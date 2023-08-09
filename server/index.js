@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const initRoutes = require('./routes');
 const bodyParser = require("body-parser");
 const userRoute = require("./routes/userRoute");
 const db = require("./config/connectDatabase");
@@ -16,7 +17,7 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/api/users", userRoute);
+initRoutes(app);
 db.connectDatabase();
 const port = process.env.PORT || 8000;
 app.listen(port, (req, res) => {
