@@ -3,11 +3,12 @@ const cors = require("cors");
 const app = express();
 const initRoutes = require('./routes');
 const bodyParser = require("body-parser");
-const userRoute = require("./routes/userRoute");
+const cookieParser = require('cookie-parser')
 const db = require("./config/connectDatabase");
 require("dotenv").config();
 
 app.use(express.json());
+app.use(cookieParser())
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
