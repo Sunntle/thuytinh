@@ -1,5 +1,5 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const db = require("../config/connectDatabase");
+// const { Sequelize, DataTypes } = require("sequelize");
+// const db = require("../config/connectDatabase");
 const bcrypt = require('bcrypt');
 require("dotenv").config();
 const hashUserPassword = async (user) => {
@@ -10,60 +10,63 @@ const hashUserPassword = async (user) => {
     throw new Error('Error hashing password');
   }
 };
+const UserTable = (sequelize, DataTypes) => {
+  const User = sequelize.define(
+    "Users",
+    {
 
-const User = db.sequelize.define(
-  "Users",
-  {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+      },
+      password: {
+        type: DataTypes.STRING(1000),
+      },
+      email: {
+        type: DataTypes.STRING,
+      },
+      phone: {
+        type: DataTypes.STRING(13),
+      },
+      black_list: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: 0
+      },
+      role: {
+        type: DataTypes.STRING,
+        defaultValue: 'R1'
+      },
+      avatar: {
+        type: DataTypes.STRING(1000),
+        defaultValue: process.env.AVATAR
+      },
+      refreshToken: {
+        type: DataTypes.STRING(1000),
+        allowNull: true
+      }
+    },
 
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-    },
-    password: {
-      type: DataTypes.STRING(1000),
-    },
-    email: {
-      type: DataTypes.STRING,
-    },
-    phone: {
-      type: DataTypes.STRING(13),
-    },
-    black_list: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: 0
-    },
-    role: {
-      type: DataTypes.STRING,
-      defaultValue: 'R1'
-    },
-    avatar: {
-      type: DataTypes.STRING(1000),
-      defaultValue: process.env.AVATAR
-    },
-    refreshToken: {
-      type: DataTypes.STRING(1000),
-      allowNull: true
-    }
-  }
-);
-User.beforeCreate(async (user) => {
-  await hashUserPassword(user);
-});
-User.beforeUpdate(async (user) => {
-  if (user.changed('password')) {
+  );
+  User.beforeCreate(async (user) => {
     await hashUserPassword(user);
-  }
-});
-User.prototype.comparePassword = async function (p) {
-  try {
-    return await bcrypt.compare(p, this.password);
-  } catch (error) {
-    throw new Error('Error comparing passwords');
-  }
-};
+  });
+  User.beforeUpdate(async (user) => {
+    if (user.changed('password')) {
+      await hashUserPassword(user);
+    }
+  });
+  User.prototype.comparePassword = async function (p) {
+    try {
+      return await bcrypt.compare(p, this.password);
+    } catch (error) {
+      throw new Error('Error comparing passwords');
+    }
+  };
+}
 
-module.exports = User;
+
+module.exports = UserTable;

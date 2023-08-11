@@ -1,8 +1,10 @@
 const { generateAccessToken, generateRefreshToken } = require("../middlewares/jwt");
-const { User, Order } = require("../models");
+// const { User, Order } = require("../models");
+
 const asyncHandler = require('express-async-handler');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
+const db = require("../models");
 
 
 exports.register = asyncHandler(async (req, res) => {
@@ -11,7 +13,7 @@ exports.register = asyncHandler(async (req, res) => {
     success: false,
     message: 'Thiếu thông tin người dùng'
   });
-  const [user, created] = await User.findOrCreate({
+  const [user, created] = await db.User.findOrCreate({
     where: { email: email }, defaults: { name: name, email: email, password: password, phone: phone }
   });
   if (created) {
