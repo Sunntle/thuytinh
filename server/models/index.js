@@ -1,23 +1,12 @@
-const { Sequelize, DataTypes } = require("sequelize");
-const { sequelize } = require("../config/connectDatabase");
-
-const db = {};
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
-db.user = require('./userModel')(sequelize, Sequelize);
-db.order = require('./orderModel')(sequelize, Sequelize);
-
-
-db.order.hasMany(db.user, {
-    foreignKey: 'id_user'
-})
-db.user.belongsTo(db.order, {
-    foreignKey: 'id_user', sourceKey: 'id'
-})
-
-
-// Order.belongsTo(User, { foreignKey: 'id_user' });
-// User.hasMany(Order, { foreignKey: 'id_user', sourceKey: 'id' });
-// sequelize.sync().then((e) => { console.log(e) }).catch((e) => { console.log(e) })
-
-module.exports = db;
+const User = require("./userModel");
+const Order = require("./orderModel");
+const Category = require("./categoryModel");
+const Product = require("./productModel");
+const Image = require("./imageModel");
+Order.belongsTo(User, { foreignKey: "id_user" });
+User.hasMany(Order, { foreignKey: "id_user", sourceKey: "id" });
+Category.hasMany(Product, { foreignKey: "id_category", sourceKey: "id" });
+Product.belongsTo(Category, { foreignKey: "id_category" });
+Product.hasMany(Image, { foreignKey: "id_product", sourceKey: "id" });
+Image.belongsTo(Product, { foreignKey: "id_product" });
+module.exports = { User, Order, Category, Product, Image };
