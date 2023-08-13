@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
-const Image = db.sequelize.define(
-  "Image",
+const ImageProduct = db.sequelize.define(
+  "ImageProduct",
   {
     // Model attributes are defined here
     id: {
@@ -18,5 +18,5 @@ const Image = db.sequelize.define(
   },
   {}
 );
-Image.sync({ alter: true });
-module.exports = Image;
+ImageProduct.sync({ alter: true });
+module.exports = ImageProduct;

@@ -17,6 +17,7 @@ const Category = db.sequelize.define(
     },
     status: {
       type: DataTypes.TINYINT,
+      defaultValue: 0,
     },
   },
   {}
