@@ -6,4 +6,10 @@ const generateAccessToken = (id, role) => {
 const generateRefreshToken = (id) => {
     return jwt.sign({ id: id }, process.env.JWT_SECRET_REFRESH, { expiresIn: process.env.JWT_REFRESH_EXPIRE_IN })
 }
-module.exports = { generateAccessToken, generateRefreshToken }
+
+function generateHash(email) {
+    return jwt.sign({ email }, process.env.JWT_SECRET_EMAIL, { expiresIn: process.env.JWT_ACCESS_EXPIRE_IN })
+}
+
+
+module.exports = { generateAccessToken, generateRefreshToken, generateHash };
