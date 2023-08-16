@@ -5,6 +5,7 @@ const Product = require("./productModel");
 const ImageProduct = require("./imageModel");
 const Recipes = require("./recipeModel");
 const Materials = require("./materialsModel");
+const OrderDetail = require("./orderDetailModel");
 Order.belongsTo(User, { foreignKey: "id_user" });
 User.hasMany(Order, { foreignKey: "id_user", sourceKey: "id" });
 Order.hasMany(OrderDetail, { foreignKey: "id_order" });
