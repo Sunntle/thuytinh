@@ -6,19 +6,17 @@ const ImageProduct = require("./imageModel");
 const Recipes = require("./recipeModel");
 const Materials = require("./materialsModel");
 const OrderDetail = require("./orderDetailModel");
-Order.belongsTo(User, { foreignKey: "id_user" });
-User.hasMany(Order, { foreignKey: "id_user", sourceKey: "id" });
-Order.hasMany(OrderDetail, { foreignKey: "id_order" });
-OrderDetail.belongsTo(Order, { foreignKey: "id_order" });
-
-OrderDetail.belongsTo(Product, { foreignKey: "id_product" })
-Product.hasMany(OrderDetail, { foreignKey: "id_product" });
-
-Product.belongsTo(Category, { foreignKey: "id_category" });
+Product.hasMany(OrderDetail, { foreignKey: "id_product", onDelete: "CASCADE", onUpdate: "CASCADE" });
+Product.belongsTo(Category, { foreignKey: "id_category", onDelete: "CASCADE", onUpdate: "CASCADE" });
 Product.hasMany(ImageProduct, { foreignKey: "id_product", sourceKey: "id" });
 Product.hasMany(Recipes, { foreignKey: "id_product", sourceKey: "id" });
 ImageProduct.belongsTo(Product, { foreignKey: "id_product" });
 Materials.hasMany(Recipes, { foreignKey: "id_material", sourceKey: "id" });
 Recipes.belongsTo(Product, { foreignKey: "id_product" });
 Recipes.belongsTo(Materials, { foreignKey: "id_material" });
-module.exports = { User, Order, Category, Product, ImageProduct, Recipes, Materials };
+Order.belongsTo(User, { foreignKey: "id_user" });
+User.hasMany(Order, { foreignKey: "id_user", sourceKey: "id" });
+Order.hasMany(OrderDetail, { foreignKey: "id_order" });
+OrderDetail.belongsTo(Order, { foreignKey: "id_order" });
+OrderDetail.belongsTo(Product, { foreignKey: "id_product" });
+module.exports = { User, Order, Category, Product, ImageProduct, Recipes, Materials, OrderDetail };

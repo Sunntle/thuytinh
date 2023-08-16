@@ -62,25 +62,25 @@ exports.addItem = async (req, res) => {
   try {
     const { recipe, ...rest } = req.body;
     const images = req.files;
-    if (rest.id_category && images.length > 0) {
+    if (rest.id_category) {
       const response = await Product.create(rest);
-      if (response) {
+      if (response && images && images.length > 0) {
         const data = images.map((file) => ({
           url: file.path.replace("/upload/", "/upload/w_400,h_300/"),
           id_product: response.id,
         }));
         await ImageProduct.bulkCreate(data);
-        if (recipe) {
-          const dataRecipe = recipe.map((el) => ({
-            ...el,
-            id_product: response.id,
-          }));
-          await Recipes.bulkCreate(dataRecipe);
-        }
-        res.status(201).json(response);
       }
+      if (response && recipe) {
+        const dataRecipe = recipe.map((el) => ({
+          ...el,
+          id_product: response.id,
+        }));
+        await Recipes.bulkCreate(dataRecipe);
+      }
+      res.status(201).json(response);
     } else {
-      res.status(400).json({ error: "Sản phẩm phải có id của danh mục và hình ảnh" });
+      res.status(400).json({ error: "Sản phẩm phải có id của danh mục" });
     }
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });

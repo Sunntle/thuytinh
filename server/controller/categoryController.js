@@ -1,4 +1,4 @@
-const { Category } = require("../models");
+const { Category, Product } = require("../models");
 const { Op } = require("sequelize");
 exports.list = async (req, res) => {
   try {
@@ -38,6 +38,7 @@ exports.removeCate = async (req, res) => {
     const _id = req.params.id;
     const response = await Category.destroy({
       where: { id: _id },
+      include: [{ model: Product }],
     });
     res.status(200).json("Xóa danh mục thành công");
   } catch (err) {

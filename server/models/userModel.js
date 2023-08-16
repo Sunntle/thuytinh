@@ -11,7 +11,6 @@ const hashUserPassword = async (user) => {
   }
 };
 
-
 const User = db.sequelize.define("Users", {
   id: {
     type: DataTypes.INTEGER,
@@ -62,5 +61,5 @@ User.prototype.comparePassword = async function (p) {
     throw new Error("Error comparing passwords");
   }
 };
-User.sync({ alter: true });
+User.sync();
 module.exports = User;
