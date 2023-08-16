@@ -19,6 +19,9 @@ const Order = db.sequelize.define("orders", {
   id_user: {
     type: DataTypes.INTEGER,
   },
+  id_employee: {
+    type: DataTypes.INTEGER,
+  },
   id_table: {
     type: DataTypes.INTEGER,
   },
