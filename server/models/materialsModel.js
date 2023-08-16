@@ -24,5 +24,5 @@ const Materials = db.sequelize.define(
   },
   {}
 );
-Materials.sync({ alter: true });
+Materials.sync();
 module.exports = Materials;

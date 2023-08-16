@@ -5,6 +5,7 @@
 /server/node_modules
 /socket/node_modules
 /node_modules
+/server/config/connectDatabase.js
 /.pnp
 .pnp.js
 .env
