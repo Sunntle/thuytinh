@@ -1,19 +1,20 @@
-const { Product, ImageProduct } = require("../models");
-const { Op } = require("sequelize");
+const { Product, ImageProduct, Recipes } = require("../models");
+const { Op, Sequelize } = require("sequelize");
+const Materials = require("../models/materialsModel");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
+    const subquery = `(SELECT GROUP_CONCAT(url SEPARATOR ';') FROM ImageProducts AS ip WHERE ip.id_product = Product.id)`;
     const query = {
-      raw: true, include: [{ model: ImageProduct, as: 'images' }]
+      raw: true,
+      attributes: ["id", "name_product", "price", "description", "status", [Sequelize.literal(subquery), "imageUrls"]],
     };
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
     if (q) query.where = { name_product: { [Op.like]: `%${q}%` } };
     if (_sort) query.order = [[_sort, _order]];
-    const response = await Product.findAll({
-      include: [{ model: ImageProduct, attributes: ['url'], as: 'images' }]
-    });
-    res.status(200).json(response);
+    const { count, rows } = await Product.findAndCountAll(query);
+    res.status(200).json({ total: count, data: rows });
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -23,7 +24,19 @@ exports.getDetail = async (req, res) => {
     const _id = req.params.id;
     const response = await Product.findOne({
       where: { id: _id },
-      include: [{ model: ImageProduct, attributes: ["url"] }],
+      include: [
+        { model: ImageProduct, attributes: ["url"] },
+        {
+          model: Recipes,
+          attributes: ["quantity"],
+          include: [
+            {
+              model: Materials,
+              attributes: ["name_material"],
+            },
+          ],
+        },
+      ],
     });
     if (!response) {
       return res.status(404).json({ error: "Product not found" });
@@ -47,16 +60,23 @@ exports.getByCategory = async (req, res) => {
 };
 exports.addItem = async (req, res) => {
   try {
-    const { id_category } = req.body;
+    const { recipe, ...rest } = req.body;
     const images = req.files;
-    if (id_category && images.length > 0) {
-      const response = await Product.create(req.body);
+    if (rest.id_category && images.length > 0) {
+      const response = await Product.create(rest);
       if (response) {
         const data = images.map((file) => ({
-          url: file.path.replace("/upload/", "/upload/w_600,h_800/"),
+          url: file.path.replace("/upload/", "/upload/w_400,h_300/"),
           id_product: response.id,
         }));
         await ImageProduct.bulkCreate(data);
+        if (recipe) {
+          const dataRecipe = recipe.map((el) => ({
+            ...el,
+            id_product: response.id,
+          }));
+          await Recipes.bulkCreate(dataRecipe);
+        }
         res.status(201).json(response);
       }
     } else {
