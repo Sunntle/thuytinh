@@ -3,7 +3,6 @@ const db = require("../config/connectDatabase");
 const ImageProduct = db.sequelize.define(
   "ImageProduct",
   {
-    // Model attributes are defined here
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,

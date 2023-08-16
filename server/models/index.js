@@ -7,7 +7,12 @@ const Recipes = require("./recipeModel");
 const Materials = require("./materialsModel");
 Order.belongsTo(User, { foreignKey: "id_user" });
 User.hasMany(Order, { foreignKey: "id_user", sourceKey: "id" });
-Category.hasMany(Product, { foreignKey: "id_category", sourceKey: "id" });
+Order.hasMany(OrderDetail, { foreignKey: "id_order" });
+OrderDetail.belongsTo(Order, { foreignKey: "id_order" });
+
+OrderDetail.belongsTo(Product, { foreignKey: "id_product" })
+Product.hasMany(OrderDetail, { foreignKey: "id_product" });
+
 Product.belongsTo(Category, { foreignKey: "id_category" });
 Product.hasMany(ImageProduct, { foreignKey: "id_product", sourceKey: "id" });
 Product.hasMany(Recipes, { foreignKey: "id_product", sourceKey: "id" });

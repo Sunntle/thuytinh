@@ -11,6 +11,7 @@ const hashUserPassword = async (user) => {
   }
 };
 
+
 const User = db.sequelize.define("Users", {
   id: {
     type: DataTypes.INTEGER,

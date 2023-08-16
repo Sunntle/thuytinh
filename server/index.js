@@ -20,6 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 initRoutes(app);
 db.connectDatabase();
+
+
 const port = process.env.PORT || 8000;
 app.listen(port, (req, res) => {
   console.log(`Connect port: ${port}`);

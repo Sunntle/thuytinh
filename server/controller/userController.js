@@ -1,8 +1,12 @@
-const { generateAccessToken, generateRefreshToken } = require("../middlewares/jwt");
+const { generateAccessToken, generateRefreshToken, generateHash } = require("../middlewares/jwt");
 const { User, Order } = require("../models");
+
 const asyncHandler = require('express-async-handler');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
+const sendEmail = require("../utils/mail");
+
+
 
 
 exports.register = asyncHandler(async (req, res) => {
@@ -75,15 +79,24 @@ exports.setPassUser = asyncHandler(async (req, res) => {
   }
 });
 exports.forgotPassword = asyncHandler(async (req, res) => {
-  const email = req.query.email;
+  const email = req.body?.email;
   const user = await User.findOne({ where: { email } });
-  if (user) {
-    return res.status(404).json({
-      success: false
-    })
-  }
-  return res.status(404).json({
-    success: false
+  if (!user) throw new Error('Không tìm thấy email');
+  let code = generateHash(email);
+  const html = `Link này sẽ hết hạn vào 1 giờ. Click vào đây sẽ thay đổi mật khẩu <a href="${process.env.URL_CLIENT}/user/update-password/${code}">Click here</a>`;
+  await sendEmail(email, html);
+  return res.status(200).json({
+    success: true
+  })
+});
+exports.setForgotPassword = asyncHandler(async (req, res) => {
+  const { token, password } = req.body;
+  jwt.verify(token, process.env.JWT_SECRET_EMAIL, async (err, decode) => {
+    if (err) return res.status(404).json({ success: false, data: 'Hết mã xác nhận hết hạn' });
+    let result = await User.findOne({ where: { email: decode.email } });
+    result.password = password;
+    await result.save();
+    result ? res.status(200).json({ success: true }) : res.status(404).json({ success: false })
   })
 });
 exports.refreshToken = asyncHandler(async (req, res) => {
@@ -91,7 +104,6 @@ exports.refreshToken = asyncHandler(async (req, res) => {
   if (!validator.isJWT(cookie)) throw new Error('Không tìm thấy refresh token');
   const ru = await jwt.verify(cookie, process.env.JWT_SECRET_REFRESH);
   const re = await User.findOne({ where: { id: ru?.id, refreshToken: cookie } });
-  console.log(re.toJSON())
   if (re) return res.status(200).json({
     success: true,
     data: generateAccessToken(re.id, re.role)
@@ -108,3 +120,25 @@ exports.currentAccount = asyncHandler(async (req, res) => {
   })
   res.status(404).json({ success: false })
 });
+exports.logout = asyncHandler(async (req, res) => {
+  const cookie = req.cookies;
+  if (!cookie || !cookie.refreshToken) throw new Error("No refresh token in cookie");
+  await User.update({ refreshToken: "" }, { where: { refreshToken: cookie.refreshToken } }, { new: true });
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true
+  })
+  return res.status(200).json({
+    success: true,
+    message: 'Logout is done !'
+  })
+})
+exports.deleteUser = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const re = await User.destroy({ where: { id: id } })
+  console.log(re)
+  return res.status(200).json({
+    success: true,
+    message: 'Xóa thành công'
+  })
+})

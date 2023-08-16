@@ -3,6 +3,7 @@ const db = require("../config/connectDatabase");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 
+
 const Order = db.sequelize.define("orders", {
   id: {
     type: DataTypes.INTEGER,
@@ -16,6 +17,9 @@ const Order = db.sequelize.define("orders", {
     type: DataTypes.INTEGER,
   },
   id_user: {
+    type: DataTypes.INTEGER,
+  },
+  id_employee: {
     type: DataTypes.INTEGER,
   },
   id_table: {
