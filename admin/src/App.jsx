@@ -8,6 +8,9 @@ const App = () => {
         <HeaderComponent />
         <MenuPage />
       </header>
+      <main>
+
+      </main>
     </div>
   );
 };
