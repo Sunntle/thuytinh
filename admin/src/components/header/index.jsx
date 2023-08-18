@@ -1,6 +1,6 @@
-import { Button } from "antd";
-import { RightOutlined, UserOutlined } from "@ant-design/icons";
 import SearchComponent from "../search";
+import ButtonComponents from "../button";
+import { RightOutlined, UserOutlined } from "@ant-design/icons";
 
 function HeaderComponent() {
   return (
@@ -9,16 +9,19 @@ function HeaderComponent() {
         <img src="Logo" className="max-w-md object-cover" alt="" />
         Logo here
       </div>
-      <SearchComponent />
-      <Button className="bg-gray-300 border-0 flex justify-center items-center py-5">
-        <div className="text-lg flex justify-center items-center">
-          <UserOutlined />
-        </div>
-        <span className="ms-1 me-3">Admin</span>
-        <div className="text-xs flex justify-center items-center">
-          <RightOutlined />
-        </div>
-      </Button>
+      <div className="d-md-none">
+        <SearchComponent background={"bg-secondaryColor"} maxWidth={"max-w-md"} />
+      </div>
+      <ButtonComponents
+        sizeIconBefore={"text-lg"}
+        sizeIconAfter={"text-xs"}
+        spacingContent={"ms-1 me-3"}
+        borderColor={"border-borderSecondaryColor"}
+        backgroundColor={"bg-secondaryColor"}
+        iconBefore={<UserOutlined />}
+        iconAfter={<RightOutlined />}
+        content={"Admin"}
+      />
     </div>
   );
 }
