@@ -1,11 +1,13 @@
-import React from 'react';
+import HeaderComponent from "./components/header";
 
 const App = () => {
-    return (
-        <div className={"bg-slate-600 w-full h-full"}>
-            Hello World
-        </div>
-    );
+  return (
+    <div>
+      <header>
+        <HeaderComponent />
+      </header>
+    </div>
+  );
 };
 
 export default App;

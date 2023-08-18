@@ -1,0 +1,18 @@
+.search {
+  .ant-input-search-button {
+    border: none;
+  }
+  .ant-input-affix-wrapper {
+    background-color: rgb(209, 213, 219);
+    border-radius: inherit;
+    .ant-input {
+      background-color: rgb(209, 213, 219);
+    }
+  }
+  .ant-input-clear-icon,
+  .ant-btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
