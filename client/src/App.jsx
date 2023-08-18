@@ -1,9 +1,11 @@
 import React from 'react';
+import FoodCard from "./components/FoodCard.jsx";
+import OrderFood from "./pages/OrderFood/OrderFood.jsx";
 
 const App = () => {
     return (
-        <div className={"bg-slate-600 w-full h-full"}>
-            Hello World
+        <div className={"w-12/12 h-full"}>
+            <OrderFood/>
         </div>
     );
 };
