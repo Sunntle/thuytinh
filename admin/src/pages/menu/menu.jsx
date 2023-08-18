@@ -3,6 +3,7 @@ import SearchComponent from "../../components/search";
 import ButtonComponents from "../../components/button";
 import { UpCircleFilled } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
+import Link from "antd/es/typography/Link";
 function MenuPage() {
   return (
     <div className="my-7 px-5">
@@ -19,7 +20,12 @@ function MenuPage() {
         </Col>
       </Row>
       <div className="mb-4">
-        <h4 className="font-bold mb-2">Danh mục</h4>
+        <div className="flex justify-between items-center">
+          <h4 className="font-bold mb-2">Danh mục</h4>
+          <Link to="/" style={{ color: "#FC8019" }}>
+            View All
+          </Link>
+        </div>
         <div>
           <Swiper
             slidesPerView={2}
@@ -114,7 +120,12 @@ function MenuPage() {
         </div>
       </div>
       <div className="mb-4">
-        <h4 className="font-bold mb-2">Sản phẩm bán chạy</h4>
+        <div className="flex justify-between items-center">
+          <h4 className="font-bold mb-2">Sản phẩm bán chạy</h4>
+          <Link to="/" style={{ color: "#FC8019" }}>
+            View All
+          </Link>
+        </div>
         <div>
           <Swiper
             slidesPerView={2}
@@ -177,7 +188,12 @@ function MenuPage() {
         </div>
       </div>
       <div className="mb-4">
-        <h4 className="font-bold mb-2">Món giảm giá</h4>
+        <div className="flex justify-between items-center">
+          <h4 className="font-bold mb-2">Món giảm giá</h4>
+          <Link to="/" style={{ color: "#FC8019" }}>
+            View All
+          </Link>
+        </div>
         <div>
           <Swiper
             slidesPerView={1}

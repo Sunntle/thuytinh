@@ -1,18 +1,8 @@
-import HeaderComponent from "./components/header";
-import MenuPage from "./pages/menu/menu";
-
+import { RouterProvider } from "react-router-dom";
+import router from "./routes";
+import "./app.scss";
 const App = () => {
-  return (
-    <div>
-      <header>
-        <HeaderComponent />
-        <MenuPage />
-      </header>
-      <main>
-
-      </main>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;
