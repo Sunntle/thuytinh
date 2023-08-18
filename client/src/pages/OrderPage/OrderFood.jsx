@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { HiMenu, HiOutlineClipboardCheck } from "react-icons/hi";
 import ButtonComponent from "../../components/ButtonComponent.jsx";
 import FoodCard from "../../components/FoodCard.jsx";
 import SidebarMobile from "./SidebarMobile.jsx";
 import SidebarTablet from "./SidebarTablet.jsx";
+import crabCute from "../../assets/images/product/crab.png";
+import { GiSadCrab, GiShrimp } from "react-icons/gi";
+import { LiaFishSolid } from "react-icons/lia";
+import { motion } from "framer-motion";
 
 const OrderFood = () => {
+  // Ref Food
+  const crabRef = useRef(null);
+  const shrimpRef = useRef(null);
+  const fishRef = useRef(null);
+
+  const sections = [
+    { ref: crabRef, icon: <GiSadCrab className="w-6 h-6 text-primary" /> },
+    { ref: shrimpRef, icon: <GiShrimp className="w-6 h-6 text-red-600" /> },
+    { ref: fishRef, icon: <LiaFishSolid className="w-6 h-6 text-blue-600" /> },
+  ];
+
+  const scrollToSection = (ref) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  // Hook
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="w-12/12 h-screen  text-slate-800">
+    <div className="w-12/12 h-screen text-slate-800">
       <div className="sm:hidden">
         <div className="space-y-5 p-4">
           <div className="flex justify-between items-center">
@@ -82,7 +104,7 @@ const OrderFood = () => {
         />
       </div>
       {/* Layout Tablet */}
-      <div className="grid grid-cols-12 gap-4">
+      <div className="grid grid-cols-12 gap-2">
         {/*Sidebar Left Content*/}
         <div className="col-span-4 lg:col-span-3 border-r">
           <SidebarTablet />
@@ -93,18 +115,94 @@ const OrderFood = () => {
             {/* Filter */}
             <div className="w-full h-16 bg-slate-200 mb-8"></div>
             {/* List Product */}
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
-              <FoodCard/>
+            {/* Cua */}
+            <div className="flex flex-col mb-10">
+              <div
+                ref={crabRef}
+                className="flex justify-center items-center text-slate-800 mb-10"
+              >
+                <span className="w-full h-1 rounded bg-slate-500"></span>
+                <span className="text-xl font-bold text-center mx-5">CUA</span>
+                <span className="w-full h-1 rounded bg-slate-500"></span>
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+              </div>
+            </div>
+            {/* Tom */}
+            <div className="flex flex-col mb-10">
+              <div
+                ref={shrimpRef}
+                className="flex justify-center items-center text-slate-800 mb-10"
+              >
+                <span className="w-full h-1 rounded bg-slate-500"></span>
+                <span className="text-xl font-bold text-center mx-5">TÔM</span>
+                <span className="w-full h-1 rounded bg-slate-500"></span>
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+              </div>
+            </div>
+            {/*  Ca */}
+            <div className="flex flex-col">
+              <div
+                ref={fishRef}
+                className="flex justify-center items-center text-slate-800 mb-10"
+              >
+                <span className="w-full h-1 rounded bg-slate-500"></span>
+                <span className="text-xl font-bold text-center mx-5">Cá</span>
+                <span className="w-full h-1 rounded bg-slate-500"></span>
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+                <FoodCard />
+              </div>
             </div>
           </div>
         </div>
         {/* Sidebar Right Content */}
-        <div className="col-span-1"></div>
+        <div className="col-span-1 h-full flex flex-col justify-center">
+          {/*<div className="flex flex-col items-center">*/}
+          <motion.div
+            initial={{ y: -800 }}
+            animate={{ y: 0 }}
+            transition={{
+              delay: 1,
+              duration: 1,
+              damping: 40,
+            }}
+          >
+            {sections.map((section, index) => (
+              <div className="flex flex-col items-center" key={index}>
+                <div
+                  onTouchStart={() => scrollToSection(section.ref)}
+                  className="w-12 h-12 bg-transparent border border-slate-400 rounded-full flex justify-center items-center text-white"
+                >
+                  {section.icon}
+                </div>
+                <div className="w-0.5 font-thin h-10 bg-black"></div>
+              </div>
+            ))}
+            <div className="relative min-w-fit -m-2 right-1">
+              <img className="w-full h-full" src={crabCute} alt="" />
+            </div>
+          </motion.div>
+          {/*</div>*/}
+        </div>
       </div>
     </div>
   );

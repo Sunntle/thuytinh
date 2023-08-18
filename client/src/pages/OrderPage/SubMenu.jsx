@@ -27,10 +27,10 @@ const SubMenu = ({ data, index }) => {
       {/* Menu */}
       <div>
         <div
-          onClick={() => setActiveKey(activeKey === index ? null : index)}
+          onTouchStart={() => setActiveKey(activeKey === index ? null : index)}
           className={`px-3 py-3 mb-3 flex justify-between items-center rounded-lg ${
             activeKey === index
-              ? "active:bg-primary active:bg-opacity-[15%] active:text-primary"
+              ? "bg-primary bg-opacity-[15%] text-primary"
               : ""
           }`}
         >

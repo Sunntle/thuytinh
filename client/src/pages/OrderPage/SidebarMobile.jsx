@@ -49,7 +49,7 @@ const SidebarMobile = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         />
                     </div>
                     <button
-                        onClick={() => setIsSidebarOpen(false)}
+                        onTouchStart={() => setIsSidebarOpen(false)}
                         className="absolute right-0"
                     >
                         <HiXMark className="w-8 h-8" />
