@@ -6,7 +6,7 @@ import ChooseTablePage from "./pages/ChooseTablePage";
 const App = () => {
   return (
     <div>
-      <BookingPage />
+      <ChooseTablePage />
     </div>
   );
 };

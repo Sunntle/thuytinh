@@ -1,13 +1,6 @@
-
 const LoginPage = () => {
   return (
-    <div
-      className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-gray-300"
-      style={{
-        backgroundImage:
-          'url("https://static.thehoneycombers.com/wp-content/uploads/sites/2/2022/03/sydney-restaurants-woodcut-900x643.png")',
-      }}
-    >
+    <div className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-gray-300 bg-[url('https://static.thehoneycombers.com/wp-content/uploads/sites/2/2022/03/sydney-restaurants-woodcut-900x643.png')]">
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <form className="z-10 space-y-6 flex flex-col justify-center items-center w-2/3 h-[50vh] p-6 bg-transparent shadow-md sm:w-1/2 sm:bg-white sm:bg-opacity-25">
         <h2 className="text-center text-2xl font-medium text-white mb-4">
