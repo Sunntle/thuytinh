@@ -1,15 +1,16 @@
 import { Input } from "antd";
 import "./searchStyle.scss";
 const { Search } = Input;
-function SearchComponent() {
+// eslint-disable-next-line react/prop-types
+function SearchComponent({ background, maxWidth, size }) {
   const onSearch = (value) => console.log(value);
   return (
     <Search
       placeholder="Tìm kiếm..."
       allowClear
       onSearch={onSearch}
-      className="w-full max-w-md bg-gray-400 rounded-lg search h-full text-lg"
-      size={"large"}
+      className={`w-full ${maxWidth} ${background} rounded-lg search h-full`}
+      size={size}
     />
   );
 }
