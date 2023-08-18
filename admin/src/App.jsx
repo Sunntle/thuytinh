@@ -6,6 +6,9 @@ const App = () => {
       <header>
         <HeaderComponent />
       </header>
+      <main>
+
+      </main>
     </div>
   );
 };
