@@ -1,0 +1,29 @@
+.main_area {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    overflow: hidden;
+
+    .layout_area {
+        padding-top: 20px;
+
+        &_sider {
+            background: white !important;
+            color: #000 !important;
+
+            .ant-menu-item {
+                font-size: 1rem;
+                font-weight: 500;
+            }
+
+            .ant-menu-item-selected {
+                background: #ffead9;
+                color: #FC8019;
+            }
+
+            .ant-layout-sider-trigger {
+                background: white;
+                color: #000;
+            }
+        }
+    }
+}
