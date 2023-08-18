@@ -1,16 +1,8 @@
-import HeaderComponent from "./components/header";
-
+import { RouterProvider } from "react-router-dom";
+import router from "./routes";
+import './app.scss';
 const App = () => {
-  return (
-    <div>
-      <header>
-        <HeaderComponent />
-      </header>
-      <main>
-
-      </main>
-    </div>
-  );
+  return <RouterProvider router={router} />
 };
 
 export default App;
