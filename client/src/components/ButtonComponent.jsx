@@ -28,7 +28,7 @@ const ButtonComponent = ({
   return (
     <button
       disabled={disable}
-      onClick={onClick}
+      onTouchStart={onClick}
       className={
         theme[type] +
         ` ${className} ${disable === true ? theme["disable"] : ""}`
