@@ -3,8 +3,28 @@ import SearchComponent from "../../components/search";
 import ButtonComponents from "../../components/button";
 import { UpCircleFilled } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Link from "antd/es/typography/Link";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import AddNewMenu from "./add";
 function MenuPage() {
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const showModal = () => {
+    setOpen(true);
+  };
+  const handleDataForm = (value) => {
+    setConfirmLoading(true);
+    try {
+      console.log(value);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setConfirmLoading(false);
+    }
+  };
+  const handleCancel = () => {
+    setOpen(false);
+  };
   return (
     <div className="my-7 px-5">
       <Row justify="space-between" align="center" className="mb-4">
@@ -16,6 +36,7 @@ function MenuPage() {
             borderColor={"border-borderSecondaryColor"}
             backgroundColor={"bg-secondaryColor"}
             content={"Thêm mới"}
+            onClick={showModal}
           />
         </Col>
       </Row>
@@ -23,7 +44,7 @@ function MenuPage() {
         <div className="flex justify-between items-center">
           <h4 className="font-bold mb-2">Danh mục</h4>
           <Link to="/" style={{ color: "#FC8019" }}>
-            View All
+            Xem tất cả
           </Link>
         </div>
         <div>
@@ -123,7 +144,7 @@ function MenuPage() {
         <div className="flex justify-between items-center">
           <h4 className="font-bold mb-2">Sản phẩm bán chạy</h4>
           <Link to="/" style={{ color: "#FC8019" }}>
-            View All
+            Xem tất cả
           </Link>
         </div>
         <div>
@@ -191,7 +212,7 @@ function MenuPage() {
         <div className="flex justify-between items-center">
           <h4 className="font-bold mb-2">Món giảm giá</h4>
           <Link to="/" style={{ color: "#FC8019" }}>
-            View All
+            Xem tất cả
           </Link>
         </div>
         <div>
@@ -285,6 +306,13 @@ function MenuPage() {
           </Swiper>
         </div>
       </div>
+      <AddNewMenu
+        open={open}
+        confirmLoading={confirmLoading}
+        data={"222"}
+        handleCancel={handleCancel}
+        handleFinish={handleDataForm}
+      />
     </div>
   );
 }
