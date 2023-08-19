@@ -10,10 +10,18 @@ function ButtonComponents({
   sizeIconBefore,
   sizeIconAfter,
   content,
+  onClick,
+  colorText,
+  type,
 }) {
   return (
     <>
-      <Button className={` ${borderColor} ${backgroundColor} flex justify-center items-center  text-white`}>
+      <Button
+        className={` ${borderColor} ${backgroundColor} inline-flex justify-center items-center  ${
+          colorText ?? "text-white"
+        }`}
+        onClick={onClick}
+      >
         {iconBefore && <div className={`flex justify-center items-center ${sizeIconBefore}`}>{iconBefore}</div>}
         <span className={spacingContent}>{content}</span>
         {iconAfter && <div className={`flex justify-center items-center ${sizeIconAfter}`}>{iconAfter}</div>}

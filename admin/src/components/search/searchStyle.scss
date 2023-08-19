@@ -6,15 +6,7 @@
   }
   .ant-input-affix-wrapper,
   .ant-input {
-    background-color: #fc8e32 !important;
-  }
-  .ant-input-group-addon {
-    button {
-      color: #fc8e32 !important;
-    }
-  }
-  .ant-input {
-    background-color: rgb(209, 213, 219);
+    background-color: transparent !important;
   }
   .ant-input-clear-icon,
   .ant-btn-icon {
@@ -28,5 +20,34 @@
   .ant-input-wrapper {
     border: 0.8px solid #fd9c4b !important;
     border-radius: 6px;
+  }
+  .ant-input-affix-wrapper {
+    box-shadow: none;
+  }
+}
+.search {
+  .ant-input-group-addon {
+    button {
+      color: #fc8e32 !important;
+    }
+  }
+  .ant-input-clear-icon {
+    color: #fc8e32;
+  }
+}
+.change-text-color {
+  .ant-input {
+    color: rgb(218, 214, 214);
+    &::placeholder {
+      color: rgb(218, 214, 214);
+    }
+  }
+  .ant-input-group-addon {
+    button {
+      color: rgb(218, 214, 214) !important;
+    }
+  }
+  .ant-input-clear-icon {
+    color: rgb(218, 214, 214);
   }
 }
