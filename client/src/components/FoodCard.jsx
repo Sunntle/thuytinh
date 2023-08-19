@@ -4,7 +4,7 @@ import {HiMinus, HiPlus} from "react-icons/hi2";
 
 const FoodCard = () => {
     return (
-        <div className="w-44 min-h-[20px] sm:w-64 sm:min-h-[256px] grid grid-rows-2 sm:grid-rows-5 m-auto rounded-lg border drop-shadow-md">
+        <div className="w-auto h-auto grid grid-rows-2 sm:grid-rows-5 m-auto rounded-lg border drop-shadow-md">
             <div className="h-full row-span-1 sm:row-span-3">
                 <img
                     className="w-full h-full aspect-video rounded-t-lg"

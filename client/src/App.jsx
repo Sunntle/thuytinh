@@ -1,15 +1,14 @@
-import React from "react";
-import LoginPage from "./pages/LoginPage";
-import BookingPage from "./pages/BookingPage";
-import ChooseTablePage from "./pages/ChooseTablePage";
-// import ChooseTableMobile from "./pages/ChooseTableMobile";
+
+import React from 'react';
+import OrderFood from "./pages/OrderPage/OrderFood.jsx";
+import OrderListMobile from "./pages/OrderPage/OrderListMobile.jsx";
 
 const App = () => {
-  return (
-    <div>
-      <ChooseTablePage />
-    </div>
-  );
+    return (
+        <div className={"w-12/12 h-full"}>
+            <OrderFood />
+        </div>
+    );
 };
 
 export default App;
