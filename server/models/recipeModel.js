@@ -21,5 +21,5 @@ const Recipes = db.sequelize.define(
   },
   {}
 );
-Recipes.sync({ alter: true });
+Recipes.sync();
 module.exports = Recipes;

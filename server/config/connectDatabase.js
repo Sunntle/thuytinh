@@ -3,6 +3,7 @@ const sequelize = new Sequelize("nhahang", "root", "", {
   host: "localhost",
   dialect: "mysql",
   logging: false,
+  port: 3309
 });
 const connectDatabase = async () => {
   try {

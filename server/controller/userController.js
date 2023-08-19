@@ -21,7 +21,7 @@ exports.register = asyncHandler(async (req, res) => {
   if (created) {
     res.status(200).json({ success: true, data: user });
   } else {
-    res.status(200).json({ success: false, mes: 'Email đã tồn tại' });
+    res.status(200).json({ success: false, mes: 'Email đã tồn tại rồi nha' });
   }
 });
 exports.login = asyncHandler(async (req, res) => {

@@ -17,5 +17,5 @@ const ImageProduct = db.sequelize.define(
   },
   {}
 );
-ImageProduct.sync({ alter: true });
+ImageProduct.sync();
 module.exports = ImageProduct;
