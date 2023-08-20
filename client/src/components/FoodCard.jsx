@@ -14,8 +14,8 @@ const FoodCard = () => {
             </div>
             <div className="py-2 sm:py-4 px-2 bg-white rounded-b-lg row-span-1 sm:row-span-2 grid grid-cols-3">
                 <div className="flex flex-col justify-around sm:justify-normal sm:gap-2 col-span-2 text-slate-800">
-                    <span className="textbase sm:text-lg font-medium">Cua hoàng đế</span>
-                    <span className="text-xs text-slate-500">100.000 VNĐ</span>
+                    <span className="textbase sm:text-lg xl:text-2xl font-medium">Cua hoàng đế</span>
+                    <span className="text-xs text-slate-500 md:text-sm xl:text-base">100.000 VNĐ</span>
                     <div className="flex justify-between items-center w-7/12">
                         <button><HiMinus className="w-3 h-3 sm:w-4 sm:h-4"/></button>
                         <span className="text-slate-500 text-sm">1</span>
