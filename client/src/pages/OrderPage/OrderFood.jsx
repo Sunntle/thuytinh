@@ -208,7 +208,7 @@ const OrderFood = () => {
                                 >
                                     <div
                                         onTouchStart={() => scrollToSection(section.ref)}
-                                        className="w-16 h-16 bg-transparent border border-slate-400 rounded-full flex justify-center items-center text-white"
+                                        className="w-12 h-12 lg:w-16 lg:h-16 bg-transparent border border-slate-400 rounded-full flex justify-center items-center text-white"
                                     >
                                         {section.icon}
                                     </div>
@@ -223,7 +223,7 @@ const OrderFood = () => {
                                 />
                             </div>
                         </div>
-                        <div className="w-16 h-16 rounded-full border border-slate-500 flex items-center justify-center shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+                        <div onTouchStart={() => setIsOrderListOpen(!isOrderListOpen)} className="w-12 h-12 lg:w-16 lg:h-16 rounded-full border border-slate-500 flex items-center justify-center shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
                             <MdMenuBook className="w-7 h-7 text-slate-500"/>
                         </div>
                     </motion.div>
@@ -231,12 +231,13 @@ const OrderFood = () => {
                 </div>
                 {/* List Order Tablet */}
                 <motion.div
-                    className="fixed p-2 z-40 top-1/2 right-32 transform -translate-y-1/2 bg-white h-[800px] w-[500px] border rounded-lg shadow-xl"
+                    className="fixed p-2 z-40 top-1/2 md:right-20 xl:right-32 transform -translate-y-1/2 bg-white md:h-[600px] xl:h-[800px] w-[500px] border rounded-lg shadow-xl"
                     variants={OrderList_Animation}
                     animate={isOrderListOpen ? 'open' : 'closed'}
+                    initial={{opacity: 0}}
                 >
                     {/* Close Button */}
-                    <button onTouchStart={() => setIsOrderListOpen(!isOrderListOpen)} className="mb-8"><HiXMark className="w-8 h-8"/></button>
+                    <button onClick={() => setIsOrderListOpen(false)} className="mb-8"><HiXMark className="w-8 h-8"/></button>
                     {/* Food List */}
                     <div className="h-32 w-full border rounded-lg flex justify-between items-center drop-shadow-md space-x-3 overflow-hidden">
                         <div className="h-full w-4/12 overflow-hidden">
