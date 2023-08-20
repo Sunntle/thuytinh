@@ -3,7 +3,7 @@ import LayoutMain from "../Layout";
 import DashBoard from "../pages/DashBoard";
 import MenuPage from "../pages/menu/menu";
 import OrderPage from "../pages/Order";
-
+import ProductPage from "../pages/product/product";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -20,7 +20,12 @@ const router = createBrowserRouter([
       {
         path: "order",
         element: <OrderPage />,
+
       },
+      {
+        path: "product",
+        element: <ProductPage />
+      }
     ],
   },
 ]);
