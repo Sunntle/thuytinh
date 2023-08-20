@@ -40,6 +40,7 @@ const SubMenu = ({ data, index }) => {
         {/* Submenu */}
         <motion.div
           variants={initialMotion}
+          initial={{x: -450}}
           animate={activeKey === index ? "open" : "closed"}
           transition={{ duration: 0.3 }}
         >
