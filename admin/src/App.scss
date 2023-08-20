@@ -1,29 +1,64 @@
+@mixin item_menu {
+    background: #ffead9 !important;
+    color: #FC8019 !important;
+}
+
+@mixin bg-color {
+    background: white !important;
+    color: #000 !important;
+}
+
 .main_area {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     overflow: hidden;
+    background: white !important;
 
     .layout_area {
         padding-top: 20px;
+        background: white !important;
 
         &_sider {
-            background: white !important;
-            color: #000 !important;
+            @include bg-color;
 
             .ant-menu-item {
                 font-size: 1rem;
                 font-weight: 500;
             }
 
+            .ant-menu-submenu-selected .ant-menu-submenu-title,
             .ant-menu-item-selected {
-                background: #ffead9;
-                color: #FC8019;
+                @include item_menu
             }
 
             .ant-layout-sider-trigger {
-                background: white;
-                color: #000;
+                @include bg-color;
             }
         }
+    }
+}
+
+.chart-line_area {
+    max-width: 100%;
+    border: 2px solid #FC8019;
+
+    .chart_month {
+        max-width: 880px;
+        object-fit: cover;
+        overflow: hidden;
+    }
+}
+
+.wc {
+    border-radius: 50%;
+    border-width: 4px;
+    width: 18px;
+    height: 18px;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .layout_area_sider {
+        display: none !important;
     }
 }

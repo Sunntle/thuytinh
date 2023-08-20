@@ -9,6 +9,10 @@ export default {
         borderSecondaryColor: "#fd9c4b",
       },
     },
+    screens: {
+      'xs': '320px',
+      'sm': '640px',
+    },
   },
   plugins: [],
 };

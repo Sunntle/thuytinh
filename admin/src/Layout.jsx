@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom'
-import HeaderComponent from './components/header'
-import { DesktopOutlined, PieChartOutlined } from '@ant-design/icons';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import HeaderComponent from './components/header';
+import { BiCategory } from 'react-icons/bi'
 import { Layout, Menu } from 'antd';
 const { Content, Sider } = Layout;
 import { getItem } from './utils/format';
 const items = [
-    getItem('Option 1 sdfaereartrtet', '1', <PieChartOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />)
+    getItem('Tổng quan', null, <BiCategory />, [
+        getItem('Dashboard', '/'),
+        getItem('Thực đơn món ăn', '/menu'),
+        getItem('Bill ', '/order'),
+        getItem('Đánh giá', '/rate'),
+    ]),
+    getItem('Nhà hàng', '/restaurant', <BiCategory />)
 ];
 
 const LayoutMain = () => {
-    const [collapsed, setCollapsed] = useState(false);
+    const { pathname } = useLocation();
+    const [collapsed, setCollapsed] = useState(true);
+    const navigate = useNavigate();
+    const onClick = (e) => {
+        navigate(e.key)
+    };
+
     return (
         <div className='bg-main'>
             <header>
@@ -19,11 +30,11 @@ const LayoutMain = () => {
             </header>
             <main className='main_area'>
                 <Layout className='layout_area' >
-                    <Sider className='layout_area_sider' collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                        <Menu defaultSelectedKeys={['1']} theme='light' mode="inline" items={items} />
+                    <Sider width={311} className='layout_area_sider ' collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                        <Menu defaultSelectedKeys={pathname} theme='light' mode="inline" items={items} onClick={onClick} />
                     </Sider>
-                    <Layout>
-                        <Content >
+                    <Layout className='bg-white'>
+                        <Content className='w-full'>
                             <Outlet />
                         </Content>
                     </Layout>
