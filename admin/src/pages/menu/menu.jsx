@@ -50,25 +50,29 @@ function MenuPage() {
         <div>
           <Swiper
             slidesPerView={2}
-            spaceBetween={10}
+            spaceBetween={20}
             className="mySwiper"
             breakpoints={{
               640: {
-                slidesPerView: 4,
-                spaceBetween: 5,
+                slidesPerView: 3,
+                spaceBetween: 20,
               },
               768: {
-                slidesPerView: 6,
-                spaceBetween: 8,
+                slidesPerView: 4,
+                spaceBetween: 20,
               },
               1024: {
+                slidesPerView: 5,
+                spaceBetween: 15,
+              },
+              1280: {
                 slidesPerView: 6,
                 spaceBetween: 10,
               },
             }}
           >
             <SwiperSlide>
-              <div className="px-10 py-6 rounded-md border text-center">
+              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
                 <img
                   className="w-full mb-3"
                   src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
@@ -78,7 +82,7 @@ function MenuPage() {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="px-10 py-6 rounded-md border text-center">
+              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
                 <img
                   className="w-full mb-3"
                   src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
@@ -88,7 +92,7 @@ function MenuPage() {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="px-10 py-6 rounded-md border text-center">
+              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
                 <img
                   className="w-full mb-3"
                   src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
@@ -98,7 +102,7 @@ function MenuPage() {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="px-10 py-6 rounded-md border text-center">
+              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
                 <img
                   className="w-full mb-3"
                   src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
@@ -108,7 +112,7 @@ function MenuPage() {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="px-10 py-6 rounded-md border text-center">
+              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
                 <img
                   className="w-full mb-3"
                   src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
@@ -118,7 +122,7 @@ function MenuPage() {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="px-10 py-6 rounded-md border text-center">
+              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
                 <img
                   className="w-full mb-3"
                   src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
@@ -128,7 +132,7 @@ function MenuPage() {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="px-10 py-6 rounded-md border text-center">
+              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
                 <img
                   className="w-full mb-3"
                   src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
@@ -149,26 +153,30 @@ function MenuPage() {
         </div>
         <div>
           <Swiper
-            slidesPerView={2}
+            slidesPerView={1}
             spaceBetween={10}
             className="mySwiper"
             breakpoints={{
-              480: {
+              525: {
                 slidesPerView: 2,
-                spaceBetween: 10,
+                spaceBetween: 20,
               },
               768: {
                 slidesPerView: 3,
-                spaceBetween: 10,
+                spaceBetween: 25,
               },
               1024: {
+                slidesPerView: 4,
+                spaceBetween: 25,
+              },
+              1280: {
                 slidesPerView: 5,
                 spaceBetween: 20,
               },
             }}
           >
             <SwiperSlide>
-              <div className="px-6 py-4 rounded-md border text-center">
+              <div className="px-3 py-2 md:px-6 md:py-4 rounded-md border text-center">
                 <div className="mb-3 p-3">
                   <img
                     className="w-full"
@@ -187,7 +195,7 @@ function MenuPage() {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="px-6 py-4 rounded-md border text-center">
+              <div className="px-3 py-2 md:px-6 md:py-4 rounded-md border text-center">
                 <div className="mb-3 p-3">
                   <img
                     className="w-full"
@@ -245,8 +253,10 @@ function MenuPage() {
                     </div>
                     <div>
                       <h6 className="font-semibold">Gà rán</h6>
-                      <h6 className="text-main font-semibold  whitespace-nowrap">20000 VNĐ</h6>
-                      <h6 className="text-gray-400 font-semibold line-through whitespace-nowrap">70000 VNĐ</h6>
+                      <div className="my-1">
+                        <h6 className="text-main font-semibold  whitespace-nowrap">20000 VNĐ</h6>
+                        <p className="text-gray-400 font-semibold line-through whitespace-nowrap text-xs">70000 VNĐ</p>
+                      </div>
                       <div className="text-slate-500 text-xs">
                         <span>Bán: 1k</span>
                       </div>
@@ -256,7 +266,7 @@ function MenuPage() {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="pe-5">
+              <div className="md:pe-5 pe-3">
                 <Badge.Ribbon text="15% Off" color="red">
                   <div className="px-2 py-5 rounded-md border text-left flex items-center justify-evenly">
                     <div>
@@ -269,8 +279,10 @@ function MenuPage() {
                     </div>
                     <div>
                       <h6 className="font-semibold">Gà rán</h6>
-                      <h6 className="text-main font-semibold  whitespace-nowrap">20000 VNĐ</h6>
-                      <h6 className="text-gray-400 font-semibold line-through whitespace-nowrap">70000 VNĐ</h6>
+                      <div className="my-1">
+                        <h6 className="text-main font-semibold  whitespace-nowrap">20000 VNĐ</h6>
+                        <p className="text-gray-400 font-semibold line-through whitespace-nowrap text-xs">70000 VNĐ</p>
+                      </div>
                       <div className="text-slate-500 text-xs">
                         <span>Bán: 1k</span>
                       </div>
@@ -280,7 +292,7 @@ function MenuPage() {
               </div>
             </SwiperSlide>
             <SwiperSlide>
-              <div className="pe-5">
+              <div className="md:pe-5 pe-3">
                 <Badge.Ribbon text="15% Off" color="red">
                   <div className="px-2 py-5 rounded-md border text-left flex items-center justify-evenly">
                     <div>
@@ -293,8 +305,10 @@ function MenuPage() {
                     </div>
                     <div>
                       <h6 className="font-semibold">Gà rán</h6>
-                      <h6 className="text-main font-semibold  whitespace-nowrap">20000 VNĐ</h6>
-                      <h6 className="text-gray-400 font-semibold line-through whitespace-nowrap">70000 VNĐ</h6>
+                      <div className="my-1">
+                        <h6 className="text-main font-semibold  whitespace-nowrap">20000 VNĐ</h6>
+                        <p className="text-gray-400 font-semibold line-through whitespace-nowrap text-xs">70000 VNĐ</p>
+                      </div>
                       <div className="text-slate-500 text-xs">
                         <span>Bán: 1k</span>
                       </div>
