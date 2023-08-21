@@ -156,6 +156,7 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
                       </Form.Item>
                       <Form.Item
                         {...field}
+                        key={[field.name, `quantity`]}
                         label="Số lượng"
                         name={[field.name, "quantity"]}
                         rules={[{ required: true, message: "Nhập số lượng nguyên liệu hoặc xóa" }]}
