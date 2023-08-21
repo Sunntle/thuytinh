@@ -9,6 +9,12 @@ const Order = db.sequelize.define("orders", {
     autoIncrement: true,
     primaryKey: true,
   },
+  name: {
+    type: DataTypes.STRING,
+  },
+  phone: {
+    type: DataTypes.INTEGER,
+  },
   payment: {
     type: DataTypes.STRING,
   },
@@ -24,6 +30,9 @@ const Order = db.sequelize.define("orders", {
   id_table: {
     type: DataTypes.INTEGER,
   },
-});
+  date_order: {
+    type: "TIMESTAMP",
+  }
+}, { timestamps: true });
 Order.sync();
 module.exports = Order;

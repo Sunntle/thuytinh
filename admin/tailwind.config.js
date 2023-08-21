@@ -14,5 +14,7 @@ export default {
       'sm': '640px',
     },
   },
-  plugins: [],
+  corePlugins: {
+    preflight: false // <== disable this!
+  },
 };
