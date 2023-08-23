@@ -12,9 +12,9 @@ export default {
     screens: {
       'xs': '320px',
       'sm': '640px',
-    },
+    }
   },
   corePlugins: {
-    preflight: false // <== disable this!
+    preflight: false
   },
 };

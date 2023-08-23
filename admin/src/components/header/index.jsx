@@ -28,7 +28,7 @@ function HeaderComponent() {
       <div className="hidden md:block">
         <SearchComponent background={"bg-secondaryColor"} maxWidth={"max-w-md"} textColor={true} />
       </div>
-      <Dropdown menu={menuProps}>
+      <Dropdown menu={menuProps} trigger={['click']}>
         <ButtonComponents
           sizeIconBefore={"text-lg"}
           sizeIconAfter={"text-xs"}

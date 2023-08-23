@@ -30,7 +30,7 @@ const LayoutMain = () => {
             </header>
             <main className='main_area'>
                 <Layout className='layout_area' >
-                    <Sider width={311} className='layout_area_sider ' collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                    <Sider width={250} className='layout_area_sider ' collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                         <Menu defaultSelectedKeys={pathname} theme='light' mode="inline" items={items} onClick={onClick} />
                     </Sider>
                     <Layout className='bg-white'>
