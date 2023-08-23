@@ -3,14 +3,15 @@ import ButtonComponents from "../button";
 import { DownOutlined, LogoutOutlined, RightOutlined, UserOutlined } from "@ant-design/icons";
 import { Dropdown } from "antd";
 import { useState } from "react";
-const items = [
-  {
-    label: "Thoát",
-    key: "1",
-    icon: <LogoutOutlined />,
-  },
-];
+
 function HeaderComponent() {
+  const items = [
+    {
+      label: "Thoát",
+      key: "1",
+      icon: <LogoutOutlined />,
+    },
+  ];
   const [icon, setIcon] = useState(false);
   const handleMenuClick = (e) => {
     console.log("click", e);
@@ -28,7 +29,7 @@ function HeaderComponent() {
       <div className="hidden md:block">
         <SearchComponent background={"bg-secondaryColor"} maxWidth={"max-w-md"} textColor={true} />
       </div>
-      <Dropdown menu={menuProps} trigger={['click']}>
+      <Dropdown menu={menuProps} trigger={["click"]}>
         <ButtonComponents
           sizeIconBefore={"text-lg"}
           sizeIconAfter={"text-xs"}
