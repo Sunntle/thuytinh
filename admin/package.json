@@ -12,9 +12,11 @@
   "dependencies": {
     "@ant-design/icons": "^5.2.5",
     "antd": "^5.8.3",
+    "apexcharts": "^3.41.1",
     "axios": "^1.4.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
     "react-router-dom": "^6.15.0",

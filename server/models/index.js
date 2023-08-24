@@ -14,9 +14,16 @@ ImageProduct.belongsTo(Product, { foreignKey: "id_product" });
 Materials.hasMany(Recipes, { foreignKey: "id_material", sourceKey: "id" });
 Recipes.belongsTo(Product, { foreignKey: "id_product" });
 Recipes.belongsTo(Materials, { foreignKey: "id_material" });
-Order.belongsTo(User, { foreignKey: "id_user" });
-User.hasMany(Order, { foreignKey: "id_user", sourceKey: "id" });
+
+
 Order.hasMany(OrderDetail, { foreignKey: "id_order" });
 OrderDetail.belongsTo(Order, { foreignKey: "id_order" });
-OrderDetail.belongsTo(Product, { foreignKey: "id_product" });
+OrderDetail.belongsTo(Product, { foreignKey: "id_product", as: 'product' });
+
+User.hasMany(Order, { sourceKey: "id", foreignKey: "id_user", as: "ordersByUser" });
+User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee", as: "ordersByEmployee" });
+
+Order.belongsTo(User, { foreignKey: "id_employee", as: "employee" });
+Order.belongsTo(User, { foreignKey: "id_user", as: "user" });
+
 module.exports = { User, Order, Category, Product, ImageProduct, Recipes, Materials, OrderDetail };
