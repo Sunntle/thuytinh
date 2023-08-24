@@ -1,6 +1,6 @@
-import { Button, Form, Input, InputNumber, Modal, Radio, Select, Space } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Radio, Select, Space, Upload } from "antd";
 import ButtonComponents from "../../../components/button";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 const { Option } = Select;
 
 function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) {
@@ -32,9 +32,50 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
       console.error("Form validation error:", error);
     }
   };
+  const fileList = [
+    {
+      uid: "0",
+      name: "xxx.png",
+      status: "uploading",
+      percent: 33,
+    },
+    {
+      uid: "-1",
+      name: "yyy.png",
+      status: "done",
+      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+      thumbUrl: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    },
+    {
+      uid: "-2",
+      name: "zzz.png",
+      status: "error",
+    },
+  ];
+  const customUpload = async ({ file, onSuccess, onError }) => {
+    console.log(2);
+    await new Promise((resolve) => {
+      return setTimeout(resolve, 2000); //handleuploadFile -> return url
+    });
+    onSuccess(file); //url
+    console.log("File uploaded successfully:", file);
+    if (onError) throw new Error(onError);
+  };
+  const handleRemove = async (file) => {
+    console.log(file);
+  };
+  const props = {
+    // action: "http://localhost:8000/api/image",
+    // name: "Image",
+    customRequest: customUpload,
+    onRemove: handleRemove,
+    showUploadList: true,
+    multiple: true,
+    fileList,
+  };
+
   return (
     <Modal
-      title="Thêm món ăn mới"
       open={open}
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
@@ -59,6 +100,7 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
       centered
     >
       <Form form={form} onFinish={handleFinish} initialValues={initialValues} className="mt-8">
+        <h3 className="font-semibold mb-8 text-main text-lg">Thêm thông tin món ăn</h3>
         <Form.Item
           name="name_product"
           label="Tên món ăn"
@@ -124,7 +166,7 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
         <Form.Item name="content" label="Mô tả">
           <Input.TextArea />
         </Form.Item>
-        <h3 className="font-semibold mb-8">Thêm công thức món ăn</h3>
+        <h3 className="font-semibold mb-8 mt-7 text-main text-lg">Thêm công thức món ăn</h3>
         <Form.Item name="descriptionRecipe" label="Mô tả công thức">
           <Input.TextArea />
         </Form.Item>
@@ -178,6 +220,10 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
             </>
           )}
         </Form.List>
+        <h3 className="font-semibold mb-8 mt-7 text-main text-lg">Thêm hình ảnh món ăn</h3>
+        <Upload {...props} listType="picture">
+          <Button icon={<UploadOutlined />}>Upload</Button>
+        </Upload>
       </Form>
     </Modal>
   );
