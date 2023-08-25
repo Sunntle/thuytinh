@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import BookingPage from "../pages/BookingPage";
 import ChooseTablePage from "../pages/ChooseTablePage";
+import LoginPage from "../pages/LoginPage";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -12,6 +14,10 @@ const router = createBrowserRouter([
       {
         path: "table",
         element: <ChooseTablePage />,
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
       },
     ],
   },

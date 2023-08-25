@@ -2,6 +2,7 @@ import { Tabs } from "antd";
 import { FiUsers, FiX } from "react-icons/fi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 const { TabPane } = Tabs;
 
@@ -9,7 +10,7 @@ const ChooseTablePage = () => {
   const [showSidebar, setShowSidebar] = useState(false);
 
   const handleTableUseClick = () => {
-    setShowSidebar(true);
+    setShowSidebar(!showSidebar);
   };
 
   const items = [
@@ -74,7 +75,14 @@ const ChooseTablePage = () => {
         </div>
       </div>
       {/* sidebar tablet */}
-      <div
+      <motion.div
+        variants={{
+          hidden: { x: "25%" },
+          visible: { x: 0 },
+        }}
+        initial="hidden"
+        animate={showSidebar ? "visible" : "hidden"}
+        transition={{ duration: 0.1, damping: 20 }}
         className={`w-1/4 bg-white h-screen p-5 shadow-md transition-all duration-300 ${tabletSidebarClass}`}
       >
         <div className="flex justify-end">
@@ -99,10 +107,17 @@ const ChooseTablePage = () => {
             Tiếp tục chọn món
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* sidebar mobile */}
-      <div
+      <motion.div
+        variants={{
+          hidden: { y: "100%" },
+          visible: { y: 0 },
+        }}
+        initial="hidden"
+        animate={showSidebar ? "visible" : "hidden"}
+        transition={{ duration: 0.1, damping: 60 }}
         className={`w-full h-1/2 bg-white p-5 transition-all duration-300 ${mobileSidebarClass}`}
       >
         <div className="flex justify-end">
@@ -119,7 +134,7 @@ const ChooseTablePage = () => {
           <span className="text-base font-normal">Số lượng: 1</span>
         </div>
         <div className="flex justify-center space-x-3 absolute bottom-0 left-0 w-full p-5">
-          <button className="w-2/3 hover:bg-red-700 transition-colors duration-300 p-2 bg-red-600 text-white rounded focus:outline-none focus:ring focus:ring-red-600 flex items-center">
+          <button className="w-2/3 hover:bg-red-700 transition-colors duration-300 p-2 bg-red-600 text-white rounded focus:outline-none focus:ring focus:ring-red-600 flex items-center justify-center">
             <AiOutlineShoppingCart className="w-4 h-4 mr-1" />
             Thanh toán
           </button>
@@ -127,7 +142,7 @@ const ChooseTablePage = () => {
             Tiếp tục chọn món
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
