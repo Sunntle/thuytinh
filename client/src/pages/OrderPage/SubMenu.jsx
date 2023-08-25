@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { HiChevronRight } from "react-icons/hi2";
 import { motion } from "framer-motion";
+import useHttp from "../../hooks/useHttp.js";
 
 const SubMenu = ({ data, index }) => {
   const [activeKey, setActiveKey] = useState(null);
-
+  const { sendRequest } = useHttp();
   const initialMotion = {
     open: {
       x: 0,
@@ -21,6 +22,16 @@ const SubMenu = ({ data, index }) => {
       },
     },
   };
+
+  const fetchProductById = async (categoryId) => {
+    const request = {
+      method: 'get',
+      url: `/product/category/${categoryId}`
+    }
+    sendRequest(request, (responseData) => {
+      console.log(responseData)
+    })
+  }
 
   return (
     <div className="flex flex-col space-y-3 w-full px-1 mb-5">
@@ -46,9 +57,9 @@ const SubMenu = ({ data, index }) => {
         >
           <div className="flex flex-col space-y-5 ml-10">
             {data?.menus?.map((menu, index) => (
-              <div key={index} className="relative">
+              <div onTouchStart={() => fetchProductById(menu._id)} key={index} className="relative">
                 <span className="text-xl font-medium after:absolute after:-bottom-1 after:left-0 after:w-full after:border-b active:text-primary active:after:border-primary">
-                  {menu}
+                  {menu.name}
                 </span>
               </div>
             ))}

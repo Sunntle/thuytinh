@@ -1,0 +1,23 @@
+const { ImageProduct } = require("../models");
+const { Op } = require("sequelize");
+const cloudinary = require("cloudinary").v2;
+exports.addNew = async (req, res) => {
+  try {
+    const images = req.files;
+    const data = images.map((file) => ({
+      url: file.path.replace("/upload/", "/upload/w_400,h_300/"),
+    }));
+    res.status(201).json(data);
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+exports.removeImgByUrl = async (req, res) => {
+  try {
+    const public_id = req.query.url.split("/").at(-1).split(".")[0];
+    await cloudinary.uploader.destroy("NhaHangThuyTinh/" + public_id);
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

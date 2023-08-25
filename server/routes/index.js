@@ -15,5 +15,6 @@ const initRoutes = (app) => {
   app.use("/api/order", orderRouter);
   app.use("/api/table", tableRouter)
   app.use(notFound, errHandler)
+  app.use("/api/image", imageRouter);
 };
 module.exports = initRoutes;

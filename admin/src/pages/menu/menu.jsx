@@ -4,18 +4,22 @@ import ButtonComponents from "../../components/button";
 import { UpCircleFilled } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddNewMenu from "./add";
+import { addNewProduct, getAllCate, getAllMaterial } from "../../services/api";
 function MenuPage() {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [materials, setMaterials] = useState([]);
   const showModal = () => {
     setOpen(true);
   };
-  const handleDataForm = (value) => {
+  const handleDataForm = async (value) => {
     setConfirmLoading(true);
     try {
-      console.log(value);
+      const res = await addNewProduct(value);
+      console.log(res);
     } catch (err) {
       console.log(err);
     } finally {
@@ -25,6 +29,15 @@ function MenuPage() {
   const handleCancel = () => {
     setOpen(false);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const resCate = await getAllCate();
+      const resMate = await getAllMaterial();
+      setCategories(resCate);
+      setMaterials(resMate);
+    };
+    fetchData();
+  }, []);
   return (
     <div className="my-7 px-5">
       <Row justify="space-between" align="center" className="mb-4">
@@ -71,76 +84,16 @@ function MenuPage() {
               },
             }}
           >
-            <SwiperSlide>
-              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
-                <img
-                  className="w-full mb-3"
-                  src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
-                  alt=""
-                />
-                <h6 className="font-semibold">Gà rán</h6>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
-                <img
-                  className="w-full mb-3"
-                  src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
-                  alt=""
-                />
-                <h6 className="font-semibold">Gà rán</h6>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
-                <img
-                  className="w-full mb-3"
-                  src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
-                  alt=""
-                />
-                <h6 className="font-semibold">Gà rán</h6>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
-                <img
-                  className="w-full mb-3"
-                  src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
-                  alt=""
-                />
-                <h6 className="font-semibold">Gà rán</h6>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
-                <img
-                  className="w-full mb-3"
-                  src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
-                  alt=""
-                />
-                <h6 className="font-semibold">Gà rán</h6>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
-                <img
-                  className="w-full mb-3"
-                  src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
-                  alt=""
-                />
-                <h6 className="font-semibold">Gà rán</h6>
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
-                <img
-                  className="w-full mb-3"
-                  src="https://png.pngtree.com/png-clipart/20220616/original/pngtree-digital-illustration-and-vector-clip-art-of-fried-chicken-drumstick-free-png-image_8089938.png"
-                  alt=""
-                />
-                <h6 className="font-semibold">Gà rán</h6>
-              </div>
-            </SwiperSlide>
+            {categories?.map((category, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <div className="px-5 py-3 xl:px-10 xl:py-6 rounded-md border text-center">
+                    <img className="w-full mb-3" src={category.thumbnail} alt="" />
+                    <h6 className="font-semibold">{category.name_category}</h6>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
           </Swiper>
         </div>
       </div>
@@ -323,7 +276,8 @@ function MenuPage() {
       <AddNewMenu
         open={open}
         confirmLoading={confirmLoading}
-        data={"222"}
+        cate={categories}
+        material={materials}
         handleCancel={handleCancel}
         handleFinish={handleDataForm}
       />
