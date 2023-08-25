@@ -1,12 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HiXMark } from "react-icons/hi2";
 import SubMenu from "./SubMenu.jsx";
+import useHttp from "../../hooks/useHttp.js";
 
 const SidebarTablet = () => {
+  const { sendRequest, isLoading, error } = useHttp();
+  const [data, setData] = useState(null);
+  const menus = [];
+
+  useEffect(() => {
+    const request = {
+      method: "get",
+      url: "category",
+    };
+    sendRequest(request, setData);
+  }, [sendRequest]);
+
+  if (data !== null) {
+    data.map((cate) => menus.push({ _id: cate.id, name: cate.name_category }));
+  }
+
   const subMenuList = [
     {
       name: "Món ăn chính",
-      menus: ["Nướng", "Lẩu", "Hấp", "Xào"],
+      menus: menus
     },
     {
       name: "Món ăn kèm",
