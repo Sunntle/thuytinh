@@ -3,8 +3,9 @@ const productRouter = require("./productRoute");
 const categoryRouter = require("./categoryRoute");
 const recipeRouter = require("./recipeRoute");
 const materialsRouter = require("./materialsRoute");
-const orderRouter = require("./orderRouter");
-const imageRouter = require("./imageRoute");
+const orderRouter = require('./orderRouter');
+const tableRouter = require("./tableRoute")
+const { notFound, errHandler } = require('../middlewares/err');
 const initRoutes = (app) => {
   app.use("/api/user", userRouter);
   app.use("/api/product", productRouter);
@@ -12,6 +13,8 @@ const initRoutes = (app) => {
   app.use("/api/recipe", recipeRouter);
   app.use("/api/material", materialsRouter);
   app.use("/api/order", orderRouter);
+  app.use("/api/table", tableRouter)
+  app.use(notFound, errHandler)
   app.use("/api/image", imageRouter);
 };
 module.exports = initRoutes;
