@@ -49,7 +49,7 @@ exports.getDetail = async (req, res) => {
 exports.getByCategory = async (req, res) => {
   try {
     const _id = req.params.id;
-    const response = await Product.findOne({
+    const response = await Product.findAll({
       where: { id_category: _id },
       include: [{ model: ImageProduct, attributes: ["url"] }],
     });
@@ -60,13 +60,12 @@ exports.getByCategory = async (req, res) => {
 };
 exports.addItem = async (req, res) => {
   try {
-    const { recipe, ...rest } = req.body;
-    const images = req.files;
+    const { recipe, img, descriptionRecipe, ...rest } = req.body;
     if (rest.id_category) {
       const response = await Product.create(rest);
-      if (response && images && images.length > 0) {
-        const data = images.map((file) => ({
-          url: file.path.replace("/upload/", "/upload/w_400,h_300/"),
+      if (response && img && img.length > 0) {
+        const data = img.map((file) => ({
+          url: file.url.replace("/upload/", "/upload/w_400,h_300/"),
           id_product: response.id,
         }));
         await ImageProduct.bulkCreate(data);

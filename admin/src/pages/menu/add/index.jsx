@@ -1,40 +1,85 @@
-import { Button, Form, Input, InputNumber, Modal, Radio, Select, Space } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Select, Space, Upload } from "antd";
 import ButtonComponents from "../../../components/button";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { deleteImg, uploadImg } from "../../../services/api";
+import { useState } from "react";
 const { Option } = Select;
 
-function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) {
+function AddNewMenu({ open, confirmLoading, handleCancel, cate, material, handleFinish }) {
+  const [fileList, setFileList] = useState([]);
   const [form] = Form.useForm();
   const optionsStatus = [
     { value: 0, label: "Còn hàng" },
     { value: 1, label: "Hết hàng" },
-  ];
-  const optionsCate = [
-    { value: 0, label: "Lẩu" },
-    { value: 1, label: "Nướng" },
-  ];
-  const optionsTopping = [
-    { value: 0, label: "Không" },
-    { value: 1, label: "Có" },
   ];
   const initialValues = {
     price: 0,
     is_topping: 0,
     status: 0,
   };
-  console.log(data);
+  //   {
+  //     uid: "0",
+  //     name: "xxx.png",
+  //     status: "uploading",
+  //     percent: 33,
+  //   },
+  //   {
+  //     uid: "-1",
+  //     name: "yyy.png",
+  //     status: "done",
+  //     url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+  //     thumbUrl: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+  //   },
+  //   {
+  //     uid: "-2",
+  //     name: "zzz.png",
+  //     status: "error",
+  //   },
+  // ];
   const handleSubmit = async () => {
     try {
       await form.validateFields();
       const formData = await form.getFieldsValue();
-      handleFinish(formData);
+      handleFinish({ ...formData, img: [...fileList] });
     } catch (error) {
       console.error("Form validation error:", error);
     }
   };
+  const customUpload = async ({ file, onError }) => {
+    try {
+      const res = await uploadImg(file);
+      const url = res[0].url;
+      setFileList((prevFileList) => [
+        ...prevFileList,
+        {
+          uid: file.uid,
+          name: file.name,
+          status: "done",
+          url: url,
+        },
+      ]);
+    } catch (error) {
+      if (onError) {
+        onError(error, "ret_placeholder", "parsedFile_placeholder");
+      }
+    }
+  };
+  const handleRemove = async (file) => {
+    const { url } = file;
+    const res = await deleteImg(url);
+    if (res === "OK") setFileList((prev) => prev.filter((item) => item.status !== "removed"));
+  };
+  const props = {
+    customRequest: customUpload,
+    onRemove: handleRemove,
+    showUploadList: true,
+    multiple: true,
+    listType: "picture",
+    fileList,
+  };
+
   return (
     <Modal
-      title="Thêm món ăn mới"
       open={open}
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
@@ -59,6 +104,7 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
       centered
     >
       <Form form={form} onFinish={handleFinish} initialValues={initialValues} className="mt-8">
+        <h3 className="font-semibold mb-8 text-main text-lg">Thêm thông tin món ăn</h3>
         <Form.Item
           name="name_product"
           label="Tên món ăn"
@@ -84,15 +130,6 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
             vnđ
           </span>
         </Form.Item>
-        <Form.Item name="is_topping" label="Đánh dấu là topping">
-          <Radio.Group>
-            {optionsTopping.map((el, index) => (
-              <Radio key={index} value={el.value}>
-                {el.label}
-              </Radio>
-            ))}
-          </Radio.Group>
-        </Form.Item>
         <Form.Item
           name="id_category"
           label="Loại món ăn"
@@ -105,9 +142,9 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
           ]}
         >
           <Select placeholder="Chọn 1 loại món ăn">
-            {optionsCate.map((el, index) => (
-              <Option key={index} value={el.value}>
-                {el.label}
+            {cate?.map((el, index) => (
+              <Option key={index} value={el.id}>
+                {el.name_category}
               </Option>
             ))}
           </Select>
@@ -121,10 +158,10 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name="content" label="Mô tả">
+        <Form.Item name="description" label="Mô tả">
           <Input.TextArea />
         </Form.Item>
-        <h3 className="font-semibold mb-8">Thêm công thức món ăn</h3>
+        <h3 className="font-semibold mb-8 mt-7 text-main text-lg">Thêm công thức món ăn</h3>
         <Form.Item name="descriptionRecipe" label="Mô tả công thức">
           <Input.TextArea />
         </Form.Item>
@@ -147,9 +184,9 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
                         ]}
                       >
                         <Select placeholder="Chọn 1 nguyên liệu cho món ăn">
-                          {optionsCate.map((el, index) => (
-                            <Option key={index} value={el.value}>
-                              {el.label}
+                          {material?.map((el, index) => (
+                            <Option key={index} value={el.id}>
+                              {el.name_material}
                             </Option>
                           ))}
                         </Select>
@@ -178,6 +215,10 @@ function AddNewMenu({ open, confirmLoading, handleCancel, data, handleFinish }) 
             </>
           )}
         </Form.List>
+        <h3 className="font-semibold mb-8 mt-7 text-main text-lg">Thêm hình ảnh món ăn</h3>
+        <Upload {...props}>
+          <Button icon={<UploadOutlined />}>Upload</Button>
+        </Upload>
       </Form>
     </Modal>
   );
