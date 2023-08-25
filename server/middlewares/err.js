@@ -1,4 +1,4 @@
-const notFount = (req, res, next) => {
+const notFound = (req, res, next) => {
     const err = new Error(`Route ${req.originalUrl} not found !`);
     res.status(404)
     next(err)
@@ -10,4 +10,4 @@ const errHandler = (err, req, res, next) => {
         message: err.message
     })
 }
-module.exports = { notFount, errHandler }
+module.exports = { notFound, errHandler }

@@ -6,6 +6,7 @@ const ImageProduct = require("./imageModel");
 const Recipes = require("./recipeModel");
 const Materials = require("./materialsModel");
 const OrderDetail = require("./orderDetailModel");
+const Tables = require('./tableModel');
 Product.hasMany(OrderDetail, { foreignKey: "id_product", onDelete: "CASCADE", onUpdate: "CASCADE" });
 Product.belongsTo(Category, { foreignKey: "id_category", onDelete: "CASCADE", onUpdate: "CASCADE" });
 Product.hasMany(ImageProduct, { foreignKey: "id_product", sourceKey: "id" });
@@ -15,6 +16,11 @@ Materials.hasMany(Recipes, { foreignKey: "id_material", sourceKey: "id" });
 Recipes.belongsTo(Product, { foreignKey: "id_product" });
 Recipes.belongsTo(Materials, { foreignKey: "id_material" });
 
+
+
+
+Order.belongsTo(Tables, { foreignKey: "id_table", onDelete: "CASCADE", onUpdate: "CASCADE" });
+Tables.hasMany(Order, { sourceKey: "id", foreignKey: "id_table", onDelete: "CASCADE", onUpdate: "CASCADE" });
 
 Order.hasMany(OrderDetail, { foreignKey: "id_order" });
 OrderDetail.belongsTo(Order, { foreignKey: "id_order" });
@@ -26,4 +32,4 @@ User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee", as: "ordersByE
 Order.belongsTo(User, { foreignKey: "id_employee", as: "employee" });
 Order.belongsTo(User, { foreignKey: "id_user", as: "user" });
 
-module.exports = { User, Order, Category, Product, ImageProduct, Recipes, Materials, OrderDetail };
+module.exports = { Tables, User, Order, Category, Product, ImageProduct, Recipes, Materials, OrderDetail };
