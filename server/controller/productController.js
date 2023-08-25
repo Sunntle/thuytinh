@@ -49,7 +49,7 @@ exports.getDetail = async (req, res) => {
 exports.getByCategory = async (req, res) => {
   try {
     const _id = req.params.id;
-    const response = await Product.findOne({
+    const response = await Product.findAll({
       where: { id_category: _id },
       include: [{ model: ImageProduct, attributes: ["url"] }],
     });
