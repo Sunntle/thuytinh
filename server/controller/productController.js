@@ -73,6 +73,7 @@ exports.addItem = async (req, res) => {
       if (response && recipe) {
         const dataRecipe = recipe.map((el) => ({
           ...el,
+          id_material: el.materials,
           id_product: response.id,
         }));
         await Recipes.bulkCreate(dataRecipe);

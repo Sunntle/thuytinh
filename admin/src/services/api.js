@@ -36,3 +36,6 @@ export const deleteImg = (url) => {
 export const getAllMaterial = (params) => {
   return axios.get(`/api/material`, { params });
 };
+export const addNewMaterial = (data) => {
+  return axios.post(`/api/material`, data);
+};

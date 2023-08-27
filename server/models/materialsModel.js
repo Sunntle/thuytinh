@@ -21,6 +21,9 @@ const Materials = db.sequelize.define(
     unit: {
       type: DataTypes.STRING,
     },
+    image: {
+      type: DataTypes.STRING(1000),
+    },
   },
   {}
 );

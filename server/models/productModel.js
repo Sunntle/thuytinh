@@ -23,6 +23,10 @@ const Product = db.sequelize.define(
     id_category: {
       type: DataTypes.INTEGER,
     },
+    sold: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   },
   {}
 );
