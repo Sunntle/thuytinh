@@ -1,23 +1,12 @@
-import { Col, Dropdown, Row } from "antd";
+import { Col, Row, message } from "antd";
 import SearchComponent from "../../components/search";
 import ButtonComponents from "../../components/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table } from "antd";
+import ConfirmComponent from "../../components/confirm";
+import { addNewProduct, getAllCate, getAllMaterial } from "../../services/api";
+import AddNewProduct from "./add";
 
-const onMenuClick = (e, record) => {
-  console.log("click", e, record);
-};
-
-const items = [
-  {
-    key: "1",
-    label: "Edit",
-  },
-  {
-    key: "2",
-    label: "Delete",
-  },
-];
 const columns = [
   {
     title: "Mã món",
@@ -66,22 +55,12 @@ const columns = [
     title: "#",
     key: "action",
     render: (_, record) => (
-      <Dropdown
-        menu={{
-          items,
-          onClick: (e) => onMenuClick(e, record),
-        }}
-        trigger={["click"]}
-      >
-        <a
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-          className="text-3xl"
-        >
-          ...
-        </a>
-      </Dropdown>
+      <div className="h-10 flex items-center cursor-pointer">
+        <span className="bg-orange-500 px-4 rounded-md py-2 text-white">Sửa</span>
+        <ConfirmComponent title="Xác nhận xóa đơn hàng" confirm={() => console.log(record.id)}>
+          Xóa
+        </ConfirmComponent>
+      </div>
     ),
   },
 ];
@@ -119,12 +98,44 @@ const data = [
     status: 1,
   },
 ];
+
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 function ProductPage() {
   const [open, setOpen] = useState(false);
-  //   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [materials, setMaterials] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const resCate = await getAllCate();
+      const resMate = await getAllMaterial();
+      setCategories(resCate);
+      setMaterials(resMate);
+    };
+    fetchData();
+  }, []);
+  const handleDataForm = async (value) => {
+    setConfirmLoading(true);
+    try {
+      const res = await addNewProduct(value);
+      if (res) {
+        setOpen(false);
+        message.open({
+          type: "success",
+          content: "Thêm món ăn mới thành công!",
+        });
+      }
+    } catch (err) {
+      message.open({ type: "error", content: "Có gì đó không ổn!" });
+    } finally {
+      setConfirmLoading(false);
+    }
+  };
+  const handleCancel = () => {
+    setOpen(false);
+  };
   return (
     <div className="my-7 px-5">
       <Row justify="space-between" align="center" className="mb-4">
@@ -141,6 +152,14 @@ function ProductPage() {
         </Col>
       </Row>
       <Table columns={columns} dataSource={data} onChange={onChange} />
+      <AddNewProduct
+        open={open}
+        confirmLoading={confirmLoading}
+        cate={categories}
+        material={materials.data}
+        handleCancel={handleCancel}
+        handleFinish={handleDataForm}
+      />
     </div>
   );
 }

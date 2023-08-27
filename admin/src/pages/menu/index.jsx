@@ -1,57 +1,23 @@
-import { Badge, Col, Row } from "antd";
+import { Badge, Row } from "antd";
 import SearchComponent from "../../components/search";
-import ButtonComponents from "../../components/button";
 import { UpCircleFilled } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import AddNewMenu from "./add";
-import { addNewProduct, getAllCate, getAllMaterial } from "../../services/api";
+import { getAllCate } from "../../services/api";
 function MenuPage() {
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [materials, setMaterials] = useState([]);
-  const showModal = () => {
-    setOpen(true);
-  };
-  const handleDataForm = async (value) => {
-    setConfirmLoading(true);
-    try {
-      const res = await addNewProduct(value);
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setConfirmLoading(false);
-    }
-  };
-  const handleCancel = () => {
-    setOpen(false);
-  };
   useEffect(() => {
     const fetchData = async () => {
       const resCate = await getAllCate();
-      const resMate = await getAllMaterial();
       setCategories(resCate);
-      setMaterials(resMate);
     };
     fetchData();
   }, []);
   return (
     <div className="my-7 px-5">
       <Row justify="space-between" align="center" className="mb-4">
-        <Col xs={6}>
-          <SearchComponent background={"bg-transparent"} size="medium"></SearchComponent>
-        </Col>
-        <Col xs={6} style={{ textAlign: "-webkit-right" }}>
-          <ButtonComponents
-            borderColor={"border-borderSecondaryColor"}
-            backgroundColor={"bg-secondaryColor"}
-            content={"Thêm mới"}
-            onClick={showModal}
-          />
-        </Col>
+        <SearchComponent background={"bg-transparent"} size="medium" maxWidth="max-w-sm"></SearchComponent>
       </Row>
       <div className="mb-4">
         <div className="flex justify-between items-center">
@@ -273,14 +239,6 @@ function MenuPage() {
           </Swiper>
         </div>
       </div>
-      <AddNewMenu
-        open={open}
-        confirmLoading={confirmLoading}
-        cate={categories}
-        material={materials}
-        handleCancel={handleCancel}
-        handleFinish={handleDataForm}
-      />
     </div>
   );
 }
