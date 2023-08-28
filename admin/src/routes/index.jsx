@@ -5,6 +5,7 @@ import MenuPage from "../pages/menu";
 import OrderPage from "../pages/Order";
 import ProductPage from "../pages/product";
 import MaterialPage from "../pages/material";
+import CategoryPage from "../pages/category";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "material",
         element: <MaterialPage />,
+      },
+      {
+        path: "category",
+        element: <CategoryPage />,
       },
     ],
   },
