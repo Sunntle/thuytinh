@@ -6,8 +6,7 @@ const materialsRouter = require("./materialsRoute");
 const orderRouter = require('./orderRouter');
 const tableRouter = require("./tableRoute");
 const imageRouter = require('./imageRoute');
-
-const { notFound, errHandler } = require('../middlewares/err');
+const { notFound, errHandler } = require("../middlewares/err");
 const initRoutes = (app) => {
   app.use("/api/user", userRouter);
   app.use("/api/product", productRouter);

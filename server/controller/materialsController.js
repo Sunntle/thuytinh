@@ -10,8 +10,8 @@ exports.list = async (req, res) => {
     if (_offset) query.offset = +_offset;
     if (q) query.where = { name_product: { [Op.like]: `%${q}%` } };
     if (_sort) query.order = [[_sort, _order]];
-    const response = await Materials.findAll(query);
-    res.status(200).json(response);
+    const { count, rows } = await Materials.findAndCountAll(query);
+    res.status(200).json({ total: count, data: rows });
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }

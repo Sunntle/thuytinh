@@ -1,11 +1,11 @@
-import { Button, Form, Input, InputNumber, Modal, Select, Space, Upload } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Select, Space, Upload, message } from "antd";
 import ButtonComponents from "../../../components/button";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { deleteImg, uploadImg } from "../../../services/api";
 import { useState } from "react";
 const { Option } = Select;
 
-function AddNewMenu({ open, confirmLoading, handleCancel, cate, material, handleFinish }) {
+function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, handleFinish }) {
   const [fileList, setFileList] = useState([]);
   const [form] = Form.useForm();
   const optionsStatus = [
@@ -14,7 +14,6 @@ function AddNewMenu({ open, confirmLoading, handleCancel, cate, material, handle
   ];
   const initialValues = {
     price: 0,
-    is_topping: 0,
     status: 0,
   };
   //   {
@@ -41,6 +40,7 @@ function AddNewMenu({ open, confirmLoading, handleCancel, cate, material, handle
       await form.validateFields();
       const formData = await form.getFieldsValue();
       handleFinish({ ...formData, img: [...fileList] });
+      form.resetFields();
     } catch (error) {
       console.error("Form validation error:", error);
     }
@@ -67,7 +67,12 @@ function AddNewMenu({ open, confirmLoading, handleCancel, cate, material, handle
   const handleRemove = async (file) => {
     const { url } = file;
     const res = await deleteImg(url);
-    if (res === "OK") setFileList((prev) => prev.filter((item) => item.status !== "removed"));
+    if (res === "OK") {
+      setFileList((prev) => prev.filter((item) => item.status !== "removed"));
+      message.open({ type: "success", content: "Xóa hình ảnh thành công" });
+    } else {
+      message.open({ type: "error", content: "Có gì đó sai sai !" });
+    }
   };
   const props = {
     customRequest: customUpload,
@@ -224,4 +229,4 @@ function AddNewMenu({ open, confirmLoading, handleCancel, cate, material, handle
   );
 }
 
-export default AddNewMenu;
+export default AddNewProduct;

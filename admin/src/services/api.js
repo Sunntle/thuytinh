@@ -50,3 +50,6 @@ export const getCate = () => {
 export const delCate = (id) => {
   return axios.delete(`/api/category/` + id);
 };
+export const addNewMaterial = (data) => {
+  return axios.post(`/api/material`, data);
+};

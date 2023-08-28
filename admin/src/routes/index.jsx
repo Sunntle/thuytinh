@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import LayoutMain from "../Layout";
 import DashBoard from "../pages/DashBoard";
-import MenuPage from "../pages/menu/menu";
+import MenuPage from "../pages/menu";
 import OrderPage from "../pages/Order";
-import ProductPage from "../pages/product/product";
+import ProductPage from "../pages/product";
+import MaterialPage from "../pages/material";
 import CategoryPage from "../pages/category";
 const router = createBrowserRouter([
   {
@@ -21,16 +22,19 @@ const router = createBrowserRouter([
       {
         path: "order",
         element: <OrderPage />,
-
       },
       {
         path: "product",
-        element: <ProductPage />
+        element: <ProductPage />,
+      },
+      {
+        path: "material",
+        element: <MaterialPage />,
       },
       {
         path: "category",
-        element: <CategoryPage />
-      }
+        element: <CategoryPage />,
+      },
     ],
   },
 ]);
