@@ -1,5 +1,6 @@
 const { Category, Product } = require("../models");
 const { Op } = require("sequelize");
+const { destroyImg } = require("../utils/cloud");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -16,7 +17,9 @@ exports.list = async (req, res) => {
 };
 exports.addCate = async (req, res) => {
   try {
-    const response = await Category.create(req.body);
+    const thumbnail = req.file.path.replace("/upload/", "/upload/w_400,h_300/");
+    const data = { thumbnail, ...req.body };
+    const response = await Category.create(data);
     res.status(201).json(response);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
@@ -24,10 +27,19 @@ exports.addCate = async (req, res) => {
 };
 exports.updateCate = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const response = await Category.update(req.body, {
-      where: { id: _id },
-    });
+    const { id, ...rest } = req.body;
+    const thumbnail = req?.file?.path?.replace("/upload/", "/upload/w_400,h_300/");
+    if (thumbnail) {
+      const data = { thumbnail, ...rest };
+      await Category.update(data, {
+        where: { id }
+      });
+    } else {
+      await Category.update(rest, {
+        where: { id }
+      });
+    }
+
     res.status(200).json("Cập nhật danh mục thành công !");
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
@@ -35,9 +47,11 @@ exports.updateCate = async (req, res) => {
 };
 exports.removeCate = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const response = await Category.destroy({
-      where: { id: _id },
+    const id = req.params.id;
+    const re = await Category.findByPk(id, { raw: true });
+    await destroyImg(re.thumbnail);
+    await Category.destroy({
+      where: { id },
       include: [{ model: Product }],
     });
     res.status(200).json("Xóa danh mục thành công");
