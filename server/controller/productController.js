@@ -1,4 +1,4 @@
-const { Product, ImageProduct, Recipes } = require("../models");
+const { Product, ImageProduct, Recipes, Category } = require("../models");
 const { Op, Sequelize } = require("sequelize");
 const Materials = require("../models/materialsModel");
 exports.list = async (req, res) => {
@@ -7,7 +7,22 @@ exports.list = async (req, res) => {
     const subquery = `(SELECT GROUP_CONCAT(url SEPARATOR ';') FROM ImageProducts AS ip WHERE ip.id_product = Product.id)`;
     const query = {
       raw: true,
-      attributes: ["id", "name_product", "price", "description", "status", [Sequelize.literal(subquery), "imageUrls"]],
+      attributes: [
+        "id",
+        "name_product",
+        "price",
+        "description",
+        "status",
+        "sold",
+        [Sequelize.literal(subquery), "imageUrls"],
+        [Sequelize.literal("`Category`.`name_category`"), "categoryName"],
+      ],
+      include: [
+        {
+          model: Category,
+          attributes: [],
+        },
+      ],
     };
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
@@ -60,17 +75,18 @@ exports.getByCategory = async (req, res) => {
 };
 exports.addItem = async (req, res) => {
   try {
-    const { recipe, img, descriptionRecipe, ...rest } = req.body;
+    const { recipe, descriptionRecipe, ...rest } = req.body;
+    const img = req.files;
     if (rest.id_category) {
       const response = await Product.create(rest);
       if (response && img && img.length > 0) {
         const data = img.map((file) => ({
-          url: file.url.replace("/upload/", "/upload/w_400,h_300/"),
+          url: file.path.replace("/upload/", "/upload/w_400,h_300/"),
           id_product: response.id,
         }));
         await ImageProduct.bulkCreate(data);
       }
-      if (response && recipe) {
+      if (response && recipe != "undefined") {
         const dataRecipe = recipe.map((el) => ({
           ...el,
           id_material: el.materials,

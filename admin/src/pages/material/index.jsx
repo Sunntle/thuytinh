@@ -99,9 +99,18 @@ function MaterialPage() {
     fetchData();
   }, []);
   const handleDataForm = async (value) => {
-    setConfirmLoading(true);
     try {
-      const res = await addNewMaterial(value);
+      const formData = new FormData();
+      for (const item of Object.entries(value)) {
+        if (item[0] == "Image") {
+          item[1].forEach((file) => {
+            formData.append("Image", file.originFileObj);
+          });
+        } else {
+          formData.append(item[0], item[1]);
+        }
+      }
+      const res = await addNewMaterial(formData);
       if (res) {
         message.open({
           type: "success",

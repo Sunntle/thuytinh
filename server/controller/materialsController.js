@@ -30,7 +30,11 @@ exports.getDetail = async (req, res) => {
 };
 exports.addMaterial = async (req, res) => {
   try {
-    const response = await Materials.create(req.body);
+    const img = req.file;
+    const response = await Materials.create({
+      ...req.body,
+      image: img.path.replace("/upload/", "/upload/w_400,h_300/"),
+    });
     res.status(201).json(response);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
