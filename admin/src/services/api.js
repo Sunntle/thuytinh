@@ -36,3 +36,17 @@ export const deleteImg = (url) => {
 export const getAllMaterial = (params) => {
   return axios.get(`/api/material`, { params });
 };
+
+//category//
+export const addCate = (body) => {
+  return axios.post(`/api/category`, body);
+};
+export const editCate = (body) => {
+  return axios.put(`/api/category`, body);
+};
+export const getCate = () => {
+  return axios.get(`/api/category`);
+};
+export const delCate = (id) => {
+  return axios.delete(`/api/category/` + id);
+};

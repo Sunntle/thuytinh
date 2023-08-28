@@ -4,6 +4,7 @@ import DashBoard from "../pages/DashBoard";
 import MenuPage from "../pages/menu/menu";
 import OrderPage from "../pages/Order";
 import ProductPage from "../pages/product/product";
+import CategoryPage from "../pages/category";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "product",
         element: <ProductPage />
+      },
+      {
+        path: "category",
+        element: <CategoryPage />
       }
     ],
   },
