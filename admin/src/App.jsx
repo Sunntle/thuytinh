@@ -1,8 +1,18 @@
-import { RouterProvider } from "react-router-dom";
-import router from "./routes";
-import "./app.scss";
+
+import { fetchAccount } from "./redux/account/accountSlice";
 import { ConfigProvider as ConfigProviderAntd } from "antd";
+import { RouterProvider } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import router from "./routes";
+
+import { useEffect } from "react";
+import "./app.scss";
+
 const App = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAccount());
+  }, []);
   return (
     <ConfigProviderAntd
       theme={{
@@ -10,8 +20,8 @@ const App = () => {
           Button: {
             colorPrimary: "#FC8019",
             algorithm: true,
-          },
-        },
+          }
+        }
       }}
     >
       <RouterProvider router={router} />

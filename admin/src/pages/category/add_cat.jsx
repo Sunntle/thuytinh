@@ -7,7 +7,7 @@ const optionsStatus = [
     { value: 0, label: "Ẩn" },
     { value: 1, label: "Hiện" },
 ];
-const CreateCategory = ({ openModal, setOpenModal, handleCancel, fetchData }) => {
+const CreateCategory = ({ openModal, handleCancel, fetchData }) => {
 
     const onFinish = async (values) => {
         const formData = new FormData();

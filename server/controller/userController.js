@@ -40,14 +40,11 @@ exports.login = asyncHandler(async (req, res) => {
     })
     res.cookie('refreshToken', newrefreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 })
     return res.status(200).json({
-      success: true,
-      data: {
-        accessToken,
-        userAcc
-      }
+      accessToken,
+      account: user
     })
   } else {
-    return res.status(401).json({ success: false, message: 'Lỗi thông tin tài khoản' });
+    return res.status(401).json('Lỗi thông tin tài khoản');
   }
 });
 exports.getAllUser = asyncHandler(async (req, res) => {
@@ -114,10 +111,7 @@ exports.currentAccount = asyncHandler(async (req, res) => {
   const id = req.user.id;
   const ru = await User.findByPk(id);
   const { createdAt, updatedAt, refreshToken, password, ...userAcc } = ru.toJSON();
-  if (ru) return res.status(200).json({
-    success: true,
-    data: userAcc
-  })
+  if (ru) return res.status(200).json(userAcc)
   res.status(404).json({ success: false })
 });
 exports.logout = asyncHandler(async (req, res) => {

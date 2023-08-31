@@ -1,6 +1,6 @@
 const { Category, Product } = require("../models");
 const { Op } = require("sequelize");
-const { destroyImg } = require("../utils/cloud");
+
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -32,7 +32,8 @@ exports.updateCate = async (req, res) => {
     if (thumbnail) {
       const data = { thumbnail, ...rest };
       await Category.update(data, {
-        where: { id }
+        where: { id },
+        individualHooks: true
       });
     } else {
       await Category.update(rest, {
@@ -48,11 +49,10 @@ exports.updateCate = async (req, res) => {
 exports.removeCate = async (req, res) => {
   try {
     const id = req.params.id;
-    const re = await Category.findByPk(id, { raw: true });
-    await destroyImg(re.thumbnail);
     await Category.destroy({
       where: { id },
       include: [{ model: Product }],
+      individualHooks: true
     });
     res.status(200).json("Xóa danh mục thành công");
   } catch (err) {

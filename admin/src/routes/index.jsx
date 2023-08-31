@@ -1,15 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
-import LayoutMain from "../Layout";
+import LayoutAdmin from "../Layout/admin";
+import LayoutEmployee from '../Layout/employee';
+
 import DashBoard from "../pages/DashBoard";
 import MenuPage from "../pages/menu";
 import OrderPage from "../pages/Order";
 import ProductPage from "../pages/product";
 import MaterialPage from "../pages/material";
 import CategoryPage from "../pages/category";
+import LoginPage from "../pages/login";
+import HomeEmployeePage from "../pages/employee/home";
+import RoleRoute from "../guard/admin";
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <LayoutMain />,
+    path: "/admin",
+    element: <RoleRoute role={['R4']} > <LayoutAdmin /></RoleRoute>,
     children: [
       {
         index: true,
@@ -36,6 +41,20 @@ const router = createBrowserRouter([
         element: <CategoryPage />,
       },
     ],
+  },
+  {
+    path: "/",
+    element: <LoginPage />,
+  },
+  {
+    path: "/employee",
+    element: <RoleRoute role={['R2', 'R3', 'R4']}><LayoutEmployee /></RoleRoute>,
+    children: [
+      {
+        index: true,
+        element: <HomeEmployeePage />,
+      },
+    ]
   },
 ]);
 export default router;

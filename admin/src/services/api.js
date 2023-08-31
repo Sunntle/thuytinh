@@ -53,3 +53,11 @@ export const delCate = (id) => {
 export const addNewMaterial = (data) => {
   return axios.post(`/api/material`, data);
 };
+
+//account 
+export const callLogin = (body) => {
+  return axios.post(`/api/user/login`, body);
+}
+export const callFetchAccount = () => {
+  return axios.get(`/api/user/current`,);
+}
