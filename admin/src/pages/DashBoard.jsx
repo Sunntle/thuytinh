@@ -1,5 +1,3 @@
-
-
 import { CiViewTimeline } from 'react-icons/ci'
 import PieChart from '../components/chart/pie-chart';
 import LineChart from '../components/chart/line-chart'
