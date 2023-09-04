@@ -1,6 +1,5 @@
-const { Recipes } = require("../models");
+const { Recipes, Materials } = require("../models");
 const { Op } = require("sequelize");
-const Materials = require("../models/materialsModel");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -44,6 +43,17 @@ exports.updateRecipe = async (req, res) => {
     const _id = req.params.id;
     const response = await Recipes.update(req.body, {
       where: { id: _id },
+    });
+    res.status(200).json("Cập nhật công thức thành công !");
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+exports.updateRecipeById = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const response = await Recipes.update(req.body, {
+      where: { id_product: _id },
     });
     res.status(200).json("Cập nhật công thức thành công !");
   } catch (err) {

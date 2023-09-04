@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
+const cloudinary = require("cloudinary").v2;
 const Materials = db.sequelize.define(
   "Materials",
   {
@@ -27,5 +28,10 @@ const Materials = db.sequelize.define(
   },
   {}
 );
+Materials.beforeDestroy(async (material, options) => {
+  const { image } = material.dataValues;
+  const public_id = image.split("/").at(-1).split(".")[0];
+  await cloudinary.uploader.destroy("NhaHangThuyTinh/" + public_id);
+});
 Materials.sync();
 module.exports = Materials;

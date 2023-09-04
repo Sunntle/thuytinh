@@ -1,12 +1,11 @@
-import { Button, Form, Input, InputNumber, Modal, Select, Space, Upload, message } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Select, Space, Upload } from "antd";
 import ButtonComponents from "../../../components/button";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { deleteImg, uploadImg } from "../../../services/api";
 import { useState } from "react";
 const { Option } = Select;
 
-function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, handleFinish }) {
-  const [fileList, setFileList] = useState([]);
+function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
+  const [haveData, setHaveData] = useState(false);
   const [form] = Form.useForm();
   const optionsStatus = [
     { value: 0, label: "Còn hàng" },
@@ -39,54 +38,16 @@ function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, han
     try {
       await form.validateFields();
       const formData = await form.getFieldsValue();
-      handleFinish({ ...formData, img: [...fileList] });
+      handleFinish({ ...formData, statusForm: "add" });
+      handleCancel();
       form.resetFields();
     } catch (error) {
       console.error("Form validation error:", error);
     }
   };
-  const customUpload = async ({ file, onError }) => {
-    try {
-      const res = await uploadImg(file);
-      const url = res[0].url;
-      setFileList((prevFileList) => [
-        ...prevFileList,
-        {
-          uid: file.uid,
-          name: file.name,
-          status: "done",
-          url: url,
-        },
-      ]);
-    } catch (error) {
-      if (onError) {
-        onError(error, "ret_placeholder", "parsedFile_placeholder");
-      }
-    }
-  };
-  const handleRemove = async (file) => {
-    const { url } = file;
-    const res = await deleteImg(url);
-    if (res === "OK") {
-      setFileList((prev) => prev.filter((item) => item.status !== "removed"));
-      message.open({ type: "success", content: "Xóa hình ảnh thành công" });
-    } else {
-      message.open({ type: "error", content: "Có gì đó sai sai !" });
-    }
-  };
-  const props = {
-    customRequest: customUpload,
-    onRemove: handleRemove,
-    showUploadList: true,
-    multiple: true,
-    listType: "picture",
-    fileList,
-  };
-
   return (
     <Modal
       open={open}
-      confirmLoading={confirmLoading}
       onCancel={handleCancel}
       footer={[
         <ButtonComponents
@@ -138,7 +99,6 @@ function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, han
         <Form.Item
           name="id_category"
           label="Loại món ăn"
-          hasFeedback
           rules={[
             {
               required: true,
@@ -168,8 +128,14 @@ function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, han
         </Form.Item>
         <h3 className="font-semibold mb-8 mt-7 text-main text-lg">Thêm công thức món ăn</h3>
         <Form.Item name="descriptionRecipe" label="Mô tả công thức">
-          <Input.TextArea />
+          <Input.TextArea onChange={() => setHaveData(true)} />
         </Form.Item>
+        {haveData && (
+          <p className="italic my-6">
+            {" "}
+            <span className="text-red-500">*Lưu ý: </span>Thêm mô tả mà không thêm nguyên liệu thì sẽ không được lưu lại
+          </p>
+        )}
         <Form.List name="recipe">
           {(fields, { add, remove }) => (
             <>
@@ -221,9 +187,26 @@ function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, han
           )}
         </Form.List>
         <h3 className="font-semibold mb-8 mt-7 text-main text-lg">Thêm hình ảnh món ăn</h3>
-        <Upload {...props}>
-          <Button icon={<UploadOutlined />}>Upload</Button>
-        </Upload>
+        <Form.Item
+          name="Image"
+          rules={[
+            {
+              required: true,
+              message: "Phải thêm hình ảnh món ăn",
+            },
+          ]}
+          valuePropName="fileList"
+          getValueFromEvent={(e) => {
+            if (Array.isArray(e)) {
+              return e;
+            }
+            return e?.fileList;
+          }}
+        >
+          <Upload beforeUpload={() => false} listType="picture" multiple={true} defaultFileList={[]}>
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
+        </Form.Item>
       </Form>
     </Modal>
   );

@@ -1,24 +1,45 @@
 import { Button, Form, Input, InputNumber, Modal, Upload } from "antd";
 import ButtonComponents from "../../../components/button";
 import { UploadOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
 
-function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish }) {
+function EditMaterial({ open, handleCancel, handleFinish, data }) {
   const [form] = Form.useForm();
   const handleSubmit = async () => {
     try {
       await form.validateFields();
       const formData = await form.getFieldsValue();
-      handleFinish({ ...formData, Image: formData.Image, status: "add" });
-      form.resetFields();
-      handleCancel();
+      handleFinish({ ...formData, status: "edit", id: data.id });
     } catch (error) {
       console.error("Form validation error:", error);
     }
   };
+  useEffect(() => {
+    if (data) {
+      data.Image = [
+        {
+          uid: "-1",
+          name: data.image.split("/").at(-1).split(".")[0],
+          status: "done",
+          url: data.image,
+        },
+      ];
+      const setFormValue = async () => {
+        await form.setFieldsValue({
+          name_material: data.name_material,
+          price: data.price,
+          amount: data.amount,
+          Image: data.Image,
+          unit: data.unit,
+        });
+      };
+      setFormValue();
+    }
+  }, [form, data]);
   return (
     <Modal
+      forceRender={true}
       open={open}
-      confirmLoading={confirmLoading}
       onCancel={handleCancel}
       footer={[
         <ButtonComponents
@@ -41,7 +62,9 @@ function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish }) {
       centered
     >
       <Form form={form} onFinish={handleFinish} initialValues={{ price: 0 }} className="mt-8">
-        <h3 className="font-semibold mb-8 text-main text-lg">Thêm thông tin nguyên liệu nhà hàng</h3>
+        <h3 className="font-semibold mb-8 text-main text-lg">
+          {data ? `Sửa nguyên liệu ${data.name_material}` : "Thêm thông tin nguyên liệu nhà hàng"}
+        </h3>
         <Form.Item
           name="name_material"
           label="Tên nguyên liệu"
@@ -89,7 +112,7 @@ function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish }) {
           rules={[
             {
               required: true,
-              message: "Phải thêm hình ảnh món ăn",
+              message: "Phải thêm hình ảnh nguyên liệu",
             },
           ]}
           valuePropName="fileList"
@@ -100,13 +123,17 @@ function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish }) {
             return e?.fileList;
           }}
         >
-          <Upload beforeUpload={() => false} listType="picture" multiple={true} defaultFileList={[]}>
+          <Upload beforeUpload={() => false} listType="picture" defaultFileList={[]}>
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         </Form.Item>
+        <span className="italic	">
+          {" "}
+          <span className="text-red-500">*Lưu ý: </span>Hình ảnh chỉ lấy ảnh cuối cùng được upload
+        </span>
       </Form>
     </Modal>
   );
 }
 
-export default AddNewMaterial;
+export default EditMaterial;

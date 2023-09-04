@@ -4,162 +4,238 @@ import ButtonComponents from "../../components/button";
 import { useEffect, useState } from "react";
 import { Table } from "antd";
 import ConfirmComponent from "../../components/confirm";
-import { addNewProduct, getAllCate, getAllMaterial } from "../../services/api";
+import {
+  addNewProduct,
+  deleteProduct,
+  editProduct,
+  editRecipeByIdProduct,
+  getAllCate,
+  getAllMaterial,
+  getAllProduct,
+  getOneProduct,
+} from "../../services/api";
 import AddNewProduct from "./add";
+import EditProduct from "./edit";
 
-const columns = [
-  {
-    title: "Mã món",
-    dataIndex: "id",
-    sorter: (a, b) => a.id - b.id,
-  },
-  {
-    title: "Tên",
-    dataIndex: "name_product",
-    filters: [
-      {
-        text: "Cá",
-        value: "Cá",
-      },
-      {
-        text: "Rau",
-        value: "Rau",
-      },
-      {
-        text: "Thịt",
-        value: "Thịt",
-      },
-    ],
-    filterMode: "tree",
-    filterSearch: true,
-    onFilter: (value, record) => record.name_product.startsWith(value),
-    width: "30%",
-  },
-  {
-    title: "Loại",
-    dataIndex: "id_category",
-    sorter: (a, b) => a.id_category - b.id_category,
-  },
-  {
-    title: "Giá",
-    dataIndex: "price",
-    sorter: (a, b) => a.price - b.price,
-  },
-  {
-    title: "Trạng thái",
-    dataIndex: "status",
-    sorter: (a, b) => a.status - b.status,
-    className: "text-center",
-  },
-  {
-    title: "#",
-    key: "action",
-    render: (_, record) => (
-      <div className="h-10 flex items-center cursor-pointer">
-        <span className="bg-orange-500 px-4 rounded-md py-2 text-white">Sửa</span>
-        <ConfirmComponent title="Xác nhận xóa đơn hàng" confirm={() => console.log(record.id)}>
-          Xóa
-        </ConfirmComponent>
-      </div>
-    ),
-  },
-];
-const data = [
-  {
-    key: 1,
-    id: 1,
-    name_product: "Cá chiên",
-    id_category: 1,
-    price: 200000,
-    status: 0,
-  },
-  {
-    key: 2,
-    id: 2,
-    name_product: "Cá xào",
-    id_category: 2,
-    price: 300000,
-    status: 1,
-  },
-  {
-    key: 3,
-    id: 3,
-    name_product: "Rau muống",
-    id_category: 0,
-    price: 100000,
-    status: 0,
-  },
-  {
-    key: 4,
-    id: 4,
-    name_product: "Cá hấp",
-    id_category: 1,
-    price: 350000,
-    status: 1,
-  },
-];
-
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
 function ProductPage() {
   const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [openModelEdit, setOpenModelEdit] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [materials, setMaterials] = useState([]);
+  const [materials, setMaterials] = useState(null);
+  const [products, setProducts] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const fetchData = async () => {
+    const resCate = await getAllCate();
+    const resMate = await getAllMaterial();
+    const resProduct = await getAllProduct();
+    setProducts({ ...resProduct, data: resProduct.data.map((el) => ({ ...el, key: el.id })) });
+    setCategories(resCate);
+    setMaterials(resMate);
+    setLoading(false);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const resCate = await getAllCate();
-      const resMate = await getAllMaterial();
-      setCategories(resCate);
-      setMaterials(resMate);
-    };
     fetchData();
   }, []);
+  const handleDeleteProduct = async (id_product) => {
+    const res = await deleteProduct(id_product);
+    if (res) {
+      message.open({ type: "success", content: res });
+      fetchData();
+    } else {
+      message.open({ type: "danger", content: "Có gì đó sai sai!" });
+    }
+  };
+  const handleClickEditProduct = async (id) => {
+    const res = await getOneProduct(id);
+    setData(res);
+    setOpenModelEdit(true);
+  };
+  const columns = [
+    {
+      title: "Hình ảnh",
+      dataIndex: "imageUrls",
+      render: (_, record) => (
+        <img className="w-full" style={{ maxWidth: "150px" }} src={record?.imageUrls?.split(";")[0]} alt="" />
+      ),
+    },
+    {
+      title: "Mã món",
+      dataIndex: "id",
+      sorter: (a, b) => a.id - b.id,
+    },
+    {
+      title: "Tên",
+      dataIndex: "name_product",
+      filters: [
+        {
+          text: "Cá",
+          value: "Cá",
+        },
+        {
+          text: "Rau",
+          value: "Rau",
+        },
+        {
+          text: "Thịt",
+          value: "Thịt",
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.name_product.startsWith(value),
+      width: "20%",
+    },
+    {
+      title: "Loại",
+      dataIndex: "categoryName",
+      filters: categories?.map((el) => {
+        return {
+          text: el.name_category,
+          value: el.name_category,
+        };
+      }),
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.categoryName.startsWith(value),
+    },
+    {
+      title: "Giá",
+      dataIndex: "price",
+      sorter: (a, b) => a.price - b.price,
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      sorter: (a, b) => a.status - b.status,
+      render: (_, record) => (record.status == 0 ? "Còn hàng" : "Hết hàng"),
+    },
+    {
+      title: "#",
+      key: "action",
+      render: (_, record) => (
+        <div className="h-10 flex items-center cursor-pointer">
+          <span
+            className="bg-orange-500 px-4 rounded-md py-2 text-white"
+            onClick={() => handleClickEditProduct(record.id)}
+          >
+            Sửa
+          </span>
+          <ConfirmComponent title="Xác nhận xóa đơn hàng" confirm={() => handleDeleteProduct(record.id)}>
+            Xóa
+          </ConfirmComponent>
+        </div>
+      ),
+    },
+  ];
+
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
+
   const handleDataForm = async (value) => {
-    setConfirmLoading(true);
+    message.open({
+      type: "loading",
+      content: "Đang xử lí...",
+      duration: 0,
+    });
     try {
-      const res = await addNewProduct(value);
+      let res;
+      const formData = new FormData();
+      for (const item of Object.entries(value)) {
+        if (item[0] == "Image" && item[1]) {
+          item[1].forEach((file) => {
+            formData.append("Image", file.originFileObj);
+          });
+        } else if (item[0] == "recipe" && item[1]) {
+          formData.append(item[0], JSON.stringify(item[1]));
+        } else {
+          formData.append(item[0], item[1]);
+        }
+      }
+      res = await addNewProduct(formData);
+      message.destroy();
       if (res) {
-        setOpen(false);
         message.open({
           type: "success",
           content: "Thêm món ăn mới thành công!",
         });
+        fetchData();
       }
     } catch (err) {
       message.open({ type: "error", content: "Có gì đó không ổn!" });
-    } finally {
-      setConfirmLoading(false);
+    }
+  };
+  const handleEditForm = async (value) => {
+    message.open({
+      type: "loading",
+      content: "Đang xử lí...",
+      duration: 0,
+    });
+    try {
+      let response;
+      const { formName, ...rest } = value;
+      if (formName == "product") {
+        response = await editProduct(rest);
+      } else if (formName == "recipe") {
+        response = await editRecipeByIdProduct(rest);
+      }
+      message.destroy();
+      if (response) {
+        message.open({
+          type: "success",
+          content: response,
+        });
+        fetchData();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   const handleCancel = () => {
     setOpen(false);
   };
+  const handleCancelEdit = () => {
+    setOpenModelEdit(false);
+    setData(null);
+  };
   return (
     <div className="my-7 px-5">
-      <Row justify="space-between" align="center" className="mb-4">
-        <Col xs={6}>
-          <SearchComponent background={"bg-transparent"} size="medium"></SearchComponent>
-        </Col>
-        <Col xs={6} style={{ textAlign: "-webkit-right" }}>
-          <ButtonComponents
-            borderColor={"border-borderSecondaryColor"}
-            backgroundColor={"bg-secondaryColor"}
-            content={"Thêm mới"}
-            onClick={() => setOpen(true)}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <Row justify="space-between" align="center" className="mb-4">
+            <Col xs={6}>
+              <SearchComponent background={"bg-transparent"} size="medium" />
+            </Col>
+            <Col xs={6} style={{ textAlign: "-webkit-right" }}>
+              <ButtonComponents
+                borderColor={"border-borderSecondaryColor"}
+                backgroundColor={"bg-secondaryColor"}
+                content={"Thêm mới"}
+                onClick={() => setOpen(true)}
+              />
+            </Col>
+          </Row>
+          <Table columns={columns} dataSource={products?.data} onChange={onChange} />
+          <AddNewProduct
+            open={open}
+            cate={categories}
+            material={materials?.data}
+            handleCancel={handleCancel}
+            handleFinish={handleDataForm}
           />
-        </Col>
-      </Row>
-      <Table columns={columns} dataSource={data} onChange={onChange} />
-      <AddNewProduct
-        open={open}
-        confirmLoading={confirmLoading}
-        cate={categories}
-        material={materials.data}
-        handleCancel={handleCancel}
-        handleFinish={handleDataForm}
-      />
+          <EditProduct
+            open={openModelEdit}
+            cate={categories}
+            material={materials?.data}
+            handleCancel={handleCancelEdit}
+            handleFinish={handleEditForm}
+            data={data}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -3,16 +3,11 @@
   .ant-input-affix-wrapper {
     border: none;
     height: 100%;
+    background: transparent;
   }
   .ant-input-affix-wrapper,
   .ant-input {
     background-color: transparent !important;
-  }
-  .ant-input-clear-icon,
-  .ant-btn-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   .ant-btn {
     box-shadow: none;
