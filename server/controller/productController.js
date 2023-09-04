@@ -1,6 +1,8 @@
-const { Product, ImageProduct, Recipes, Category } = require("../models");
+const { Product, ImageProduct, Recipes, Category, Materials } = require("../models");
 const { Op, Sequelize } = require("sequelize");
-const Materials = require("../models/materialsModel");
+Product.beforeDestroy(() => {
+  console.log("Product has been destroyed");
+});
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -40,16 +42,20 @@ exports.getDetail = async (req, res) => {
     const response = await Product.findOne({
       where: { id: _id },
       include: [
-        { model: ImageProduct, attributes: ["url"] },
+        { model: ImageProduct, attributes: ["url", "id"] },
         {
           model: Recipes,
-          attributes: ["quantity"],
+          attributes: ["quantity", "descriptionRecipe"],
           include: [
             {
               model: Materials,
-              attributes: ["name_material"],
+              attributes: ["id"],
             },
           ],
+        },
+        {
+          model: Category,
+          attributes: ["name_category", "id"],
         },
       ],
     });
@@ -58,6 +64,7 @@ exports.getDetail = async (req, res) => {
     }
     res.status(200).json(response);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -86,12 +93,15 @@ exports.addItem = async (req, res) => {
         }));
         await ImageProduct.bulkCreate(data);
       }
-      if (response && recipe != "undefined") {
-        const dataRecipe = recipe.map((el) => ({
-          ...el,
-          id_material: el.materials,
-          id_product: response.id,
-        }));
+      if (response && recipe != "undefined" && recipe.length > 0) {
+        const dataRecipe = JSON.parse(recipe).map((el) => {
+          return {
+            id_material: el.materials,
+            id_product: response.id,
+            quantity: el.quantity,
+            descriptionRecipe: descriptionRecipe,
+          };
+        });
         await Recipes.bulkCreate(dataRecipe);
       }
       res.status(201).json(response);
@@ -99,6 +109,7 @@ exports.addItem = async (req, res) => {
       res.status(400).json({ error: "Sản phẩm phải có id của danh mục" });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -118,6 +129,7 @@ exports.removeProduct = async (req, res) => {
     const _id = req.params.id;
     const response = await Product.destroy({
       where: { id: _id },
+      individualHooks: true,
     });
     res.status(200).json("Xóa sản phẩm thành công");
   } catch (err) {

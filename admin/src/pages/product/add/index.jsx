@@ -1,9 +1,11 @@
 import { Button, Form, Input, InputNumber, Modal, Select, Space, Upload } from "antd";
 import ButtonComponents from "../../../components/button";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { useState } from "react";
 const { Option } = Select;
 
-function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, handleFinish }) {
+function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
+  const [haveData, setHaveData] = useState(false);
   const [form] = Form.useForm();
   const optionsStatus = [
     { value: 0, label: "Còn hàng" },
@@ -36,7 +38,8 @@ function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, han
     try {
       await form.validateFields();
       const formData = await form.getFieldsValue();
-      handleFinish({ ...formData, Image: formData.Image });
+      handleFinish({ ...formData, statusForm: "add" });
+      handleCancel();
       form.resetFields();
     } catch (error) {
       console.error("Form validation error:", error);
@@ -45,7 +48,6 @@ function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, han
   return (
     <Modal
       open={open}
-      confirmLoading={confirmLoading}
       onCancel={handleCancel}
       footer={[
         <ButtonComponents
@@ -126,8 +128,14 @@ function AddNewProduct({ open, confirmLoading, handleCancel, cate, material, han
         </Form.Item>
         <h3 className="font-semibold mb-8 mt-7 text-main text-lg">Thêm công thức món ăn</h3>
         <Form.Item name="descriptionRecipe" label="Mô tả công thức">
-          <Input.TextArea />
+          <Input.TextArea onChange={() => setHaveData(true)} />
         </Form.Item>
+        {haveData && (
+          <p className="italic my-6">
+            {" "}
+            <span className="text-red-500">*Lưu ý: </span>Thêm mô tả mà không thêm nguyên liệu thì sẽ không được lưu lại
+          </p>
+        )}
         <Form.List name="recipe">
           {(fields, { add, remove }) => (
             <>
