@@ -1,32 +1,60 @@
 import { createBrowserRouter } from "react-router-dom";
-import BookingPage from "../pages/BookingPage";
-import ChooseTablePage from "../pages/ChooseTablePage";
 import LoginPage from "../pages/LoginPage";
-import OrderFood from "../pages/OrderPage/OrderFood.jsx";
+import Home from "../pages/Home/Home.jsx";
+import Order from "../pages/Order/Order.jsx";
+import Menu from "../pages/Menu/Menu.jsx";
+import Layout from "../layouts/index.jsx";
+import Rate from "../pages/Rating/Rate.jsx";
+import Service from "../pages/Service/Service.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
     children: [
       {
         index: true,
-        element: <BookingPage />,
+        element: (
+          <Layout>
+            <Home />
+          </Layout>
+        ),
       },
       {
-        path: "table",
-        element: <ChooseTablePage />,
+        path: "service",
+        element: (
+          <Layout>
+            <Service />
+          </Layout>
+        ),
       },
       {
         path: "login",
         element: <LoginPage />,
       },
       {
-        path: "area",
-        element: <BookingPage />
+        path: "order",
+        element: (
+          <Layout>
+            <Order />
+          </Layout>
+        ),
       },
       {
-        path: "order",
-        element: <OrderFood />
-      }
+        path: "menu",
+        element: (
+          <Layout>
+            <Menu />
+          </Layout>
+        ),
+      },
+      {
+        path: "rating",
+        element: (
+          <Layout>
+            <Rate />
+          </Layout>
+        ),
+      },
     ],
   },
 ]);
