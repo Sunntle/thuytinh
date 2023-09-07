@@ -30,7 +30,11 @@ exports.getDetail = async (req, res) => {
 };
 exports.addMaterial = async (req, res) => {
   try {
-    const response = await Materials.create(req.body);
+    const img = req.file;
+    const response = await Materials.create({
+      ...req.body,
+      image: img.path.replace("/upload/", "/upload/w_400,h_300/"),
+    });
     res.status(201).json(response);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
@@ -38,10 +42,13 @@ exports.addMaterial = async (req, res) => {
 };
 exports.updateMaterial = async (req, res) => {
   try {
-    const _id = req.params.id;
-    const response = await Materials.update(req.body, {
-      where: { id: _id },
-    });
+    const image = req.file?.path.replace("/upload/", "/upload/w_400,h_300/");
+    await Materials.update(
+      { ...req.body, image },
+      {
+        where: { id: +req.body.id },
+      }
+    );
     res.status(200).json("Cập nhật công thức thành công !");
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
@@ -52,9 +59,11 @@ exports.removeMaterial = async (req, res) => {
     const _id = req.params.id;
     const response = await Materials.destroy({
       where: { id: _id },
+      individualHooks: true,
     });
     res.status(200).json("Xóa công thức thành công");
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };

@@ -6,6 +6,15 @@ export default {
       colors: {
         primary: "#FC8019",
       },
+      keyframes: {
+        'swing': {
+          '0%,100%' : { transform: 'rotate(15deg)' },
+          '50%' : { transform: 'rotate(-15deg)' },
+        }
+      },
+      animation: {
+        'swing': 'swing 1s infinite'
+      }
     },
   },
   plugins: [],

@@ -1,0 +1,15 @@
+.custom-scrollbar {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 11 */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+
+
+
+
+
+
