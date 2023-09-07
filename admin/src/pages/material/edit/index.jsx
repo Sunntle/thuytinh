@@ -43,17 +43,14 @@ function EditMaterial({ open, handleCancel, handleFinish, data }) {
       onCancel={handleCancel}
       footer={[
         <ButtonComponents
-          borderColor={"border-borderSecondaryColor"}
+        className="border-borderSecondaryColor text-main"
           key="back"
           onClick={handleCancel}
           content={"Quay lại"}
-          colorText={"text-main"}
         />,
         <ButtonComponents
-          borderColor={"border-borderSecondaryColor"}
-          backgroundColor={"bg-secondaryColor"}
+        className="border-borderSecondaryColor bg-secondaryColor"
           content={"Tạo mới"}
-          type="submit"
           key="submit"
           htmlType="submit"
           onClick={handleSubmit}

@@ -18,11 +18,11 @@ function MenuPage() {
   return (
     <div className="my-7 px-5">
       <Row justify="space-between" align="center" className="mb-4">
-        <SearchComponent background={"bg-transparent"} size="medium" maxWidth="max-w-sm"></SearchComponent>
+        <SearchComponent className="bg-transparent max-w-sm" size="medium"></SearchComponent>
       </Row>
-      <div className="mb-4">
+      <div className="mb-6">
         <div className="flex justify-between items-center">
-          <h4 className="font-bold mb-2">Danh mục</h4>
+          <h4 className="font-bold text-lg mb-2 text-slate-700">Danh mục</h4>
           <Link to="/" style={{ color: "#FC8019" }}>
             Xem tất cả
           </Link>
@@ -70,9 +70,9 @@ function MenuPage() {
           </Swiper>
         </div>
       </div>
-      <div className="mb-4">
+      <div className="mb-6">
         <div className="flex justify-between items-center">
-          <h4 className="font-bold mb-2">Sản phẩm bán chạy</h4>
+          <h4 className="font-bold text-lg mb-2 text-slate-700">Sản phẩm bán chạy</h4>
           <Link to="/" style={{ color: "#FC8019" }}>
             Xem tất cả
           </Link>
@@ -120,8 +120,8 @@ function MenuPage() {
                 <h5 className="text-main font-semibold lg:text-lg my-1">20000 VNĐ</h5>
                 <div className="text-slate-500 text-xs">
                   <span className="after:content-['|'] after:mx-1.5">Bán: 1k</span>
-                  <span style={{ color: "#52c41a" }} className="inline-flex items-center gap-x-1.5 justify-center">
-                    +15% <UpCircleFilled style={{ color: "#52c41a" }} />
+                  <span style={{ color: "#52c41a" }} className="font-bold inline-flex items-center gap-x-1.5 justify-center">
+                    +15% <UpCircleFilled className="text-lg" style={{ color: "#52c41a" }} />
                   </span>
                 </div>
               </div>
@@ -129,9 +129,9 @@ function MenuPage() {
           </Swiper>
         </div>
       </div>
-      <div className="mb-4">
+      <div className="mb-6">
         <div className="flex justify-between items-center">
-          <h4 className="font-bold mb-2">Món giảm giá</h4>
+          <h4 className="font-bold text-lg mb-2 text-slate-700">Món giảm giá</h4>
           <Link to="/" style={{ color: "#FC8019" }}>
             Xem tất cả
           </Link>

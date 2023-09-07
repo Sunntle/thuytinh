@@ -183,7 +183,7 @@ function MaterialPage() {
           />
         </Col>
       </Row>
-      <Table bordered columns={columns} dataSource={materials.data} onChange={onChange} />
+      <Table columns={columns} dataSource={materials.data} onChange={onChange} />
       <AddNewMaterial open={open} handleCancel={handleCancel} handleFinish={handleDataForm} />
       <EditMaterial
         open={openModelEdit}

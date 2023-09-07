@@ -51,15 +51,14 @@ function HeaderComponent() {
       </div>
 
       <div className="hidden sm:block">
-        <SearchComponent background={"bg-secondaryColor"} maxWidth={"max-w-md"} textColor={true} />
+        <SearchComponent className="bg-secondaryColor w-full min-w-[20rem]" textColor={true} />
       </div>
       <Dropdown menu={menuProps} trigger={["click"]}>
         <ButtonComponents
           sizeIconBefore={"text-lg"}
           sizeIconAfter={"text-xs"}
           spacingContent={"ms-1 me-3"}
-          borderColor={"border-borderSecondaryColor"}
-          backgroundColor={"bg-secondaryColor"}
+          className={"border-borderSecondaryColor bg-secondaryColor text-white"}
           iconBefore={<UserOutlined />}
           iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
           content={"Admin"}

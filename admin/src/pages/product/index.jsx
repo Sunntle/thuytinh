@@ -1,4 +1,4 @@
-import { Col, Row, message } from "antd";
+import { Button, Col, Row, message } from "antd";
 import SearchComponent from "../../components/search";
 import ButtonComponents from "../../components/button";
 import { useEffect, useState } from "react";
@@ -108,7 +108,16 @@ function ProductPage() {
       title: "Trạng thái",
       dataIndex: "status",
       sorter: (a, b) => a.status - b.status,
-      render: (_, record) => (record.status == 0 ? "Còn hàng" : "Hết hàng"),
+      render: (_, record) =>
+        record.status == 0 ? (
+          <ButtonComponents
+            content={"Còn hàng"}
+            spacingContent={"px-4 py-2"}
+            className={"h-9 border-none text-green-500 bg-green-200"}
+          />
+        ) : (
+          <ButtonComponents content={"Hết hàng"} />
+        ),
     },
     {
       title: "#",
