@@ -13,9 +13,11 @@ const initialState = {
         id: '',
     }
 };
-export const fetchAccount = createAsyncThunk('account/fetchAccount', async () => {
+export const fetchAccount = createAsyncThunk('account/fetchAccount', async (_, { rejectWithValue }) => {
     const response = await callFetchAccount();
-    console.log(response)
+    if (response.success == false) {
+        return rejectWithValue(response);
+    }
     return response
 })
 export const accountSlide = createSlice({
@@ -42,6 +44,7 @@ export const accountSlide = createSlice({
             })
             .addCase(fetchAccount.rejected, (state) => {
                 state.isAuthenticated = false;
+                localStorage.removeItem('access_token');
             })
             .addCase(fetchAccount.fulfilled, (state, action) => {
                 state.isAuthenticated = true;

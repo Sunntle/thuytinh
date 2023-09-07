@@ -11,8 +11,11 @@ import "./app.scss";
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchAccount());
-  }, []);
+    if (window.location.pathname !== '/') {
+      dispatch(fetchAccount());
+    }
+
+  }, [dispatch]);
   return (
     <ConfigProviderAntd
       theme={{

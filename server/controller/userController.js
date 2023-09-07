@@ -4,7 +4,7 @@ const { User, Order } = require("../models");
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken');
 const sendEmail = require("../utils/mail");
-
+const validator = require("validator")
 
 
 
@@ -99,13 +99,15 @@ exports.setForgotPassword = asyncHandler(async (req, res) => {
 exports.refreshToken = asyncHandler(async (req, res) => {
   const cookie = req.cookies?.refreshToken;
   if (!validator.isJWT(cookie)) throw new Error('Không tìm thấy refresh token');
-  const ru = await jwt.verify(cookie, process.env.JWT_SECRET_REFRESH);
-  const re = await User.findOne({ where: { id: ru?.id, refreshToken: cookie } });
-  if (re) return res.status(200).json({
-    success: true,
-    data: generateAccessToken(re.id, re.role)
+  jwt.verify(cookie, process.env.JWT_SECRET_REFRESH, async (err, decode) => {
+    if (err) return res.status(400).json({
+      success: false,
+      message: "Lỗi access token"
+    })
+    const re = await User.findOne({ where: { id: decode?.id, refreshToken: cookie }, raw: true });
+    if (re) return res.status(200).json({ success: true, token: generateAccessToken(re.id, re.role) });
+    res.status(404).json({ success: false })
   })
-  res.status(404).json({ success: false })
 });
 exports.currentAccount = asyncHandler(async (req, res) => {
   const id = req.user.id;

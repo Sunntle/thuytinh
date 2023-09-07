@@ -59,5 +59,5 @@ export const callLogin = (body) => {
   return axios.post(`/api/user/login`, body);
 }
 export const callFetchAccount = () => {
-  return axios.get(`/api/user/current`,);
+  return axios.get(`/api/user/current`);
 }

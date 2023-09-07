@@ -32,7 +32,7 @@ const LoginPage = () => {
             message.success('Đăng nhập thành công');
             localStorage.setItem('access_token', res.accessToken);
             dispatch(doLoginAction(res.account));
-            console.log(res.account.role)
+
             if (res.account.role == 'R4') navigate('/admin');
             else navigate('/employee');
         } else {
