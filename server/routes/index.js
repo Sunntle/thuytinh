@@ -15,7 +15,6 @@ const initRoutes = (app) => {
   app.use("/api/material", materialsRouter);
   app.use("/api/order", orderRouter);
   app.use("/api/table", tableRouter);
-
   app.use("/api/image", imageRouter);
   app.use(notFound, errHandler)
 };
