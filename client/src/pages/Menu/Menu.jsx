@@ -1,15 +1,44 @@
-import React, { useState } from "react";
-import './index.css'
+import React, { useEffect, useState } from "react";
+import "./index.css";
 import { FiSearch } from "react-icons/fi";
-import product from "../../assets/images/product.png";
 import { AiFillPlusCircle } from "react-icons/ai";
-import Backdrop from "../../components/Backdrop.jsx";
+import { BiFoodMenu } from "react-icons/bi";
+import useHttp from "../../hooks/useHttp.js";
+import { formatCurrency } from "../../utils/format.js";
+import {useDispatch, useSelector} from "react-redux";
+import OrderListModal from "../../components/OrderListModal/OrderListModal.jsx";
+import {addToOrder} from "../../redux/Order/orderSlice.js";
 
 const Menu = () => {
   const [active, setActive] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const toggleModal = () => {
-    setShowModal(!showModal);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const { sendRequest } = useHttp();
+  const [foods, setFoods] = useState([]);
+  const dispatch = useDispatch();
+  const orders = useSelector(state => state.order)
+
+  useEffect(() => {
+    const request = {
+      method: "get",
+      url: "/product",
+    };
+    sendRequest(request, setFoods);
+  }, [sendRequest]);
+
+  const handleAddToOrder = (product) => {
+    if (product) {
+      dispatch(addToOrder(product))
+    }
+  }
+
+  const showOrderListModal = () => {
+    setIsOrderModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsOrderModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsOrderModalOpen(false);
   };
 
   return (
@@ -21,12 +50,24 @@ const Menu = () => {
             <input
               type="text"
               placeholder="Tìm kiếm món ăn..."
-              className="h-full bg-transparent focus:outline-none text-sm"
+              className="h-full w-full bg-transparent focus:outline-none text-sm"
             />
           </div>
-          {/*<div className="col-span-2 w-full h-12 bg-slate-100 rounded-lg p-2 flex justify-center items-center">*/}
-          {/*    <VscSettings className="w-5 h-5"/>*/}
-          {/*</div>*/}
+          {/* Ordering */}
+          <div
+            onClick={() => showOrderListModal()}
+            className="relative col-span-2 w-full h-12 bg-slate-100 rounded-lg p-2 flex justify-center items-center lg:cursor-pointer"
+          >
+            <BiFoodMenu className="w-6 h-6" />
+            <span className="absolute -right-1 px-2 py-0.5 rounded-full -top-1 text-xs bg-primary text-white">
+              1
+            </span>
+          </div>
+          <OrderListModal
+            isModalOpen={isOrderModalOpen}
+            handleOk={handleOk}
+            handleCancel={handleCancel}
+          />
         </div>
         {/*Category*/}
         <div className="relative w-full text-sm">
@@ -86,168 +127,34 @@ const Menu = () => {
           </div>
         )}
         {/*Food*/}
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          <div
-            onClick={toggleModal}
-            className="w-auto h-auto border rounded-lg"
-          >
-            <div className="w-full">
-              <img
-                className="w-full h-full rounded-t-lg"
-                src={product}
-                alt=""
-              />
-            </div>
-            <div className="flex justify-between items-center p-2 text-slate-500">
-              <div>
-                <span className="text-sm font-medium overflow-hidden block">
-                  Tôm hùm ngon số 1
-                </span>
-                <span className="text-xs">150.000 VNĐ</span>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {foods &&
+            foods?.data?.map((item) => (
+              <div key={item.id} className="w-auto h-auto border rounded-lg">
+                <div className="w-full h-40">
+                  <img
+                    className="w-full h-full rounded-t-lg"
+                    src={item.imageUrls}
+                    alt={item.name_product}
+                  />
+                </div>
+                <div className="flex justify-between items-center p-2 text-slate-500">
+                  <div>
+                    <span className="text-sm md:text-base font-medium overflow-hidden block">
+                      {item.name_product}
+                    </span>
+                    <span className="text-xs md:text-sm">
+                      {formatCurrency(item.price)}
+                    </span>
+                  </div>
+                  <button onClick={() => handleAddToOrder(item)}>
+                    <AiFillPlusCircle className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+                  </button>
+                </div>
               </div>
-              <button>
-                <AiFillPlusCircle className="w-6 h-6 text-primary" />
-              </button>
-            </div>
-          </div>
-          <div className="w-auto h-auto border rounded-lg">
-            <div className="w-full">
-              <img
-                className="w-full h-full rounded-t-lg"
-                src={product}
-                alt=""
-              />
-            </div>
-            <div className="flex justify-between items-center p-2 text-slate-500">
-              <div>
-                <span className="text-sm font-medium overflow-hidden block">
-                  Tôm hùm ngon số 1
-                </span>
-                <span className="text-xs">150.000 VNĐ</span>
-              </div>
-              <button>
-                <AiFillPlusCircle className="w-6 h-6 text-primary" />
-              </button>
-            </div>
-          </div>
-          <div className="w-auto h-auto border rounded-lg">
-            <div className="w-full">
-              <img
-                className="w-full h-full rounded-t-lg"
-                src={product}
-                alt=""
-              />
-            </div>
-            <div className="flex justify-between items-center p-2 text-slate-500">
-              <div>
-                <span className="text-sm font-medium overflow-hidden block">
-                  Tôm hùm ngon số 1
-                </span>
-                <span className="text-xs">150.000 VNĐ</span>
-              </div>
-              <button>
-                <AiFillPlusCircle className="w-6 h-6 text-primary" />
-              </button>
-            </div>
-          </div>
-          <div className="w-auto h-auto border rounded-lg">
-            <div className="w-full">
-              <img
-                className="w-full h-full rounded-t-lg"
-                src={product}
-                alt=""
-              />
-            </div>
-            <div className="flex justify-between items-center p-2 text-slate-500">
-              <div>
-                <span className="text-sm font-medium overflow-hidden block">
-                  Tôm hùm ngon số 1
-                </span>
-                <span className="text-xs">150.000 VNĐ</span>
-              </div>
-              <button>
-                <AiFillPlusCircle className="w-6 h-6 text-primary" />
-              </button>
-            </div>
-          </div>
-          <div className="w-auto h-auto border rounded-lg">
-            <div className="w-full">
-              <img
-                className="w-full h-full rounded-t-lg"
-                src={product}
-                alt=""
-              />
-            </div>
-            <div className="flex justify-between items-center p-2 text-slate-500">
-              <div>
-                <span className="text-sm font-medium overflow-hidden block">
-                  Tôm hùm ngon số 1
-                </span>
-                <span className="text-xs">150.000 VNĐ</span>
-              </div>
-              <button>
-                <AiFillPlusCircle className="w-6 h-6 text-primary" />
-              </button>
-            </div>
-          </div>
-          <div className="w-auto h-auto border rounded-lg">
-            <div className="w-full">
-              <img
-                className="w-full h-full rounded-t-lg"
-                src={product}
-                alt=""
-              />
-            </div>
-            <div className="flex justify-between items-center p-2 text-slate-500">
-              <div>
-                <span className="text-sm font-medium overflow-hidden block">
-                  Tôm hùm ngon số 1
-                </span>
-                <span className="text-xs">150.000 VNĐ</span>
-              </div>
-              <button>
-                <AiFillPlusCircle className="w-6 h-6 text-primary" />
-              </button>
-            </div>
-          </div>
-          <div className="w-auto h-auto border rounded-lg">
-            <div className="w-full">
-              <img
-                className="w-full h-full rounded-t-lg"
-                src={product}
-                alt=""
-              />
-            </div>
-            <div className="flex justify-between items-center p-2 text-slate-500">
-              <div>
-                <span className="text-sm font-medium overflow-hidden block">
-                  Tôm hùm ngon số 1
-                </span>
-                <span className="text-xs">150.000 VNĐ</span>
-              </div>
-              <button>
-                <AiFillPlusCircle className="w-6 h-6 text-primary" />
-              </button>
-            </div>
-          </div>
+            ))}
         </div>
       </div>
-      {showModal && (
-        <>
-          <Backdrop onClick={toggleModal} />
-          <div className="fixed w-full bottom-0 translate-y-0 bg-white p-4 rounded shadow-lg z-50">
-            {/* Your modal content */}
-            <h2 className="text-lg font-semibold mb-2">Modal Content</h2>
-            <p>This is the modal content.</p>
-            <button
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              onClick={toggleModal}
-            >
-              Close Modal
-            </button>
-          </div>
-        </>
-      )}
     </div>
   );
 };
