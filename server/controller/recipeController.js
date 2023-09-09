@@ -1,19 +1,36 @@
 const { Recipes } = require("../models");
 const { Op } = require("sequelize");
 const Materials = require("../models/materialsModel");
+const { raw } = require("body-parser");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
     const query = {
+      include: { model: Materials },
       raw: true,
-      include: [{ model: Materials, attributes: ["name_material"] }],
+      nest: true
     };
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
     if (q) query.where = { name_product: { [Op.like]: `%${q}%` } };
     if (_sort) query.order = [[_sort, _order]];
     const response = await Recipes.findAll(query);
-    res.status(200).json(response);
+    const result = response.reduce((con, cur) => {
+      const existingProduct = con.find((item) => item.id_product === cur.id_product);
+      if (existingProduct) {
+        existingProduct.quantity += cur.quantity;
+        existingProduct.materials.push(cur.Material);
+      } else {
+        con.push({
+          id_product: cur.id_product,
+          quantity: cur.quantity,
+          materials: [cur.Material]
+        });
+      }
+      return con;
+    }, []);
+
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
