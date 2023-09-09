@@ -1,17 +1,27 @@
 import SearchComponent from "../search";
 import ButtonComponents from "../button";
-import { DownOutlined, LogoutOutlined, MenuUnfoldOutlined, RightOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Drawer, Dropdown, Menu } from "antd";
+import {
+  BellOutlined,
+  DownOutlined,
+  LogoutOutlined,
+  MenuUnfoldOutlined,
+  RightOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { Badge, Button, Drawer, Dropdown, Menu, Popover } from "antd";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getItem } from "../../utils/format";
 import { BiCategory } from "react-icons/bi";
+import { useSelector } from "react-redux";
 
 function HeaderComponent() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-
   const [open, setOpen] = useState(false);
+  const [icon, setIcon] = useState(false);
+  const [openPopover, setOpenPopover] = useState(false);
+  const user = useSelector((state) => state.account);
   const items = [
     {
       label: "Thoát",
@@ -28,7 +38,6 @@ function HeaderComponent() {
     ]),
     getItem("Nhà hàng", null),
   ];
-  const [icon, setIcon] = useState(false);
   const handleMenuClick = (e) => {
     console.log("click", e);
   };
@@ -51,20 +60,44 @@ function HeaderComponent() {
       </div>
 
       <div className="hidden sm:block">
-        <SearchComponent className="bg-secondaryColor w-full min-w-[20rem]" textColor={true} />
-      </div>
-      <Dropdown menu={menuProps} trigger={["click"]}>
-        <ButtonComponents
-          sizeIconBefore={"text-lg"}
-          sizeIconAfter={"text-xs"}
-          spacingContent={"ms-1 me-3"}
-          className={"border-borderSecondaryColor bg-secondaryColor text-white"}
-          iconBefore={<UserOutlined />}
-          iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
-          content={"Admin"}
-          onClick={() => setIcon(!icon)}
+        <SearchComponent
+          className="bg-secondaryColor w-full min-w-[20rem]"
+          textColor={true}
         />
-      </Dropdown>
+      </div>
+      <div className="flex items-center justify-center gap-x-1">
+        <Popover
+          content={
+            <a onClick={() => setOpenPopover(false)}>Đánh dấu tất cả đã đọc</a>
+          }
+          title={<p className="text-red-500">222</p>}
+          trigger="click"
+          open={openPopover}
+          onOpenChange={() => setOpenPopover(!openPopover)}
+          placement="topRight"
+        >
+          <Badge count={2}>
+            <Button
+              type="primary"
+              className="border-borderSecondaryColor bg-secondaryColor"
+            >
+              <BellOutlined className="text-white" />
+            </Button>
+          </Badge>
+        </Popover>
+        <Dropdown menu={menuProps} trigger={["click"]}>
+          <ButtonComponents
+            sizeIconBefore={"text-lg"}
+            sizeIconAfter={"text-xs"}
+            spacingContent={"ms-1 me-3"}
+            className="border-borderSecondaryColor bg-secondaryColor text-white ms-3"
+            iconBefore={<UserOutlined />}
+            iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
+            content={user?.user.name}
+            onClick={() => setIcon(!icon)}
+          />
+        </Dropdown>
+      </div>
       <Drawer
         title={
           <div>

@@ -79,7 +79,22 @@ export const delCate = (id) => {
 export const addNewMaterial = (data) => {
   return axios.post(`/api/material`, data);
 };
+
+//account 
+export const callLogin = (body) => {
+  return axios.post(`/api/user/login`, body);
+}
+export const callFetchAccount = () => {
+  return axios.get(`/api/user/current`);
+}
 //recipe
 export const editRecipeByIdProduct = (data) => {
   return axios.put(`/api/recipe/product/${data.id}`, data);
+};
+//reviews
+export const getAllReviews = (params)=>{
+  return axios.get(`/api/review`, { params });
+}
+export const deleteReview = (id) => {
+  return axios.delete(`/api/review/` + id);
 };

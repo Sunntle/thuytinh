@@ -8,13 +8,11 @@ import { delCate, editCate, getCate } from '../../services/api';
 import { formatNgay } from '../../utils/format';
 import ConfirmComponent from '../../components/confirm';
 import { UploadOutlined } from '@ant-design/icons';
-const initData = {
-    show: false, data: []
-}
+
 const CategoryPage = () => {
     const [form] = Form.useForm();
     const [openModal, setOpenModal] = useState(false);
-    const [openModalUpdate, setOpenModalUpdate] = useState(initData);
+    const [openModalUpdate, setOpenModalUpdate] = useState(false);
     const [data, setDate] = useState([]);
     useEffect(() => {
         fetchData();
@@ -25,12 +23,13 @@ const CategoryPage = () => {
     }
     const handleCancel = () => {
         setOpenModal(false);
-        setOpenModalUpdate(initData)
+        setOpenModalUpdate(false)
     }
     const handOpen = () => {
         setOpenModal(true)
     }
     const showModalUpdate = (record) => {
+        setOpenModalUpdate(true);
         const data = { ...record };
         data.thumbnail = [{
             uid: '-1',
@@ -38,7 +37,6 @@ const CategoryPage = () => {
             status: 'done',
             url: record.thumbnail
         }]
-        setOpenModalUpdate({ data, show: true });
         form.setFieldsValue(data);
     }
     const handDeleteOrder = async (id) => {
@@ -127,9 +125,8 @@ const CategoryPage = () => {
                 title="Cập nhật đơn hàng"
                 footer={null}
                 centered
-                open={openModalUpdate.show}
+                open={openModalUpdate}
                 width={500}
-
                 onCancel={handleCancel}
 
             >
@@ -222,7 +219,6 @@ const CategoryPage = () => {
             </Modal>
             <CreateCategory
                 openModal={openModal}
-                setOpenModal={setOpenModal}
                 handleCancel={handleCancel}
                 fetchData={fetchData}
             />

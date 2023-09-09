@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import HeaderComponent from "./components/header";
-import { BiCategory } from "react-icons/bi";
-import { Layout, Menu } from "antd";
+import { useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import HeaderComponent from '../components/header';
+import { BiCategory } from 'react-icons/bi'
+import { Layout, Menu } from 'antd';
 const { Content, Sider } = Layout;
-import { getItem } from "./utils/format";
+import { getItem } from '../utils/format';
 const items = [
   getItem("Tổng quan", null, <BiCategory />, [
     getItem("Dashboard", "/"),

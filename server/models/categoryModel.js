@@ -1,9 +1,9 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
+const { destroyImg } = require("../utils/cloud");
 const Category = db.sequelize.define(
   "Category",
   {
-    // Model attributes are defined here
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -22,5 +22,14 @@ const Category = db.sequelize.define(
   },
   {}
 );
+
+Category.beforeUpdate(async (cat) => {
+  if (cat.changed("thumbnail")) {
+    await destroyImg(cat._previousDataValues.thumbnail);
+  }
+});
+Category.beforeDestroy(async (cat) => {
+  await destroyImg(cat.thumbnail);
+})
 Category.sync();
 module.exports = Category;
