@@ -35,7 +35,7 @@ const Home = () => {
   // console.log(slideProduct);
 
   return (
-    <div className="lg:pt-24">
+    <div className="pb-24 lg:pb-0 lg:pt-24">
       {/*  Hot Food */}
       {/* <Swiper
         // install Swiper modules
