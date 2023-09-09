@@ -4,7 +4,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import {
     persistStore,
     persistReducer,
-
     PERSIST
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'

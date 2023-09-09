@@ -109,20 +109,16 @@ function EditProduct({ open, handleCancel, handleFinish, cate, material, data })
           </Form.Item>
           <div className="text-right">
             <ButtonComponents
-              borderColor={"border-borderSecondaryColor"}
               key="back"
               onClick={handleCancel}
               content={"Quay lại"}
-              colorText={"text-main"}
-              className="me-2"
+              className="me-2 border-borderSecondaryColor text-main"
             />
             <ButtonComponents
-              borderColor={"border-borderSecondaryColor"}
-              backgroundColor={"bg-secondaryColor"}
               content={"Tạo mới"}
-              type="submit"
               key="submit"
               htmlType="submit"
+              className="border-borderSecondaryColor bg-secondaryColor"
             />
           </div>
         </Form>

@@ -91,3 +91,10 @@ export const callFetchAccount = () => {
 export const editRecipeByIdProduct = (data) => {
   return axios.put(`/api/recipe/product/${data.id}`, data);
 };
+//reviews
+export const getAllReviews = (params)=>{
+  return axios.get(`/api/review`, { params });
+}
+export const deleteReview = (id) => {
+  return axios.delete(`/api/review/` + id);
+};
