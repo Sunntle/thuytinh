@@ -13,27 +13,31 @@ import "swiper/css/scrollbar";
 import product from "../../assets/images/product.png";
 import { AiFillPlusCircle } from "react-icons/ai";
 import useHttp from "../../hooks/useHttp.js";
-import {formatCurrency, truncateString} from "../../utils/format.js";
-import { Badge, Card } from 'antd';
+import { formatCurrency, truncateString } from "../../utils/format.js";
+import { Badge, Card } from "antd";
+
+import Banner from "../../components/Banner.jsx";
+import AboutUs from "../../components/AboutUs.jsx";
+import Footer from "../../components/Footer.jsx";
 
 const Home = () => {
-  const [slideProduct, setSlideProduct] = useState(null);
-  const { sendRequest } = useHttp();
+  // const [slideProduct, setSlideProduct] = useState(null);
+  // const { sendRequest } = useHttp();
 
-  useEffect(() => {
-    const request = {
-      method: "get",
-      url: "/product",
-    };
-    sendRequest(request, setSlideProduct);
-  }, []);
+  // useEffect(() => {
+  //   const request = {
+  //     method: "get",
+  //     url: "/product",
+  //   };
+  //   sendRequest(request, setSlideProduct);
+  // }, []);
 
-  console.log(slideProduct);
+  // console.log(slideProduct);
 
   return (
-    <div className="py-24">
+    <div className="lg:pt-24">
       {/*  Hot Food */}
-      <Swiper
+      {/* <Swiper
         // install Swiper modules
         className="mt-12 px-6 w-auto"
         modules={[A11y]}
@@ -90,7 +94,11 @@ const Home = () => {
               </div>
             </SwiperSlide>
           ))}
-      </Swiper>
+      </Swiper> */}
+      {/* code ở đây */}
+      <Banner />
+      <AboutUs />
+      <Footer />
     </div>
   );
 };

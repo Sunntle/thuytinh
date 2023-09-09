@@ -26,7 +26,7 @@ const Service = () => {
                         <FaFileInvoiceDollar className="w-10 h-10 rounded-lg text-white bg-orange-400 p-2"/>
                         <span className="text-xs text-slate-500">Thanh toán</span>
                     </div>
-                    <div className="bg-slate-50 p-2 rounded-lg flex active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2">
+                    <div onClick={() => navigate('/rating')} className="bg-slate-50 p-2 rounded-lg flex active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2">
                         <FaFileInvoiceDollar className="w-10 h-10 rounded-lg text-white bg-green-500 p-2"/>
                         <span className="text-xs text-slate-500">Đánh giá</span>
                     </div>
