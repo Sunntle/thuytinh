@@ -64,9 +64,9 @@ const Rate = () => {
               title={star.label}
               className={`rounded-sm text-gray-300 fill-current focus:outline-none focus:shadow-outline w-7 m-0 cursor-pointer ${
                 hoverRating >= star.amount
-                  ? "text-yellow-500"
+                  ? "text-yellow-400"
                   : rating >= star.amount && hoverRating >= star.amount
-                  ? "text-yellow-500"
+                  ? "text-yellow-400"
                   : ""
               }`}
             >
