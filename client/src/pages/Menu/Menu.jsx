@@ -60,7 +60,7 @@ const Menu = () => {
           >
             <BiFoodMenu className="w-6 h-6" />
             <span className="absolute -right-1 px-2 py-0.5 rounded-full -top-1 text-xs bg-primary text-white">
-              1
+              {orders.length}
             </span>
           </div>
           <OrderListModal

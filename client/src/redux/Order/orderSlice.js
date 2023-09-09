@@ -14,19 +14,19 @@ const orderSlice = createSlice({
             }
         },
         removeFromOrder: (state, action) => {
-            const food = action.payload
-            state = state.filter(item => item.id !== food.id)
+            const id = action.payload
+            state = state.filter(item => item.id !== id)
             return state
         },
         increaseQuantity: (state, action) => {
-            const food = action
+            const food = action.payload
             const existingItem = state.find(item => item.id === food.id)
             if (existingItem) {
                 existingItem.quantity += 1
             }
         },
         decreaseQuantity: (state, action) => {
-            const food = action
+            const food = action.payload
             const existingItem = state.find(item => item.id === food.id)
             if (existingItem) {
                 existingItem.quantity -= 1

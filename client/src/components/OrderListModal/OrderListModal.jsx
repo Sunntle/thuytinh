@@ -15,7 +15,7 @@ import {
 } from "../../redux/Order/orderSlice.js";
 
 const { confirm } = Modal;
-const OrderListModal = ({ isModalOpen, handleOk, handleCancle }) => {
+const OrderListModal = ({ isModalOpen, handleOk, handleCancel }) => {
   const orders = useSelector((state) => state.order);
   const dispatch = useDispatch();
   const showDeleteConfirm = (id) => {
@@ -27,7 +27,7 @@ const OrderListModal = ({ isModalOpen, handleOk, handleCancle }) => {
       cancelText: "Không",
       onOk() {
         try {
-          dispatch(removeFood(id));
+          dispatch(removeFromOrder(id));
         } catch (err) {
           console.log(err);
         }
@@ -56,7 +56,7 @@ const OrderListModal = ({ isModalOpen, handleOk, handleCancle }) => {
           title="Món Đã Chọn"
           open={isModalOpen}
           onOk={handleOk}
-          onCancel={handleCancle}
+          onCancel={handleCancel}
           centered
           footer={[
             <Button
