@@ -6,7 +6,7 @@ const Header = () => {
 
   return (
     <div
-      className={`w-full h-24 md:h-20 z-30 lg:hidden bg-primary rounded-b-3xl drop-shadow-md px-6 text-white flex items-center ${user ? 'justify-between' : 'justify-center'}`}
+      className={`w-full h-24 md:h-20 z-40 relative lg:hidden bg-primary rounded-b-3xl drop-shadow-md px-6 text-white flex items-center ${user ? 'justify-between' : 'justify-center'}`}
     >
       {user ? (
         <>
