@@ -11,6 +11,7 @@ import CategoryPage from "../pages/category";
 import LoginPage from "../pages/login";
 import HomeEmployeePage from "../pages/employee/home";
 import RoleRoute from "../guard/admin";
+import RecipePage from "../pages/recipes";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "category",
         element: <CategoryPage />,
+      },
+      {
+        path: "recipe",
+        element: <RecipePage />,
       },
     ],
   },

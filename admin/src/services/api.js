@@ -61,3 +61,18 @@ export const callLogin = (body) => {
 export const callFetchAccount = () => {
   return axios.get(`/api/user/current`);
 }
+
+// recipe
+
+export const callFetchRecipe = () => {
+  return axios.get(`/api/recipe`);
+}
+export const callCreateRecipe = (body) => {
+  return axios.post(`/api/recipe`, body);
+}
+export const callDelRecipe = (id) => {
+  return axios.delete(`/api/recipe/` + id);
+}
+export const callUpdateRecipe = (body) => {
+  return axios.put(`/api/recipe`, body);
+}

@@ -4,6 +4,6 @@ const { list, getRecipeByProduct, addRecipe, updateRecipe, removeRecipe } = requ
 router.get("/", list);
 router.get("/product/:id", getRecipeByProduct);
 router.post("/", addRecipe);
-router.put("/:id", updateRecipe);
+router.put("/", updateRecipe);
 router.delete("/:id", removeRecipe);
 module.exports = router;
