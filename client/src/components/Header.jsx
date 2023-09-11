@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import panda from "../assets/images/panda.png";
 
 const Header = () => {
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(true);
 
   return (
     <div

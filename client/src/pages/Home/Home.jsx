@@ -21,23 +21,23 @@ import AboutUs from "../../components/AboutUs.jsx";
 import Footer from "../../components/Footer.jsx";
 
 const Home = () => {
-  // const [slideProduct, setSlideProduct] = useState(null);
-  // const { sendRequest } = useHttp();
+  const [slideProduct, setSlideProduct] = useState(null);
+  const { sendRequest } = useHttp();
 
-  // useEffect(() => {
-  //   const request = {
-  //     method: "get",
-  //     url: "/product",
-  //   };
-  //   sendRequest(request, setSlideProduct);
-  // }, []);
+  useEffect(() => {
+    const request = {
+      method: "get",
+      url: "/product",
+    };
+    sendRequest(request, setSlideProduct);
+  }, []);
 
-  // console.log(slideProduct);
+  console.log(slideProduct);
 
   return (
     <div className="pb-24 lg:pb-0 lg:pt-24">
       {/*  Hot Food */}
-      {/* <Swiper
+      <Swiper
         // install Swiper modules
         className="mt-12 px-6 w-auto"
         modules={[A11y]}
@@ -83,7 +83,7 @@ const Home = () => {
                     <span className="text-sm font-medium overflow-hidden block">
                       {truncateString(product.name_product)}
                     </span>
-                    <span className="text-xs">
+                                        <span className="text-xs">
                       {formatCurrency(product.price)}
                     </span>
                   </div>

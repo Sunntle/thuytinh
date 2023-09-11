@@ -6,6 +6,7 @@ import Menu from "../pages/Menu/Menu.jsx";
 import Layout from "../layouts/index.jsx";
 import Rate from "../pages/Rating/Rate.jsx";
 import Service from "../pages/Service/Service.jsx";
+import EnterName from "../pages/EnterName/EnterName.jsx";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,14 @@ const router = createBrowserRouter([
         element: (
           <Layout>
             <Rate />
+          </Layout>
+        ),
+      },
+      {
+        path: "enter-name",
+        element: (
+          <Layout>
+            <EnterName />
           </Layout>
         ),
       },
