@@ -58,6 +58,7 @@ function ProductPage() {
     {
       title: "Hình ảnh",
       dataIndex: "imageUrls",
+      fixed: "left",
       render: (_, record) => (
         <img
           className="w-full"
@@ -132,8 +133,10 @@ function ProductPage() {
         ),
     },
     {
-      title: "#",
+      title: "Action",
       key: "action",
+      fixed: "right",
+      width: "12%",
       render: (_, record) => (
         <div className="h-10 flex items-center cursor-pointer">
           <span
@@ -242,6 +245,9 @@ function ProductPage() {
             </Col>
           </Row>
           <Table
+            scroll={{
+              x: 1300,
+            }}
             columns={columns}
             dataSource={products?.data}
             onChange={onChange}
