@@ -44,22 +44,22 @@ const Home = () => {
         spaceBetween={10}
         slidesPerView={2}
         breakpoints={{
-            375: {
-                slidesPerView: 2,
-                spaceBetween: 25
-            },
-            768: {
-                slidesPerView: 3,
-                spaceBetween: 30
-            },
-            1024: {
-                slidesPerView: 4,
-                spaceBetween: 30
-            },
-            1440: {
-                slidesPerView: 5,
-                spaceBetween: 30
-            }
+          375: {
+            slidesPerView: 2,
+            spaceBetween: 25
+          },
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 30
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 30
+          },
+          1440: {
+            slidesPerView: 5,
+            spaceBetween: 30
+          }
         }}
         autoplay={true}
         onSwiper={(swiper) => console.log(swiper)}
@@ -69,8 +69,8 @@ const Home = () => {
           slideProduct?.data?.map((product) => (
             <SwiperSlide key={product.id}>
               <div className="w-auto h-auto border rounded-lg">
-                  <Badge.Ribbon text="Hippies" className="bg-primary">
-                  </Badge.Ribbon>
+                <Badge.Ribbon text="Hippies" className="bg-primary">
+                </Badge.Ribbon>
                 <div className="w-full h-[120px]">
                   <img
                     className="w-full h-full rounded-t-lg"
@@ -83,7 +83,7 @@ const Home = () => {
                     <span className="text-sm font-medium overflow-hidden block">
                       {truncateString(product.name_product)}
                     </span>
-                                        <span className="text-xs">
+                    <span className="text-xs">
                       {formatCurrency(product.price)}
                     </span>
                   </div>
@@ -94,7 +94,7 @@ const Home = () => {
               </div>
             </SwiperSlide>
           ))}
-      </Swiper> */}
+      </Swiper>
       {/* code ở đây */}
       <Banner />
       <AboutUs />

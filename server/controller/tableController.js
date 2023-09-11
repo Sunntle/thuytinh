@@ -5,6 +5,11 @@ exports.getAll = asyncHandler(async (req, res) => {
     const re = await Tables.findAll({ include: { model: Order, order: [['date_order', 'DESC']], separate: true, limit: 1 } });
     res.status(200).json(re);
 });
+exports.getId = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const re = await Tables.findByPk(id);
+    res.status(200).json(re);
+});
 exports.create = asyncHandler(async (req, res) => {
     const { name_table } = req.body;
     const [table, created] = await Tables.findOrCreate({
