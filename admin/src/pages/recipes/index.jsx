@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Table, message, Button, Modal, Form, Select, Input, Divider } from 'antd';
-import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { callCreateRecipe, callDelRecipe, callFetchRecipe, callUpdateRecipe, getAllMaterial, getAllProduct } from '../../services/api';
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { callDelRecipe, callFetchRecipe, callUpdateRecipe, getAllMaterial, getAllProduct } from '../../services/api';
 import ConfirmComponent from '../../components/confirm';
 import ButtonComponents from '../../components/button';
 import CreateRecipe from './add_recipe';
@@ -13,8 +13,6 @@ const RecipePage = () => {
     const [openModalUpdate, setOpenModalUpdate] = useState(init);
     const [optionsMaterial, setOptionsMaterial] = useState([]);
     const [optionsProduct, setOptionsProduct] = useState([]);
-
-
     useEffect(() => {
         fetchData();
     }, [])
