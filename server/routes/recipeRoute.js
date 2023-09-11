@@ -7,11 +7,13 @@ const {
   updateRecipe,
   removeRecipe,
   updateRecipeById,
+  removeRecipeByProductId
 } = require("../controller/recipeController");
 router.get("/", list);
 router.get("/product/:id", getRecipeByProduct);
 router.post("/", addRecipe);
-router.put("/:id", updateRecipe);
+router.put("/", updateRecipe);
 router.put("/product/:id", updateRecipeById);
 router.delete("/:id", removeRecipe);
+router.delete("/product/:id", removeRecipeByProductId);
 module.exports = router;
