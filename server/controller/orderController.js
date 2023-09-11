@@ -1,6 +1,20 @@
 
 const asyncHandler = require('express-async-handler');
-const { Order, OrderDetail, Product, ImageProduct, User } = require('../models')
+const { Order, OrderDetail, Product, ImageProduct, User } = require('../models');
+
+exports.createOrder = asyncHandler(async (req, res) => {
+    const { order, customerName } = req.body;
+    let total = order.reduce((acc, cur) => {
+        acc += cur.quantity * cur.price
+        return acc
+    }, 0);
+    const order_result = await Order.create({ total, name: customerName, date_order: new Date() });
+    let val = order.map(item => ({ id_product: item.id, quantity: item.quantity, id_order: order_result.id }))
+    await OrderDetail.bulkCreate(val);
+    res.status(200).json("Tạo đơn hàng thành công");
+
+});
+
 exports.GetAllOrder = asyncHandler(async (req, res) => {
     const { key_sort, val_sort, page, limit } = req.query;
     const page_current = +page || 1;

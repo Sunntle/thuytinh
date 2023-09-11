@@ -23,7 +23,7 @@ const RecipePage = () => {
             label: item.name_material,
         }));
         const conProduct = productResponse.data.filter(item => {
-            return !data.some(pro => pro.product.id === item.id);
+            return !data?.some(pro => pro.product.id === item.id);
         }).map(item => ({
             value: item.id,
             label: item.name_product

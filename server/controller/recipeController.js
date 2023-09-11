@@ -30,7 +30,6 @@ exports.list = async (req, res) => {
       }
       return con;
     }, []);
-
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
@@ -44,6 +43,7 @@ exports.getRecipeByProduct = async (req, res) => {
       raw: true,
       include: [{ model: Materials, attributes: ["name_material"] }],
     });
+
     res.status(200).json(response);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
@@ -70,7 +70,9 @@ exports.updateRecipe = asyncHandler(async (req, res) => {
   };
   if (removedItems?.length > 0) {
     await Recipes.destroy({ where: { id: removedItems } });
-};
+  }
+  res.status(200).json("Cập nhật công thức thành công !");
+})
 exports.updateRecipeById = async (req, res) => {
   try {
     const _id = req.params.id;
@@ -92,14 +94,10 @@ exports.removeRecipe = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
-  res.status(200).json("Cập nhật công thức thành công !");
-
-})
+};
 exports.removeRecipeByProductId = asyncHandler(async (req, res) => {
   await Recipes.destroy({
     where: { id_product: req.params.id }
-  }).catch((err) => {
-    console.log(err)
-  });
+  })
   res.status(200).json("Xóa công thức thành công");
 })
