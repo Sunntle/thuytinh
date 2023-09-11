@@ -8,6 +8,7 @@ import OrderPage from "../pages/Order";
 import ProductPage from "../pages/product";
 import MaterialPage from "../pages/material";
 import CategoryPage from "../pages/category";
+import ReviewsPage from "../pages/reviews";
 import LoginPage from "../pages/login";
 import HomeEmployeePage from "../pages/employee/home";
 import RoleRoute from "../guard/admin";
@@ -44,6 +45,9 @@ const router = createBrowserRouter([
       {
         path: "recipe",
         element: <RecipePage />,
+      },{
+        path: "reviews",
+        element: <ReviewsPage />,
       },
     ],
   },

@@ -18,6 +18,9 @@ const Recipes = db.sequelize.define(
     quantity: {
       type: DataTypes.INTEGER,
     },
+    descriptionRecipe: {
+      type: DataTypes.STRING(1000),
+    },
   },
   {}
 );

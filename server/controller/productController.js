@@ -1,13 +1,27 @@
-const { Product, ImageProduct, Recipes } = require("../models");
+const { Product, ImageProduct, Recipes, Category, Materials } = require("../models");
 const { Op, Sequelize } = require("sequelize");
-const Materials = require("../models/materialsModel");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
     const subquery = `(SELECT GROUP_CONCAT(url SEPARATOR ';') FROM ImageProducts AS ip WHERE ip.id_product = Product.id)`;
     const query = {
       raw: true,
-      attributes: ["id", "name_product", "price", "description", "status", [Sequelize.literal(subquery), "imageUrls"]],
+      attributes: [
+        "id",
+        "name_product",
+        "price",
+        "description",
+        "status",
+        "sold",
+        [Sequelize.literal(subquery), "imageUrls"],
+        [Sequelize.literal("`Category`.`name_category`"), "categoryName"],
+      ],
+      include: [
+        {
+          model: Category,
+          attributes: [],
+        },
+      ],
     };
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
@@ -25,16 +39,20 @@ exports.getDetail = async (req, res) => {
     const response = await Product.findOne({
       where: { id: _id },
       include: [
-        { model: ImageProduct, attributes: ["url"] },
+        { model: ImageProduct, attributes: ["url", "id"] },
         {
           model: Recipes,
-          attributes: ["quantity"],
+          attributes: ["quantity", "descriptionRecipe"],
           include: [
             {
               model: Materials,
-              attributes: ["name_material"],
+              attributes: ["id"],
             },
           ],
+        },
+        {
+          model: Category,
+          attributes: ["name_category", "id"],
         },
       ],
     });
@@ -43,6 +61,7 @@ exports.getDetail = async (req, res) => {
     }
     res.status(200).json(response);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -60,22 +79,26 @@ exports.getByCategory = async (req, res) => {
 };
 exports.addItem = async (req, res) => {
   try {
-    const { recipe, img, descriptionRecipe, ...rest } = req.body;
+    const { recipe, descriptionRecipe, ...rest } = req.body;
+    const img = req.files;
     if (rest.id_category) {
       const response = await Product.create(rest);
       if (response && img && img.length > 0) {
         const data = img.map((file) => ({
-          url: file.url.replace("/upload/", "/upload/w_400,h_300/"),
+          url: file.path.replace("/upload/", "/upload/w_400,h_300/"),
           id_product: response.id,
         }));
         await ImageProduct.bulkCreate(data);
       }
-      if (response && recipe) {
-        const dataRecipe = recipe.map((el) => ({
-          ...el,
-          id_material: el.materials,
-          id_product: response.id,
-        }));
+      if (response && recipe != "undefined" && recipe.length > 0) {
+        const dataRecipe = JSON.parse(recipe).map((el) => {
+          return {
+            id_material: el.materials,
+            id_product: response.id,
+            quantity: el.quantity,
+            descriptionRecipe: descriptionRecipe,
+          };
+        });
         await Recipes.bulkCreate(dataRecipe);
       }
       res.status(201).json(response);
@@ -83,6 +106,7 @@ exports.addItem = async (req, res) => {
       res.status(400).json({ error: "Sản phẩm phải có id của danh mục" });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -102,6 +126,7 @@ exports.removeProduct = async (req, res) => {
     const _id = req.params.id;
     const response = await Product.destroy({
       where: { id: _id },
+      individualHooks: true,
     });
     res.status(200).json("Xóa sản phẩm thành công");
   } catch (err) {

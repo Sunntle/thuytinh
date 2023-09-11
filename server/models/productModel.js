@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
+const ImageProduct = require("./imageModel");
+const cloudinary = require("cloudinary").v2;
 const Product = db.sequelize.define(
   "Product",
   {
@@ -30,5 +32,14 @@ const Product = db.sequelize.define(
   },
   {}
 );
+Product.beforeDestroy(async (product, options) => {
+  const relatedImages = await ImageProduct.findAll({
+    where: { id_product: product.dataValues.id },
+  });
+  for (const image of relatedImages) {
+    const public_id = image.dataValues.url.split("/").at(-1).split(".")[0];
+    await cloudinary.uploader.destroy("NhaHangThuyTinh/" + public_id);
+  }
+});
 Product.sync();
 module.exports = Product;

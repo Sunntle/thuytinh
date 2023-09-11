@@ -1,7 +1,6 @@
-const { Recipes, Product, ImageProduct } = require("../models");
+const { Recipes, Product, ImageProduct, Materials } = require("../models");
 const asyncHandler = require('express-async-handler');
 const { Op } = require("sequelize");
-const Materials = require("../models/materialsModel");
 const { raw } = require("body-parser");
 exports.list = async (req, res) => {
   try {
@@ -71,13 +70,32 @@ exports.updateRecipe = asyncHandler(async (req, res) => {
   };
   if (removedItems?.length > 0) {
     await Recipes.destroy({ where: { id: removedItems } });
+};
+exports.updateRecipeById = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const response = await Recipes.update(req.body, {
+      where: { id_product: _id },
+    });
+    res.status(200).json("Cập nhật công thức thành công !");
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
   }
-
-
+};
+exports.removeRecipe = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const response = await Recipes.destroy({
+      where: { id: _id },
+    });
+    res.status(200).json("Xóa công thức thành công");
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
   res.status(200).json("Cập nhật công thức thành công !");
 
 })
-exports.removeRecipe = asyncHandler(async (req, res) => {
+exports.removeRecipeByProductId = asyncHandler(async (req, res) => {
   await Recipes.destroy({
     where: { id_product: req.params.id }
   }).catch((err) => {

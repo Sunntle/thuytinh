@@ -18,6 +18,15 @@ export const getAllProduct = (params) => {
 export const addNewProduct = (data) => {
   return axios.post(`/api/product`, data);
 };
+export const deleteProduct = (idProduct) => {
+  return axios.delete(`/api/product/${idProduct}`);
+};
+export const editProduct = (data) => {
+  return axios.put(`/api/product/${data.id}`, data);
+};
+export const getOneProduct = (id_product) => {
+  return axios.get(`/api/product/${id_product}`);
+};
 // category//
 export const getAllCate = (params) => {
   return axios.get(`/api/category`, { params });
@@ -29,14 +38,31 @@ export const uploadImg = (file) => {
   form.append("Image", file);
   return axios.post(`/api/image`, form);
 };
-export const deleteImg = (url) => {
-  return axios.delete(`/api/image`, { params: { url } });
+export const uploadImgByIdProduct = (file, idProduct) => {
+  const form = new FormData();
+  form.append("Image", file);
+  form.append("idProduct", idProduct);
+  return axios.post(`/api/image/product`, form);
+};
+export const deleteImgByUrl = (url, id) => {
+  return axios.delete(`/api/image/url/${id}`, { params: { url } });
+};
+export const deleteImgById = (id) => {
+  return axios.delete(`/api/image/${id}`);
 };
 //material//
 export const getAllMaterial = (params) => {
   return axios.get(`/api/material`, { params });
 };
-
+export const deleteMaterial = (id) => {
+  return axios.delete(`/api/material/` + id);
+};
+export const editMaterial = (body) => {
+  return axios.put(`/api/material`, body);
+};
+export const getOneMaterial = (id) => {
+  return axios.get(`/api/material/${id}`);
+};
 //category//
 export const addCate = (body) => {
   return axios.post(`/api/category`, body);
@@ -61,9 +87,7 @@ export const callLogin = (body) => {
 export const callFetchAccount = () => {
   return axios.get(`/api/user/current`);
 }
-
 // recipe
-
 export const callFetchRecipe = () => {
   return axios.get(`/api/recipe`);
 }
@@ -76,3 +100,14 @@ export const callDelRecipe = (id) => {
 export const callUpdateRecipe = (body) => {
   return axios.put(`/api/recipe`, body);
 }
+//recipe
+export const editRecipeByIdProduct = (data) => {
+  return axios.put(`/api/recipe/product/${data.id}`, data);
+};
+//reviews
+export const getAllReviews = (params)=>{
+  return axios.get(`/api/review`, { params });
+}
+export const deleteReview = (id) => {
+  return axios.delete(`/api/review/` + id);
+};

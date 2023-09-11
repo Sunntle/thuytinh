@@ -1,21 +1,29 @@
-
-import { fetchAccount } from "./redux/account/accountSlice";
 import { ConfigProvider as ConfigProviderAntd } from "antd";
-import { RouterProvider } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import router from "./routes";
-
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RouterProvider } from "react-router-dom";
 import "./app.scss";
-
+import Spinner from "./components/spinner";
+import { fetchAccount } from "./redux/account/accountSlice";
+import router from "./routes";
 const App = () => {
   const dispatch = useDispatch();
+  const user = useSelector(state=>state.account)
   useEffect(() => {
     if (window.location.pathname !== '/') {
       dispatch(fetchAccount());
     }
-
   }, [dispatch]);
+  // useEffect(()=>{
+  // socket.timeout(5000).emit("hello", { name: "John" });
+  // socket.timeout(2000).emit("hello", { name: "John 2" });
+  // socket.on("new user", arg =>{
+  //   console.log(arg);
+  // })
+  // },[]) 
+  if(user && user.isLoading){
+    return  <Spinner/>
+  }
   return (
     <ConfigProviderAntd
       theme={{
@@ -23,6 +31,15 @@ const App = () => {
           Button: {
             colorPrimary: "#FC8019",
             algorithm: true,
+          },
+          Pagination:{
+            itemActiveBg: "#FC8019",
+            colorPrimary:"#fff",
+            colorPrimaryBorder:"#fd9c4b",
+            colorPrimaryHover:"fd9c4b",
+            colorBgTextHover: "#FC8019",
+            colorBgTextActive: "#fff",
+            colorText: "#7e808c"
           }
         }
       }}

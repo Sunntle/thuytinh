@@ -1,107 +1,109 @@
 *,
 *:before,
 *:after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    font: inherit;
+  margin: 0;
+  padding: 0;
+  font: inherit;
 }
 
 img,
 picture,
 svg,
 video {
-    display: block;
-    max-width: 100%;
+  display: block;
+  max-width: 100%;
 }
 
 input,
 select,
 textarea {
-    background-color: transparent;
-    outline: none;
+  background-color: transparent;
+  outline: none;
 }
 
 button {
-    cursor: pointer;
-    background-color: transparent;
-    outline: none;
-    border: 0;
+  cursor: pointer;
+  background-color: transparent;
+  outline: none;
+  border: 0;
 }
 
 body {
-    min-height: 100vh;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 1;
+  min-height: 100vh;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1;
 }
 
-
-
 @mixin item_menu {
-    background: #ffead9 !important;
-    color: #FC8019 !important;
+  color: #fc8019 !important;
+  background: white !important;
 }
 
 @mixin bg-color {
-    background: white !important;
-    color: #000 !important;
+  background-color: white !important;
+  color: #000 !important;
 }
 
 .main_area {
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    overflow: hidden;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  overflow: hidden;
+  background: white !important;
+
+  .layout_area {
+    padding-top: 20px;
     background: white !important;
 
-    .layout_area {
-        padding-top: 20px;
-        background: white !important;
+    &_sider {
+      @include bg-color;
 
-        &_sider {
-            @include bg-color;
+      .ant-menu-item {
+        font-size: 1rem;
+        font-weight: 500;
+      }
 
-            .ant-menu-item {
-                font-size: 1rem;
-                font-weight: 500;
-            }
+      .ant-menu-submenu-selected .ant-menu-submenu-title,
+      .ant-menu-item-selected {
+        @include item_menu;
+      }
 
-            .ant-menu-submenu-selected .ant-menu-submenu-title,
-            .ant-menu-item-selected {
-                @include item_menu
-            }
-
-            .ant-layout-sider-trigger {
-                @include bg-color;
-            }
-        }
+      .ant-layout-sider-trigger {
+        @include bg-color;
+      }
     }
+  }
+}
+.ant-menu-submenu-title {
+  @include item_menu;
 }
 
 .chart-line_area {
-    max-width: 100%;
-    border: 2px solid #FC8019;
+  max-width: 100%;
+  border: 2px solid #fc8019;
 
-    .chart_month {
-        max-width: 880px;
-        object-fit: cover;
-        overflow: hidden;
-    }
+  .chart_month {
+    max-width: 880px;
+    object-fit: cover;
+    overflow: hidden;
+  }
 }
 
 .wc {
-    border-radius: 50%;
-    border-width: 4px;
-    width: 18px;
-    height: 18px;
+  border-radius: 50%;
+  border-width: 4px;
+  width: 18px;
+  height: 18px;
 }
 
-
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 640px) {
+  .main_area {
     .layout_area_sider {
-        display: none !important;
+      display: none;
     }
+  }
 }

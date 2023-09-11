@@ -2,8 +2,6 @@ import { Button } from "antd";
 
 /* eslint-disable */
 function ButtonComponents({
-  borderColor,
-  backgroundColor,
   iconBefore,
   iconAfter,
   spacingContent,
@@ -11,15 +9,15 @@ function ButtonComponents({
   sizeIconAfter,
   content,
   onClick,
-  colorText,
   type,
-  htmlType
+  className,
+  htmlType,
 }) {
   return (
     <>
-      <Button htmlType={htmlType || "button"}
-        className={` ${borderColor} ${backgroundColor} inline-flex justify-center items-center  ${colorText ?? "text-white"
-          }`}
+      <Button
+        htmlType={htmlType || "button"}
+        className={`${className} inline-flex justify-center items-center`}
         onClick={onClick}
       >
         {iconBefore && <div className={`flex justify-center items-center ${sizeIconBefore}`}>{iconBefore}</div>}
