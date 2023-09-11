@@ -3,6 +3,7 @@ import product from "../assets/images/product.png";
 import { BsBookmarkCheckFill } from "react-icons/bs";
 import { FaShippingFast } from "react-icons/fa";
 import { RiServiceFill } from "react-icons/ri";
+import {truncateString} from "../utils/format.js";
 
 const AboutUs = () => {
   return (
@@ -28,14 +29,12 @@ const AboutUs = () => {
               <div className="p-2 bg-primary rounded-full flex">
                 <BsBookmarkCheckFill className="text-white text-xl" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-gray-800 overflow-hidden whitespace-nowrap">
                 Đặt bàn online
               </h2>
             </div>
             <p className="py-4 text-sm text-gray-500">
-              Nếu bạn muốn có sự chuẩn bị tốt nhất cho một cuộc hẹn,
-              bạn không thể thiếu sự chuẩn bị trước cho việc đặt bàn tại nhà
-              hàng của chúng tôi.
+              {truncateString('Nếu bạn muốn có sự chuẩn bị tốt nhất cho một cuộc hẹn, bạn không thể thiếu sự chuẩn bị trước cho việc đặt bàn tại nhà hàng của chúng tôi.', 130)}
             </p>
             <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
               Xem Menu
@@ -55,13 +54,12 @@ const AboutUs = () => {
               <div className="p-2 bg-primary rounded-full flex">
                 <FaShippingFast className="text-white text-xl" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-gray-800 overflow-hidden whitespace-nowrap">
                 Giao hàng tận nơi
               </h2>
             </div>
             <p className="py-4 text-sm text-gray-500">
-              Bạn không cần phải tốn công đến nhà hàng để đặt món, nhà hàng Thuỷ
-              Tinh sẽ cung cấp dịch vụ giao hàng tận nơi đến cho quý khách hàng.
+              {truncateString('Bạn không cần phải tốn công đến nhà hàng để đặt món, nhà hàng Thuỷ Tinh sẽ cung cấp dịch vụ giao hàng tận nơi đến cho quý khách hàng.', 130)}
             </p>
             <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
               Xem Menu
@@ -81,13 +79,12 @@ const AboutUs = () => {
               <div className="p-2 bg-primary rounded-full flex">
                 <RiServiceFill className="text-white text-xl" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-gray-800 overflow-hidden whitespace-nowrap">
                 Chăm sóc khách hàng
               </h2>
             </div>
-            <p className="py-4 text-sm text-gray-500">
-              Nhà hàng Thuỷ Tinh luôn đặt khách hàng trong tim. Chúng tôi khẳng định sẽ tận
-              tâm, lắng nghe và phục vụ khách hàng bằng những gì mình có.
+            <p className="py-4 text-sm text-gray-500 ">
+              {truncateString('Nhà hàng Thuỷ Tinh luôn đặt khách hàng trong tim. Chúng tôi khẳng định sẽ tận tâm, lắng nghe và phục vụ khách hàng bằng những gì mình có.', 130)}
             </p>
             <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
               Xem Menu

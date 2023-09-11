@@ -61,40 +61,27 @@ const Navbar = () => {
         </div>
       </div>
       <div className="hidden lg:flex lg:justify-between lg:items-center lg:fixed z-30 bg-white top-0 w-full h-20 px-6 py-2 drop-shadow-md">
-        <div>
-          <div
-            className="flex items-center group cursor-pointer"
-            onClick={() => setDropdown(!dropdown)}
-          >
-            <HiOutlineViewGrid className="w-6 h-6 mr-3 group-hover:text-primary transition-colors" />
-            <span className="text-xl font-medium group-hover:text-primary transition-colors">
-              Danh mục
-            </span>
-          </div>
-          {dropdown && (
-            <div className="absolute -bottom-24 left-10 w-44 space-y-3 h-auto bg-white p-2 border rounded-lg flex flex-col drop-shadow-md z-30">
-              <NavLink
-                to="/"
-                className="font-medium text-base hover:text-primary transition-colors "
-              >
-                Trang chủ
-              </NavLink>
-              <NavLink
-                to="/service"
-                className="font-medium text-base hover:text-primary transition-colors "
-              >
-                Dịch vụ
-              </NavLink>
-              <NavLink
-                to="/menu"
-                className="font-medium text-base hover:text-primary transition-colors "
-              >
-                Thực đơn
-              </NavLink>
-            </div>
-          )}
-        </div>
         <div className="text-2xl font-bold">LOGO</div>
+        <div className="w-44 space-y-3 h-auto bg-white p-2 border rounded-lg flex flex-col drop-shadow-md z-30">
+          <NavLink
+            to="/"
+            className="font-medium text-base hover:text-primary transition-colors "
+          >
+            Trang chủ
+          </NavLink>
+          <NavLink
+            to="/service"
+            className="font-medium text-base hover:text-primary transition-colors "
+          >
+            Dịch vụ
+          </NavLink>
+          <NavLink
+            to="/menu"
+            className="font-medium text-base hover:text-primary transition-colors "
+          >
+            Thực đơn
+          </NavLink>
+        </div>
         <div className="flex justify-between items-center space-x-3">
           <HiOutlineClipboardList className="w-8 h-8" />
           <FiUser className="w-8 h-8" />

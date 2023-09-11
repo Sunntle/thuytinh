@@ -21,45 +21,45 @@ import AboutUs from "../../components/AboutUs.jsx";
 import Footer from "../../components/Footer.jsx";
 
 const Home = () => {
-  // const [slideProduct, setSlideProduct] = useState(null);
-  // const { sendRequest } = useHttp();
+  const [slideProduct, setSlideProduct] = useState(null);
+  const { sendRequest } = useHttp();
 
-  // useEffect(() => {
-  //   const request = {
-  //     method: "get",
-  //     url: "/product",
-  //   };
-  //   sendRequest(request, setSlideProduct);
-  // }, []);
+  useEffect(() => {
+    const request = {
+      method: "get",
+      url: "/product",
+    };
+    sendRequest(request, setSlideProduct);
+  }, []);
 
-  // console.log(slideProduct);
+  console.log(slideProduct);
 
   return (
-    <div className="lg:pt-24">
+    <div className="pb-24 lg:pb-0 lg:pt-24">
       {/*  Hot Food */}
-      {/* <Swiper
+      <Swiper
         // install Swiper modules
         className="mt-12 px-6 w-auto"
         modules={[A11y]}
         spaceBetween={10}
         slidesPerView={2}
         breakpoints={{
-            375: {
-                slidesPerView: 2,
-                spaceBetween: 25
-            },
-            768: {
-                slidesPerView: 3,
-                spaceBetween: 30
-            },
-            1024: {
-                slidesPerView: 4,
-                spaceBetween: 30
-            },
-            1440: {
-                slidesPerView: 5,
-                spaceBetween: 30
-            }
+          375: {
+            slidesPerView: 2,
+            spaceBetween: 25
+          },
+          768: {
+            slidesPerView: 3,
+            spaceBetween: 30
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 30
+          },
+          1440: {
+            slidesPerView: 5,
+            spaceBetween: 30
+          }
         }}
         autoplay={true}
         onSwiper={(swiper) => console.log(swiper)}
@@ -69,8 +69,8 @@ const Home = () => {
           slideProduct?.data?.map((product) => (
             <SwiperSlide key={product.id}>
               <div className="w-auto h-auto border rounded-lg">
-                  <Badge.Ribbon text="Hippies" className="bg-primary">
-                  </Badge.Ribbon>
+                <Badge.Ribbon text="Hippies" className="bg-primary">
+                </Badge.Ribbon>
                 <div className="w-full h-[120px]">
                   <img
                     className="w-full h-full rounded-t-lg"
@@ -94,7 +94,7 @@ const Home = () => {
               </div>
             </SwiperSlide>
           ))}
-      </Swiper> */}
+      </Swiper>
       {/* code ở đây */}
       <Banner />
       <AboutUs />

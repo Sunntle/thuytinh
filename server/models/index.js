@@ -11,6 +11,7 @@ const Reviews = require('./reviewsModel')
 Product.hasMany(OrderDetail, { foreignKey: "id_product", onDelete: "CASCADE", onUpdate: "CASCADE" });
 Product.belongsTo(Category, { foreignKey: "id_category", onDelete: "CASCADE", onUpdate: "CASCADE" });
 Product.hasMany(ImageProduct, { foreignKey: "id_product", sourceKey: "id" });
+
 Product.hasMany(Recipes, { foreignKey: "id_product", sourceKey: "id" });
 ImageProduct.belongsTo(Product, { foreignKey: "id_product" });
 Materials.hasMany(Recipes, { foreignKey: "id_material", sourceKey: "id" });
