@@ -1,6 +1,10 @@
-export const truncateString = (str) => {
-    return str.length > 10 ? str.substring(0,10) + "..." : str
+export function truncateString(text, maxLength) {
+    if (text.length <= maxLength) {
+        return text;
+    }
+    return text.substring(0, maxLength) + '...';
 }
+
 
 export const formatCurrency = (cur) => {
     return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(cur)

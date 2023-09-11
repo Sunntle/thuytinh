@@ -92,8 +92,8 @@ const Order = () => {
               ]}
             >
               <p className="text-gray-700">
-                Quý khách vui lòng kiểm tra món lại 1 lần nữa. Nhân viên sẽ đến thanh
-                toán trong giây lát.
+                Quý khách vui lòng kiểm tra món lại 1 lần nữa. Nhân viên sẽ đến
+                thanh toán trong giây lát.
               </p>
             </Modal>
           </div>

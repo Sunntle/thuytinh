@@ -66,10 +66,9 @@ const CategoryPage = () => {
         <div className='px-5 mt-5'>
             <div >
                 <ButtonComponents
-                    borderColor={"border-borderSecondaryColor"}
+                className="text-main border-borderSecondaryColor"
                     onClick={handOpen}
                     content={"Thêm mới"}
-                    colorText={"text-main"}
                 />
             </div>
             <Table columns={[

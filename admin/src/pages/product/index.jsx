@@ -29,7 +29,10 @@ function ProductPage() {
     const resCate = await getAllCate();
     const resMate = await getAllMaterial();
     const resProduct = await getAllProduct();
-    setProducts({ ...resProduct, data: resProduct.data.map((el) => ({ ...el, key: el.id })) });
+    setProducts({
+      ...resProduct,
+      data: resProduct.data.map((el) => ({ ...el, key: el.id })),
+    });
     setCategories(resCate);
     setMaterials(resMate);
     setLoading(false);
@@ -56,7 +59,12 @@ function ProductPage() {
       title: "Hình ảnh",
       dataIndex: "imageUrls",
       render: (_, record) => (
-        <img className="w-full" style={{ maxWidth: "150px" }} src={record?.imageUrls?.split(";")[0]} alt="" />
+        <img
+          className="w-full"
+          style={{ maxWidth: "150px" }}
+          src={record?.imageUrls?.split(";")[0]}
+          alt=""
+        />
       ),
     },
     {
@@ -108,7 +116,20 @@ function ProductPage() {
       title: "Trạng thái",
       dataIndex: "status",
       sorter: (a, b) => a.status - b.status,
-      render: (_, record) => (record.status == 0 ? "Còn hàng" : "Hết hàng"),
+      render: (_, record) =>
+        record.status == 0 ? (
+          <ButtonComponents
+            content={"Còn hàng"}
+            spacingContent={"px-4 py-2"}
+            className={"h-9 border-none text-green-500 bg-green-200"}
+          />
+        ) : (
+          <ButtonComponents
+            content={"Hết hàng"}
+            spacingContent={"px-4 py-2"}
+            className={"h-9 border-none text-red-500 bg-red-200"}
+          />
+        ),
     },
     {
       title: "#",
@@ -121,7 +142,10 @@ function ProductPage() {
           >
             Sửa
           </span>
-          <ConfirmComponent title="Xác nhận xóa đơn hàng" confirm={() => handleDeleteProduct(record.id)}>
+          <ConfirmComponent
+            title="Xác nhận xóa đơn hàng"
+            confirm={() => handleDeleteProduct(record.id)}
+          >
             Xóa
           </ConfirmComponent>
         </div>
@@ -211,14 +235,17 @@ function ProductPage() {
             </Col>
             <Col xs={6} style={{ textAlign: "-webkit-right" }}>
               <ButtonComponents
-                borderColor={"border-borderSecondaryColor"}
-                backgroundColor={"bg-secondaryColor"}
+                className="border-borderSecondaryColor bg-secondaryColor text-white"
                 content={"Thêm mới"}
                 onClick={() => setOpen(true)}
               />
             </Col>
           </Row>
-          <Table columns={columns} dataSource={products?.data} onChange={onChange} />
+          <Table
+            columns={columns}
+            dataSource={products?.data}
+            onChange={onChange}
+          />
           <AddNewProduct
             open={open}
             cate={categories}

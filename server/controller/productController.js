@@ -1,8 +1,5 @@
 const { Product, ImageProduct, Recipes, Category, Materials } = require("../models");
 const { Op, Sequelize } = require("sequelize");
-Product.beforeDestroy(() => {
-  console.log("Product has been destroyed");
-});
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
