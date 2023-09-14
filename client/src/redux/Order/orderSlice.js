@@ -32,7 +32,7 @@ const orderSlice = createSlice({
                 existingItem.quantity -= 1
             }
         },
-        emptyOrder: (state, action) => {
+        emptyOrder: (state) => {
             state = [];
             return state
         }

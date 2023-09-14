@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import panda from "../assets/images/panda.png";
 import {useSelector} from "react-redux";
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // import Swiper core and required modules
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { A11y } from "swiper/modules";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -10,15 +10,13 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import product from "../../assets/images/product.png";
 import { AiFillPlusCircle } from "react-icons/ai";
 import useHttp from "../../hooks/useHttp.js";
 import { formatCurrency, truncateString } from "../../utils/format.js";
-import { Badge, Card } from "antd";
+import { Badge } from "antd";
 
 import Banner from "../../components/Banner.jsx";
 import AboutUs from "../../components/AboutUs.jsx";
-import Footer from "../../components/Footer.jsx";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);

@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import { Button, Modal } from "antd";
 import "./main.css";
-import product from "../../assets/images/product.png";
 import { BiSolidTrash } from "react-icons/bi";
 import { AiFillWarning } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";

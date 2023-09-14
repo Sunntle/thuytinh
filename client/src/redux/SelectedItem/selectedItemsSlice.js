@@ -8,7 +8,7 @@ const selectedItemsSlice = createSlice({
             state = action.payload
             return state
         },
-        emptySeletedItems: (state, action) => {
+        emptySeletedItems: (state) => {
             state = null
             return state
         }

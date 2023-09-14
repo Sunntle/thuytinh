@@ -1,4 +1,3 @@
-import panda from "../../assets/images/panda.png";
 import product from "../../assets/images/product.png";
 import {Button, Divider, Modal} from "antd";
 import { useState } from "react";
