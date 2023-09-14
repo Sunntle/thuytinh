@@ -5,9 +5,9 @@ import { AiFillPlusCircle } from "react-icons/ai";
 import { BiFoodMenu } from "react-icons/bi";
 import useHttp from "../../hooks/useHttp.js";
 import { formatCurrency } from "../../utils/format.js";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import OrderListModal from "../../components/OrderListModal/OrderListModal.jsx";
-import {addToOrder} from "../../redux/Order/orderSlice.js";
+import { addToOrder } from "../../redux/Order/orderSlice.js";
 
 const Menu = () => {
   const [active, setActive] = useState(false);
@@ -15,7 +15,7 @@ const Menu = () => {
   const { sendRequest } = useHttp();
   const [foods, setFoods] = useState([]);
   const dispatch = useDispatch();
-  const orders = useSelector(state => state.order)
+  const orders = useSelector((state) => state.order);
 
   useEffect(() => {
     const request = {
@@ -27,9 +27,9 @@ const Menu = () => {
 
   const handleAddToOrder = (product) => {
     if (product) {
-      dispatch(addToOrder(product))
+      dispatch(addToOrder(product));
     }
-  }
+  };
 
   const showOrderListModal = () => {
     setIsOrderModalOpen(true);
@@ -67,6 +67,7 @@ const Menu = () => {
             isModalOpen={isOrderModalOpen}
             handleOk={handleOk}
             handleCancel={handleCancel}
+            setIsOrderModalOpen={setIsOrderModalOpen}
           />
         </div>
         {/*Category*/}

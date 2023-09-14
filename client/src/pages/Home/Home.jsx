@@ -98,7 +98,6 @@ const Home = () => {
       {/* code ở đây */}
       <Banner />
       <AboutUs />
-      <Footer />
     </div>
   );
 };

@@ -31,9 +31,13 @@ const orderSlice = createSlice({
             if (existingItem) {
                 existingItem.quantity -= 1
             }
+        },
+        emptyOrder: (state, action) => {
+            state = [];
+            return state
         }
     }
 })
 
-export const {addToOrder,removeFromOrder, increaseQuantity, decreaseQuantity} = orderSlice.actions
+export const {emptyOrder, addToOrder,removeFromOrder, increaseQuantity, decreaseQuantity} = orderSlice.actions
 export const orderReducer = orderSlice.reducer
