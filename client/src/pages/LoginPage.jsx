@@ -9,7 +9,7 @@ const LoginPage = () => {
   useEffect(() => {
     const request = {
       method: "get",
-      url: "/user",
+      url: "/login",
     };
     sendRequest(request, setData);
   }, [sendRequest]);
