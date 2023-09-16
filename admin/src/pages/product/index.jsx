@@ -16,7 +16,7 @@ import {
 } from "../../services/api";
 import AddNewProduct from "./add";
 import EditProduct from "./edit";
-
+import { socket } from "../../socket";
 function ProductPage() {
   const [open, setOpen] = useState(false);
   const [openModelEdit, setOpenModelEdit] = useState(false);
@@ -39,6 +39,11 @@ function ProductPage() {
   };
   useEffect(() => {
     fetchData();
+  }, []);
+  useEffect(() => {
+    socket.on("new message", (data) => {
+      data?.name == "order" && fetchData();
+    });
   }, []);
   const handleDeleteProduct = async (id_product) => {
     const res = await deleteProduct(id_product);
