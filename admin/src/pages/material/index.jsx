@@ -5,7 +5,13 @@ import { useEffect, useState } from "react";
 import { Table } from "antd";
 import ConfirmComponent from "../../components/confirm";
 import AddNewMaterial from "./add";
-import { addNewMaterial, deleteMaterial, editMaterial, getAllMaterial, getOneMaterial } from "../../services/api";
+import {
+  addNewMaterial,
+  deleteMaterial,
+  editMaterial,
+  getAllMaterial,
+  getOneMaterial,
+} from "../../services/api";
 import EditMaterial from "./edit";
 
 function MaterialPage() {
@@ -15,7 +21,10 @@ function MaterialPage() {
   const [data, setData] = useState(null);
   const fetchData = async () => {
     const res = await getAllMaterial();
-    setMaterials({ ...res, data: res.data.map((el) => ({ ...el, key: el.id })) });
+    setMaterials({
+      ...res,
+      data: res.data.map((el) => ({ ...el, key: el.id })),
+    });
   };
 
   useEffect(() => {
@@ -41,7 +50,15 @@ function MaterialPage() {
     {
       title: "Hình nguyên liệu",
       dataIndex: "image",
-      render: (_, record) => <img className="w-full" style={{ maxWidth: "200px" }} src={record.image} alt="" />,
+      fixed: "left",
+      render: (_, record) => (
+        <img
+          className="w-full"
+          style={{ maxWidth: "200px" }}
+          src={record.image}
+          alt=""
+        />
+      ),
     },
     {
       title: "Mã nguyên liệu",
@@ -102,8 +119,10 @@ function MaterialPage() {
     },
 
     {
-      title: "#",
+      title: "Action",
       key: "action",
+      width: "12%",
+      fixed: "right",
       render: (_, record) => (
         <div className="h-10 flex items-center cursor-pointer">
           <span
@@ -154,7 +173,10 @@ function MaterialPage() {
       if (res) {
         message.open({
           type: "success",
-          content: status == "edit" ? "Sửa nguyên liệu thành công!" : "Thêm nguyên liệu mới thành công!",
+          content:
+            status == "edit"
+              ? "Sửa nguyên liệu thành công!"
+              : "Thêm nguyên liệu mới thành công!",
         });
         status === "edit" ? setOpenModelEdit(false) : setOpen(false);
         fetchData();
@@ -172,7 +194,10 @@ function MaterialPage() {
     <div className="my-7 px-5">
       <Row justify="space-between" align="center" className="mb-4">
         <Col xs={6}>
-          <SearchComponent background={"bg-transparent"} size="medium"></SearchComponent>
+          <SearchComponent
+            background={"bg-transparent"}
+            size="medium"
+          ></SearchComponent>
         </Col>
         <Col xs={6} style={{ textAlign: "-webkit-right" }}>
           <ButtonComponents
@@ -183,8 +208,16 @@ function MaterialPage() {
           />
         </Col>
       </Row>
-      <Table columns={columns} dataSource={materials.data} onChange={onChange} />
-      <AddNewMaterial open={open} handleCancel={handleCancel} handleFinish={handleDataForm} />
+      <Table
+        columns={columns}
+        dataSource={materials.data}
+        onChange={onChange}
+      />
+      <AddNewMaterial
+        open={open}
+        handleCancel={handleCancel}
+        handleFinish={handleDataForm}
+      />
       <EditMaterial
         open={openModelEdit}
         handleCancel={() => setOpenModelEdit(false)}

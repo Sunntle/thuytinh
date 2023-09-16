@@ -1,19 +1,21 @@
 import SearchComponent from "../search";
 import ButtonComponents from "../button";
 import {
-  BellOutlined,
   DownOutlined,
   LogoutOutlined,
   MenuUnfoldOutlined,
   RightOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Badge, Button, Drawer, Dropdown, Menu, Popover } from "antd";
+import { Button, Drawer, Dropdown, Menu } from "antd";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getItem } from "../../utils/format";
 import { BiCategory } from "react-icons/bi";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { socket } from "../../socket";
+import NotificationsComponent from "../notification";
 
 function HeaderComponent() {
   const { pathname } = useLocation();
@@ -21,6 +23,7 @@ function HeaderComponent() {
   const [open, setOpen] = useState(false);
   const [icon, setIcon] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   const user = useSelector((state) => state.account);
   const items = [
     {
@@ -45,6 +48,20 @@ function HeaderComponent() {
     items,
     onClick: handleMenuClick,
   };
+  useEffect(() => {
+    socket.emit("new user", { userName: "Taile", role: "R4" });
+    socket.on("new message", (arg) => {
+      setNotifications((prev) => {
+        const arr = [...prev];
+        if (Array.isArray(arg)) {
+          arr.unshift(...arg);
+        } else {
+          arr.unshift(arg);
+        }
+        return arr;
+      });
+    });
+  }, []);
   return (
     <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
       <div className="flex items-center justify-between">
@@ -66,25 +83,12 @@ function HeaderComponent() {
         />
       </div>
       <div className="flex items-center justify-center gap-x-1">
-        <Popover
-          content={
-            <a onClick={() => setOpenPopover(false)}>Đánh dấu tất cả đã đọc</a>
-          }
-          title={<p className="text-red-500">222</p>}
-          trigger="click"
-          open={openPopover}
-          onOpenChange={() => setOpenPopover(!openPopover)}
-          placement="topRight"
-        >
-          <Badge count={2}>
-            <Button
-              type="primary"
-              className="border-borderSecondaryColor bg-secondaryColor"
-            >
-              <BellOutlined className="text-white" />
-            </Button>
-          </Badge>
-        </Popover>
+        <NotificationsComponent
+          notifications={notifications}
+          openPopover={openPopover}
+          setOpenPopover={setOpenPopover}
+          setNotifications={setNotifications}
+        />
         <Dropdown menu={menuProps} trigger={["click"]}>
           <ButtonComponents
             sizeIconBefore={"text-lg"}
