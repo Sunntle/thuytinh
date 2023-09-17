@@ -17,10 +17,13 @@ import { Badge } from "antd";
 
 import Banner from "../../components/Banner.jsx";
 import AboutUs from "../../components/AboutUs.jsx";
+import { useParams } from "react-router-dom";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
+  const { slug } = useParams();
+  console.log(slug);
 
   useEffect(() => {
     const request = {
@@ -30,34 +33,37 @@ const Home = () => {
     sendRequest(request, setSlideProduct);
   }, []);
 
-  console.log(slideProduct);
-
   return (
     <div className="pb-24 lg:pb-0 lg:pt-24">
-      {/*  Hot Food */}
+      <Banner />
+        <div className="flex items-center justify-between mt-12">
+            <span className="w-full h-0.5 bg-black"></span>
+            <span className="font-medium text-2xl whitespace-nowrap px-6">Bán Chạy Nhất</span>
+            <span className="w-full h-0.5 bg-black"></span>
+        </div>
       <Swiper
         // install Swiper modules
-        className="mt-12 px-6 w-auto"
+        className="mt-6 px-6 w-auto"
         modules={[A11y]}
         spaceBetween={10}
         slidesPerView={2}
         breakpoints={{
           375: {
             slidesPerView: 2,
-            spaceBetween: 25
+            spaceBetween: 25,
           },
           768: {
             slidesPerView: 3,
-            spaceBetween: 30
+            spaceBetween: 30,
           },
           1024: {
             slidesPerView: 4,
-            spaceBetween: 30
+            spaceBetween: 30,
           },
           1440: {
             slidesPerView: 5,
-            spaceBetween: 30
-          }
+            spaceBetween: 30,
+          },
         }}
         autoplay={true}
         onSwiper={(swiper) => console.log(swiper)}
@@ -67,9 +73,11 @@ const Home = () => {
           slideProduct?.data?.map((product) => (
             <SwiperSlide key={product.id}>
               <div className="w-auto h-auto border rounded-lg">
-                <Badge.Ribbon text="Hippies" className="bg-primary">
-                </Badge.Ribbon>
-                <div className="w-full h-[120px]">
+                <Badge.Ribbon
+                  text="Hippies"
+                  className="bg-primary"
+                ></Badge.Ribbon>
+                <div className="w-full h-[160px]">
                   <img
                     className="w-full h-full rounded-t-lg"
                     src={product.imageUrls}
@@ -93,8 +101,6 @@ const Home = () => {
             </SwiperSlide>
           ))}
       </Swiper>
-      {/* code ở đây */}
-      <Banner />
       <AboutUs />
     </div>
   );
