@@ -41,8 +41,6 @@ const Footer = () => {
             <div className="flex flex-col space-y-2">
               <a
                 href="URL của Facebook"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-white hover:text-primary transition-colors flex items-center"
               >
                 <FaFacebook className="w-5 h-5 mr-1" />
@@ -50,8 +48,6 @@ const Footer = () => {
               </a>
               <a
                 href="URL của Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-white hover:text-primary transition-colors flex items-center"
               >
                 <FaInstagram className="w-5 h-5 mr-1" />
@@ -59,8 +55,6 @@ const Footer = () => {
               </a>
               <a
                 href="URL của Twitter"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-white hover:text-primary transition-colors flex items-center"
               >
                 <FaTwitter className="w-5 h-5 mr-1" />
@@ -68,8 +62,6 @@ const Footer = () => {
               </a>
               <a
                 href="URL của Youtube"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-white hover:text-primary transition-colors flex items-center"
               >
                 <FaYoutube className="w-5 h-5 mr-1" />

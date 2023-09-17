@@ -1,12 +1,29 @@
 import React, { useState } from "react";
 import { AiOutlineShop } from "react-icons/ai";
 import { MdOutlineRestaurantMenu, MdRoomService } from "react-icons/md";
-import { HiOutlineClipboardList, HiOutlineViewGrid } from "react-icons/hi";
+import { HiOutlineClipboardList, HiSearch } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
+import { BiFlag } from "react-icons/bi";
+import { Dropdown, Menu } from "antd";
 
 const Navbar = () => {
   const [dropdown, setDropdown] = useState(false);
+
+  const { SubMenu } = Menu;
+
+  const LanguageMenu = (
+    <Menu>
+      <Menu.Item key="1">Tiếng Việt</Menu.Item>
+      <Menu.Item key="2">English</Menu.Item>
+    </Menu>
+  );
+
+  const [showInput, setShowInput] = useState(false);
+
+  const showSearchInput = (show) => {
+    setShowInput(show);
+  };
 
   return (
     <>
@@ -60,31 +77,77 @@ const Navbar = () => {
           <span className="text-xs font-medium">Tài khoản</span>
         </div>
       </div>
-      <div className="hidden lg:flex lg:justify-between lg:items-center lg:fixed z-30 bg-white top-0 w-full h-20 px-6 py-2 drop-shadow-md">
+      <div className="lg:flex lg:justify-between lg:items-center lg:fixed z-30 bg-white top-0 w-full h-20 px-6 py-2 drop-shadow-md">
         <div className="text-2xl font-bold">LOGO</div>
-        <div className="w-44 space-y-3 h-auto bg-white p-2 border rounded-lg flex flex-col drop-shadow-md z-30">
+        <nav className="hidden lg:flex lg:space-x-6">
           <NavLink
             to="/"
-            className="font-medium text-base hover:text-primary transition-colors "
+            className="font-medium text-base hover:text-primary transition-colors"
           >
             Trang chủ
           </NavLink>
           <NavLink
             to="/service"
-            className="font-medium text-base hover:text-primary transition-colors "
+            className="font-medium text-base hover:text-primary transition-colors"
           >
             Dịch vụ
           </NavLink>
           <NavLink
             to="/menu"
-            className="font-medium text-base hover:text-primary transition-colors "
+            className="font-medium text-base hover:text-primary transition-colors"
           >
             Thực đơn
           </NavLink>
-        </div>
+          <NavLink
+            to="/contact"
+            className="font-medium text-base hover:text-primary transition-colors"
+          >
+            Liên hệ
+          </NavLink>
+          <NavLink
+            to="/signup"
+            className="font-medium text-base hover:text-primary transition-colors"
+          >
+            Đăng ký
+          </NavLink>
+          <NavLink
+            to="/login"
+            className="font-medium text-base hover:text-primary transition-colors"
+          >
+            Đăng nhập
+          </NavLink>
+        </nav>
         <div className="flex justify-between items-center space-x-3">
-          <HiOutlineClipboardList className="w-8 h-8" />
-          <FiUser className="w-8 h-8" />
+          <div
+            className="cursor-pointer flex items-center space-x-2 relative"
+            onMouseEnter={() => {
+              showSearchInput(true);
+            }}
+            onMouseLeave={() => {
+              showSearchInput(false);
+            }}
+          >
+            <HiSearch className="w-4 h-4 text-primary hover:text-primary-dark transition-colors" />
+            <div
+              className={`absolute top-0 right-0 mt-4 w-52 ${
+                showInput ? "" : "hidden"
+              }`}
+            >
+              <input
+                type="text"
+                placeholder="Tìm kiếm..."
+                className="w-full p-2 border border-gray-200 rounded-md outline-none"
+              />
+            </div>
+          </div>
+          <div className="cursor-pointer flex items-center space-x-2">
+            <FiUser className="w-4 h-4 text-primary hover:text-primary-dark transition-colors" />
+          </div>
+          <Dropdown overlay={LanguageMenu}>
+            <div className="flex items-center space-x-2 cursor-pointer">
+              <BiFlag className="w-4 h-4 text-primary hover:text-primary-dark transition-colors" />
+            </div>
+          </Dropdown>
         </div>
       </div>
     </>

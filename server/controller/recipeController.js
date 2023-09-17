@@ -71,30 +71,8 @@ exports.updateRecipe = asyncHandler(async (req, res) => {
     await Recipes.destroy({ where: { id: removedItems } });
   }
   res.status(200).json("Cập nhật công thức thành công !");
-})
-exports.updateRecipeById = async (req, res) => {
-  try {
-    const _id = req.params.id;
-    const response = await Recipes.update(req.body, {
-      where: { id_product: _id },
-    });
-    res.status(200).json("Cập nhật công thức thành công !");
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-exports.removeRecipe = async (req, res) => {
-  try {
-    const _id = req.params.id;
-    const response = await Recipes.destroy({
-      where: { id: _id },
-    });
-    res.status(200).json("Xóa công thức thành công");
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-exports.removeRecipeByProductId = asyncHandler(async (req, res) => {
+});
+exports.removeRecipe = asyncHandler(async (req, res) => {
   await Recipes.destroy({
     where: { id_product: req.params.id }
   })
