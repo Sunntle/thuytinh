@@ -19,6 +19,7 @@ const App = () => {
   }
   return (
     <ConfigProviderAntd
+
       theme={{
         components: {
           Button: {
