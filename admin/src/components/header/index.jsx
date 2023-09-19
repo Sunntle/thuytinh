@@ -2,6 +2,7 @@ import SearchComponent from "../search";
 import ButtonComponents from "../button";
 import {
   DownOutlined,
+  FileSearchOutlined,
   LogoutOutlined,
   MenuUnfoldOutlined,
   RightOutlined,
@@ -10,13 +11,11 @@ import {
 import { Button, Drawer, Dropdown, Menu } from "antd";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getItem } from "../../utils/format";
-import { BiCategory } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { socket } from "../../socket";
 import NotificationsComponent from "../notification";
-
+import { NAV_ITEMS } from "../../utils/constant";
 function HeaderComponent() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -27,19 +26,15 @@ function HeaderComponent() {
   const user = useSelector((state) => state.account);
   const items = [
     {
-      label: "Thoát",
+      label: "Thông tin",
       key: "1",
+      icon: <FileSearchOutlined />,
+    },
+    {
+      label: "Thoát",
+      key: "2",
       icon: <LogoutOutlined />,
     },
-  ];
-  const itemsMenu = [
-    getItem("Tổng quan", null, <BiCategory />, [
-      getItem("Dashboard", "/"),
-      getItem("Thực đơn món ăn", "/menu"),
-      getItem("Bill ", "/order"),
-      getItem("Đánh giá", "/rate"),
-    ]),
-    getItem("Nhà hàng", null),
   ];
   const handleMenuClick = (e) => {
     console.log("click", e);
@@ -76,10 +71,11 @@ function HeaderComponent() {
         </div>
       </div>
 
-      <div className="hidden sm:block">
+      <div className="hidden sm:block flex-1 text-center">
         <SearchComponent
-          className="bg-secondaryColor w-full min-w-[20rem]"
+          className="bg-secondaryColor w-full max-w-2xl"
           textColor={true}
+          size="large"
         />
       </div>
       <div className="flex items-center justify-center gap-x-1">
@@ -105,10 +101,11 @@ function HeaderComponent() {
       <Drawer
         title={
           <div>
-            <SearchComponent maxWidth={"max-w-md"} />
+            <SearchComponent />
           </div>
         }
         placement="left"
+        className="main_area"
         headerStyle={{ border: "none" }}
         bodyStyle={{ padding: 0 }}
         closable={true}
@@ -121,7 +118,7 @@ function HeaderComponent() {
           defaultSelectedKeys={pathname}
           theme="light"
           mode="inline"
-          items={itemsMenu}
+          items={NAV_ITEMS}
           style={{ border: "none" }}
           onClick={(e) => navigate(e.key)}
         />
