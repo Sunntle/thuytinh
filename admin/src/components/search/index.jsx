@@ -1,5 +1,4 @@
 import { Dropdown, Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "./searchStyle.scss";
@@ -46,7 +45,7 @@ function SearchComponent({ className, size, textColor }) {
         <div>
           <Swiper
             speed={1000}
-            slidesPerView={2}
+            slidesPerView={4}
             spaceBetween={20}
             className="mySwiper"
           >
