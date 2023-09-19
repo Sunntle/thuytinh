@@ -17,6 +17,7 @@ import {
 import AddNewProduct from "./add";
 import EditProduct from "./edit";
 import { socket } from "../../socket";
+import Spinner from "../../components/spinner";
 function ProductPage() {
   const [open, setOpen] = useState(false);
   const [openModelEdit, setOpenModelEdit] = useState(false);
@@ -234,7 +235,7 @@ function ProductPage() {
   return (
     <div className="my-7 px-5">
       {loading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : (
         <>
           <Row justify="space-between" align="center" className="mb-4">
