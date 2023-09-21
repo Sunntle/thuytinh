@@ -6,11 +6,13 @@ import "./app.scss";
 import Spinner from "./components/spinner";
 import { fetchAccount } from "./redux/account/accountSlice";
 import router from "./routes";
+const nextCallAccount = ['/', '/register'];
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.account);
+  console.log(user)
   useEffect(() => {
-    if (window.location.pathname !== "/") {
+    if (!nextCallAccount.includes(window.location.pathname)) {
       dispatch(fetchAccount());
     }
   }, [dispatch]);
@@ -19,7 +21,6 @@ const App = () => {
   }
   return (
     <ConfigProviderAntd
-
       theme={{
         components: {
           Button: {

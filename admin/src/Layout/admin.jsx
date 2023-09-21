@@ -13,7 +13,7 @@ const LayoutMain = () => {
   };
 
   return (
-    <div className="bg-main relative">
+    <div className="bg-main relative ">
       <header className="sticky top-0 w-full z-10">
         <HeaderComponent />
       </header>
