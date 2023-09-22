@@ -6,7 +6,7 @@ const { Content, Sider } = Layout;
 import { NAV_ITEMS } from "../utils/constant";
 const LayoutMain = () => {
   const { pathname } = useLocation();
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const onClick = (e) => {
     navigate(e.key);

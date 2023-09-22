@@ -20,7 +20,7 @@ const Category = db.sequelize.define(
       defaultValue: 0,
     },
   },
-  {}
+  { timestamps: true }
 );
 
 Category.beforeUpdate(async (cat) => {
@@ -31,5 +31,5 @@ Category.beforeUpdate(async (cat) => {
 Category.beforeDestroy(async (cat) => {
   await destroyImg(cat.thumbnail);
 })
-Category.sync();
+Category.sync({ alter: true });
 module.exports = Category;

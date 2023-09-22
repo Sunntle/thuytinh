@@ -10,7 +10,7 @@ const nextCallAccount = ['/', '/register'];
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.account);
-  console.log(user)
+
   useEffect(() => {
     if (!nextCallAccount.includes(window.location.pathname)) {
       dispatch(fetchAccount());

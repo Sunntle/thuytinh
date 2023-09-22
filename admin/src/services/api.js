@@ -117,3 +117,8 @@ export const getAllReviews = (params) => {
 export const deleteReview = (id) => {
   return axios.delete(`/api/review/` + id);
 };
+
+export const getDataDashboard = (type) => {
+  return axios.get(`/api/order/thongke`, { params: { type: type } });
+}
+
