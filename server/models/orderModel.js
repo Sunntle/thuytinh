@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
-const bcrypt = require("bcrypt");
+
 require("dotenv").config();
 
 const Order = db.sequelize.define("orders", {
@@ -30,14 +30,6 @@ const Order = db.sequelize.define("orders", {
   },
   id_employee: {
     type: DataTypes.INTEGER,
-    defaultValue: null
-  },
-  id_table: {
-    type: DataTypes.INTEGER,
-    defaultValue: null
-  },
-  date_order: {
-    type: "TIMESTAMP",
     defaultValue: null
   }
 }, { timestamps: true });

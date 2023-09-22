@@ -47,7 +47,9 @@ const RecipePage = () => {
             id_material: item.id,
             id: item.id_recipe,
             quantity: item.quantity,
-            id_product: record.product.id
+            id_product: record.product.id,
+            descriptionRecipe: item.descriptionRecipe
+
         }))
         form.setFieldsValue({ materials: materials })
         setOpenModalUpdate({ show: true, data: materials });
@@ -118,11 +120,13 @@ const RecipePage = () => {
                 {
                     title: 'Nguyên liệu',
                     key: 'materials',
+                    width: '30%',
                     render: (_, record) => (
                         record.materials.map((item) => (
                             <div key={Math.random()} className='flex gap-2'>
-                                <div className='w-1/3'>{item.name_material}</div>
-                                <div>{item.amount}/{item.unit}</div>
+                                <div className='w-1/6 font-medium text-base'>{item.name_material}</div>
+                                <div className='flex-grow text-base'>{item.descriptionRecipe}</div>
+                                <div className='w-1/6 text-gray-500 text-base'>{item.amount}/{item.unit}</div>
                             </div>
                         ))
                     )
@@ -162,58 +166,70 @@ const RecipePage = () => {
 
                     <div className='text-xl text-center mt-2'>Công thức</div>
                     <Divider />
-                    <Form.List name="materials" >
-                        {(fields, { add, remove }) => (
-                            <div >
-                                {fields.map(({ key, name, ...restField }) => (
-                                    <div className="flex justify-center  gap-3" key={key}>
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'id_product']}
-                                            hidden
-                                        >
-                                            <Input />
-                                        </Form.Item>
-                                        <Form.Item
-                                            className="w-2/5"
-                                            label="Nguyên liệu"
-                                            {...restField}
-                                            name={[name, 'id_material']}
-                                            rules={[
-                                                {
+                    <div className='h-96 overflow-y-auto'>
+                        <Form.List name="materials" >
+                            {(fields, { add, remove }) => (
+                                <div>
+                                    {fields.map(({ key, name, ...restField }) => (
+                                        <div className="flex flex-col items-center" key={key}>
+                                            <Form.Item
+                                                {...restField}
+                                                name={[name, 'id_product']}
+                                                hidden
+                                            >
+                                                <Input />
+                                            </Form.Item>
+                                            <Form.Item
+                                                className="w-full"
+                                                label="Nguyên liệu"
+                                                {...restField}
+                                                name={[name, 'id_material']}
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: 'Chọn Nguyên liệu',
+                                                    },
+                                                ]}
+                                            >
+                                                <Select options={optionsMaterial} />
+                                            </Form.Item>
+                                            <Form.Item
+                                                label='Số lượng'
+                                                className="w-full"
+                                                {...restField}
+                                                name={[name, 'quantity']}
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: 'Nhập số lượng',
+                                                    },
+                                                ]}
+                                            >
+                                                <Input placeholder="Số lượng" />
+                                            </Form.Item>
+                                            <Form.Item
+                                                className='w-full'
+                                                name={[name, 'descriptionRecipe']}
+                                                rules={[{
                                                     required: true,
-                                                    message: 'Chọn Nguyên liệu',
-                                                },
-                                            ]}
-                                        >
-                                            <Select options={optionsMaterial} />
-                                        </Form.Item>
-                                        <Form.Item
-                                            label='Số lượng'
-                                            className="w-2/5"
-                                            {...restField}
-                                            name={[name, 'quantity']}
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Nhập số lượng',
-                                                },
-                                            ]}
-                                        >
-                                            <Input placeholder="Số lượng" />
-                                        </Form.Item>
-                                        <div className='flex items-center w-1/5'><MinusCircleOutlined className='mt-3' onClick={() => remove(name)} /></div>
+                                                    message: 'Vui lòng mô tả'
+                                                }]}
+                                            >
+                                                <Input.TextArea rows={4} placeholder="Mô tả công thức của sản phẩm" />
+                                            </Form.Item>
+                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                        </div>
+                                    ))}
+                                    <Form.Item>
+                                        <Button className="mt-8" type="dashed" onClick={() => changeSelect(add, form.getFieldsValue())} block icon={<PlusOutlined />}>
+                                            Add field
+                                        </Button>
+                                    </Form.Item>
+                                </div>
+                            )}
+                        </Form.List>
+                    </div>
 
-                                    </div>
-                                ))}
-                                <Form.Item>
-                                    <Button className="mt-2" type="dashed" onClick={() => changeSelect(add, form.getFieldsValue())} block icon={<PlusOutlined />}>
-                                        Add field
-                                    </Button>
-                                </Form.Item>
-                            </div>
-                        )}
-                    </Form.List>
                     <Form.Item
                         wrapperCol={{
                             offset: 20,

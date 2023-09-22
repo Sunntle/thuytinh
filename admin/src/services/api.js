@@ -84,8 +84,14 @@ export const addNewMaterial = (data) => {
 export const callLogin = (body) => {
   return axios.post(`/api/user/login`, body);
 }
+export const callRegister = (body) => {
+  return axios.post(`/api/user/register`, body);
+}
 export const callFetchAccount = () => {
   return axios.get(`/api/user/current`);
+}
+export const callLogout = () => {
+  return axios.get(`/api/user/logout`);
 }
 // recipe
 export const callFetchRecipe = () => {
@@ -105,9 +111,14 @@ export const editRecipeByIdProduct = (data) => {
   return axios.put(`/api/recipe/product/${data.id}`, data);
 };
 //reviews
-export const getAllReviews = (params)=>{
+export const getAllReviews = (params) => {
   return axios.get(`/api/review`, { params });
 }
 export const deleteReview = (id) => {
   return axios.delete(`/api/review/` + id);
 };
+
+export const getDataDashboard = (type) => {
+  return axios.get(`/api/order/thongke`, { params: { type: type } });
+}
+
