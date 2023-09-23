@@ -27,6 +27,11 @@ function ColumnChart({ series, colors, customOptions, categories }) {
         type: "category",
         categories: handleArrCategories(),
       },
+      yaxis: {
+        min: 0,
+        floating: false,
+        decimalsInFloat: undefined,
+      },
     },
   };
 
