@@ -2,17 +2,19 @@ import Chart from "react-apexcharts";
 import { Select, Row, Col, Progress } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
-
-
-
 const LineChart = ({ setTimeChart, timeChart, data }) => {
-  const { totalMonth, chart_order, order } = data
+  const { totalMonth, chart_order, order } = data;
   const handleChange = (value) => {
-    setTimeChart(value)
+    setTimeChart(value);
   };
   return (
     <div className="w-full block max-h-[25rem] ">
-      <Row align={"middle"} justify={"space-between"} className="px-4 mt-4" gutter={[0, 16]}>
+      <Row
+        align={"middle"}
+        justify={"space-between"}
+        className="px-4 mt-4"
+        gutter={[0, 16]}
+      >
         <Col xs={12} className="font-medium text-xl">
           Order Rate
         </Col>
@@ -42,7 +44,9 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
             </Col>
             <Col xs={7} className="flex justify-center items-center">
               <div className="flex flex-col gap-2">
-                <span className="text-gray-400 font-medium whitespace-nowrap">Order total</span>
+                <span className="text-gray-400 font-medium whitespace-nowrap">
+                  Order total
+                </span>
                 <span className="font-medium">{order || 0}</span>
               </div>
             </Col>
@@ -52,7 +56,12 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
                   <span className="font-medium text-gray-400">Target</span>
                   <span className="font-medium">100</span>
                 </div>
-                <Progress percent={order} showInfo={false} className="m-0" strokeColor="#FC8019" />
+                <Progress
+                  percent={order}
+                  showInfo={false}
+                  className="m-0"
+                  strokeColor="#FC8019"
+                />
               </div>
             </Col>
           </Row>
@@ -62,7 +71,7 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
             <Col xs={6}>
               <div className="wc border-main mt-1"></div>
             </Col>
-            <Col xs={18} >
+            <Col xs={18}>
               <div className="text-xs"> Month this</div>
               <div className="font-medium pt-1">{totalMonth?.[1] || 0}</div>
             </Col>
@@ -85,24 +94,23 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
           chart: {
             stacked: false,
             toolbar: { show: false },
-            zoom: { enabled: false }
+            zoom: { enabled: false },
           },
           tooltip: { enabled: false },
           dataLabels: { enabled: true },
           xaxis: {
             type: "category",
-            categories: chart_order?.labels || []
+            categories: chart_order?.labels || [],
           },
           yaxis: {
             min: 0,
-            max: 50
-          }
+            max: 50,
+          },
         }}
         series={[{ data: chart_order?.values || [] }]}
         type="area"
         height={300}
       />
-
     </div>
   );
 };
