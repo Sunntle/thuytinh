@@ -9,13 +9,14 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Button, Drawer, Dropdown, Menu } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { socket } from "../../socket";
 import NotificationsComponent from "../notification";
 import { NAV_ITEMS } from "../../utils/constant";
+import { doLogoutAction } from "../../redux/account/accountSlice";
+import { callLogout } from "../../services/api";
 function HeaderComponent() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ function HeaderComponent() {
   const [openPopover, setOpenPopover] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const user = useSelector((state) => state.account);
+  const dispatch = useDispatch();
   const items = [
     {
       label: "Thông tin",
@@ -36,8 +38,11 @@ function HeaderComponent() {
       icon: <LogoutOutlined />,
     },
   ];
-  const handleMenuClick = (e) => {
-    console.log("click", e);
+  const handleMenuClick = async (e) => {
+    if (e.key == 2) {
+      dispatch(doLogoutAction());
+      await callLogout();
+    }
   };
   const menuProps = {
     items,

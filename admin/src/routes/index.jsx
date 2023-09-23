@@ -13,6 +13,7 @@ import LoginPage from "../pages/login";
 import HomeEmployeePage from "../pages/employee/home";
 import RoleRoute from "../guard/admin";
 import RecipePage from "../pages/recipes";
+import RegisterPage from "../pages/register";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
       {
         path: "recipe",
         element: <RecipePage />,
-      },{
+      }, {
         path: "reviews",
         element: <ReviewsPage />,
       },
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
   },
   {
     path: "/employee",

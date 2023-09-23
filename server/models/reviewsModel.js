@@ -9,11 +9,11 @@ const Reviews = db.sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    name:{
-        type:DataTypes.STRING(1000)
+    name: {
+      type: DataTypes.STRING(1000)
     },
-    id_order:{
-        type:DataTypes.INTEGER
+    id_order: {
+      type: DataTypes.INTEGER
     },
     description: {
       type: DataTypes.STRING,

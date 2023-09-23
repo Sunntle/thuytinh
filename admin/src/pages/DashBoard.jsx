@@ -4,9 +4,23 @@ import LineChart from "../components/chart/line-chart";
 import { Col, Rate, Row, Badge } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useEffect, useState } from "react";
+import { getDataDashboard } from "../services/api";
+
 const img =
   "https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000";
 const DashBoard = () => {
+
+  const [data, setData] = useState({});
+  const [timeChart, setTimeChart] = useState("MONTH");
+
+  useEffect(() => {
+    fetchData();
+  }, [timeChart])
+  const fetchData = async () => {
+    const res = await getDataDashboard(timeChart);
+    setData(res)
+  }
   return (
     <div className="w-full my-7 px-5">
       <Row gutter={[32, 16]}>
@@ -26,7 +40,7 @@ const DashBoard = () => {
             </div>
           </div>
           <div className="chart-line_area mt-4 rounded-lg">
-            <LineChart />
+            <LineChart timeChart={timeChart} setTimeChart={setTimeChart} data={data} />
           </div>
           <div className="save-product w-full mt-4">
             <Swiper
@@ -331,48 +345,48 @@ const DashBoard = () => {
           </div>
         </Col>
         <Col xs={24} lg={8} className="flex flex-col gap-y-4">
-          <div className=" border-2 flex flex-col gap-y-4 p-4 rounded-lg">
+          <div className=" flex flex-col gap-y-4 p-4 rounded-lg border-gray-400 border-solid border-2">
             <div className="flex flex-row ">
               <div className="border-2 rounded-md ms-5 flex justify-end">
-                <CiViewTimeline size={40} className="text-main" />
+                <CiViewTimeline size={50} className="text-main" />
               </div>
-              <div className="flex flex-col justify-center items-start  ms-5">
+              <div className="flex flex-col justify-center items-start ms-5">
                 <span className="text-neutral-500 font-medium">Số đơn hàng</span>
-                <span className=" text-gray-500 font-medium">123</span>
+                <span className=" text-black font-medium text-xl">{data?.order}</span>
               </div>
             </div>
             <div className="flex flex-row ">
               <div className="border-2 rounded-md ms-5 flex justify-end">
-                <CiViewTimeline size={40} className="text-main" />
+                <CiViewTimeline size={50} className="text-main" />
               </div>
               <div className="flex flex-col justify-center items-start  ms-5">
-                <span className="text-neutral-500 font-medium">Số đơn hàng</span>
-                <span className=" text-gray-500 font-medium">123</span>
+                <span className="text-neutral-500 font-medium">Số món ăn</span>
+                <span className=" text-black font-medium text-xl">{data?.food}</span>
               </div>
             </div>
             <div className="flex flex-row ">
               <div className="border-2 rounded-md ms-5 flex justify-end">
-                <CiViewTimeline size={40} className="text-main" />
+                <CiViewTimeline size={50} className="text-main" />
               </div>
-              <div className="flex flex-col justify-center items-start  ms-5">
-                <span className="text-neutral-500 font-medium">Số đơn hàng</span>
-                <span className=" text-gray-500 font-medium">123</span>
+              <div className="flex flex-col justify-center items-start   ms-5">
+                <span className="text-neutral-500 font-medium">Số bàn đã đặt</span>
+                <span className=" text-black font-medium text-xl">{data?.table}</span>
               </div>
             </div>
             <div className="flex flex-row ">
               <div className="border-2 rounded-md ms-5 flex justify-end">
-                <CiViewTimeline size={40} className="text-main" />
+                <CiViewTimeline size={50} className="text-main" />
               </div>
               <div className="flex flex-col justify-center items-start  ms-5">
-                <span className="text-neutral-500 font-medium">Số đơn hàng</span>
-                <span className=" text-gray-500 font-medium">123</span>
+                <span className="text-neutral-500 font-medium">Số người dùng</span>
+                <span className=" text-black font-medium text-xl">{data?.user}</span>
               </div>
             </div>
           </div>
-          <div className="border-2 rounded-lg p-4">
+          <div className="border-2 rounded-lg p-4 border-gray-400 border-solid">
             <span className="font-medium text-lg">Món ăn phổ biến</span>
             <div className="overflow-hidden w-full p-2">
-              <PieChart />
+              <PieChart data={data?.category || []} />
             </div>
           </div>
         </Col>

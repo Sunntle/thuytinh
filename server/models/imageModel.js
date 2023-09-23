@@ -16,7 +16,7 @@ const ImageProduct = db.sequelize.define(
       type: DataTypes.INTEGER,
     },
   },
-  {}
+  { timestamps: true }
 );
 ImageProduct.beforeDestroy(async (img, options) => {
   const public_id = img.dataValues.url.split("/").at(-1).split(".")[0];

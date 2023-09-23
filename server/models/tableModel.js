@@ -14,7 +14,13 @@ const Tables = db.sequelize.define(
         qr_code: {
             type: DataTypes.STRING,
         },
-
+        id_order: {
+            type: DataTypes.INTEGER,
+        },
+        total_booked: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
         position: {
             type: DataTypes.ENUM('Ngoài trời', 'Trong nhà')
         },
@@ -24,5 +30,5 @@ const Tables = db.sequelize.define(
     },
     { timestamps: true }
 );
-Tables.sync();
+Tables.sync({ alter: true });
 module.exports = Tables;
