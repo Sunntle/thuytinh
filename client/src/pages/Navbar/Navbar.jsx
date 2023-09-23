@@ -1,7 +1,6 @@
-import React, { useState } from "react";
 import { AiOutlineShop } from "react-icons/ai";
 import { MdOutlineRestaurantMenu, MdRoomService } from "react-icons/md";
-import { HiOutlineClipboardList, HiSearch } from "react-icons/hi";
+import { HiOutlineClipboardList } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { BiFlag } from "react-icons/bi";
@@ -9,7 +8,6 @@ import { Dropdown, Menu } from "antd";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 const Navbar = () => {
-  const [dropdown, setDropdown] = useState(false);
 
   const { SubMenu } = Menu;
 
@@ -32,7 +30,7 @@ const Navbar = () => {
     <>
       <div className="fixed lg:hidden z-30 bg-white bottom-0 w-full h-20 lg:px-16 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-500">
         <NavLink
-          to="/"
+          to="/home"
           className={({ isActive }) =>
             isActive
               ? "flex flex-col items-center text-white p-2 transition-all duration-300 bg-gradient-to-br from-[#DC0000] to-[#FFDB89] rounded-tr-2xl rounded-bl-2xl"
@@ -80,7 +78,8 @@ const Navbar = () => {
           <span className="text-xs font-medium">Tài khoản</span>
         </div>
       </div>
-      <div className=" hidden lg:flex lg:justify-between lg:items-center lg:fixed z-30 bg-white top-0 w-full h-20 px-8 py-2 drop-shadow-md">
+      {/* Desktop */}
+      <div className="hidden lg:flex lg:justify-between lg:items-center lg:fixed z-30 bg-white top-0 w-full h-20 px-6 py-2 drop-shadow-md">
         <div className="text-2xl font-bold">LOGO</div>
         <nav className="lg:flex lg:space-x-6">
           <NavLink

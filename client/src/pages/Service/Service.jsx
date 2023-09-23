@@ -10,10 +10,10 @@ import Header from "../../components/Header.jsx";
 const Service = () => {
     const navigate = useNavigate()
     return (
-        <div className="relative text-slate-800 pb-24">
+        <div className="relative text-slate-800 pb-24 lg:py-24 min-h-screen">
             {/* Header */}
             <div className="flex flex-col px-6 mt-8 space-y-6">
-                <div className="w-full h-44 rounded-lg">
+                <div className="w-full h-44 lg:h-[450px] rounded-lg">
                     <img
                         className="w-full h-full rounded-lg object-fill"
                         src={banner}

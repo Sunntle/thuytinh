@@ -1,4 +1,10 @@
-const { Product, ImageProduct, Recipes, Category, Materials } = require("../models");
+const {
+  Product,
+  ImageProduct,
+  Recipes,
+  Category,
+  Materials,
+} = require("../models");
 const { Op, Sequelize } = require("sequelize");
 exports.list = async (req, res) => {
   try {
@@ -72,7 +78,7 @@ exports.getByCategory = async (req, res) => {
       where: { id_category: _id },
       include: [{ model: ImageProduct, attributes: ["url"] }],
     });
-    res.status(200).json(response);
+    res.status(200).json({ data: response });
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
