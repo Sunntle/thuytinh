@@ -22,26 +22,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
     })
     const result = { orders: order_result, detail: order_detail, product: pro };
     res.status(200).json(result);
-
-  const order_result = await Order.create({
-    total,
-    name: customerName,
-    date_order: new Date(),
-  });
-  let val = orders.map((item) => ({
-    id_product: item.id,
-    quantity: item.quantity,
-    id_order: order_result.id,
-  }));
-  const order_detail = await OrderDetail.bulkCreate(val);
-  let pro = await Product.findAll({
-    where: {
-      id: { [Op.in]: order_detail.map((item) => item.id_product) },
-    },
-    include: [{ model: ImageProduct, attributes: ["url", "id"] }],
-  });
-  const result = { orders: order_result, detail: order_detail, products: pro };
-  res.status(200).json(result);
 });
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {
