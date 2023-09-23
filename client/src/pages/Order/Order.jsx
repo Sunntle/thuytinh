@@ -3,11 +3,14 @@ import { Button, Divider, Modal } from "antd";
 import { useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { formatCurrency } from "../../utils/format.js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { emptySeletedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const selectedItem = useSelector((state) => state.selectedItem);
+  const { products, total } = useSelector((state) => state.selectedItem);
+  const dispatch = useDispatch();
+  const VAT = 0.1;
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -15,6 +18,7 @@ const Order = () => {
 
   const handleOk = () => {
     setIsModalOpen(false);
+    dispatch(emptySeletedItems());
   };
 
   const handleCancel = () => {
@@ -30,10 +34,13 @@ const Order = () => {
         <div className="">
           <div className="w-full min-h-0 grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Main */}
-            <div className="w-full overflow-hidden border md:col-span-7 p-2 rounded-lg space-y-3 drop-shadow-md">
-              {selectedItem !== null &&
-                selectedItem.map((item) => (
-                  <div key={item.id} className="grid grid-cols-12 border rounded-lg gap-2 p-1 shadow-sm">
+            <div className="w-full overflow-hidden border md:col-span-7 p-2 rounded-lg space-y-3 shadow-sm">
+              {products.length ? (
+                products.map((item) => (
+                  <div
+                    key={item.id}
+                    className="grid grid-cols-12 border rounded-lg gap-2 p-1 shadow-sm"
+                  >
                     <div className="col-span-5 md:col-span-4 h-28 xl:h-36">
                       <div className="w-full h-full">
                         <img
@@ -56,31 +63,37 @@ const Order = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                <div className="text-center text-base font-semibold">
+                  Vui lòng đặt món
+                </div>
+              )}
             </div>
             {/* Aside */}
             <div className="relative w-full md:col-span-5 text-slate-500 overflow-hidden">
-              <div className="sticky top-0 xl:top-24 border p-5 drop-shadow-md rounded-lg">
+              <div className="sticky top-0 xl:top-24 border p-5 shadow-sm rounded-lg">
                 <div className="w-full flex justify-between items-center">
                   <span className="text-lg font-medium text-slate-800">
-                    Tổng (1 món)
+                    Tổng ({products.length} món)
                   </span>
-                  <span>{formatCurrency(150000)}</span>
+                  <span>{formatCurrency(total)}</span>
                 </div>
                 <div className="w-full flex justify-between items-center">
                   <span className="text-lg font-medium text-slate-800">
                     VAT
                   </span>
-                  <span>10%</span>
+                  <span>{VAT * 100}%</span>
                 </div>
                 <Divider />
                 <div className="w-full flex justify-between items-center text-slate-800">
                   <span className="text-lg font-bold">Thành tiền</span>
                   <span className="font-bold text-lg">
-                    {formatCurrency(150000)}
+                    {formatCurrency(total * 0.8)}
                   </span>
                 </div>
                 <Button
+                  disabled={products.length <= 0}
                   onClick={showModal}
                   size="large"
                   className="mt-8 w-full bg-primary text-white"

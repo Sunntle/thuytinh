@@ -1,18 +1,16 @@
-import React, { useState } from "react";
 import { AiOutlineShop } from "react-icons/ai";
 import { MdOutlineRestaurantMenu, MdRoomService } from "react-icons/md";
-import { HiOutlineClipboardList, HiOutlineViewGrid } from "react-icons/hi";
+import { HiOutlineClipboardList } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
-  const [dropdown, setDropdown] = useState(false);
 
   return (
     <>
       <div className="fixed lg:hidden z-30 bg-white bottom-0 w-full h-20 px-6 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-500">
         <NavLink
-          to="/"
+          to="/home"
           className={({ isActive }) =>
             isActive
               ? "flex flex-col items-center text-white p-2 transition-all duration-300 bg-gradient-to-br from-[#DC0000] to-[#FFDB89] rounded-tr-2xl rounded-bl-2xl"
@@ -60,6 +58,7 @@ const Navbar = () => {
           <span className="text-xs font-medium">Tài khoản</span>
         </div>
       </div>
+      {/* Desktop */}
       <div className="hidden lg:flex lg:justify-between lg:items-center lg:fixed z-30 bg-white top-0 w-full h-20 px-6 py-2 drop-shadow-md">
         <div className="text-2xl font-bold">LOGO</div>
         <div className="w-44 space-y-3 h-auto bg-white p-2 border rounded-lg flex flex-col drop-shadow-md z-30">

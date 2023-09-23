@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Button, Modal } from "antd";
 import "./main.css";
 import { BiSolidTrash } from "react-icons/bi";
@@ -6,12 +6,13 @@ import { AiFillWarning } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { formatCurrency } from "../../utils/format.js";
 import {
-  decreaseQuantity, emptyOrder,
+  decreaseQuantity,
+  emptyOrder,
   increaseQuantity,
   removeFromOrder,
 } from "../../redux/Order/orderSlice.js";
 import useHttp from "../../hooks/useHttp.js";
-import {addSelectedItems} from "../../redux/SelectedItem/selectedItemsSlice.js";
+import { addSelectedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
 
 const { confirm } = Modal;
 const OrderListModal = ({
@@ -20,15 +21,15 @@ const OrderListModal = ({
   handleCancel,
   setIsOrderModalOpen,
 }) => {
-  const [data,setData] = useState(null)
+  const [data, setData] = useState(null);
   const orders = useSelector((state) => state.order);
-  const customerName = useSelector(state => state.customerName)
+  const customerName = useSelector((state) => state.customerName);
   const { sendRequest } = useHttp();
   const dispatch = useDispatch();
   const total = orders.reduce((acc, cur) => {
-    acc += cur.quantity * cur.price
-    return acc
-  },0)
+    acc += cur.quantity * cur.price;
+    return acc;
+  }, 0);
   const showDeleteConfirm = (id) => {
     confirm({
       title: "Bạn muốn xóa món ăn này ?",
@@ -64,18 +65,23 @@ const OrderListModal = ({
     const body = {
       orders: orders,
       total: total,
-      customerName: customerName
-    }
+      customerName: customerName,
+    };
     try {
       const request = {
         method: "post",
         url: "/order",
-        ...body
+        ...body,
       };
-      sendRequest(request,setData);
+      sendRequest(request, setData);
       if (data) {
-        dispatch(addSelectedItems(data?.products))
-        dispatch(emptyOrder())
+        dispatch(
+          addSelectedItems({
+            products: data?.products,
+            total: total,
+          }),
+        );
+        dispatch(emptyOrder());
         console.log("Đặt món thành công");
       }
     } catch (err) {
@@ -108,7 +114,7 @@ const OrderListModal = ({
           orders.map((item) => (
             <div
               key={item.id}
-              className="border h-auto w-auto rounded-lg grid grid-cols-12 gap-4 text-slate-500 overflow-hidden drop-shadow-md"
+              className="border h-auto w-auto rounded-lg grid grid-cols-12 gap-4 text-slate-500 overflow-hidden shadow-sm"
             >
               {/* Image */}
               <div className="col-span-5">

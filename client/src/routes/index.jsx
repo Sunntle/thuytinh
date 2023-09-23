@@ -1,4 +1,4 @@
-import {createBrowserRouter, useRouteError} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import Home from "../pages/Home/Home.jsx";
 import Order from "../pages/Order/Order.jsx";
@@ -7,20 +7,18 @@ import Layout from "../layouts/index.jsx";
 import Rate from "../pages/Rating/Rate.jsx";
 import Service from "../pages/Service/Service.jsx";
 import EnterName from "../pages/EnterName/EnterName.jsx";
-
-const ErrorBoundary = () => {
-  const error = useRouteError()
-  console.log(error)
-  return <>{error}</>
-}
+import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/:id",
     children: [
       {
         index: true,
-        errorElement: <ErrorBoundary />,
+        element: <EnterName />,
+      },
+      {
+        path: "home",
         element: (
           <Layout>
             <Home />
@@ -72,6 +70,10 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "*",
+    element: <PageNotFound />,
   },
 ]);
 export default router;
