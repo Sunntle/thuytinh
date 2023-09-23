@@ -3,7 +3,8 @@ const sequelize = new Sequelize("nhahang", "root", "", {
   host: "localhost",
   dialect: "mysql",
   logging: false,
-  timezone: "+07:00"
+  timezone: "+07:00",
+  port: 3309
 });
 const connectDatabase = async () => {
   try {

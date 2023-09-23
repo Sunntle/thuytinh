@@ -36,10 +36,6 @@ const Order = db.sequelize.define("orders", {
     type: DataTypes.INTEGER,
     defaultValue: null
   },
-  date_order: {
-    type: "TIMESTAMP",
-    defaultValue: null
-  }
 }, { timestamps: true });
 Order.sync();
 module.exports = Order;
