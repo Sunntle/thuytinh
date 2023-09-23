@@ -34,8 +34,10 @@ export const accountSlide = createSlice({
             state.user = action.payload;
         },
         doLogoutAction: (state) => {
+            state.isAuthenticated = false;
+            state.isLoading = false;
+            state.user = {};
             localStorage.removeItem('access_token');
-            state = initialState;
         }
     },
     extraReducers: builder => {
@@ -46,6 +48,7 @@ export const accountSlide = createSlice({
             })
             .addCase(fetchAccount.rejected, (state) => {
                 state.isAuthenticated = false;
+                state.isLoading = false;
                 localStorage.removeItem('access_token');
             })
             .addCase(fetchAccount.fulfilled, (state, action) => {

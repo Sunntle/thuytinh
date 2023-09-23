@@ -16,7 +16,8 @@ import {
 } from "../../services/api";
 import AddNewProduct from "./add";
 import EditProduct from "./edit";
-
+import { socket } from "../../socket";
+import Spinner from "../../components/spinner";
 function ProductPage() {
   const [open, setOpen] = useState(false);
   const [openModelEdit, setOpenModelEdit] = useState(false);
@@ -40,6 +41,11 @@ function ProductPage() {
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(() => {
+    socket.on("new message", (data) => {
+      data?.name == "order" && fetchData();
+    });
+  }, []);
   const handleDeleteProduct = async (id_product) => {
     const res = await deleteProduct(id_product);
     if (res) {
@@ -58,6 +64,7 @@ function ProductPage() {
     {
       title: "Hình ảnh",
       dataIndex: "imageUrls",
+      fixed: "left",
       render: (_, record) => (
         <img
           className="w-full"
@@ -132,8 +139,10 @@ function ProductPage() {
         ),
     },
     {
-      title: "#",
+      title: "Action",
       key: "action",
+      fixed: "right",
+      width: "12%",
       render: (_, record) => (
         <div className="h-10 flex items-center cursor-pointer">
           <span
@@ -226,7 +235,7 @@ function ProductPage() {
   return (
     <div className="my-7 px-5">
       {loading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : (
         <>
           <Row justify="space-between" align="center" className="mb-4">
@@ -242,6 +251,9 @@ function ProductPage() {
             </Col>
           </Row>
           <Table
+            scroll={{
+              x: 1300,
+            }}
             columns={columns}
             dataSource={products?.data}
             onChange={onChange}

@@ -9,13 +9,13 @@ const validator = require("validator")
 
 
 exports.register = asyncHandler(async (req, res) => {
-  const { name, password, email, phone } = req.body;
-  if (!name || !password || !email || !phone) return res.status(400).json({
+  const { name, password, email } = req.body;
+  if (!name || !password || !email) return res.status(400).json({
     success: false,
     message: 'Thiếu thông tin người dùng'
   });
   const [user, created] = await User.findOrCreate({
-    where: { email: email }, defaults: { name: name, email: email, password: password, phone: phone }
+    where: { email: email }, defaults: { ...req.body }
   });
   if (created) {
     res.status(200).json({ success: true, data: user });
@@ -131,7 +131,6 @@ exports.logout = asyncHandler(async (req, res) => {
 exports.deleteUser = asyncHandler(async (req, res) => {
   const id = req.params.id;
   const re = await User.destroy({ where: { id: id } })
-  console.log(re)
   return res.status(200).json({
     success: true,
     message: 'Xóa thành công'

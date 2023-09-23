@@ -24,6 +24,7 @@ function ReviewsPage() {
   const fetchData = async (
     params = { _offset: 0, _limit: limit, _time: currentMonth }
   ) => {
+    setLoading(true);
     try {
       const response = await getAllReviews(params);
       setReviews(response);

@@ -6,23 +6,18 @@ import "./app.scss";
 import Spinner from "./components/spinner";
 import { fetchAccount } from "./redux/account/accountSlice";
 import router from "./routes";
+const nextCallAccount = ['/', '/register'];
 const App = () => {
   const dispatch = useDispatch();
-  const user = useSelector(state=>state.account)
+  const user = useSelector((state) => state.account);
+
   useEffect(() => {
-    if (window.location.pathname !== '/') {
+    if (!nextCallAccount.includes(window.location.pathname)) {
       dispatch(fetchAccount());
     }
   }, [dispatch]);
-  // useEffect(()=>{
-  // socket.timeout(5000).emit("hello", { name: "John" });
-  // socket.timeout(2000).emit("hello", { name: "John 2" });
-  // socket.on("new user", arg =>{
-  //   console.log(arg);
-  // })
-  // },[]) 
-  if(user && user.isLoading){
-    return  <Spinner/>
+  if (user && user.isLoading) {
+    return <Spinner />;
   }
   return (
     <ConfigProviderAntd
@@ -32,16 +27,16 @@ const App = () => {
             colorPrimary: "#FC8019",
             algorithm: true,
           },
-          Pagination:{
+          Pagination: {
             itemActiveBg: "#FC8019",
-            colorPrimary:"#fff",
-            colorPrimaryBorder:"#fd9c4b",
-            colorPrimaryHover:"fd9c4b",
+            colorPrimary: "#fff",
+            colorPrimaryBorder: "#fd9c4b",
+            colorPrimaryHover: "fd9c4b",
             colorBgTextHover: "#FC8019",
             colorBgTextActive: "#fff",
-            colorText: "#7e808c"
-          }
-        }
+            colorText: "#7e808c",
+          },
+        },
       }}
     >
       <RouterProvider router={router} />

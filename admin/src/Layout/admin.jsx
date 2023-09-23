@@ -1,36 +1,26 @@
-import { useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import HeaderComponent from '../components/header';
-import { BiCategory } from 'react-icons/bi'
-import { Layout, Menu } from 'antd';
+import { useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import HeaderComponent from "../components/header";
+import { Layout, Menu } from "antd";
 const { Content, Sider } = Layout;
-import { getItem } from '../utils/format';
-const items = [
-  getItem("Tổng quan", null, <BiCategory />, [
-    getItem("Dashboard", "/"),
-    getItem("Thực đơn món ăn", "/menu"),
-    getItem("Bill ", "/order"),
-    getItem("Đánh giá", "/rate"),
-  ]),
-  getItem("Nhà hàng", "/restaurant", <BiCategory />),
-];
-
+import { NAV_ITEMS } from "../utils/constant";
 const LayoutMain = () => {
   const { pathname } = useLocation();
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const onClick = (e) => {
     navigate(e.key);
   };
 
   return (
-    <div className="bg-main relative">
+    <div className="bg-main relative ">
       <header className="sticky top-0 w-full z-10">
         <HeaderComponent />
       </header>
-      <main className="main_area">
+      <main className="main_area rounded-3xl">
         <Layout className="layout_area">
           <Sider
+            breakpoint="lg"
             width={250}
             className="layout_area_sider"
             collapsible
@@ -42,7 +32,7 @@ const LayoutMain = () => {
               defaultSelectedKeys={pathname}
               theme="light"
               mode="inline"
-              items={items}
+              items={NAV_ITEMS}
               onClick={onClick}
             />
           </Sider>

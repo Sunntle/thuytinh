@@ -1,7 +1,6 @@
 const { Recipes, Product, ImageProduct, Materials } = require("../models");
 const asyncHandler = require('express-async-handler');
 const { Op } = require("sequelize");
-const { raw } = require("body-parser");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -17,7 +16,7 @@ exports.list = async (req, res) => {
     const response = await Recipes.findAll(query);
     const result = response.reduce((con, cur) => {
       const existingProduct = con.find((item) => item.product.id === cur.Product.id);
-      const ma = { quantity: cur.quantity, id_recipe: cur.id, ...cur.Material }
+      const ma = { quantity: cur.quantity, id_recipe: cur.id, ...cur.Material, descriptionRecipe: cur.descriptionRecipe }
       if (existingProduct) {
         existingProduct.quantity += cur.quantity;
         existingProduct.materials.push(ma);

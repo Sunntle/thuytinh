@@ -1,11 +1,14 @@
-import {useEffect, useState} from "react";
+
+import { useEffect, useState } from "react";
 
 // import Swiper core and required modules
-import {A11y} from "swiper/modules";
-
+import { A11y } from "swiper/modules";
 import {Swiper, SwiperSlide} from "swiper/react";
 
 // Import Swiper styles
+import { Badge } from "antd";
+import moment from "moment";
+import { AiFillPlusCircle } from "react-icons/ai";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -14,8 +17,9 @@ import {AiFillPlusCircle} from "react-icons/ai";
 import useHttp from "../../hooks/useHttp.js";
 import {formatCurrency, truncateString} from "../../utils/format.js";
 import {Badge} from "antd";
+import { socket } from "../../services/socket";
 
-import Banner from "../../components/Banner.jsx";
+
 import AboutUs from "../../components/AboutUs.jsx";
 import {useParams} from "react-router-dom";
 
@@ -33,8 +37,22 @@ const Home = () => {
         sendRequest(request, setSlideProduct);
     }, [sendRequest]);
 
+ useEffect(() => {
+    socket.emit("new user", { userName: "Taile", role: "R1" });
+  }, []);
+  const onClickCheckSocket = () => {
+    socket.emit("new order", {
+      id: 12706,
+      name: "order",
+      status: false,
+      timestamp: moment().format(),
+    });
+  };
+
     return (
         <div className="pb-24 lg:pb-0 lg:pt-24">
+      <ButtonComponents onClick={onClickCheckSocket} content="2" />
+
             <Banner/>
             <div className="flex items-center justify-between mt-12 px-6 lg:mx-16">
                 <span className="w-full h-0.5 bg-black"></span>

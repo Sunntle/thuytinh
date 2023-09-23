@@ -39,21 +39,27 @@ body {
   line-height: 1;
 }
 
-@mixin item_menu {
-  color: #fc8019 !important;
-  background: white !important;
-}
-
 @mixin bg-color {
   background-color: white !important;
   color: #000 !important;
 }
 
 .main_area {
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
   overflow: hidden;
   background: white !important;
+
+  .ant-menu-submenu-title {
+    color: #fc8019 !important;
+  }
+
+  .ant-menu-item-active {
+    color: #fc8019 !important;
+  }
+
+  .ant-menu-item-selected {
+    color: white !important;
+    background-color: #fc8019 !important;
+  }
 
   .layout_area {
     padding-top: 20px;
@@ -65,11 +71,8 @@ body {
       .ant-menu-item {
         font-size: 1rem;
         font-weight: 500;
-      }
+        color: rgb(75 85 99);
 
-      .ant-menu-submenu-selected .ant-menu-submenu-title,
-      .ant-menu-item-selected {
-        @include item_menu;
       }
 
       .ant-layout-sider-trigger {
@@ -78,19 +81,11 @@ body {
     }
   }
 }
-.ant-menu-submenu-title {
-  @include item_menu;
-}
 
 .chart-line_area {
   max-width: 100%;
   border: 2px solid #fc8019;
 
-  .chart_month {
-    max-width: 880px;
-    object-fit: cover;
-    overflow: hidden;
-  }
 }
 
 .wc {
@@ -106,4 +101,8 @@ body {
       display: none;
     }
   }
+}
+
+.bd {
+  border: 2px solid red;
 }
