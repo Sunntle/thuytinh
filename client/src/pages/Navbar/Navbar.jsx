@@ -162,7 +162,7 @@ const Navbar = () => {
             Liên hệ
           </NavLink>
           <NavLink
-            to="/aboutus"
+            to="/about-us"
             className="font-medium text-base hover:text-primary transition-colors duration-300"
           >
             Về chúng tôi

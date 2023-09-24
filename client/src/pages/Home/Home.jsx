@@ -16,7 +16,7 @@ import "swiper/css/scrollbar";
 import useHttp from "../../hooks/useHttp.js";
 import { formatCurrency, truncateString } from "../../utils/format.js";
 
-import AboutUs from "../../components/AboutUs.jsx";
+import Reason from "../../components/Reason.jsx";
 import Banner from "../../components/Banner.jsx";
 import Footer from "../../components/Footer.jsx";
 import { socket } from "../../services/socket";
@@ -111,7 +111,7 @@ const Home = () => {
       </Swiper>
       {/* code ở đây */}
       <Banner />
-      <AboutUs />
+      <Reason />
       <Footer />
     </div>
   );
