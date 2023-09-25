@@ -8,7 +8,7 @@ const Contact = () => {
     <div className="py-24 relative flex flex-col justify-center items-center min-h-screen bg-cover bg-center bg-gray-300 bg-[url('https://static.thehoneycombers.com/wp-content/uploads/sites/2/2022/03/sydney-restaurants-woodcut-900x643.png')]">
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <div className="text-white text-center z-10 flex flex-col justify-center items-center space-y-4 mb-10">
-        <h2 className="text-4xl font-bold">LIÊN HỆ VỚI CHÚNG TÔI</h2>
+        <h2 className="text-4xl font-bold pt-10">LIÊN HỆ VỚI CHÚNG TÔI</h2>
         <span className="flex justify-center items-center">
           <BsTelephone className="mr-2" />
           Phone: 0392262423.
@@ -24,8 +24,8 @@ const Contact = () => {
         </span>
       </div>
       <form className="z-10 w-2/3 h-2/3 p-10 bg-transparent shadow-md sm:bg-white sm:bg-opacity-25">
-        <div className="space-y-6 md:space-y-0 flex flex-col md:flex md:flex-row justify-center items-center h-full">
-          <div className="space-y-6 w-full sm:w-1/2 relative mr-0 md:mr-6">
+        <div className="space-y-6 md:space-y-0 grid grid-cols-1 md:grid-cols-2 h-full">
+          <div className="space-y-6 relative mr-0 md:mr-6">
             <input
               type="text"
               name="username"
@@ -45,7 +45,7 @@ const Contact = () => {
               placeholder="Nhập số điện thoại"
             />
           </div>
-          <div className="w-full sm:w-1/2 relative">
+          <div className="relative">
             <textarea
               type="textarea"
               name="message"
