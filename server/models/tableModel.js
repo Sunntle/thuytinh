@@ -30,5 +30,5 @@ const Tables = db.sequelize.define(
     },
     { timestamps: true }
 );
-Tables.sync({ alter: true });
+Tables.sync();
 module.exports = Tables;
