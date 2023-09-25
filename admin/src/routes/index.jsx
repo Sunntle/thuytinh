@@ -11,6 +11,9 @@ import CategoryPage from "../pages/category";
 import LoginPage from "../pages/login";
 import HomeEmployeePage from "../pages/employee/home";
 import RoleRoute from "../guard/admin";
+import ResMenu from "../pages/restaurant/menu/res-menu";
+import ResChooseTable from "../pages/restaurant/choosetable/res-choosetable";
+import ResRevenue from "../pages/restaurant/revenue/res-revenue";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -48,12 +51,24 @@ const router = createBrowserRouter([
   },
   {
     path: "/employee",
-    element: <RoleRoute role={['R2', 'R3', 'R4']}><LayoutEmployee /></RoleRoute>,
+    element: <RoleRoute role={['R2', 'R3', 'R4']}><LayoutAdmin /></RoleRoute>,
     children: [
       {
         index: true,
         element: <HomeEmployeePage />,
       },
+      {
+        path: "menu",
+        element: <ResMenu />,
+      },
+      {
+        path: "choosetable",
+        element: <ResChooseTable />,
+      },
+      {
+        path: "renvenue",
+        element: <ResRevenue />,
+      }
     ]
   },
 ]);

@@ -12,7 +12,11 @@ const items = [
     getItem("Bill ", "/order"),
     getItem("Đánh giá", "/rate"),
   ]),
-  getItem("Nhà hàng", "/restaurant", <BiCategory />),
+  getItem("Nhà hàng", "/restaurant", <BiCategory />,[
+    getItem("Chọn bàn","/employee/choosetable"),
+    getItem("Thực đơn món ăn","/employee/menu"),
+    getItem("Doanh thu","/employee/renvenue")
+  ]),
 ];
 
 const LayoutMain = () => {
