@@ -6,14 +6,14 @@ const { Content, Sider } = Layout;
 import { NAV_ITEMS } from "../utils/constant";
 const LayoutMain = () => {
   const { pathname } = useLocation();
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const onClick = (e) => {
     navigate(e.key);
   };
 
   return (
-    <div className="bg-main relative">
+    <div className="bg-main relative ">
       <header className="sticky top-0 w-full z-10">
         <HeaderComponent />
       </header>

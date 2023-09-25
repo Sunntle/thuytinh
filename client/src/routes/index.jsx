@@ -10,13 +10,18 @@ import EnterName from "../pages/EnterName/EnterName.jsx";
 import AboutUs from "../pages/AboutUs/AboutUs.jsx";
 import Contact from "../pages/Contact/Contact.jsx";
 
+import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/:id",
     children: [
       {
         index: true,
+        element: <EnterName />,
+      },
+      {
+        path: "home",
         element: (
           <Layout>
             <Home />
@@ -84,6 +89,10 @@ const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: "*",
+    element: <PageNotFound />,
   },
 ]);
 export default router;

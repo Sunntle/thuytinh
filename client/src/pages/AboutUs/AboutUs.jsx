@@ -1,4 +1,3 @@
-import React from "react";
 import Reason from "../../components/Reason.jsx";
 import product from "../../assets/images/product.png";
 

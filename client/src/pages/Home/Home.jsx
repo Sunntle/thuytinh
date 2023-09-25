@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 
 // import Swiper core and required modules
 import { A11y } from "swiper/modules";
-
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import { Badge } from "antd";
+import { Badge, Button } from "antd";
 import moment from "moment";
 import { AiFillPlusCircle } from "react-icons/ai";
 import "swiper/css";
@@ -15,22 +14,27 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import useHttp from "../../hooks/useHttp.js";
 import { formatCurrency, truncateString } from "../../utils/format.js";
+import { socket } from "../../services/socket";
 
 import Reason from "../../components/Reason.jsx";
 import Banner from "../../components/Banner.jsx";
 import Footer from "../../components/Footer.jsx";
-import { socket } from "../../services/socket";
-import ButtonComponents from "../../../../admin/src/components/button/index.jsx";
+import { useParams } from "react-router-dom";
+
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
+  const { slug } = useParams();
+  console.log(slug);
+
   useEffect(() => {
     const request = {
       method: "get",
       url: "/product",
     };
     sendRequest(request, setSlideProduct);
-  }, []);
+  }, [sendRequest]);
+
   useEffect(() => {
     socket.emit("new user", { userName: "Taile", role: "R1" });
   }, []);
@@ -42,16 +46,22 @@ const Home = () => {
       timestamp: moment().format(),
     });
   };
-  console.log(slideProduct);
 
   return (
     <div className="pb-24 lg:pb-0 lg:pt-24">
-      {/*  Hot Food */}
+      <Button onClick={onClickCheckSocket} content="2" />
 
-      <ButtonComponents onClick={onClickCheckSocket} content="2" />
+      <Banner />
+      <div className="flex items-center justify-between mt-12 px-6 lg:mx-16">
+        <span className="w-full h-0.5 bg-black"></span>
+        <span className="font-medium text-2xl whitespace-nowrap px-6">
+          Bán Chạy Nhất
+        </span>
+        <span className="w-full h-0.5 bg-black"></span>
+      </div>
       <Swiper
         // install Swiper modules
-        className="mt-12 px-6 w-auto"
+        className="mt-6 lg:mx-16 px-6 w-auto"
         modules={[A11y]}
         spaceBetween={10}
         slidesPerView={2}
@@ -80,12 +90,12 @@ const Home = () => {
         {slideProduct &&
           slideProduct?.data?.map((product) => (
             <SwiperSlide key={product.id}>
-              <div className="w-auto h-auto border rounded-lg">
+              <div className="w-auto h-auto border rounded-lg hover:shadow-lg cursor-pointer transition-all">
                 <Badge.Ribbon
                   text="Hippies"
                   className="bg-primary"
                 ></Badge.Ribbon>
-                <div className="w-full h-[120px]">
+                <div className="w-full h-[160px]">
                   <img
                     className="w-full h-full rounded-t-lg"
                     src={product.imageUrls}
@@ -116,5 +126,4 @@ const Home = () => {
     </div>
   );
 };
-
 export default Home;

@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import panda from "../assets/images/panda.png";
+import {useSelector} from "react-redux";
 
 const Header = () => {
-  const [user, setUser] = useState(true);
+  const customerName = useSelector((state) => state.customerName);
 
   return (
     <div
-      className={`w-full h-24 md:h-20 z-40 relative lg:hidden bg-primary rounded-b-3xl drop-shadow-md px-6 text-white flex items-center ${user ? 'justify-between' : 'justify-center'}`}
+      className={`w-full h-20 z-40 relative lg:hidden bg-primary rounded-b-3xl drop-shadow-md px-6 text-white flex items-center ${
+          customerName ? "justify-between" : "justify-center"
+      }`}
     >
-      {user ? (
+      {customerName ? (
         <>
           <div className="flex flex-col">
             <span className="text-white text-lg">
-              Xin chào, <span className="font-medium">Phú</span>
+              Xin chào, <span className="font-medium">{ customerName }</span>
             </span>
             <span className="text-base text-[#FFE6C7]">
               Bạn đang ngồi bàn số 1
@@ -24,7 +27,9 @@ const Header = () => {
         </>
       ) : (
         <>
-          <span className="font-bold text-base lg:text-xl">Vui lòng quét mã để đặt món</span>
+          <span className="font-bold text-base lg:text-xl">
+            Vui lòng quét mã để đặt món
+          </span>
         </>
       )}
     </div>

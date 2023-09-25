@@ -1,4 +1,3 @@
-import React from "react";
 import { BsTelephone } from "react-icons/bs";
 import { MdOutlineMail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
