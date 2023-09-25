@@ -14,7 +14,6 @@ exports.list = async (req, res) => {
       query.group = [_group]
     }
     if (_time) {
-      console.log(_time)
       const currentDateString = `${moment().year()}-${_time}-01`;
       const currentDate = moment(currentDateString, "YYYY-MM-DD HH:mm:ss");
       const forrmatedCurrentDate = currentDate.format("YYYY-MM-DD HH:mm:ss")

@@ -2,48 +2,6 @@
 import Chart from "react-apexcharts";
 import { Avatar } from 'antd';
 
-// ChartJS.register(ArcElement, Tooltip, Legend);
-
-
-// const data = {
-//     labels: ['Thịt chó', 'Bê thui', 'Hột vịt lộn', 'Má heo'],
-//     total: [12, 19, 3, 5],
-//     bg: [
-//         'rgba(255, 99, 132)',
-//         'rgba(54, 162, 235)',
-//         'rgba(255, 206, 86)',
-//         'rgba(75, 192, 192)',
-//     ]
-// }
-// const result = {
-//     labels: data.labels,
-//     datasets: [
-//         {
-//             backgroundColor: data.bg,
-//             data: data.total,
-//         },
-//     ]
-// };
-// const options = {
-//     responsive: true,
-//     plugins: {
-//         legend: {
-//             display: false,
-//         }
-//     }
-// };
-
-
-const data = {
-
-    series: [20, 13, 33, 45],
-    options: {
-        legend: { show: false },
-        labels: ['Thịt chó', 'Bê thui', 'Hột vịt lộn', 'Má heo'],
-        chart: { type: 'donut' },
-        dataLabels: { enabled: false }
-    }
-};
 
 
 const PieChart = (props) => {
