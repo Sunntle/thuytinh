@@ -1,12 +1,12 @@
 import { AiOutlineShop } from "react-icons/ai";
 import { MdOutlineRestaurantMenu, MdRoomService } from "react-icons/md";
-import { HiOutlineClipboardList } from "react-icons/hi";
+import { HiOutlineClipboardList, HiSearch } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { BiFlag } from "react-icons/bi";
 import { Dropdown, Menu } from "antd";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import {useState} from 'react'
+import { useState } from "react";
 
 const Navbar = () => {
   const LanguageMenu = (
