@@ -9,8 +9,6 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { useState } from "react";
 
 const Navbar = () => {
-  const { SubMenu } = Menu;
-
   const LanguageMenu = (
     <Menu>
       <Menu.Item key="1">Tiếng Việt</Menu.Item>
@@ -18,16 +16,18 @@ const Navbar = () => {
     </Menu>
   );
 
-  const [showInput, setShowInput] = useState(false);
-
-  const showSearchInput = (show) => {
-    setShowInput(show);
-  };
-
   const [isMenuHovered, setIsMenuHovered] = useState(false);
 
+  const handleMenuMouseEnter = () => {
+    setIsMenuHovered(true);
+  };
+
+  const handleMenuMouseLeave = () => {
+    setIsMenuHovered(false);
+  };
+
   return (
-    <>
+    <div>
       <div className="fixed lg:hidden z-30 bg-white bottom-0 w-full h-20 lg:px-16 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-500">
         <NavLink
           to="/home"
@@ -94,13 +94,15 @@ const Navbar = () => {
           >
             Dịch vụ
           </NavLink>
-          <div className="relative group">
+          <div
+            className={`relative ${isMenuHovered ? "hovered" : ""}`}
+            onMouseEnter={handleMenuMouseEnter}
+            onMouseLeave={handleMenuMouseLeave}
+          >
             <div
               className={`flex items-center transition-colors duration-300 ${
                 isMenuHovered ? "text-primary" : "text-current"
               }`}
-              onMouseEnter={() => setIsMenuHovered(true)}
-              onMouseLeave={() => setIsMenuHovered(false)}
             >
               <NavLink to="/menu" className="font-medium text-base">
                 Thực đơn
@@ -113,46 +115,42 @@ const Navbar = () => {
                 {isMenuHovered ? <BsChevronUp /> : <BsChevronDown />}
               </div>
             </div>
-            <ul
-              className={`z-10 absolute space-y-2 bg-white border border-gray-200 py-2 px-3 transition-all duration-300 ${
-                isMenuHovered
-                  ? "opacity-100 pointer-events-auto scale-100"
-                  : "opacity-0 pointer-events-none scale-95"
-              } transform origin-top`}
-            >
-              <li>
-                <NavLink
-                  to="/menu/category1"
-                  className=" hover:text-primary whitespace-nowrap"
-                >
-                  Món Lẩu
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/menu/category2"
-                  className=" hover:text-primary whitespace-nowrap"
-                >
-                  Món Nướng
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/menu/category3"
-                  className=" hover:text-primary whitespace-nowrap"
-                >
-                  Món Hấp
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/menu/category4"
-                  className=" hover:text-primary whitespace-nowrap"
-                >
-                  Món Tráng Miệng
-                </NavLink>
-              </li>
-            </ul>
+            {isMenuHovered && (
+              <ul className="z-10 absolute space-y-2 bg-white border border-gray-200 py-2 px-3 transition-all duration-300">
+                <li>
+                  <NavLink
+                    to="/menu/category1"
+                    className="hover:text-primary whitespace-nowrap"
+                  >
+                    Món Lẩu
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/menu/category2"
+                    className="hover:text-primary whitespace-nowrap"
+                  >
+                    Món Nướng
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/menu/category3"
+                    className="hover:text-primary whitespace-nowrap"
+                  >
+                    Món Hấp
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/menu/category4"
+                    className="hover:text-primary whitespace-nowrap"
+                  >
+                    Món Tráng Miệng
+                  </NavLink>
+                </li>
+              </ul>
+            )}
           </div>
           <NavLink
             to="/contact"
@@ -161,22 +159,14 @@ const Navbar = () => {
             Liên hệ
           </NavLink>
           <NavLink
-            to="/aboutus"
+            to="/about-us"
             className="font-medium text-base hover:text-primary transition-colors duration-300"
           >
             Về chúng tôi
           </NavLink>
         </nav>
         <div className="flex justify-between items-center space-x-3">
-          <div
-            className="cursor-pointer flex items-center space-x-2 relative"
-            onMouseEnter={() => {
-              showSearchInput(true);
-            }}
-            onMouseLeave={() => {
-              showSearchInput(false);
-            }}
-          >
+          <div className="cursor-pointer flex items-center space-x-2 relative">
             <div className="relative">
               <input
                 type="text"
@@ -198,7 +188,7 @@ const Navbar = () => {
           </Dropdown>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

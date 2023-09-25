@@ -12,13 +12,14 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-
-import { useParams } from "react-router-dom";
-import AboutUs from "../../components/AboutUs.jsx";
-import Banner from "../../components/Banner.jsx";
 import useHttp from "../../hooks/useHttp.js";
-import { socket } from "../../services/socket";
 import { formatCurrency, truncateString } from "../../utils/format.js";
+import { socket } from "../../services/socket";
+
+import Reason from "../../components/Reason.jsx";
+import Banner from "../../components/Banner.jsx";
+import Footer from "../../components/Footer.jsx";
+import { useParams } from "react-router-dom";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
@@ -118,9 +119,11 @@ const Home = () => {
             </SwiperSlide>
           ))}
       </Swiper>
-      <AboutUs />
+      {/* code ở đây */}
+      <Banner />
+      <Reason />
+      <Footer />
     </div>
   );
 };
-
 export default Home;
