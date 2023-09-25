@@ -5,6 +5,9 @@ const initRoutes = require("./routes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const db = require("./config/connectDatabase");
+const { Server } = require("socket.io");
+const {handleNewUser, handleNewOrder, handleDisconnect} = require("./utils/socketHanlers")
+const port = process.env.PORT || 8000;
 require("dotenv").config();
 
 app.use(express.json());
@@ -18,11 +21,22 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+const server = app.listen(port, (req, res) => {
+  console.log(`Connect port: ${port}`);
+});
+const io = new Server(server,{cors: {
+    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
+    methods: ["GET", "POST"]
+  }})
+let userConnected =  [];
+let storeMessage = [];
+const listPermission = ['R2', 'R3', 'R4'];
+io.on("connection", (socket) => {
+  handleNewUser(socket, userConnected, storeMessage, listPermission)
+  handleNewOrder(socket, userConnected, storeMessage)
+  handleDisconnect(socket, userConnected, storeMessage, listPermission)
+});
 initRoutes(app);
 db.connectDatabase();
 
-const port = process.env.PORT || 8000;
-app.listen(port, (req, res) => {
-  console.log(`Connect port: ${port}`);
-});
+

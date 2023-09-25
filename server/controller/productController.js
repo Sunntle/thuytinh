@@ -1,8 +1,11 @@
-const { Product, ImageProduct, Recipes, Category, Materials } = require("../models");
+const {
+  Product,
+  ImageProduct,
+  Recipes,
+  Category,
+  Materials,
+} = require("../models");
 const { Op, Sequelize } = require("sequelize");
-Product.beforeDestroy(() => {
-  console.log("Product has been destroyed");
-});
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -16,7 +19,6 @@ exports.list = async (req, res) => {
         "description",
         "status",
         "sold",
-        "id_category",
         [Sequelize.literal(subquery), "imageUrls"],
         [Sequelize.literal("`Category`.`name_category`"), "categoryName"],
       ],
@@ -76,7 +78,7 @@ exports.getByCategory = async (req, res) => {
       where: { id_category: _id },
       include: [{ model: ImageProduct, attributes: ["url"] }],
     });
-    res.status(200).json(response);
+    res.status(200).json({ data: response });
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }

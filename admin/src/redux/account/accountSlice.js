@@ -3,6 +3,7 @@ import { callFetchAccount } from '../../services/api';
 
 const initialState = {
     isAuthenticated: false,
+    isLoading: false,
     user: {
         email: '',
         phone: '',
@@ -33,22 +34,27 @@ export const accountSlide = createSlice({
             state.user = action.payload;
         },
         doLogoutAction: (state) => {
+            state.isAuthenticated = false;
+            state.isLoading = false;
+            state.user = {};
             localStorage.removeItem('access_token');
-            state = initialState;
         }
     },
     extraReducers: builder => {
         builder
             .addCase(fetchAccount.pending, (state) => {
                 state.isAuthenticated = false;
+                state.isLoading = true;
             })
             .addCase(fetchAccount.rejected, (state) => {
                 state.isAuthenticated = false;
+                state.isLoading = false;
                 localStorage.removeItem('access_token');
             })
             .addCase(fetchAccount.fulfilled, (state, action) => {
                 state.isAuthenticated = true;
                 state.user = action.payload;
+                state.isLoading = false
             })
     }
 });

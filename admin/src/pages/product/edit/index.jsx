@@ -1,6 +1,16 @@
-import { Button, Form, Input, InputNumber, Modal, Select, Space, Tabs, Upload, message } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  Tabs,
+  Upload,
+  message,
+} from "antd";
 import ButtonComponents from "../../../components/button";
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { deleteImgById, uploadImgByIdProduct } from "../../../services/api";
 const { Option } = Select;
@@ -8,15 +18,11 @@ const optionsStatus = [
   { value: 0, label: "Còn hàng" },
   { value: 1, label: "Hết hàng" },
 ];
-function EditProduct({ open, handleCancel, handleFinish, cate, material, data }) {
+function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
   const [form] = Form.useForm();
   const [statusForm, setStatusForm] = useState("1");
   const handleEditProduct = (dataForm) => {
     handleFinish({ ...dataForm, formName: "product", id: data?.id });
-    handleCancel();
-  };
-  const handleEditRecipe = (dataForm) => {
-    handleFinish({ ...dataForm, formName: "recipe", id: data?.id });
     handleCancel();
   };
   const fileList = data?.ImageProducts.map((el) => {
@@ -39,7 +45,10 @@ function EditProduct({ open, handleCancel, handleFinish, cate, material, data })
           createdAt: data.createdAt,
           id_category: data.id_category,
           Image: data.Image,
-          recipe: data.Recipes.map((el) => ({ quantity: el.quantity, materials: el.Material.id })),
+          recipe: data.Recipes.map((el) => ({
+            quantity: el.quantity,
+            materials: el.Material.id,
+          })),
           descriptionRecipe: data.Recipes[0]?.descriptionRecipe,
         });
       };
@@ -109,99 +118,16 @@ function EditProduct({ open, handleCancel, handleFinish, cate, material, data })
           </Form.Item>
           <div className="text-right">
             <ButtonComponents
-              borderColor={"border-borderSecondaryColor"}
               key="back"
               onClick={handleCancel}
               content={"Quay lại"}
-              colorText={"text-main"}
-              className="me-2"
+              className="me-2 border-borderSecondaryColor text-main"
             />
             <ButtonComponents
-              borderColor={"border-borderSecondaryColor"}
-              backgroundColor={"bg-secondaryColor"}
               content={"Tạo mới"}
-              type="submit"
               key="submit"
               htmlType="submit"
-            />
-          </div>
-        </Form>
-      ),
-    },
-    {
-      key: "2",
-      label: "Công thức",
-      children: statusForm === "2" && (
-        <Form form={form} onFinish={handleEditRecipe} className="mt-8">
-          <Form.Item name="descriptionRecipe" label="Mô tả công thức">
-            <Input.TextArea />
-          </Form.Item>
-          <Form.List name="recipe">
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map((field) => {
-                  return (
-                    <Space key={field.key} className="w-full">
-                      <Form.Item required={false}>
-                        <Form.Item
-                          {...field}
-                          label="Nguyên liệu"
-                          name={[field.name, "materials"]}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Nhập nguyên liệu cho món ăn hoặc xóa",
-                            },
-                          ]}
-                        >
-                          <Select placeholder="Chọn 1 nguyên liệu cho món ăn">
-                            {material?.map((el, index) => (
-                              <Option key={index} value={el.id}>
-                                {el.name_material}
-                              </Option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          {...field}
-                          key={[field.name, `quantity`]}
-                          label="Số lượng"
-                          name={[field.name, "quantity"]}
-                          rules={[{ required: true, message: "Nhập số lượng nguyên liệu hoặc xóa" }]}
-                        >
-                          <InputNumber min={0} />
-                        </Form.Item>
-                        {fields.length > 0 ? (
-                          <span className="ms-2 text-gray-500" onClick={() => remove(field.name)}>
-                            Xóa
-                          </span>
-                        ) : null}
-                      </Form.Item>
-                    </Space>
-                  );
-                })}
-                <Button type="dashed" onClick={() => add()} style={{ width: "60%" }} icon={<PlusOutlined />}>
-                  Add field
-                </Button>
-              </>
-            )}
-          </Form.List>
-          <div className="text-right">
-            <ButtonComponents
-              borderColor={"border-borderSecondaryColor"}
-              key="back"
-              onClick={handleCancel}
-              content={"Quay lại"}
-              colorText={"text-main"}
-              className="me-2"
-            />
-            <ButtonComponents
-              borderColor={"border-borderSecondaryColor"}
-              backgroundColor={"bg-secondaryColor"}
-              content={"Tạo mới"}
-              type="submit"
-              key="submit"
-              htmlType="submit"
+              className="border-borderSecondaryColor bg-secondaryColor"
             />
           </div>
         </Form>
@@ -246,7 +172,11 @@ function EditProduct({ open, handleCancel, handleFinish, cate, material, data })
   ];
   return (
     <Modal open={open} onCancel={handleCancel} footer={false} centered>
-      <Tabs defaultActiveKey="1" items={items} onChange={(key) => setStatusForm(key)} />
+      <Tabs
+        defaultActiveKey="1"
+        items={items}
+        onChange={(key) => setStatusForm(key)}
+      />
     </Modal>
   );
 }

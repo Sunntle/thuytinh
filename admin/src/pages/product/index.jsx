@@ -16,7 +16,8 @@ import {
 } from "../../services/api";
 import AddNewProduct from "./add";
 import EditProduct from "./edit";
-
+import { socket } from "../../socket";
+import Spinner from "../../components/spinner";
 function ProductPage() {
   const [open, setOpen] = useState(false);
   const [openModelEdit, setOpenModelEdit] = useState(false);
@@ -29,13 +30,21 @@ function ProductPage() {
     const resCate = await getAllCate();
     const resMate = await getAllMaterial();
     const resProduct = await getAllProduct();
-    setProducts({ ...resProduct, data: resProduct.data.map((el) => ({ ...el, key: el.id })) });
+    setProducts({
+      ...resProduct,
+      data: resProduct.data.map((el) => ({ ...el, key: el.id })),
+    });
     setCategories(resCate);
     setMaterials(resMate);
     setLoading(false);
   };
   useEffect(() => {
     fetchData();
+  }, []);
+  useEffect(() => {
+    socket.on("new message", (data) => {
+      data?.name == "order" && fetchData();
+    });
   }, []);
   const handleDeleteProduct = async (id_product) => {
     const res = await deleteProduct(id_product);
@@ -55,8 +64,14 @@ function ProductPage() {
     {
       title: "Hình ảnh",
       dataIndex: "imageUrls",
+      fixed: "left",
       render: (_, record) => (
-        <img className="w-full" style={{ maxWidth: "150px" }} src={record?.imageUrls?.split(";")[0]} alt="" />
+        <img
+          className="w-full"
+          style={{ maxWidth: "150px" }}
+          src={record?.imageUrls?.split(";")[0]}
+          alt=""
+        />
       ),
     },
     {
@@ -108,11 +123,26 @@ function ProductPage() {
       title: "Trạng thái",
       dataIndex: "status",
       sorter: (a, b) => a.status - b.status,
-      render: (_, record) => (record.status == 0 ? "Còn hàng" : "Hết hàng"),
+      render: (_, record) =>
+        record.status == 0 ? (
+          <ButtonComponents
+            content={"Còn hàng"}
+            spacingContent={"px-4 py-2"}
+            className={"h-9 border-none text-green-500 bg-green-200"}
+          />
+        ) : (
+          <ButtonComponents
+            content={"Hết hàng"}
+            spacingContent={"px-4 py-2"}
+            className={"h-9 border-none text-red-500 bg-red-200"}
+          />
+        ),
     },
     {
-      title: "#",
+      title: "Action",
       key: "action",
+      fixed: "right",
+      width: "12%",
       render: (_, record) => (
         <div className="h-10 flex items-center cursor-pointer">
           <span
@@ -121,7 +151,10 @@ function ProductPage() {
           >
             Sửa
           </span>
-          <ConfirmComponent title="Xác nhận xóa đơn hàng" confirm={() => handleDeleteProduct(record.id)}>
+          <ConfirmComponent
+            title="Xác nhận xóa đơn hàng"
+            confirm={() => handleDeleteProduct(record.id)}
+          >
             Xóa
           </ConfirmComponent>
         </div>
@@ -202,7 +235,7 @@ function ProductPage() {
   return (
     <div className="my-7 px-5">
       {loading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : (
         <>
           <Row justify="space-between" align="center" className="mb-4">
@@ -211,14 +244,20 @@ function ProductPage() {
             </Col>
             <Col xs={6} style={{ textAlign: "-webkit-right" }}>
               <ButtonComponents
-                borderColor={"border-borderSecondaryColor"}
-                backgroundColor={"bg-secondaryColor"}
+                className="border-borderSecondaryColor text-main"
                 content={"Thêm mới"}
                 onClick={() => setOpen(true)}
               />
             </Col>
           </Row>
-          <Table columns={columns} dataSource={products?.data} onChange={onChange} />
+          <Table
+            scroll={{
+              x: 1300,
+            }}
+            columns={columns}
+            dataSource={products?.data}
+            onChange={onChange}
+          />
           <AddNewProduct
             open={open}
             cate={categories}

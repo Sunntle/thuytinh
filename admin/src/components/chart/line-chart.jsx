@@ -1,72 +1,35 @@
 import Chart from "react-apexcharts";
 import { Select, Row, Col, Progress } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-const data = {
-  series: [
-    {
-      name: "Thịt chó",
-      data: [31, 40, 28, 51, 42, 109, 100, 45, 32, 34, 52, 41],
-    },
-    {
-      name: "Cơm chó",
-      data: [11, 32, 45, 32, 34, 52, 41, 51, 42, 109, 100, 40],
-    },
-  ],
-  options: {
-    chart: {
-      width: "100%",
-      type: "area",
-      stacked: false,
-      toolbar: {
-        show: false,
-      },
 
-      zoom: {
-        enabled: false,
-      },
-    },
-    markers: {
-      size: 0,
-    },
-    dataLabels: { enabled: false },
-    stroke: {
-      width: 3,
-      curve: "smooth",
-    },
-    xaxis: {
-      type: "category",
-      categories: ["T/1", "T/2", "T/3", "T/4", "T/5", "T/6", "T/7", "T/8", "T/9", "T/10", "T/11", "T/12"],
-    },
-    tooltip: {
-      x: {
-        format: "MM",
-      },
-    },
-  },
-};
-
-const LineChart = () => {
+const LineChart = ({ setTimeChart, timeChart, data }) => {
+  const { totalMonth, chart_order, order } = data;
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    setTimeChart(value);
   };
   return (
-    <div className="w-full overflow-hidden">
-      <Row align={"middle"} justify={"space-between"} className="px-4 mt-4" gutter={[0, 16]}>
+    <div className="w-full block max-h-[25rem] ">
+      <Row
+        align={"middle"}
+        justify={"space-between"}
+        className="px-4 mt-4"
+        gutter={[0, 16]}
+      >
         <Col xs={12} className="font-medium text-xl">
           Order Rate
         </Col>
         <Col xs={12} className="flex justify-end">
           <Select
             className="w-1/3"
-            defaultValue="month"
+            defaultValue={timeChart}
             onChange={handleChange}
             options={[
               {
-                value: "month",
+                value: "MONTH",
                 label: "Tháng",
               },
               {
-                value: "year",
+                value: "YEAR",
                 label: "Năm",
               },
             ]}
@@ -80,18 +43,25 @@ const LineChart = () => {
               </div>
             </Col>
             <Col xs={7} className="flex justify-center items-center">
-              <div className="flex flex-col justify-between">
-                <span className="text-gray-400 font-medium whitespace-nowrap">Order total</span>
-                <span className="font-medium">259999</span>
+              <div className="flex flex-col gap-2">
+                <span className="text-gray-400 font-medium whitespace-nowrap">
+                  Order total
+                </span>
+                <span className="font-medium">{order || 0}</span>
               </div>
             </Col>
             <Col xs={12} className="flex justify-center items-center">
               <div className="flex flex-col justify-between  border-2 w-full p-2 rounded-md">
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-400">Target</span>
-                  <span className="font-medium">2342</span>
+                  <span className="font-medium">100</span>
                 </div>
-                <Progress percent={50} showInfo={false} className="m-0" strokeColor="#FC8019" />
+                <Progress
+                  percent={order}
+                  showInfo={false}
+                  className="m-0"
+                  strokeColor="#FC8019"
+                />
               </div>
             </Col>
           </Row>
@@ -102,8 +72,8 @@ const LineChart = () => {
               <div className="wc border-main mt-1"></div>
             </Col>
             <Col xs={18}>
-              <div className="text-xs">Month this</div>
-              <div className="font-medium ">230000000</div>
+              <div className="text-xs"> Month this</div>
+              <div className="font-medium pt-1">{totalMonth?.[1] || 0}</div>
             </Col>
           </Row>
           <Row className="w-2/5">
@@ -111,19 +81,35 @@ const LineChart = () => {
               <div className="wc border-main mt-1"></div>
             </Col>
             <Col xs={18}>
-              <div className="text-xs">Month this</div>
-              <div className="font-medium ">12323123 </div>
+              <div className="text-xs">Last Month </div>
+              <div className="font-medium pt-1">{totalMonth?.[0] || 0}</div>
             </Col>
           </Row>
         </Col>
       </Row>
+
       <Chart
-        options={data.options}
-        series={data.series}
+        className=" max-w-full overflow-hidden"
+        options={{
+          chart: {
+            stacked: false,
+            toolbar: { show: false },
+            zoom: { enabled: false },
+          },
+          tooltip: { enabled: false },
+          dataLabels: { enabled: true },
+          xaxis: {
+            type: "category",
+            categories: chart_order?.labels || [],
+          },
+          yaxis: {
+            min: 0,
+            max: 50,
+          },
+        }}
+        series={[{ data: chart_order?.values || [] }]}
         type="area"
-        className="chart_month"
         height={300}
-        width={"100%"}
       />
     </div>
   );

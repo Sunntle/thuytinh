@@ -10,10 +10,10 @@ import Header from "../../components/Header.jsx";
 const Service = () => {
     const navigate = useNavigate()
     return (
-        <div className="relative text-slate-800 pb-24">
+        <div className="relative text-slate-800 pb-24 lg:py-24 min-h-screen">
             {/* Header */}
             <div className="flex flex-col px-6 mt-8 space-y-6">
-                <div className="w-full h-44 rounded-lg">
+                <div className="w-full h-44 lg:h-[450px] rounded-lg">
                     <img
                         className="w-full h-full rounded-lg object-fill"
                         src={banner}
@@ -26,7 +26,7 @@ const Service = () => {
                         <FaFileInvoiceDollar className="w-10 h-10 rounded-lg text-white bg-orange-400 p-2"/>
                         <span className="text-xs text-slate-500">Thanh toán</span>
                     </div>
-                    <div className="bg-slate-50 p-2 rounded-lg flex active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2">
+                    <div onClick={() => navigate('/rating')} className="bg-slate-50 p-2 rounded-lg flex active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2">
                         <FaFileInvoiceDollar className="w-10 h-10 rounded-lg text-white bg-green-500 p-2"/>
                         <span className="text-xs text-slate-500">Đánh giá</span>
                     </div>

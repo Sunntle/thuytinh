@@ -5,14 +5,7 @@ import { callLogin } from '../../services/api';
 import { doLoginAction } from '../../redux/account/accountSlice';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
-const formItemLayout = {
-    labelCol: {
-        span: 24
-    },
-    wrapperCol: {
-        span: 24
-    }
-};
+
 const LoginPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -32,7 +25,6 @@ const LoginPage = () => {
             message.success('Đăng nhập thành công');
             localStorage.setItem('access_token', res.accessToken);
             dispatch(doLoginAction(res.account));
-
             if (res.account.role == 'R4') navigate('/admin');
             else navigate('/employee');
         } else {
@@ -40,56 +32,57 @@ const LoginPage = () => {
         }
 
     };
-    return (
-        <div className='mx-auto mt-5 w-1/4'>
-            <h2 className='font-medium text-2xl text-center'> Đăng nhập </h2>
-            <Form
-                name="basic"
-                {...formItemLayout}
-                style={{
-                    maxWidth: 600,
-                }}
-                initialValues={{
-                    remember: true,
-                }}
-                onFinish={onFinish}
-                autoComplete="off"
+    return (<div className="relative flex justify-center items-center min-h-screen bg-cover bg-center bg-gray-300 bg-[url('https://static.thehoneycombers.com/wp-content/uploads/sites/2/2022/03/sydney-restaurants-woodcut-900x643.png')]">
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <Form className="z-10 space-y-6 flex flex-col justify-center items-center
+             w-2/3 h-2/3 py-10 bg-transparent shadow-md sm:w-1/2 sm:bg-white sm:bg-opacity-25"
+            onFinish={onFinish}
+        >
+            <h2 className="text-center text-2xl font-medium text-white mb-4">
+                ĐĂNG NHẬP
+            </h2>
+            <Form.Item
+                className='lg:w-1/2 md:w-3/4 xs:w-full'
+                name="email"
+                rules={[
+                    {
+                        required: true,
+                        min: 5,
+                        message: 'Ít nhất 5 kí tự !',
+                    },
+                    {
+                        type: 'email',
+                        message: 'Vui lòng nhập đúng định dạng E-mail!',
+                    },
+
+                ]}
+                // validateTrigger={true}
             >
-                <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your email !',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item>
+                <Input className='p-2 font-medium  focus:border-orange-500' placeholder='Tài khoản (email)' />
+            </Form.Item>
 
-                <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your password!',
-                        },
-                    ]}
-                >
-                    <Input.Password />
-                </Form.Item>
+            <Form.Item
+                className='lg:w-1/2 md:w-3/4 xs:w-full'
+                name="password"
+                rules={[
+                    {
+                        required: true,
+                        min: 5,
+                        message: 'Ít nhất 5 kí tự !',
+                    }
+                ]}
+                // validateTrigger={true}
+            >
+                <Input.Password className='p-2 font-medium focus:border-orange-500' placeholder='Mật khẩu' />
+            </Form.Item>
 
-                <Form.Item
-                >
-                    <button className='w-full bg-main p-3 text-white mt-3'  >
-                        Đăng nhập
-                    </button>
-                </Form.Item>
-            </Form>
-        </div>
-    )
+
+            <button className='lg:w-1/2 md:w-3/4 xs:w-full rounded bg-main p-2 text-white mt-3 font-medium text-base'>
+                Đăng nhập
+            </button>
+        </Form>
+
+    </div >)
 }
 
 export default LoginPage
