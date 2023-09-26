@@ -19,7 +19,7 @@ function EditMaterial({ open, handleCancel, handleFinish, data }) {
       data.Image = [
         {
           uid: "-1",
-          name: data.image.split("/").at(-1).split(".")[0],
+          name: data.image?.split("/").at(-1).split(".")[0],
           status: "done",
           url: data.image,
         },
@@ -43,13 +43,13 @@ function EditMaterial({ open, handleCancel, handleFinish, data }) {
       onCancel={handleCancel}
       footer={[
         <ButtonComponents
-        className="border-borderSecondaryColor text-main"
+          className="border-borderSecondaryColor text-main"
           key="back"
           onClick={handleCancel}
           content={"Quay lại"}
         />,
         <ButtonComponents
-        className="border-borderSecondaryColor bg-secondaryColor"
+          className="border-borderSecondaryColor bg-secondaryColor"
           content={"Tạo mới"}
           key="submit"
           htmlType="submit"
@@ -58,9 +58,16 @@ function EditMaterial({ open, handleCancel, handleFinish, data }) {
       ]}
       centered
     >
-      <Form form={form} onFinish={handleFinish} initialValues={{ price: 0 }} className="mt-8">
+      <Form
+        form={form}
+        onFinish={handleFinish}
+        initialValues={{ price: 0 }}
+        className="mt-8"
+      >
         <h3 className="font-semibold mb-8 text-main text-lg">
-          {data ? `Sửa nguyên liệu ${data.name_material}` : "Thêm thông tin nguyên liệu nhà hàng"}
+          {data
+            ? `Sửa nguyên liệu ${data.name_material}`
+            : "Thêm thông tin nguyên liệu nhà hàng"}
         </h3>
         <Form.Item
           name="name_material"
@@ -120,13 +127,18 @@ function EditMaterial({ open, handleCancel, handleFinish, data }) {
             return e?.fileList;
           }}
         >
-          <Upload beforeUpload={() => false} listType="picture" defaultFileList={[]}>
+          <Upload
+            beforeUpload={() => false}
+            listType="picture"
+            defaultFileList={[]}
+          >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         </Form.Item>
         <span className="italic	">
           {" "}
-          <span className="text-red-500">*Lưu ý: </span>Hình ảnh chỉ lấy ảnh cuối cùng được upload
+          <span className="text-red-500">*Lưu ý: </span>Hình ảnh chỉ lấy ảnh
+          cuối cùng được upload
         </span>
       </Form>
     </Modal>

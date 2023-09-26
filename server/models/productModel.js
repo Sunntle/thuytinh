@@ -29,6 +29,10 @@ const Product = db.sequelize.define(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    discount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   },
   {}
 );
