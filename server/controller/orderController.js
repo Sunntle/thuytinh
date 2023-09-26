@@ -10,9 +10,9 @@ function currentYear(pa = "startOf") {
     return date.format('YYYY-MM-DD');
 }
 exports.createOrder = asyncHandler(async (req, res) => {
-    const { order, customerName, total } = req.body;
+    const { orders, customerName, total } = req.body;
     const order_result = await Order.create({ total, name: customerName });
-    let val = order.map(item => ({ id_product: item.id, quantity: item.quantity, id_order: order_result.id }));
+    let val = orders.map(item => ({ id_product: item.id, quantity: item.quantity, id_order: order_result.id }));
     const order_detail = await OrderDetail.bulkCreate(val);
     let pro = await Product.findAll({
         where: {

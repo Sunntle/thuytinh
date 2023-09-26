@@ -1,11 +1,12 @@
 import { AiOutlineShop } from "react-icons/ai";
 import { MdOutlineRestaurantMenu, MdRoomService } from "react-icons/md";
-import { HiOutlineClipboardList } from "react-icons/hi";
+import {HiOutlineClipboardList, HiSearch} from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { BiFlag } from "react-icons/bi";
 import { Dropdown, Menu } from "antd";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import {useState} from "react";
 
 const Navbar = () => {
 
@@ -28,7 +29,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="fixed lg:hidden z-30 bg-white bottom-0 w-full h-20 lg:px-16 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-500">
+      <div className="fixed lg:hidden z-30 bg-white bottom-0 w-full h-20 lg:px-16 py-2 px-6 lg:px-0 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-500">
         <NavLink
           to="/home"
           className={({ isActive }) =>
