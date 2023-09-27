@@ -4,7 +4,7 @@ import Home from "../pages/Home/Home.jsx";
 import Order from "../pages/Order/Order.jsx";
 import Menu from "../pages/Menu/Menu.jsx";
 import Layout from "../layouts/index.jsx";
-import Rate from "../pages/Rating/Rate.jsx";
+import Rate from "../pages/Rating/Rating.jsx";
 import Service from "../pages/Service/Service.jsx";
 import EnterName from "../pages/EnterName/EnterName.jsx";
 import AboutUs from "../pages/AboutUs/AboutUs.jsx";

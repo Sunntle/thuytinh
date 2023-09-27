@@ -1,69 +1,64 @@
-import { BsTelephone } from "react-icons/bs";
-import { MdOutlineMail } from "react-icons/md";
-import { FaLocationDot } from "react-icons/fa6";
+import imgContact from "../../assets/images/contact.png";
+import { SiContactlesspayment } from "react-icons/si";
 
 const Contact = () => {
   return (
-    <div className="py-24 relative flex flex-col justify-center items-center min-h-screen bg-cover bg-center bg-gray-300 bg-[url('https://static.thehoneycombers.com/wp-content/uploads/sites/2/2022/03/sydney-restaurants-woodcut-900x643.png')]">
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-      <div className="text-white text-center z-10 flex flex-col justify-center items-center space-y-4 mb-10">
-        <h2 className="text-4xl font-bold pt-10">LIÊN HỆ VỚI CHÚNG TÔI</h2>
-        <span className="flex justify-center items-center">
-          <BsTelephone className="mr-2" />
-          Phone: 0392262423.
-        </span>
-        <span className="flex justify-center items-center">
-          <MdOutlineMail className="mr-2" />
-          Email: thuytinh2023@gmail.com.
-        </span>
-        <span className="flex justify-center items-center">
-          <FaLocationDot className="mr-2 " />
-          Địa chỉ: Công viên phần mềm Quang Trung, Quốc lộ 1A, P. Tân Chánh
-          Hiệp, Q. 12, Tp. Hồ Chí Minh.
-        </span>
-      </div>
-      <form className="z-10 w-2/3 h-2/3 p-10 bg-transparent shadow-md sm:bg-white sm:bg-opacity-25">
-        <div className="space-y-6 md:space-y-0 grid grid-cols-1 md:grid-cols-2 h-full">
-          <div className="space-y-6 relative mr-0 md:mr-6">
+    <div className="lg:py-24 pb-24 relative flex flex-col justify-center items-center min-h-screen bg-white mx-0 lg:mx-16">
+      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-4 justify-center items-center border rounded shadow-md ">
+        <form className="col-span-2 grid grid-cols-1 gap-4 w-full h-full p-10">
+          <h2 className="text-center text-primary text-3xl font-bold pb-4">
+            LIÊN HỆ VỚI CHÚNG TÔI
+          </h2>
+          <div className="space-y-6">
             <input
               type="text"
               name="username"
-              className="w-full text-sm p-2 focus:outline-none border border-gray-300 focus-within:border-orange-500 rounded-sm focus:border-orange-500 bg-gray-100"
+              className="outline-none bg-[#f3f4f6] rounded w-full text-sm p-[10px]"
               placeholder="Nhập tên"
             />
             <input
               type="email"
               name="email"
-              className="w-full text-sm p-2 focus:outline-none border border-gray-300 focus-within:border-orange-500 rounded-sm focus:border-orange-500 bg-gray-100"
+              className="outline-none bg-[#f3f4f6] rounded w-full text-sm p-[10px]"
               placeholder="Nhập email"
             />
             <input
               type="phone"
               name="phone"
-              className="w-full text-sm p-2 focus:outline-none border border-gray-300 focus-within:border-orange-500 rounded-sm focus:border-orange-500 bg-gray-100"
+              className="outline-none bg-[#f3f4f6] rounded w-full text-sm p-[10px]"
               placeholder="Nhập số điện thoại"
             />
-          </div>
-          <div className="relative">
             <textarea
               type="textarea"
               name="message"
               rows="7"
               cols="50"
-              className="w-full h-full text-sm p-2 focus:outline-none border border-gray-300 focus-within:border-orange-500 rounded-sm focus:border-orange-500 bg-gray-100"
+              className="outline-none bg-[#f3f4f6] rounded w-full text-sm p-[10px] resize-none "
               placeholder="Nhập nội dung"
             ></textarea>
           </div>
+          <div className="flex justify-end items-center">
+            <button
+              type="submit"
+              className="hover:bg-[#F0A500E5] transition-colors duration-300 w-full md:w-1/4 p-2 bg-orange-500 text-white rounded focus:outline-none focus:ring focus:ring-orange-500"
+            >
+              Gửi
+            </button>
+          </div>
+        </form>
+        <div className="w-full h-full bg-[#fbeed6] flex flex-col justify-center items-center py-10 md:py-0">
+          <div className="flex flex-col justify-center items-center w-32 h-32 text-primary bg-white rounded-full border-2 border-primary ">
+            <SiContactlesspayment size={64} className="" />
+          </div>
+
+          <div className="w-full flex flex-col justify-center items-center mt-4">
+            <p className="text-primary font-light text-center w-2/3">
+              Nếu bạn có thắc mắc hoặc muốn liên lạc, hãy sử dụng mẫu dưới đây.
+              Chúng tôi mong chờ tin từ bạn!
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col justify-center items-center mt-6">
-          <button
-            type="submit"
-            className="hover:bg-[#F0A500E5] transition-colors duration-300 w-full md:w-1/4 p-2 bg-orange-500 text-white rounded focus:outline-none focus:ring focus:ring-orange-500"
-          >
-            Gửi
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };
