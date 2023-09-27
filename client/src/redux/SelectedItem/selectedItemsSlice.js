@@ -18,6 +18,7 @@ const selectedItemsSlice = createSlice({
   },
 });
 
+
 export const { addSelectedItems, emptySeletedItems } =
   selectedItemsSlice.actions;
 export const selectedItemsReducer = selectedItemsSlice.reducer;
