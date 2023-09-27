@@ -5,7 +5,7 @@ import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import { Badge } from "antd";
+import { Badge, Button } from "antd";
 import moment from "moment";
 import { AiFillPlusCircle } from "react-icons/ai";
 import "swiper/css";
@@ -16,9 +16,11 @@ import useHttp from "../../hooks/useHttp.js";
 import { formatCurrency, truncateString } from "../../utils/format.js";
 import { socket } from "../../services/socket";
 
-import AboutUs from "../../components/AboutUs.jsx";
-import { useParams } from "react-router-dom";
+import Reason from "../../components/Reason.jsx";
 import Banner from "../../components/Banner.jsx";
+import Footer from "../../components/Footer.jsx";
+import { useParams } from "react-router-dom";
+
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
@@ -48,7 +50,7 @@ const Home = () => {
 
   return (
     <div className="pb-24 lg:pb-0 lg:pt-24">
-      {/*<ButtonComponents onClick={onClickCheckSocket} content="2" />*/}
+      <Button onClick={onClickCheckSocket} content="2" />
 
       <Banner />
       <div className="flex items-center justify-between mt-12 px-6 lg:mx-16">
@@ -118,9 +120,10 @@ const Home = () => {
             </SwiperSlide>
           ))}
       </Swiper>
-      <AboutUs />
+      <Reason />
+      <Footer />
+
     </div>
   );
 };
-
 export default Home;

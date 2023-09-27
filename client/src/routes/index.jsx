@@ -7,7 +7,11 @@ import Layout from "../layouts/index.jsx";
 import Rate from "../pages/Rating/rate.jsx";
 import Service from "../pages/Service/Service.jsx";
 import EnterName from "../pages/EnterName/EnterName.jsx";
-import PageNotFound from "../pages/PageNotFound/pagenotfound.jsx";
+import AboutUs from "../pages/AboutUs/AboutUs.jsx";
+import Contact from "../pages/Contact/Contact.jsx";
+
+import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -66,6 +70,22 @@ const router = createBrowserRouter([
         element: (
           <Layout>
             <EnterName />
+          </Layout>
+        ),
+      },
+      {
+        path: "about-us",
+        element: (
+          <Layout>
+            <AboutUs />
+          </Layout>
+        ),
+      },
+      {
+        path: "contact",
+        element: (
+          <Layout>
+            <Contact />
           </Layout>
         ),
       },
