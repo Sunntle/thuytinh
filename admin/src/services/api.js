@@ -1,6 +1,10 @@
 import axios from "../utils/axios";
 
-// ?????????   Index  ????????? //
+
+// ?????????   Order  ????????? //
+export const addOrder = (data) => {
+  return axios.post(`/api/order`, data );
+};
 export const getAllOrder = (params) => {
   return axios.get(`/api/order`, { params });
 };
@@ -10,7 +14,10 @@ export const delOrder = (id) => {
 export const updateOrder = (body) => {
   return axios.put(`/api/order`, body);
 };
-
+// table //
+export const getAllTable = (params) => {
+  return axios.get(`/api/table`, {params});
+}
 // product //
 export const getAllProduct = (params) => {
   return axios.get(`/api/product`, { params });
