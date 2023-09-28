@@ -5,7 +5,7 @@ const {
   Category,
   Materials,
 } = require("../models");
-const { Op, Sequelize } = require("sequelize");
+const { Op, Sequelize, where } = require("sequelize");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -20,6 +20,7 @@ exports.list = async (req, res) => {
         "status",
         "sold",
         "id_category",
+        "discount",
         [Sequelize.literal(subquery), "imageUrls"],
         [Sequelize.literal("`Category`.`name_category`"), "categoryName"],
       ],
@@ -34,9 +35,22 @@ exports.list = async (req, res) => {
     if (_offset) query.offset = +_offset;
     if (q) query.where = { name_product: { [Op.like]: `%${q}%` } };
     if (_sort) query.order = [[_sort, _order]];
+    if (rest) {
+      const whereConditions = {};
+      for (let [index, value] of Object.entries(rest)) {
+        const key = index.substring(1);
+        const [op, opValue] = value.split("_");
+        if (!whereConditions[key]) {
+          whereConditions[key] = {};
+        }
+        whereConditions[key][Op[op]] = opValue;
+      }
+      query.where = { ...query.where, ...whereConditions };
+    }
     const { count, rows } = await Product.findAndCountAll(query);
     res.status(200).json({ total: count, data: rows });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -140,3 +154,20 @@ exports.removeProduct = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+exports.searchProduct = async (req, res) => {
+  try {
+    const { query } = req.query;
+    const searchedProducts = await Product.findAll({
+      where: {
+        name_product: {
+          [Op.like]: `%${query}%`
+        }
+      },
+      include: [{ model: ImageProduct, attributes: ["url", "id"] }],
+    })
+    res.status(200).json({data: searchedProducts})
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
