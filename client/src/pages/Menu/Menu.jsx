@@ -10,6 +10,7 @@ import OrderListModal from "../../components/OrderListModal/OrderListModal.jsx";
 import { addToOrder } from "../../redux/Order/orderSlice.js";
 import { Spin } from "antd";
 import useDebounce from "../../hooks/useDebounce.js";
+import Product from "../../components/Product/Product.jsx";
 
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -20,7 +21,7 @@ const Menu = () => {
   const [categories, setCategories] = useState(null);
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.order);
-  const debouncedValue = useDebounce(searchValue, 300)
+  const debouncedValue = useDebounce(searchValue, 300);
 
   const handleSubmitSearchValue = (e) => {
     if (e.key === "Enter") {
@@ -84,12 +85,6 @@ const Menu = () => {
     sendRequest(request, setFoods);
   }, [sendRequest]);
 
-  const handleAddToOrder = (product) => {
-    if (product) {
-      dispatch(addToOrder(product));
-    }
-  };
-
   const showOrderListModal = () => {
     setIsOrderModalOpen(true);
   };
@@ -112,7 +107,7 @@ const Menu = () => {
   }
 
   return (
-    <div className="pb-24 text-slate-800">
+    <div className="pb-24 text-slate-800 lg:px-12">
       <div className="flex flex-col px-6 mt-8 space-y-4">
         <div className="grid grid-cols-12 gap-4 text-slate-500 ">
           <div className="col-span-10 w-full h-12 bg-slate-100 rounded-lg flex justify-start items-center space-x-3 px-2">
@@ -145,13 +140,14 @@ const Menu = () => {
         </div>
         {/*Category*/}
         <div className="relative w-full text-sm">
-          <span className="text-base font-medium block mb-3">Danh mục</span>
+          <span className="text-base lg:text-xl font-semibold block mb-3">Danh mục</span>
           <div className=" flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">
             <button
+              disabled={activeIndex === 0}
               onClick={() => handleGetAllFood(0)}
               className={`px-4 py-2 border rounded-full whitespace-nowrap transition-colors duration-100 ${
                 activeIndex === 0
-                  ? "text-white bg-primary drop-shadow"
+                  ? "text-white bg-primary shadow"
                   : "text-slate-800 bg-white"
               }`}
             >
@@ -160,11 +156,12 @@ const Menu = () => {
             {categories &&
               categories.map((category) => (
                 <button
+                  disabled={category.id === activeIndex}
                   key={category.id}
                   onClick={() => handleFilterFoodByCategory(category.id)}
                   className={`px-4 py-2 border rounded-full whitespace-nowrap transition-colors duration-100 ${
                     category.id === activeIndex
-                      ? "text-white bg-primary drop-shadow"
+                      ? "text-white bg-primary shadow"
                       : "text-slate-800 bg-white"
                   }`}
                 >
@@ -200,31 +197,10 @@ const Menu = () => {
           </div>
         )}
         {/*Food*/}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {foods &&
             foods?.data?.map((item) => (
-              <div key={item.id} className="w-auto h-auto border rounded-lg">
-                <div className="w-full h-40">
-                  <img
-                    className="w-full h-full rounded-t-lg"
-                    src={item?.imageUrls || item?.ImageProducts?.[0]?.url}
-                    alt={item.name_product}
-                  />
-                </div>
-                <div className="flex justify-between items-center p-2 text-slate-500">
-                  <div>
-                    <span className="text-sm md:text-base font-medium overflow-hidden block">
-                      {item.name_product}
-                    </span>
-                    <span className="text-xs md:text-sm">
-                      {formatCurrency(item.price)}
-                    </span>
-                  </div>
-                  <button onClick={() => handleAddToOrder(item)}>
-                    <AiFillPlusCircle className="w-6 h-6 md:w-8 md:h-8 text-primary active:text-opacity-40" />
-                  </button>
-                </div>
-              </div>
+              <Product key={item.id} item={item} />
             ))}
         </div>
       </div>

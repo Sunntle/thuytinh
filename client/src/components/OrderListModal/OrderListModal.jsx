@@ -101,7 +101,7 @@ const OrderListModal = ({
       centered
       footer={[
         <Button
-          disabled={orders.length == 0}
+          disabled={orders.length === 0}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
           key="submit"
           size="middle"
