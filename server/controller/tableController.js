@@ -2,8 +2,7 @@ const { Tables, Order } = require('../models');
 const asyncHandler = require('express-async-handler');
 
 exports.getAll = asyncHandler(async (req, res) => {
-    const re = await Tables.findAll({ include: { model: Order, order: [['date_order', 'DESC']], separate: true, limit: 1 } });
-    console.log(re);
+    const re = await Tables.findAll({ include: { model: Order } });
     res.status(200).json(re);
 });
 exports.getId = asyncHandler(async (req, res) => {

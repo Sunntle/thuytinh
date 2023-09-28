@@ -1,6 +1,9 @@
 import axios from "../utils/axios";
 
 // ?????????   Order  ????????? //
+export const addOrder = (data) => {
+  return axios.post(`/api/order`, data );
+};
 export const getAllOrder = (params) => {
   return axios.get(`/api/order`, { params });
 };

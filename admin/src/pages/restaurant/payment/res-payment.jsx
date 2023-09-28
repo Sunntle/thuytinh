@@ -6,16 +6,40 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { CloseOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
+import { addOrder } from '../../../services/api'
+import { RemoveTable } from '../../../redux/table/tableSystem'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const ResPayment = () => {
-
+    const [data, setData] = useState(null);
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getTotal());
     }, [total])
+    const totalVAT = total.cartTotalAmount + (total.cartTotalAmount * 0.1);
+    //Xu ly dat mon
+    const submitOrderList = async(value) => {
+        try {
+            let res;
+            const body = {
+              order: carts,
+              total: totalVAT,
+              customerName: "Huy",
+            };
+            console.log(body)
+            res = await addOrder(body);
+                dispatch(RemoveAllCart());
+                dispatch(RemoveTable());
+                message.open({
+                    type: "success",
+                    content: "Đặt món thành công thành công!",
+                  });
+        } catch (err) {
+          console.log(err);
+        }
+      };
     // modal phuong thuc thanh toan
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
@@ -104,14 +128,14 @@ const ResPayment = () => {
                         </div>
                         <div className='total m-3'>
                             <span className='font-medium text-lg'>Tổng tiền:</span>
-                            <span className='float-right text-lg text-main'>{total.cartTotalAmount + (total.cartTotalAmount * 0.1)} VNĐ</span>
+                            <span className='float-right text-lg text-main'>{totalVAT} VNĐ</span>
                         </div>
                         <div className='grid grid-cols-4 mt-12'>
                             <div className='flex justify-center font-semibold col-span-2 m-1'>
                                 <button className='bg-red-500 text-white' onClick={() => dispatch(RemoveAllCart())}>Hủy</button>
                             </div>
                             <div className='flex justify-center font-semibold col-span-2 m-1'>
-                                <button className='bg-blue-500 text-white'>Đặt món</button>
+                                <button className='bg-blue-500 text-white'onClick={submitOrderList}>Đặt món</button>
                             </div>
                             <div className='flex justify-center font-semibold col-span-2 m-1'>
                                 <button className='bg-indigo-500 text-white'>In bill</button>

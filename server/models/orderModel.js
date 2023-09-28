@@ -24,10 +24,6 @@ const Order = db.sequelize.define("orders", {
   total: {
     type: DataTypes.INTEGER,
   },
-  id_user: {
-    type: DataTypes.INTEGER,
-    defaultValue: null
-  },
   id_employee: {
     type: DataTypes.INTEGER,
     defaultValue: null

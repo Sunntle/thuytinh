@@ -58,62 +58,44 @@ const ResRevenue = () => {
         fetchData();
     }, []);
 // TỔNG DANH THU NGÀY
-function calculateDailyRevenue(transactions, targetDate) {
-    let dailyRevenue = 0;
-
-    for (const totalOrder of transactions) {
-        const transactionDate = new Date(totalOrder.date_order);
-        if (transactionDate.toDateString() === targetDate.toDateString()) {
-            dailyRevenue += totalOrder.total;
-        }
-    }
-    return dailyRevenue;
-}
-
-// Sử dụng hàm tính toán tổng doanh thu hàng ngày
-const targetDate = new Date();
-const dailyRevenue = calculateDailyRevenue(totalOrder, targetDate);
-console.log(`Tổng doanh thu cho ngày ${targetDate.toDateString()}: $${dailyRevenue}`);
+// function calculateDailyRevenue(transactions, targetDate) {
+//     let dailyRevenue = 0;
+//     for (const totalOrder of transactions) {
+//         const transactionDate = new Date(totalOrder.createdAt);
+//         if (transactionDate.toDateString() === targetDate.toDateString()) {
+//             dailyRevenue += totalOrder.total;
+//         }
+//     }
+//     return dailyRevenue;
+// }
+// const targetDate = new Date();
+// const dailyRevenue = calculateDailyRevenue(totalOrder, targetDate);
+// console.log(`Tổng doanh thu cho ngày ${targetDate.toDateString()}: $${dailyRevenue}`);
 
 
 // TỔNG DANH THU TUẦN
-    function calculateWeeklyRevenue(transactions) {
-        const today = new Date();
-        const dayOfWeek = today.getDay();
-        const startDate = new Date(today);
-        startDate.setDate(today.getDate() - dayOfWeek);
+    // function calculateWeeklyRevenue(transactions) {
+    //     const today = new Date();
+    //     const dayOfWeek = today.getDay();
+    //     const startDate = new Date(today);
+    //     startDate.setDate(today.getDate() - dayOfWeek);
 
-        const endDate = new Date(today);
-        endDate.setDate(today.getDate() - dayOfWeek + 7);
+    //     const endDate = new Date(today);
+    //     endDate.setDate(today.getDate() - dayOfWeek + 7);
 
-        let weeklyRevenue = 0;
+    //     let weeklyRevenue = 0;
 
-        for (const totalOrder of transactions) {
-            const transactionDate = new Date(totalOrder.date_order);
-            if (transactionDate >= startDate && transactionDate <= endDate) {
-                weeklyRevenue += totalOrder.total;
-            }
-        }
-        return weeklyRevenue;
-    }
-    const weeklyRevenue = calculateWeeklyRevenue(totalOrder);
-    console.log(`Tổng doanh thu trong tuần này: $${weeklyRevenue}`);
+    //     for (const totalOrder of transactions) {
+    //         const transactionDate = new Date(totalOrder.date_order);
+    //         if (transactionDate >= startDate && transactionDate <= endDate) {
+    //             weeklyRevenue += totalOrder.total;
+    //         }
+    //     }
+    //     return weeklyRevenue;
+    // }
+    // const weeklyRevenue = calculateWeeklyRevenue(totalOrder);
+    // console.log(`Tổng doanh thu trong tuần này: $${weeklyRevenue}`);
 
-
-    function calculateMonthlyRevenue(transactions, targetMonth) {
-        let monthlyRevenue = 0;
-    
-        for (const totalOrder of transactions) {
-            const transactionDate = new Date(totalOrder.date_order);
-            if (transactionDate.getMonth() === targetMonth) {
-                monthlyRevenue += totalOrder.total;
-            }
-        }
-        return monthlyRevenue;
-    }
-    const targetMonth = 8;
-    const monthlyRevenue = calculateMonthlyRevenue(totalOrder, targetMonth);
-    console.log(`Tổng doanh thu cho tháng ${targetMonth + 1}: $${monthlyRevenue}`);
     
     return (
         <>
@@ -132,13 +114,13 @@ console.log(`Tổng doanh thu cho ngày ${targetDate.toDateString()}: $${dailyRe
                                     <span className='text-black font-medium text-sm text-center'>
                                         Tổng tiền tuần
                                     </span>
-                                    <p className='text-2xl font-medium text-green-500 text-center'>{weeklyRevenue}</p>
+                                    <p className='text-2xl font-medium text-green-500 text-center'>0</p>
                                 </div>
                                 <div className='w-1/3 p-4 h-full flex flex-col justify-center items  gap-1'>
                                     <span className='text-black font-medium text-sm text-center'>
                                         Tổng tiền ngày
                                     </span>
-                                    <p className='text-2xl font-medium text-red-500 text-center'>{dailyRevenue}</p>
+                                    <p className='text-2xl font-medium text-red-500 text-center'>0</p>
                                 </div>
                             </div>
 

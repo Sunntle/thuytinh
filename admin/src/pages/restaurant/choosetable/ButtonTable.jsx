@@ -73,8 +73,8 @@ export const ButtonTable = () => {
                 <span className="mt-2 text-white block grid justify-items-center">
                   Đang sử dụng
                 </span>
-                <div className="grid grid-cols-4 mt-3">
-                  <button className="mt-2 col-span-2 text-white block" onClick={showModal}>
+                <div className=" mt-3">
+                  <button className="mt-2 col-span-2 h-10 w-20 text-white block bg-green-500 rounded" onClick={showModal}>
                     Chi tiết
                   </button>
                   <Modal
@@ -86,12 +86,6 @@ export const ButtonTable = () => {
                   >
                     <ResPayment />
                   </Modal>
-                  <button
-                    className="mt-2 col-span-2 h-10 w-20 rounded text-white bg-green-500"
-                    onClick={() => handlePaymentClick(index)}
-                  >
-                    Thanh toán
-                  </button>
                 </div>
               </div>
             )}

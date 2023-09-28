@@ -19,6 +19,7 @@ exports.list = async (req, res) => {
         "description",
         "status",
         "sold",
+        "id_category",
         [Sequelize.literal(subquery), "imageUrls"],
         [Sequelize.literal("`Category`.`name_category`"), "categoryName"],
       ],
