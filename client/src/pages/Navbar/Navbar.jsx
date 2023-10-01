@@ -1,21 +1,14 @@
 import { AiOutlineShop } from "react-icons/ai";
 import { MdOutlineRestaurantMenu, MdRoomService } from "react-icons/md";
-import { HiOutlineClipboardList, HiSearch } from "react-icons/hi";
-import { FiUser } from "react-icons/fi";
+import { HiOutlineClipboardList } from "react-icons/hi";
+import { PiShoppingCartLight } from "react-icons/pi";
+import { CiUser } from "react-icons/ci";
+import { GoSearch } from "react-icons/go";
 import { NavLink } from "react-router-dom";
-import { BiFlag } from "react-icons/bi";
-import { Dropdown, Menu } from "antd";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { useState } from "react";
 
 const Navbar = () => {
-  const LanguageMenu = (
-    <Menu>
-      <Menu.Item key="1">Tiếng Việt</Menu.Item>
-      <Menu.Item key="2">English</Menu.Item>
-    </Menu>
-  );
-
   const [isMenuHovered, setIsMenuHovered] = useState(false);
 
   const handleMenuMouseEnter = () => {
@@ -74,12 +67,12 @@ const Navbar = () => {
           <span className="text-xs font-medium">Món đã đặt</span>
         </NavLink>
         <div className="flex flex-col items-center">
-          <FiUser className="w-5 h-5 md:w-6 md:h-6" />
+          <CiUser className="w-5 h-5 md:w-6 md:h-6" />
           <span className="text-xs font-medium">Tài khoản</span>
         </div>
       </div>
       {/* Desktop */}
-      <div className="hidden lg:flex lg:justify-between lg:items-center lg:fixed z-30 bg-white top-0 w-full h-20 px-6 py-2 drop-shadow-md">
+      <div className="hidden lg:flex lg:justify-between lg:items-center lg:fixed z-30 bg-white top-0 w-full h-20 px-16 py-2 drop-shadow-md">
         <div className="text-2xl font-bold">LOGO</div>
         <nav className="lg:flex lg:space-x-6">
           <NavLink
@@ -174,18 +167,16 @@ const Navbar = () => {
                 className="w-full p-2 pr-8 pl-2 border border-gray-100 rounded-md outline-none transition-all duration-300"
               />
               <div className="absolute top-0 right-0 flex items-center justify-center h-full w-10">
-                <HiSearch className="w-6 h-6 text-gray-400 hover:text-primary transition-colors duration-300" />
+                <GoSearch className="w-4 h-4 text-gray-400 hover:text-primary transition-colors duration-300" />
               </div>
             </div>
           </div>
           <div className="cursor-pointer flex items-center space-x-2">
-            <FiUser className="w-6 h-6 hover:text-primary transition-colors duration-300" />
+            <CiUser className="w-6 h-6 hover:text-primary transition-colors duration-300" />
           </div>
-          <Dropdown overlay={LanguageMenu}>
-            <div className="flex items-center space-x-2 cursor-pointer">
-              <BiFlag className="w-6 h-6 hover:text-primary transition-colors duration-300" />
-            </div>
-          </Dropdown>
+          <div className="cursor-pointer flex items-center space-x-2">
+            <PiShoppingCartLight className="w-6 h-6 hover:text-primary transition-colors duration-300" />
+          </div>
         </div>
       </div>
     </div>
