@@ -8,9 +8,10 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import useHttp from "../../hooks/useHttp.js";
-import { formatCurrency, truncateString } from "../../utils/format.js";
+import { truncateString } from "../../utils/format.js";
 import { socket } from "../../services/socket";
 import { useParams } from "react-router-dom";
+import { Rate } from "antd";
 
 const AboutUs = () => {
   const [slideProduct, setSlideRating] = useState(null);
@@ -21,13 +22,13 @@ const AboutUs = () => {
   useEffect(() => {
     const request = {
       method: "get",
-      url: "/rating",
+      url: "/review",
     };
     sendRequest(request, setSlideRating);
   }, [sendRequest]);
 
   useEffect(() => {
-    socket.emit("new rating", { userName: "Taile", role: "R1" });
+    socket.emit("new rating", { userName: "Myduyen", role: "R1" });
   }, []);
 
   return (
@@ -121,13 +122,14 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-      <section>
+      <section className="px-16 my-12 w-full h-full">
+        <h2 className="text-5xl text-center text-primary w-full font-semibold mb-14">
+          Đánh giá của khách hàng
+        </h2>
         <Swiper
           // install Swiper modules
-          className="mt-6 lg:mx-16 px-6 w-auto"
           modules={[A11y]}
-          spaceBetween={10}
-          slidesPerView={2}
+          spaceBetween={8}
           breakpoints={{
             375: {
               slidesPerView: 2,
@@ -141,40 +143,39 @@ const AboutUs = () => {
               slidesPerView: 4,
               spaceBetween: 30,
             },
-            1440: {
-              slidesPerView: 5,
-              spaceBetween: 30,
-            },
+            // 1440: {
+            //   slidesPerView: 5,
+            //   spaceBetween: 30,
+            // },
           }}
           autoplay={true}
-          onSwiper={(swiper) => console.log(swiper)}
           onSlideChange={() => console.log("slide change")}
         >
           {slideProduct &&
             slideProduct?.data?.map((rating) => (
               <SwiperSlide key={rating.id}>
-                <div className="w-auto h-auto border hover:shadow-lg cursor-pointer transition-all">
+                <div className="flex p-2 border hover:shadow-lg cursor-pointer transition-all">
                   <div className="w-full">
                     <img
                       className="w-full h-full rounded-full"
-                      src={rating.imgRating}
+                      src="https://i.pinimg.com/564x/85/25/83/852583511c3109d7a4efa0c3a233be1e.jpg"
                     />
                   </div>
-                  <div className="flex justify-between items-center p-2 text-slate-500">
-                    <div>
-                      <span className="text-sm font-medium overflow-hidden block">
-                        {truncateString(rating.star)}
-                      </span>
-                      <span className="text-xs">
-                        {formatCurrency(rating.review)}
-                      </span>
-                    </div>
+                  <div className="flex flex-col p-4 text-slate-500">
+                    <span>{rating.name}</span>
+                    <span className="whitespace-nowrap">
+                      <Rate value={rating.rate} />
+                    </span>
+                    <span className="text-xs">
+                      {truncateString(rating.description, 20)}
+                    </span>
                   </div>
                 </div>
               </SwiperSlide>
             ))}
         </Swiper>
       </section>
+
       <Reason />
     </div>
   );
