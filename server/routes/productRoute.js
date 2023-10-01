@@ -7,9 +7,10 @@ const {
   getByCategory,
   addItem,
   updateProduct,
-  removeProduct,
+  removeProduct, searchProduct,
 } = require("../controller/productController");
 router.get("/", list);
+router.get("/search", searchProduct)
 router.get("/:id", getDetail);
 router.get("/category/:id", getByCategory);
 router.post("/", parser.array("Image"), addItem);

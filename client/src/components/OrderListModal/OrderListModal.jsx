@@ -25,8 +25,9 @@ const OrderListModal = ({
   const [data, setData] = useState(null);
   const orders = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
-  const { sendRequest } = useHttp();
+  const { sendRequest,isLoading } = useHttp();
   const dispatch = useDispatch();
+  // Calculate Total Bill
   const total = orders.reduce((acc, cur) => {
     acc += cur.quantity * cur.price;
     return acc;
@@ -79,7 +80,7 @@ const OrderListModal = ({
       if (data) {
         dispatch(
           addSelectedItems({
-            products: data?.products,
+            products: data.product,
             total: total,
           }),
         );
@@ -103,6 +104,7 @@ const OrderListModal = ({
       centered
       footer={[
         <Button
+          disabled={orders.length === 0}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
           key="submit"
           size="middle"

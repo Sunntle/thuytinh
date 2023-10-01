@@ -28,7 +28,7 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
   const fileList = data?.ImageProducts.map((el) => {
     return {
       uid: el.id,
-      name: el.url.split("/").at(-1).split(".")[0],
+      name: el.url?.split("/").at(-1).split(".")[0],
       status: "done",
       url: el.url,
     };
@@ -144,7 +144,7 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
             res.map((el) => {
               onSuccess({
                 uid: el.id,
-                name: el.url.split("/").at(-1).split(".")[0],
+                name: el.url?.split("/").at(-1).split(".")[0],
                 status: "done",
                 url: el.url,
               });

@@ -1,0 +1,41 @@
+nav .btn-desktop-order{
+    width: 79px;
+    height: 40px;
+    color: white;
+    border-radius: 5px;
+}
+nav .btn-desktop-listOrder{
+    width: 161px;
+    height: 40px;
+    color: white;
+    border-radius: 5px;
+}
+nav .btn-desktop-order:hover{
+    opacity: 0.7;
+}
+nav .btn-desktop-listOrder:hover{
+    opacity: 0.7;
+}   
+.divider{
+    height: 2px;
+    border-top: #303030 1px solid;
+    max-width: 2px 0px;
+}
+
+.Order-total button{
+    /* width: 50%; */
+    border-radius: 5px;
+    height: 40px;
+    width: 100%;
+} 
+.Order-total button:hover{
+    opacity: 0.7;
+}
+.btn-cancel button{
+    height: 40px;
+    width: 70%;
+}
+.btn-accept button{
+    height: 40px;
+    width: 70%;
+}

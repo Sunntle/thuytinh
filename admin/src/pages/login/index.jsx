@@ -37,6 +37,9 @@ const LoginPage = () => {
         <Form className="z-10 space-y-6 flex flex-col justify-center items-center
              w-2/3 h-2/3 py-10 bg-transparent shadow-md sm:w-1/2 sm:bg-white sm:bg-opacity-25"
             onFinish={onFinish}
+            initialValues={{
+                remember: true
+            }}
         >
             <h2 className="text-center text-2xl font-medium text-white mb-4">
                 ĐĂNG NHẬP
@@ -47,16 +50,14 @@ const LoginPage = () => {
                 rules={[
                     {
                         required: true,
-                        min: 5,
+                        // min: 5,
                         message: 'Ít nhất 5 kí tự !',
                     },
                     {
                         type: 'email',
                         message: 'Vui lòng nhập đúng định dạng E-mail!',
-                    },
-
+                    }
                 ]}
-                validateTrigger={true}
             >
                 <Input className='p-2 font-medium  focus:border-orange-500' placeholder='Tài khoản (email)' />
             </Form.Item>
@@ -71,7 +72,6 @@ const LoginPage = () => {
                         message: 'Ít nhất 5 kí tự !',
                     }
                 ]}
-                validateTrigger={true}
             >
                 <Input.Password className='p-2 font-medium focus:border-orange-500' placeholder='Mật khẩu' />
             </Form.Item>
