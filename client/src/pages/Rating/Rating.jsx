@@ -1,19 +1,45 @@
+import axios from "axios";
 import { useState } from "react";
 import { Form, Rate, Modal, Input } from "antd";
+import { useSelector } from "react-redux";
+import useHttp from "../../hooks/useHttp.js";
+const desc = ["Rất tệ", "Tệ", "Tạm được", "Tốt", "Rất tuyệt vời"];
 
 const Rating = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [value, setValue] = useState(3);
   const [form] = Form.useForm();
+  const customerName = useSelector((state) => state.customerName);
+  const { id_order } = useSelector((state) => state.rating);
+  const { sendRequest } = useHttp();
 
-  const desc = ["Rất tệ", "Tệ", "Tạm được", "Tốt", "Rất tuyệt vời"];
+  // console.log(id_order);
 
   // const showModal = () => {
   //   setIsModalOpen(true);
   // };
 
-  const onFinish = (values) => {
-    console.log(values);
+  // console.log(customerName);
+
+  const onFinish = async (values) => {
+    const { rating, text } = values;
+    const dataToSend = {
+      name: customerName,
+      id_order: id_order,
+      description: text,
+      rate: rating,
+    };
+    try {
+      await sendRequest({
+        method: "post",
+        url: "/review",
+        ...dataToSend,
+      });
+      setIsModalOpen(true);
+      console.log("Gửi đánh giá thành công");
+    } catch (error) {
+      console.error("Lỗi khi gửi dữ liệu lên server", error);
+    }
   };
 
   const onFinishFailed = (error) => {

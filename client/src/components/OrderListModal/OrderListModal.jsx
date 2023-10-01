@@ -13,6 +13,7 @@ import {
 } from "../../redux/Order/orderSlice.js";
 import useHttp from "../../hooks/useHttp.js";
 import { addSelectedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
+import { getIdOrder } from "../../redux/Rating/ratingSlice.js";
 
 const { confirm } = Modal;
 const OrderListModal = ({
@@ -74,6 +75,7 @@ const OrderListModal = ({
         ...body,
       };
       sendRequest(request, setData);
+      console.log(data);
       if (data) {
         dispatch(
           addSelectedItems({
@@ -81,6 +83,7 @@ const OrderListModal = ({
             total: total,
           }),
         );
+        dispatch(getIdOrder(data?.orders.id))
         dispatch(emptyOrder());
         console.log("Đặt món thành công");
       }
@@ -131,7 +134,7 @@ const OrderListModal = ({
                     {item.name_product}
                   </span>
                   <span className="text-md md:text-md font-normal">
-                    Giá:{" "}
+                    Giá:
                     <span className="font-bold">
                       {formatCurrency(item.price)}
                     </span>

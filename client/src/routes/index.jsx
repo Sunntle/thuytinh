@@ -14,7 +14,7 @@ import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/:id",
+    path: "/",
     children: [
       {
         index: true,
