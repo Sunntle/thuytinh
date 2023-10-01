@@ -32,7 +32,7 @@ exports.list = async (req, res) => {
     };
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
-    if (q) query.where = { name_product: { [Op.like]: `%${q}%` } };
+    if (q) query.where = { name_product: { [Op.substring]: q } };
     if (_sort) query.order = [[_sort, _order]];
     if (rest) {
       const whereConditions = {};

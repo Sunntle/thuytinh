@@ -56,7 +56,7 @@ function ReviewsPage() {
       setPercent(
         ((countReviews?.total - countPrevReviews?.total) /
           countPrevReviews?.total) *
-        100
+          100
       );
     }
   };
@@ -82,7 +82,6 @@ function ReviewsPage() {
       res?.total?.forEach((el) => {
         arr[+formatNgay(el.createdAt).substring(0, 2) - 1] += el.count;
       });
-      console.log(arr)
       setDataChart(arr);
     };
     fetchDataColumn();

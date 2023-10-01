@@ -29,8 +29,7 @@ function ColumnChart({ series, colors, customOptions, categories }) {
       },
       yaxis: {
         min: 0,
-        floating: false,
-        decimalsInFloat: undefined,
+        max: 20,
       },
     },
   };
