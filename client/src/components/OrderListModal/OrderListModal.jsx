@@ -13,6 +13,7 @@ import {
 } from "../../redux/Order/orderSlice.js";
 import useHttp from "../../hooks/useHttp.js";
 import { addSelectedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
+import { getIdOrder } from "../../redux/Rating/ratingSlice.js";
 
 const { confirm } = Modal;
 const OrderListModal = ({
@@ -24,8 +25,9 @@ const OrderListModal = ({
   const [data, setData] = useState(null);
   const orders = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
-  const { sendRequest } = useHttp();
+  const { sendRequest,isLoading } = useHttp();
   const dispatch = useDispatch();
+  // Calculate Total Bill
   const total = orders.reduce((acc, cur) => {
     acc += cur.quantity * cur.price;
     return acc;
@@ -74,13 +76,15 @@ const OrderListModal = ({
         ...body,
       };
       sendRequest(request, setData);
+      console.log(data);
       if (data) {
         dispatch(
           addSelectedItems({
-            products: data?.products,
+            products: data.product,
             total: total,
           }),
         );
+        dispatch(getIdOrder(data?.orders.id))
         dispatch(emptyOrder());
         console.log("Đặt món thành công");
       }
@@ -100,6 +104,7 @@ const OrderListModal = ({
       centered
       footer={[
         <Button
+          disabled={orders.length === 0}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
           key="submit"
           size="middle"
@@ -131,7 +136,7 @@ const OrderListModal = ({
                     {item.name_product}
                   </span>
                   <span className="text-md md:text-md font-normal">
-                    Giá:{" "}
+                    Giá:
                     <span className="font-bold">
                       {formatCurrency(item.price)}
                     </span>

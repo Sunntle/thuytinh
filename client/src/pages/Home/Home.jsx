@@ -21,6 +21,7 @@ import Banner from "../../components/Banner.jsx";
 import Footer from "../../components/Footer.jsx";
 import { useParams } from "react-router-dom";
 
+
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
@@ -119,10 +120,9 @@ const Home = () => {
             </SwiperSlide>
           ))}
       </Swiper>
-      {/* code ở đây */}
-      <Banner />
       <Reason />
       <Footer />
+
     </div>
   );
 };
