@@ -12,6 +12,8 @@ const Order = () => {
   const dispatch = useDispatch();
   const VAT = 0.1;
 
+  console.log(products)
+
   const showModal = () => {
     setIsModalOpen(true);
   };

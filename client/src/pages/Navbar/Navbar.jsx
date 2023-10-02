@@ -1,14 +1,60 @@
 import { AiOutlineShop } from "react-icons/ai";
-import { MdOutlineRestaurantMenu, MdRoomService } from "react-icons/md";
 import { HiOutlineClipboardList, HiSearch } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { BiFlag } from "react-icons/bi";
 import { Dropdown, Menu } from "antd";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { IoRestaurantOutline } from "react-icons/io5";
+import { MdOutlineRoomService } from "react-icons/md";
+import { regexRouter } from "../../utils/regex.js";
+
+const navbarRoute = [
+  {
+    id: 1,
+    route: "/ban-1/home",
+    icon: <AiOutlineShop className="w-6 h-6" />,
+    routeName: "Trang chủ",
+  },
+  {
+    id: 2,
+    route: "/ban-1/service",
+    icon: <MdOutlineRoomService className="w-6 h-6" />,
+    routeName: "Dịch vụ",
+  },
+  {
+    id: 3,
+    route: "/ban-1/menu",
+    icon: <IoRestaurantOutline className="w-6 h-6" />,
+    routeName: "Thực đơn",
+  },
+  {
+    id: 4,
+    route: "/ban-1/order",
+    icon: <HiOutlineClipboardList className="w-6 h-6" />,
+    routeName: "Món đã đặt",
+  },
+  {
+    id: 5,
+    route: "/ban-1/account",
+    icon: <FiUser className="w-6 h-6" />,
+    routeName: "Tài khoản",
+  },
+];
 
 const Navbar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const idTable = location.pathname.split("/")[1].split("-")[1];
+
+  useEffect(() => {
+    const compareRegex = regexRouter.test(location.pathname)
+    if(!compareRegex) {
+      navigate('/')
+    }
+  }, []);
+
   const LanguageMenu = (
     <Menu>
       <Menu.Item key="1">Tiếng Việt</Menu.Item>
@@ -28,55 +74,28 @@ const Navbar = () => {
 
   return (
     <div>
-      <div className="fixed lg:hidden z-30 bg-white bottom-0 w-full h-20 lg:px-16 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-500">
-        <NavLink
-          to="/home"
-          className={({ isActive }) =>
-            isActive
-              ? "flex flex-col items-center text-white p-2 transition-all duration-300 bg-gradient-to-br from-[#DC0000] to-[#FFDB89] rounded-tr-2xl rounded-bl-2xl"
-              : "flex flex-col items-center transition-all duration-300"
-          }
-        >
-          <AiOutlineShop className="w-5 h-5 md:w-6 md:h-6" />
-          <span className="text-xs font-medium">Trang chủ</span>
-        </NavLink>
-        <NavLink
-          to="/service"
-          className={({ isActive }) =>
-            isActive
-              ? "flex flex-col items-center text-white p-2 transition-all duration-300 bg-gradient-to-br from-[#DC0000] to-[#FFDB89] rounded-tr-2xl rounded-bl-2xl"
-              : "flex flex-col items-center transition-all duration-300"
-          }
-        >
-          <MdRoomService className="w-5 h-5 md:w-6 md:h-6" />
-          <span className="text-xs font-medium">Dịch vụ</span>
-        </NavLink>
-        <NavLink
-          to="/menu"
-          className={({ isActive }) =>
-            isActive
-              ? "flex flex-col items-center text-white p-2 transition-all duration-300 bg-gradient-to-br from-[#DC0000] to-[#FFDB89] rounded-tr-2xl rounded-bl-2xl"
-              : "flex flex-col items-center transition-all duration-300"
-          }
-        >
-          <MdOutlineRestaurantMenu className="w-5 h-5 md:w-6 md:h-6" />
-          <span className="text-xs font-medium">Thực đơn</span>
-        </NavLink>
-        <NavLink
-          to="/order"
-          className={({ isActive }) =>
-            isActive
-              ? "flex flex-col items-center text-white p-2 transition-all duration-300 bg-gradient-to-br from-[#DC0000] to-[#FFDB89] rounded-tr-2xl rounded-bl-2xl"
-              : "flex flex-col items-center transition-all duration-300"
-          }
-        >
-          <HiOutlineClipboardList className="w-5 h-5 md:w-6 md:h-6" />
-          <span className="text-xs font-medium">Món đã đặt</span>
-        </NavLink>
-        <div className="flex flex-col items-center">
-          <FiUser className="w-5 h-5 md:w-6 md:h-6" />
-          <span className="text-xs font-medium">Tài khoản</span>
-        </div>
+      <div className="fixed px-6 lg:hidden z-40 bg-white bottom-0 w-full h-16 lg:px-16 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-400 overflow-hidden">
+        {navbarRoute &&
+          navbarRoute.map((item) => (
+            <NavLink
+              key={item.id}
+              to={item.route.replace("1", idTable)}
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center px-3 py-2 text-primary rounded-full bg-primary bg-opacity-20 shadow transition-all duration-400"
+                  : "flex items-center transition-all duration-400"
+              }
+            >
+              {item.icon}
+              <span
+                className={`text-sm font-medium ${
+                  location.pathname !== item.route ? "hidden ml-0" : "flex ml-1"
+                }`}
+              >
+                {item.routeName}
+              </span>
+            </NavLink>
+          ))}
       </div>
       {/* Desktop */}
       <div className="hidden lg:flex lg:justify-between lg:items-center lg:fixed z-30 bg-white top-0 w-full h-20 px-6 py-2 drop-shadow-md">
@@ -182,7 +201,7 @@ const Navbar = () => {
             <FiUser className="w-6 h-6 hover:text-primary transition-colors duration-300" />
           </div>
           <Dropdown overlay={LanguageMenu}>
-            <div className="flex items-center space-x-2 cursor-pointer">
+            <div className="hidden lg:flex items-center space-x-2 cursor-pointer">
               <BiFlag className="w-6 h-6 hover:text-primary transition-colors duration-300" />
             </div>
           </Dropdown>

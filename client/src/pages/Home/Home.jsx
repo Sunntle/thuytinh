@@ -19,14 +19,12 @@ import { socket } from "../../services/socket";
 import Reason from "../../components/Reason.jsx";
 import Banner from "../../components/Banner.jsx";
 import Footer from "../../components/Footer.jsx";
-import { useParams } from "react-router-dom";
-
+import { useLocation, useParams } from "react-router-dom";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
-  const { slug } = useParams();
-  console.log(slug);
+  const location = useLocation();
 
   useEffect(() => {
     const request = {
@@ -50,8 +48,7 @@ const Home = () => {
 
   return (
     <div className="pb-24 lg:pb-0 lg:pt-24">
-      <Button onClick={onClickCheckSocket} content="2" />
-
+      {/*<Button onClick={onClickCheckSocket} content="2" />*/}
       <Banner />
       <div className="flex items-center justify-between mt-12 px-6 lg:mx-16">
         <span className="w-full h-0.5 bg-black"></span>
@@ -85,7 +82,6 @@ const Home = () => {
           },
         }}
         autoplay={true}
-        onSwiper={(swiper) => console.log(swiper)}
         onSlideChange={() => console.log("slide change")}
       >
         {slideProduct &&
@@ -105,8 +101,8 @@ const Home = () => {
                 </div>
                 <div className="flex justify-between items-center p-2 text-slate-500">
                   <div>
-                    <span className="text-sm font-medium overflow-hidden block">
-                      {truncateString(product.name_product)}
+                    <span className="text-sm font-medium overflow-hidden block w-full whitespace-nowrap">
+                      {truncateString(product.name_product, 10)}
                     </span>
                     <span className="text-xs">
                       {formatCurrency(product.price)}
@@ -121,8 +117,6 @@ const Home = () => {
           ))}
       </Swiper>
       <Reason />
-      <Footer />
-
     </div>
   );
 };

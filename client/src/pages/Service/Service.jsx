@@ -6,11 +6,12 @@ import {PiFishSimpleBold} from "react-icons/pi";
 import {HiOutlineBellAlert} from "react-icons/hi2";
 import {useNavigate} from "react-router-dom";
 import Header from "../../components/Header.jsx";
+import CallStaff from "../../components/CallStaff.jsx";
 
 const Service = () => {
     const navigate = useNavigate()
     return (
-        <div className="relative text-slate-800 pb-24 lg:py-24 min-h-screen">
+        <div className="relative text-slate-800 pb-24 lg:py-24">
             {/* Header */}
             <div className="flex flex-col px-6 mt-8 space-y-6">
                 <div className="w-full h-44 lg:h-[450px] rounded-lg">
@@ -37,9 +38,7 @@ const Service = () => {
                     <span className="font-medium">Xem thực đơn - Gọi món</span>
                 </div>
             </div>
-            <div className="fixed right-5 bottom-24 w-12 h-12 bg-white border-2 active:bg-primary transition-all border-primary rounded-full flex justify-center items-center">
-                <HiOutlineBellAlert className="w-6 h-6 text-primary animate-swing active:text-white" />
-            </div>
+            <CallStaff />
         </div>
     );
 };

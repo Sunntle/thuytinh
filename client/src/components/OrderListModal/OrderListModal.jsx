@@ -75,10 +75,10 @@ const OrderListModal = ({
         ...body,
       };
       sendRequest(request, setData);
-      if (!isLoading) {
+      if (data) {
         dispatch(
           addSelectedItems({
-            products: data.product,
+            products: data?.product,
             total: total,
           }),
         );

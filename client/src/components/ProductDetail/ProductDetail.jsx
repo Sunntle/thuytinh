@@ -1,87 +1,69 @@
-import React from "react";
-import { Button, Collapse, Modal, theme } from "antd";
-import product from "../../assets/images/product.png";
-import { FiChevronDown } from "react-icons/fi";
+import React, { useEffect, useState } from "react";
+import { Drawer, Spin } from "antd";
+import "./main.css";
 import { formatCurrency } from "../../utils/format.js";
+import useHttp from "../../hooks/useHttp.js";
+import {HiMiniXMark} from "react-icons/hi2";
 
-const ProductDetail = ({
-  isProductDetailModalOpen,
-  handleOk,
-  handleCancel,
-  item,
-}) => {
-  const { token } = theme.useToken();
-  const panelStyle = {
-    marginBottom: 6,
-    background: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    border: "none",
-  };
-  const getItems = (panelStyle) => [
-    {
-      key: "1",
-      label: <span className="font-semibold">Mô tả</span>,
-      children: <p>{item.description}</p>,
-      style: panelStyle,
-    },
-    {
-      key: "2",
-      label: <span className="font-semibold">Thành phần chính</span>,
-      children: <p>none</p>,
-      style: panelStyle,
-    },
-  ];
+const ProductDetail = ({ openDrawer, onClose, id }) => {
+  const [productDetail, setProductDetail] = useState({});
+  const { sendRequest, isLoading } = useHttp();
 
-  return (
-    <Modal
-      className="lg:h-full"
-      open={isProductDetailModalOpen}
-      height={600}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      centered
-      footer={[
-        <Button
-          className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
-          size="middle"
-          onClick={handleOk}
-        >
-          Ok
-        </Button>,
-      ]}
-    >
-      <div className="max-h-96 overflow-y-auto custom-scrollbar mt-8 text-slate-500">
-        <div className="w-full h-52 rounded block">
-          <img
-            className="w-full h-full aspect-square object-cover rounded"
-            src={item.imageUrls || item.ImageProducts?.[0]?.url}
-            alt=""
-          />
+  useEffect(() => {
+    const request = {
+      method: "get",
+      url: `product/${id}`,
+    };
+    sendRequest(request, setProductDetail);
+  }, [sendRequest, id]);
+
+  console.log(productDetail)
+  return isLoading ? (
+      <Drawer
+          height={"80%"}
+          onClose={onClose}
+          open={openDrawer}
+          placement={"bottom"}
+          key={"bottom"}
+          extra={
+            <span className="font-semibold text-base text-primary capitalize">
+          Chi tiết sản phẩm
+        </span>
+          }
+      >
+        <div className="w-full h-full flex flex-col justify-center items-center">
+          <Spin size={"large"} />
+          <span className="mt-4 font-semibold text-lg">
+          Quý khách vui lòng đợi trong giây lát !
+        </span>
         </div>
-        <div className="flex flex-col mt-3 space-y-3">
-          <span className="text-lg text-primary font-bold">
-            {item.name_product}
+      </Drawer>
+  ) : (
+    <Drawer
+        closeIcon={<HiMiniXMark className="text-slate-800" size={28}/>}
+      height={"80%"}
+      onClose={onClose}
+      open={openDrawer}
+      placement={"bottom"}
+      key={"bottom"}
+      extra={
+        <span className="font-semibold text-base text-primary capitalize">
+          Chi tiết sản phẩm
+        </span>
+      }
+    >
+      <div className="text-slate-500">
+        <div className="w-auto h-48">
+          <img className="w-full h-full rounded" src={productDetail?.imageUrls || productDetail?.ImageProducts?.[0].url } alt="" />
+        </div>
+        <div className="mt-3 flex justify-between items-center">
+          <span className="font-semibold text-lg text-primary">
+            Tôm hùm nướng
           </span>
-          <span className="text-base font-medium">
-            Giá: {formatCurrency(item.price)}
-          </span>
-          <Collapse
-            bordered={false}
-            size={"small"}
-            expandIcon={({ isActive }) => (
-              <FiChevronDown
-                size={16}
-                className={`transition-transform duration-300 ${
-                  isActive ? "rotate-0" : "-rotate-90"
-                }`}
-              />
-            )}
-            style={{ background: token.colorBgContainer }}
-            items={getItems(panelStyle)}
-          />
+          <span className="font-medium">{formatCurrency(1500000)}</span>
         </div>
       </div>
-    </Modal>
+    </Drawer>
   );
 };
 
