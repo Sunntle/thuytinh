@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import { Form, Rate, Modal, Input } from "antd";
 import { useSelector } from "react-redux";
