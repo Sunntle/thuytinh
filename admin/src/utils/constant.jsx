@@ -24,5 +24,9 @@ export const NAV_ITEMS = [
     getItem("Hóa đơn ", "/admin/order"),
     getItem("Đánh giá", "/admin/reviews"),
   ]),
-  getItem("Nhà hàng", null, <ShopOutlined />, []),
+  getItem("Nhà hàng", null, <ShopOutlined />, [
+    getItem("Chọn bàn","/employee/choosetable"),
+    getItem("Thực đơn món ăn","/employee/menu"),
+    getItem("Doanh thu","/employee/renvenue")
+  ]),
 ];

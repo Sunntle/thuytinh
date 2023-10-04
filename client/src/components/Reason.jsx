@@ -1,5 +1,3 @@
-import React from "react";
-import product from "../assets/images/product.png";
 import { BsBookmarkCheckFill } from "react-icons/bs";
 import { FaShippingFast } from "react-icons/fa";
 import { RiServiceFill } from "react-icons/ri";
@@ -7,7 +5,7 @@ import {truncateString} from "../utils/format.js";
 
 const AboutUs = () => {
   return (
-    <div className="max-w-screen-xl lg:mx-16 my-12 px-6">
+    <div className="max-w-screen-xl lg:mx-16 my-12">
       <h1 className="text-4xl font-bold text-primary pb-4">
         Tại sao bạn chọn chúng tôi
       </h1>
