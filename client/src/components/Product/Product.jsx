@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import ProductDetail from "../ProductDetail/ProductDetail.jsx";
 
 const Product = (props) => {
-  const { id, imageUrls, ImageProducts, name_product, price } = props.item;
+  const { id, name_product, price } = props.item;
   const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [productDetail, setProductDetail] = useState(false);
@@ -35,6 +35,7 @@ const Product = (props) => {
       <div className="w-full h-40" onClick={showProductDetail}>
         <img
           className="w-full h-full rounded-t-lg"
+          loading={"lazy"}
           src={imageUrl}
           alt={name_product}
         />

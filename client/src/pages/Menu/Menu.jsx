@@ -1,7 +1,6 @@
-import {useEffect, useMemo, useState} from "react";
+import { useEffect, useState } from "react";
 import "./index.css";
 import { FiSearch } from "react-icons/fi";
-import { AiFillPlusCircle } from "react-icons/ai";
 import { BiFoodMenu } from "react-icons/bi";
 import useHttp from "../../hooks/useHttp.js";
 import { useSelector } from "react-redux";
@@ -19,27 +18,24 @@ const Menu = () => {
   const [foods, setFoods] = useState(null);
   const [categories, setCategories] = useState(null);
   const orders = useSelector((state) => state.order);
-  const debouncedValue = useDebounce(searchValue, 300);
+  const debouncedValue = useDebounce(searchValue, 100);
 
-  const handleSubmitSearchValue = (e) => {
-    if (e.key === "Enter") {
-      if (searchValue.trim() !== "") {
-        try {
-          const request = {
-            method: "get",
-            url: `product/search?query=${debouncedValue}`,
-          };
-          sendRequest(request, setFoods);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    }
-  };
+  useEffect(() => {
+    const categoryRequest = {
+      method: "get",
+      url: "/category",
+    };
 
-  const handleChangeSearchValue = (e) => {
-    setSearchValue(e.target.value);
-  };
+    const productRequest = {
+      method: "get",
+      url: "/product",
+    };
+
+    sendRequest(categoryRequest, setCategories);
+    sendRequest(productRequest, setFoods);
+  }, [sendRequest]);
+
+  console.log(foods);
 
   const handleGetAllFood = (index) => {
     try {
@@ -67,22 +63,25 @@ const Menu = () => {
     }
   };
 
-  useEffect(() => {
-    const categoryRequest = {
-      method: "get",
-      url: "/category",
-    };
+  const handleChangeSearchValue = (e) => {
+    setSearchValue(e.target.value);
+  };
 
-    const productRequest = {
-      method: "get",
-      url: "/product",
-    };
-
-    sendRequest(categoryRequest, setCategories);
-    sendRequest(productRequest, setFoods);
-  }, [sendRequest]);
-
-  console.log(foods)
+  const handleSubmitSearchValue = (e) => {
+    if (e.key === "Enter") {
+      if (searchValue.trim() !== "") {
+        try {
+          const request = {
+            method: "get",
+            url: `product/search?query=${debouncedValue}`,
+          };
+          sendRequest(request, setFoods);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  };
 
   const showOrderListModal = () => {
     setIsOrderModalOpen(true);
@@ -139,12 +138,14 @@ const Menu = () => {
         </div>
         {/*Category*/}
         <div className="relative w-full text-sm">
-          <span className="text-base lg:text-xl font-semibold block mb-3">Danh mục</span>
+          <span className="text-base lg:text-xl font-semibold block mb-3">
+            Danh mục
+          </span>
           <CategoryList
-              categories={categories}
-              activeIndex={activeIndex}
-              handleGetAllFood={handleGetAllFood}
-              handleFilterFoodByCategory={handleFilterFoodByCategory}
+            categories={categories}
+            activeIndex={activeIndex}
+            handleGetAllFood={handleGetAllFood}
+            handleFilterFoodByCategory={handleFilterFoodByCategory}
           />
         </div>
         {/* Filter with material */}
