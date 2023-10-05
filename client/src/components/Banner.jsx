@@ -7,7 +7,7 @@ const Banner = () => {
         <h1 className="text-center text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-200">
           Nhà hàng Thuỷ Tinh - Lung linh cho mọi bữa tiệc
         </h1>
-        <div className="rounded-full p-1 box-border mt-8 bg-white overflow-hidden  w-96 flex items-center">
+        <div className="rounded-full p-1 box-border mt-8 bg-white overflow-hidden w-80 md:w-96 flex items-center">
           <input
             type="text"
             className="rounded-full px-4 outline-none w-full"

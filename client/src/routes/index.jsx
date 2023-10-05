@@ -12,10 +12,9 @@ import Contact from "../pages/Contact/Contact.jsx";
 
 import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 
-
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/:alias",
     children: [
       {
         index: true,

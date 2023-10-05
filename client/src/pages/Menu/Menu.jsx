@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import "./index.css";
 import { FiSearch } from "react-icons/fi";
-import { AiFillPlusCircle } from "react-icons/ai";
 import { BiFoodMenu } from "react-icons/bi";
 import useHttp from "../../hooks/useHttp.js";
-import { formatCurrency } from "../../utils/format.js";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import OrderListModal from "../../components/OrderListModal/OrderListModal.jsx";
-import { addToOrder } from "../../redux/Order/orderSlice.js";
 import { Spin } from "antd";
 import useDebounce from "../../hooks/useDebounce.js";
-import Product from "../../components/Product/Product.jsx";
+import ProductList from "../../components/ProductList/ProductList.jsx";
+import CategoryList from "../../components/CategoryList/CategoryList.jsx";
 
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -19,29 +17,25 @@ const Menu = () => {
   const { sendRequest, isLoading, error } = useHttp();
   const [foods, setFoods] = useState(null);
   const [categories, setCategories] = useState(null);
-  const dispatch = useDispatch();
   const orders = useSelector((state) => state.order);
-  const debouncedValue = useDebounce(searchValue, 300);
+  const debouncedValue = useDebounce(searchValue, 100);
 
-  const handleSubmitSearchValue = (e) => {
-    if (e.key === "Enter") {
-      if (searchValue.trim() !== "") {
-        try {
-          const request = {
-            method: "get",
-            url: `product/search?query=${debouncedValue}`,
-          };
-          sendRequest(request, setFoods);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    }
-  };
+  useEffect(() => {
+    const categoryRequest = {
+      method: "get",
+      url: "/category",
+    };
 
-  const handleChangeSearchValue = (e) => {
-    setSearchValue(e.target.value);
-  };
+    const productRequest = {
+      method: "get",
+      url: "/product",
+    };
+
+    sendRequest(categoryRequest, setCategories);
+    sendRequest(productRequest, setFoods);
+  }, [sendRequest]);
+
+  console.log(foods);
 
   const handleGetAllFood = (index) => {
     try {
@@ -69,21 +63,25 @@ const Menu = () => {
     }
   };
 
-  useEffect(() => {
-    const request = {
-      method: "get",
-      url: "/category",
-    };
-    sendRequest(request, setCategories);
-  }, [sendRequest]);
+  const handleChangeSearchValue = (e) => {
+    setSearchValue(e.target.value);
+  };
 
-  useEffect(() => {
-    const request = {
-      method: "get",
-      url: "/product",
-    };
-    sendRequest(request, setFoods);
-  }, [sendRequest]);
+  const handleSubmitSearchValue = (e) => {
+    if (e.key === "Enter") {
+      if (searchValue.trim() !== "") {
+        try {
+          const request = {
+            method: "get",
+            url: `product/search?query=${debouncedValue}`,
+          };
+          sendRequest(request, setFoods);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  };
 
   const showOrderListModal = () => {
     setIsOrderModalOpen(true);
@@ -140,37 +138,15 @@ const Menu = () => {
         </div>
         {/*Category*/}
         <div className="relative w-full text-sm">
-          <span className="text-base lg:text-xl font-semibold block mb-3">Danh mục</span>
-          <div className=" flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">
-            <button
-              disabled={activeIndex === 0}
-              onClick={() => handleGetAllFood(0)}
-              className={`px-4 py-2 border rounded-full whitespace-nowrap transition-colors duration-100 ${
-                activeIndex === 0
-                  ? "text-white bg-primary shadow"
-                  : "text-slate-800 bg-white"
-              }`}
-            >
-              Tất cả
-            </button>
-            {categories &&
-              categories.map((category) => (
-                <button
-                  disabled={category.id === activeIndex}
-                  key={category.id}
-                  onClick={() => handleFilterFoodByCategory(category.id)}
-                  className={`px-4 py-2 border rounded-full whitespace-nowrap transition-colors duration-100 ${
-                    category.id === activeIndex
-                      ? "text-white bg-primary shadow"
-                      : "text-slate-800 bg-white"
-                  }`}
-                >
-                  {category.name_category}
-                </button>
-              ))}
-          </div>
-          {/* Overlay */}
-          <div className="absolute right-0 bottom-0 w-12 h-1/2 bg-white bg-opacity-60"></div>
+          <span className="text-base lg:text-xl font-semibold block mb-3">
+            Danh mục
+          </span>
+          <CategoryList
+            categories={categories}
+            activeIndex={activeIndex}
+            handleGetAllFood={handleGetAllFood}
+            handleFilterFoodByCategory={handleFilterFoodByCategory}
+          />
         </div>
         {/* Filter with material */}
         {activeIndex !== 0 && (
@@ -197,12 +173,7 @@ const Menu = () => {
           </div>
         )}
         {/*Food*/}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-          {foods &&
-            foods?.data?.map((item) => (
-              <Product key={item.id} item={item} />
-            ))}
-        </div>
+        <ProductList foods={foods} />
       </div>
     </div>
   );

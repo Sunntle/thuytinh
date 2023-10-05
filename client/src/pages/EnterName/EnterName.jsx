@@ -1,13 +1,22 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import serviceImg from '../../assets/images/Service 24_7-pana.png'
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getCustomerName} from "../../redux/CustomerName/customerNameSlice.js";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const EnterName = () => {
     const [customerName, setCustomerName] = useState('')
+    const userName = useSelector(state => state.customerName)
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const location = useLocation()
+    const idTable = location.pathname.split('/')[1].split('-')[1]
+
+    useEffect(() => {
+        if (userName) {
+            navigate(`/ban-${idTable}/home`)
+        }
+    }, []);
 
     const handleChangeName = (e) => {
         setCustomerName(e.target.value)
@@ -15,7 +24,7 @@ const EnterName = () => {
 
     const handleSubmitName = () => {
         dispatch(getCustomerName(customerName))
-        navigate('/menu')
+        navigate(`/${idTable}/menu`)
     }
 
     return (
