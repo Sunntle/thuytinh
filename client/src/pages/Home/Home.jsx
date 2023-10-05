@@ -18,8 +18,7 @@ import { socket } from "../../services/socket";
 
 import Reason from "../../components/Reason.jsx";
 import Banner from "../../components/Banner.jsx";
-import Footer from "../../components/Footer.jsx";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);

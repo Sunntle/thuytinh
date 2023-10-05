@@ -1,6 +1,7 @@
 import React from "react";
 
 const Banner = () => {
+
   return (
     <section className="relative mt-[-20px] h-96 w-full bg-cover bg-center bg-gray-300 bg-[url('https://static.thehoneycombers.com/wp-content/uploads/sites/2/2022/03/sydney-restaurants-woodcut-900x643.png')]">
       <div className="flex flex-col items-center justify-center absolute inset-0 bg-black bg-opacity-40">

@@ -2,6 +2,7 @@ import React from "react";
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
+
   return (
     <footer className="bg-gray-800 px-16 py-12 hidden lg:block">
       <div className="max-w-screen-xl">
