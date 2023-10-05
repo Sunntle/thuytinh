@@ -1,4 +1,3 @@
-import imgContact from "../../assets/images/contact.png";
 import { SiContactlesspayment } from "react-icons/si";
 
 const Contact = () => {

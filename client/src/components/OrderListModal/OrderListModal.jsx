@@ -15,7 +15,6 @@ import useHttp from "../../hooks/useHttp.js";
 import { addSelectedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
 import { getIdOrder } from "../../redux/Rating/ratingSlice.js";
 
-
 const { confirm } = Modal;
 const OrderListModal = ({
   isModalOpen,
@@ -70,7 +69,7 @@ const OrderListModal = ({
       orders: orders,
       total: total,
       customerName: customerName,
-      idTable: idTable
+      idTable: idTable,
     };
     try {
       const request = {
@@ -86,7 +85,7 @@ const OrderListModal = ({
             total: total,
           }),
         );
-        dispatch(getIdOrder(data?.orders.id))
+        dispatch(getIdOrder(data?.orders.id));
         dispatch(emptyOrder());
         console.log("Đặt món thành công");
       }

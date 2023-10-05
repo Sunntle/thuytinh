@@ -12,14 +12,6 @@ const Rating = () => {
   const { id_order } = useSelector((state) => state.rating);
   const { sendRequest } = useHttp();
 
-  // console.log(id_order);
-
-  // const showModal = () => {
-  //   setIsModalOpen(true);
-  // };
-
-  // console.log(customerName);
-
   const onFinish = async (values) => {
     const { rating, text } = values;
     const dataToSend = {
