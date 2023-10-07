@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Modal } from "antd";
 import "./main.css";
 import { BiSolidTrash } from "react-icons/bi";
@@ -25,7 +25,8 @@ const OrderListModal = ({
   const [data, setData] = useState(null);
   const orders = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
-  const { sendRequest,isLoading } = useHttp();
+  const idTable = location.pathname.split("/")[1].split("-")[1];
+  const { sendRequest } = useHttp();
   const dispatch = useDispatch();
   // Calculate Total Bill
   const total = orders.reduce((acc, cur) => {
@@ -68,6 +69,7 @@ const OrderListModal = ({
       orders: orders,
       total: total,
       customerName: customerName,
+      idTable: idTable,
     };
     try {
       const request = {
@@ -76,7 +78,6 @@ const OrderListModal = ({
         ...body,
       };
       sendRequest(request, setData);
-      console.log(data);
       if (data) {
         dispatch(
           addSelectedItems({
@@ -84,7 +85,7 @@ const OrderListModal = ({
             total: total,
           }),
         );
-        dispatch(getIdOrder(data?.orders.id))
+        dispatch(getIdOrder(data?.orders.id));
         dispatch(emptyOrder());
         console.log("Đặt món thành công");
       }
