@@ -33,7 +33,7 @@ exports.list = async (req, res) => {
     };
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
-    if (q) query.where = { name_product: { [Op.like]: `%${q}%` } };
+    if (q) query.where = { name_product: { [Op.substring]: q } };
     if (_sort) query.order = [[_sort, _order]];
     if (rest) {
       const whereConditions = {};
@@ -161,13 +161,13 @@ exports.searchProduct = async (req, res) => {
     const searchedProducts = await Product.findAll({
       where: {
         name_product: {
-          [Op.like]: `%${query}%`
-        }
+          [Op.like]: `%${query}%`,
+        },
       },
       include: [{ model: ImageProduct, attributes: ["url", "id"] }],
-    })
-    res.status(200).json({data: searchedProducts})
+    });
+    res.status(200).json({ data: searchedProducts });
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
-}
+};

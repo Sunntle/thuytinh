@@ -17,7 +17,7 @@ const LayoutMain = () => {
       <header className="sticky top-0 w-full z-10">
         <HeaderComponent />
       </header>
-      <main className="main_area rounded-3xl">
+      <main className="main_area rounded-t-3xl">
         <Layout className="layout_area">
           <Sider
             breakpoint="lg"
