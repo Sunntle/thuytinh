@@ -1,6 +1,6 @@
 import { DownCircleFilled, UpCircleFilled } from "@ant-design/icons";
 import { Col, Pagination, Rate, Row, Select, message } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ButtonComponents from "../../components/button";
 import ColumnChart from "../../components/chart/column-chart";
 import SearchComponent from "../../components/search";
@@ -21,45 +21,43 @@ function ReviewsPage() {
     _limit: limit,
     _time: currentMonth,
   });
-  const fetchData = async (
-    params = { _offset: 0, _limit: limit, _time: currentMonth }
-  ) => {
-    setLoading(true);
-    try {
-      const response = await getAllReviews(params);
-      setReviews(response);
-      setFilter(params);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const fetchData = useCallback(
+    async (params = { _offset: 0, _limit: limit, _time: currentMonth }) => {
+      setLoading(true);
+      try {
+        const response = await getAllReviews(params);
+        const countReviews = await getAllReviews({ _time: params._time });
+        const countPrevReviews = await getAllReviews({
+          _time: params._time - 1,
+        });
+        if (countPrevReviews?.total == 0) {
+          setPercent(countReviews?.total == 0 ? 0 : 100);
+        } else {
+          setPercent(
+            ((countReviews?.total - countPrevReviews?.total) /
+              countPrevReviews?.total) *
+              100
+          );
+        }
+        setReviews(response);
+        setFilter(params);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [currentMonth]
+  );
   const handleChangePage = (e) => {
     setPage(e);
     fetchData({ _offset: limit * (e - 1), _limit: limit });
   };
   const handleChangeSelectMonth = (e) => {
     fetchData({ _offset: 0, _limit: limit, _time: e });
-    handlePercent(e, e - 1);
     setMonth(e);
   };
-  const handlePercent = async (
-    current = currentMonth,
-    prev = currentMonth - 1
-  ) => {
-    const countReviews = await getAllReviews({ _time: current });
-    const countPrevReviews = await getAllReviews({ _time: prev });
-    if (countPrevReviews?.total == 0) {
-      setPercent(countReviews?.total == 0 ? 0 : 100);
-    } else {
-      setPercent(
-        ((countReviews?.total - countPrevReviews?.total) /
-          countPrevReviews?.total) *
-          100
-      );
-    }
-  };
+
   const handleDeleteReview = async (id) => {
     const res = await deleteReview(id);
     if (res) {
@@ -67,25 +65,26 @@ function ReviewsPage() {
       fetchData(filter);
     }
   };
+  const dayInMonth = useMemo(() => {
+    return getDaysInMonth(2023, currentMonth);
+  }, [currentMonth]);
   useEffect(() => {
     fetchData();
-    handlePercent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchData]);
   useEffect(() => {
     const fetchDataColumn = async () => {
       const res = await getAllReviews({
         _time: currentMonth,
         _group: "createdAt",
       });
-      const arr = new Array(getDaysInMonth(2023, currentMonth)).fill(0);
+      const arr = new Array(dayInMonth).fill(0);
       res?.total?.forEach((el) => {
         arr[+formatNgay(el.createdAt).substring(0, 2) - 1] += el.count;
       });
       setDataChart(arr);
     };
     fetchDataColumn();
-  }, [currentMonth]);
+  }, [currentMonth, dayInMonth]);
   if (loading) {
     return <Spinner />;
   }
@@ -146,7 +145,7 @@ function ReviewsPage() {
                 },
               ]}
               colors={percent >= 0 ? ["#22C55E"] : ["#EF4444"]}
-              categories={getDaysInMonth(2023, currentMonth)}
+              categories={dayInMonth}
             />
           </Col>
         </Row>
@@ -198,6 +197,7 @@ function ReviewsPage() {
                       tooltips={desc}
                       className="text-main"
                       value={el.rate}
+                      disabled
                     />
                     {el.rate ? (
                       <span className="ant-rate-text text-main capitalize">

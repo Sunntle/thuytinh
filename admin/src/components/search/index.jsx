@@ -1,6 +1,7 @@
 import { Dropdown, Input } from "antd";
 
 import "./searchStyle.scss";
+import { useState } from "react";
 
 const { Search } = Input;
 // eslint-disable-next-line react/prop-types
@@ -12,6 +13,7 @@ function SearchComponent({
   customContent,
   onChange,
 }) {
+  const [dropdownVisible, setDropdownVisible] = useState(false);
   const onSearch = (value) => {
     const keyword = value.trim();
     if (keyword.length < 1) return;
@@ -19,6 +21,7 @@ function SearchComponent({
     searchArr.unshift(keyword);
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     onChange(searchArr);
+    setDropdownVisible(false);
   };
   const noContent = () => {
     return (
@@ -32,6 +35,8 @@ function SearchComponent({
       trigger={["click"]}
       overlayClassName="max-w-[200px]"
       dropdownRender={customContent ?? noContent}
+      open={dropdownVisible}
+      onOpenChange={(visible) => setDropdownVisible(visible)}
     >
       <Search
         placeholder="Tìm kiếm..."

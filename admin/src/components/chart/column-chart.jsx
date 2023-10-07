@@ -1,12 +1,13 @@
+import { useCallback } from "react";
 import Chart from "react-apexcharts";
 function ColumnChart({ series, colors, customOptions, categories }) {
-  const handleArrCategories = () => {
+  const handleArrCategories = useCallback(() => {
     const numbersArray = [];
     for (let i = 1; i <= categories; i++) {
       numbersArray.push(i);
     }
     return numbersArray;
-  };
+  }, [categories]);
   const data = {
     series: series,
     options: {

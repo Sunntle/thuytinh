@@ -58,7 +58,7 @@ function HeaderComponent() {
   };
   const handleSearch = (searchArr) => {
     setSearchKw(searchArr);
-    navigate(`/search?keyword=${searchArr[0]}`);
+    navigate(`/employee/search?keyword=${searchArr[0]}`);
   };
   useEffect(() => {
     const fetchProducts = async () => {
@@ -106,7 +106,7 @@ function HeaderComponent() {
                 <SwiperSlide key={index}>
                   <div className="inline-flex items-center">
                     <Link
-                      to={`/search?keyword=${el}`}
+                      to={`/employee/search?keyword=${el}`}
                       className="p-1 text-main hover:text-gray-500"
                     >
                       {truncateString(el, 7)}

@@ -1,7 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import LayoutAdmin from "../Layout/admin";
-import LayoutEmployee from "../Layout/employee";
-
 import DashBoard from "../pages/DashBoard";
 import MenuPage from "../pages/menu";
 import OrderPage from "../pages/Order";
@@ -71,10 +69,6 @@ const router = createBrowserRouter([
     element: <RegisterPage />,
   },
   {
-    path: "/search",
-    element: <SearchPage />,
-  },
-  {
     path: "/employee",
     element: (
       <RoleRoute role={["R2", "R3", "R4"]}>
@@ -97,6 +91,10 @@ const router = createBrowserRouter([
       {
         path: "renvenue",
         element: <ResRevenue />,
+      },
+      {
+        path: "search",
+        element: <SearchPage />,
       },
     ],
   },
