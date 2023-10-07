@@ -12,16 +12,21 @@ function SearchComponent({
   textColor,
   customContent,
   onChange,
+  onClear,
+  visible = false,
 }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const onSearch = (value) => {
     const keyword = value.trim();
     if (keyword.length < 1) return;
-    const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
-    searchArr.unshift(keyword);
-    localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
-    onChange(searchArr);
-    setDropdownVisible(false);
+    onChange(keyword);
+    setDropdownVisible(visible);
+  };
+  const handleClear = (e) => {
+    const value = e.target.value;
+    if (!value) {
+      onClear();
+    }
   };
   const noContent = () => {
     return (
@@ -41,6 +46,7 @@ function SearchComponent({
       <Search
         placeholder="Tìm kiếm..."
         allowClear
+        onChange={handleClear}
         onSearch={onSearch}
         className={`${className} rounded-lg search h-full ${
           textColor && "change-text-color"

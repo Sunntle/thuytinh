@@ -56,7 +56,10 @@ function HeaderComponent() {
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
   };
-  const handleSearch = (searchArr) => {
+  const handleSearch = (keyword) => {
+    const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
+    searchArr.unshift(keyword);
+    localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
     navigate(`/employee/search?keyword=${searchArr[0]}`);
   };
@@ -137,7 +140,10 @@ function HeaderComponent() {
           >
             {categories?.map((el) => (
               <SwiperSlide key={el.id} className="my-5">
-                <Link className="border rounded-full border-gray-300 border-solid py-2 px-3 transition-all duration-500 text-gray-500 hover:text-main hover:border-secondaryColor me-2">
+                <Link
+                  to={`/employee/menu?category=${el.id}`}
+                  className="border rounded-full border-gray-300 border-solid py-2 px-3 transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
+                >
                   {el.name_category}
                 </Link>
               </SwiperSlide>
@@ -155,7 +161,7 @@ function HeaderComponent() {
             {data.data?.map((product, index) => {
               return (
                 <SwiperSlide key={index}>
-                  <Link to={`/admin/product?id=${product.id}`}>
+                  <Link to={`/employee/menu?product=${product.id}`}>
                     <div className="p-2 border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
                       <img
                         className="w-full mb-3"
