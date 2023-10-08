@@ -12,7 +12,8 @@ import {
   UploadOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Button, Drawer, Dropdown, Form, Input, Menu, Modal, Tabs, Upload, message } from "antd";
+import { Button, Drawer, Dropdown, Form, Input, Menu, Modal, Tabs, Upload, message, Tooltip } from "antd";
+
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,8 +21,9 @@ import { socket } from "../../socket";
 import NotificationsComponent from "../notification";
 import { NAV_ITEMS } from "../../utils/constant";
 import { doLogoutAction, fetchAccount } from "../../redux/account/accountSlice";
-import { callLogout, callUpdateAccount, callUpdatePassword } from "../../services/api";
-import { roleRext } from "../../utils/format";
+import { roleRext, truncateString } from "../../utils/format";
+import { callLogout, getAllCate, getAllProduct, callUpdateAccount, callUpdatePassword } from "../../services/api";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 function HeaderComponent() {
 
@@ -78,6 +80,12 @@ function HeaderComponent() {
       };
       form.setFieldsValue(data);
     }
+  }
+  const handleRemoveKeyWord = (index) => {
+    const searchArr = JSON.parse(localStorage.getItem("searchKeyWord"));
+    searchArr.splice(index, 1);
+    localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
+    setSearchKw(searchArr);
   };
   const handleSearch = (keyword) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
@@ -117,7 +125,7 @@ function HeaderComponent() {
       });
     });
 
-  }, []);
+  }, [user?.user.name, user?.user.role]);
 
 
 
@@ -152,11 +160,109 @@ function HeaderComponent() {
     }
 
   }
+  const customContent = () => {
+    return (
+      <div className="bg-white rounded-lg px-5 py-3 shadow-md">
+        <h4 className="text-gray-500 mb-3">Tìm kiếm gần đây</h4>
+        <Swiper
+          speed={1000}
+          slidesPerView={6}
+          spaceBetween={20}
+          className="mySwiper my-5"
+        >
+          {searchKw.length > 0 ? (
+            searchKw.map((el, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <div className="inline-flex items-center">
+                    <Link
+                      to={`/employee/search?keyword=${el}`}
+                      className="p-1 text-main hover:text-gray-500"
+                    >
+                      {truncateString(el, 7)}
+                    </Link>
+                    <Tooltip title="remove">
+                      <Button
+                        className="border-none shadow-none hover:bg-gray-300 text-gray-300 "
+                        shape="circle"
+                        icon={<CloseOutlined />}
+                        onClick={() => handleRemoveKeyWord(index)}
+                      />
+                    </Tooltip>
+                  </div>
+                </SwiperSlide>
+              );
+            })
+          ) : (
+            <p className="text-gray-500">Không có tìm kiếm nào!</p>
+          )}
+        </Swiper>
+        <h4 className="text-gray-500 mb-3">Danh mục</h4>
+        <div className="my-5">
+          <Swiper
+            speed={1000}
+            slidesPerView={8}
+            spaceBetween={20}
+            className="mySwiper"
+          >
+            {categories?.map((el) => (
+              <SwiperSlide key={el.id} className="my-5">
+                <Link
+                  to={`/employee/menu?category=${el.id}`}
+                  className="border rounded-full border-gray-300 border-solid py-2 px-3 transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
+                >
+                  {el.name_category}
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+        <h4 className="text-gray-500 my-3">Món ăn phổ biến</h4>
+        <div>
+          <Swiper
+            speed={1000}
+            slidesPerView={4}
+            spaceBetween={20}
+            className="mySwiper"
+          >
+            {data.data?.map((product, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <Link to={`/employee/menu?product=${product.id}`}>
+                    <div className="p-2 border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
+                      <img
+                        className="w-full mb-3"
+                        src={product.imageUrls?.split(";")[0]}
+                        alt=""
+                      />
+                      <h6 className="font-semibold text-gray-500">
+                        {product.name_product}
+                      </h6>
+                    </div>
+                  </Link>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </div>
+      </div>
+    );
+  };
+
+  const menuProps = {
+    items,
+    onClick: handleMenuClick,
+  };
   return (
     <>
       {contextHolder}
-      <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
+      {/* <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
 
+        <div className="flex items-center justify-between"> */}
+
+      {/*   
+  return ( */}
+      <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
         <div className="flex items-center justify-between">
           <div>
             <img src="Logo" className="max-w-md object-cover" alt="" />
@@ -169,11 +275,13 @@ function HeaderComponent() {
           </div>
         </div>
 
-        <div className="hidden sm:block flex-1 text-center">
+        <div className="hidden sm:block flex-1 text-center mx-3">
           <SearchComponent
-            className="bg-secondaryColor w-full max-w-2xl"
+            className="bg-secondaryColor w-full max-w-2xl "
             textColor={true}
             size="large"
+            customContent={customContent}
+            onChange={handleSearch}
           />
         </div>
         <div className="flex items-center justify-center gap-x-1">
@@ -191,7 +299,7 @@ function HeaderComponent() {
               className="border-borderSecondaryColor bg-secondaryColor text-white ms-3"
               iconBefore={<UserOutlined />}
               iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
-              content={user?.user.name}
+              content={truncateString(user?.user.name, 7)}
               onClick={() => setIcon(!icon)}
             />
           </Dropdown>

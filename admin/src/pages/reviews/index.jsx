@@ -90,23 +90,7 @@ function ReviewsPage() {
   }, [currentMonth]);
   useEffect(() => {
     fetchData();
-    handlePercent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    const fetchDataColumn = async () => {
-      const res = await getAllReviews({
-        _time: currentMonth,
-        _group: "createdAt",
-      });
-      const arr = new Array(getDaysInMonth(2023, currentMonth)).fill(0);
-      res?.total?.forEach((el) => {
-        arr[+formatNgay(el.createdAt).substring(0, 2) - 1] += el.count;
-      });
-      setDataChart(arr);
-    };
-    fetchDataColumn();
-  }, [currentMonth]);
+  }, [fetchData]);
   if (loading) {
     return <Spinner />;
   }
@@ -173,7 +157,7 @@ function ReviewsPage() {
                 },
               ]}
               colors={percent >= 0 ? ["#22C55E"] : ["#EF4444"]}
-              categories={handleArrCategories()}
+              categories={dayInMonth}
             />
           </Col>
         </Row>

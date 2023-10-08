@@ -25,6 +25,10 @@ function ColumnChart({ series, colors, customOptions, categories }) {
         min: 0,
         max: 20,
       },
+      yaxis: {
+        min: 0,
+        max: 20,
+      },
     },
   };
 

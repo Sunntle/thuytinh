@@ -50,7 +50,7 @@ const LoginPage = () => {
                 rules={[
                     {
                         required: true,
-                        min: 5,
+                        // min: 5,
                         message: 'Ít nhất 5 kí tự !',
                     },
                     {

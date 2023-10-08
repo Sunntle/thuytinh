@@ -103,48 +103,58 @@ exports.dashBoard = asyncHandler(async (req, res) => {
   previousMonth.setMonth(previousMonth.getMonth() - 1);
   previousMonth.setDate(1);
   let con = {
-    group: [Sequelize.fn(type, Sequelize.col('createdAt'))],
+    group: [Sequelize.fn(type, Sequelize.col("createdAt"))],
     order: [[type, "ASC"]],
-    raw: true
-  }
-  if (type === "MONTH") con.where = {
-    createdAt: {
-      [Op.between]: [currentYear(), currentYear("endOf")]
-    }
-  }
-  data.totalMonth = (await Order.findAll({
-    attributes: [
-      [Sequelize.fn('SUM', Sequelize.col('total')), 'total']
-    ],
-    where: {
+    raw: true,
+  };
+  if (type === "MONTH")
+    con.where = {
       createdAt: {
-        [Op.between]: [previousMonth, currentMonth]
-      }
-    },
-    group: [Sequelize.fn('MONTH', Sequelize.col('createdAt'))],
-    order: [[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'ASC']]
-  })).map(item => item.total)
+        [Op.between]: [currentYear(), currentYear("endOf")],
+      },
+    };
+  data.totalMonth = (
+    await Order.findAll({
+      attributes: [[Sequelize.fn("SUM", Sequelize.col("total")), "total"]],
+      where: {
+        createdAt: {
+          [Op.between]: [previousMonth, currentMonth],
+        },
+      },
+      group: [Sequelize.fn("MONTH", Sequelize.col("createdAt"))],
+      order: [[Sequelize.fn("MONTH", Sequelize.col("createdAt")), "ASC"]],
+    })
+  ).map((item) => item.total);
   data.category = await Category.findAll({
-    attributes: ['name_category', 'thumbnail', [Sequelize.fn('COUNT', Sequelize.col('Products.id')), 'productCount']],
+    attributes: [
+      "name_category",
+      "thumbnail",
+      [Sequelize.fn("COUNT", Sequelize.col("Products.id")), "productCount"],
+    ],
     include: [{ model: Product, attributes: [] }],
-    group: ['Category.id', 'name_category']
+    group: ["Category.id", "name_category"],
   });
-  data.order = await Order.count()
-  data.user = await User.count({ where: { "role": "R1" } })
+  data.order = await Order.count();
+  data.user = await User.count({ where: { role: "R1" } });
   data.food = await Product.count();
   data.table = await Tables.sum("total_booked");
 
-  data.chart_order = (await Order.findAll({
-    attributes: [
-      [Sequelize.fn(type, Sequelize.col('createdAt')), type],
-      [Sequelize.fn('COUNT', Sequelize.col('id')), 'totalOrder'],
-      [Sequelize.fn('SUM', Sequelize.col('total')), 'total']
-    ],
-    ...con
-  })).reduce((acc, item) => {
-    acc.labels.push(`${info}${item[type]}`);
-    acc.values.push(item['totalOrder']);
-    return acc;
-  }, { labels: [], values: [] });
+  data.chart_order = (
+    await Order.findAll({
+      attributes: [
+        [Sequelize.fn(type, Sequelize.col("createdAt")), type],
+        [Sequelize.fn("COUNT", Sequelize.col("id")), "totalOrder"],
+        [Sequelize.fn("SUM", Sequelize.col("total")), "total"],
+      ],
+      ...con,
+    })
+  ).reduce(
+    (acc, item) => {
+      acc.labels.push(`${info}${item[type]}`);
+      acc.values.push(item["totalOrder"]);
+      return acc;
+    },
+    { labels: [], values: [] },
+  );
   res.status(200).json(data);
 });

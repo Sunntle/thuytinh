@@ -66,74 +66,81 @@ const CategoryPage = () => {
         formData.append(item[0], item[1]);
       }
       const res = await editCate(formData);
-      message.success(res)
+      message.success(res);
     } else {
       const res = await editCate(rest);
-      message.success(res)
+      message.success(res);
     }
     fetchData();
     handleCancel();
   };
   return (
-    <div className='px-5 mt-5'>
-      <div >
+    <div className="px-5 mt-5">
+      <div className="mb-4">
         <ButtonComponents
           className="text-main border-borderSecondaryColor"
           onClick={handOpen}
           content={"Thêm mới"}
         />
       </div>
-      <Table columns={[
-        {
-          title: 'Tên danh mục',
-          dataIndex: 'name_category',
-          key: 'name_category',
-          sorter: true
-        },
-        {
-          title: 'Ảnh chính',
-          dataIndex: 'thumbnail',
-          key: 'thumbnail',
-          render: (_, record) => (
-            <img src={record.thumbnail} width={100} />
-          )
-        },
-        {
-          title: 'Ẩn / Hiện',
-          dataIndex: 'status',
-          key: 'status',
-          sorter: true
-        },
-        {
-          title: 'Ngày tạo',
-          dataIndex: 'createdAt',
-          key: 'createdAt',
-          sorter: true,
-          render: (_, record) => (
-            <span>{formatNgay(record.createdAt)}</span>
-          )
-        },
-        {
-          title: 'Ngày cập nhật',
-          dataIndex: 'updatedAt',
-          key: 'updatedAt',
-          sorter: true,
-          render: (_, record) => (
-            <span>{formatNgay(record.updatedAt)}</span>
-          )
-        },
-        {
-          title: 'Chỉnh sửa',
-          key: 'action',
-          render: (_, record) => (
-            <div className='h-10 flex items-center cursor-pointer'>
-              <span className='bg-orange-500 px-4 rounded-md py-2 text-white' onClick={() => showModalUpdate(record)} >Sửa</span>
-              <ConfirmComponent title="Xác nhận xóa đơn hàng" confirm={() => handDeleteOrder(record.id)} >Xóa</ConfirmComponent>
-            </div>
-          ),
-        }
-      ]} dataSource={data} rowKey={'id'} />
-
+      <Table
+        columns={[
+          {
+            title: "Tên danh mục",
+            dataIndex: "name_category",
+            key: "name_category",
+            sorter: true,
+          },
+          {
+            title: "Ảnh chính",
+            dataIndex: "thumbnail",
+            key: "thumbnail",
+            render: (_, record) => <img src={record.thumbnail} width={100} />,
+          },
+          {
+            title: "Ẩn / Hiện",
+            dataIndex: "status",
+            key: "status",
+            sorter: true,
+          },
+          {
+            title: "Ngày tạo",
+            dataIndex: "createdAt",
+            key: "createdAt",
+            sorter: true,
+            render: (_, record) => <span>{formatNgay(record.createdAt)}</span>,
+          },
+          {
+            title: "Ngày cập nhật",
+            dataIndex: "updatedAt",
+            key: "updatedAt",
+            sorter: true,
+            render: (_, record) => <span>{formatNgay(record.updatedAt)}</span>,
+          },
+          {
+            title: "Chỉnh sửa",
+            key: "action",
+            render: (_, record) => (
+              <div className="h-10 flex items-center cursor-pointer">
+                <span
+                  className="bg-orange-500 px-4 rounded-md py-2 text-white"
+                  onClick={() => showModalUpdate(record)}
+                >
+                  Sửa
+                </span>
+                <ConfirmComponent
+                  title="Xác nhận xóa đơn hàng"
+                  confirm={() => handDeleteOrder(record.id)}
+                >
+                  Xóa
+                </ConfirmComponent>
+              </div>
+            ),
+          },
+        ]}
+        dataSource={data}
+        rowKey={"id"}
+      />
       <Modal
         title="Cập nhật đơn hàng"
         footer={null}
