@@ -12,7 +12,7 @@ exports.list = async (req, res) => {
 
   if (_limit) query.limit = +_limit;
   if (_offset) query.offset = +_offset;
-  if (q) query.where = { name_product: { [Op.like]: `%${q}%` } };
+  if (q) query.where = { name_material: { [Op.substring]: q } };
   if (_sort) query.order = [[_sort, _order]];
 
   const { count, rows } = await Materials.findAndCountAll(query);
@@ -35,10 +35,11 @@ exports.list = async (req, res) => {
   });
 
   if (dataChart.length > 0 && !notificationSent) {
-    let created = await Notification.create({
-      type: "Nguyên liệu",
-      description: `Có ${dataChart.length} chuẩn bị hết hàng`
-    },
+    let created = await Notification.create(
+      {
+        type: "Nguyên liệu",
+        description: `Có ${dataChart.length} chuẩn bị hết hàng`,
+      },
       { raw: true }
     );
     _io.emit("new message", created);

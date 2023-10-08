@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import Chart from "react-apexcharts";
 function ColumnChart({ series, colors, customOptions, categories }) {
   const data = {
@@ -20,10 +19,6 @@ function ColumnChart({ series, colors, customOptions, categories }) {
       xaxis: {
         type: "category",
         categories: categories,
-      },
-      yaxis: {
-        min: 0,
-        max: 20,
       },
       yaxis: {
         min: 0,

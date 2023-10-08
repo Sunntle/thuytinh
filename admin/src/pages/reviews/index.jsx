@@ -43,7 +43,7 @@ function ReviewsPage() {
           setPercent(
             ((countReviews?.total - countPrevReviews?.total) /
               countPrevReviews?.total) *
-            100
+              100
           );
         }
         const res = await getAllReviews({
@@ -160,7 +160,7 @@ function ReviewsPage() {
                 },
               ]}
               colors={percent >= 0 ? ["#22C55E"] : ["#EF4444"]}
-              categories={dayInMonth}
+              categories={handleArrCategories}
             />
           </Col>
         </Row>

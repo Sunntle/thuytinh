@@ -46,7 +46,7 @@ function SearchComponent({
       <Search
         placeholder="Tìm kiếm..."
         allowClear
-        onChange={handleClear}
+        onChange={onClear ? handleClear : ""}
         onSearch={onSearch}
         className={`${className} rounded-lg search h-full ${
           textColor && "change-text-color"
