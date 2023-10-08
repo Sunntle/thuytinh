@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
 const bcrypt = require("bcrypt");
+const { destroyImg } = require("../utils/cloud");
 require("dotenv").config();
 const hashUserPassword = async (user) => {
   try {
@@ -46,6 +47,15 @@ const User = db.sequelize.define("Users", {
     allowNull: true,
   },
 });
+
+User.beforeUpdate(async (User) => {
+  if (User.changed("avatar")) {
+    await destroyImg(User._previousDataValues.avatar);
+  }
+});
+User.beforeDestroy(async (User) => {
+  await destroyImg(User.avatar);
+})
 User.beforeCreate(async (user) => {
   await hashUserPassword(user);
 });

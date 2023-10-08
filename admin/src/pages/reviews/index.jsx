@@ -43,7 +43,7 @@ function ReviewsPage() {
           setPercent(
             ((countReviews?.total - countPrevReviews?.total) /
               countPrevReviews?.total) *
-              100
+            100
           );
         }
         const res = await getAllReviews({
@@ -97,7 +97,13 @@ function ReviewsPage() {
   if (loading) {
     return <Spinner />;
   }
-
+  const handleArrCategories = () => {
+    const numbersArray = [];
+    for (let i = 1; i <= getDaysInMonth(2023, currentMonth); i++) {
+      numbersArray.push(i);
+    }
+    return numbersArray;
+  };
   return (
     <div className="my-7 px-5">
       <div className="p-5 mb-6 rounded-md border border-solid border-gray-300">

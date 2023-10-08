@@ -1,6 +1,6 @@
 const User = require("./userModel");
 const Category = require("./categoryModel");
-
+const Notification = require("./notificationModel");
 const Product = require("./productModel");
 const Order = require("./orderModel");
 const Materials = require("./materialsModel");
@@ -43,15 +43,8 @@ Order.hasMany(OrderDetail, { foreignKey: "id_order" });
 Order.hasOne(Reviews, { sourceKey: "id", foreignKey: "id_order", onDelete: "CASCADE", onUpdate: "CASCADE" })
 User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee", as: "ordersByEmployee" });
 
-module.exports = {
-  Tables,
-  User,
-  Order,
-  Category,
-  Product,
-  ImageProduct,
-  Recipes,
-  Materials,
-  OrderDetail,
-  Reviews,
-};
+
+
+
+module.exports = { Notification, Tables, User, Order, Category, Product, ImageProduct, Recipes, Materials, OrderDetail, Reviews };
+

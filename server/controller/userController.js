@@ -27,6 +27,8 @@ exports.register = asyncHandler(async (req, res) => {
     res.status(200).json({ success: false, mes: "Email đã tồn tại rồi nha" });
   }
 });
+
+
 exports.login = asyncHandler(async (req, res) => {
   const { password, email } = req.body;
   if (!password || !email)
@@ -79,13 +81,27 @@ exports.setPassUser = asyncHandler(async (req, res) => {
     await result.save();
     return res.status(200).json({
       success: true,
-    });
+      message: 'Cập nhật thành công'
+    })
   } else {
     return res.status(404).json({
       success: false,
-      data: "Sai thông tin",
-    });
+      message: 'Sai thông tin'
+    })
   }
+})
+
+exports.updateAccount = asyncHandler(async (req, res) => {
+  const { id, ...rest } = req.body;
+  const avatarPath = req?.file?.path;
+  const dataToUpdate = avatarPath
+    ? { avatar: avatarPath.replace("/upload/", "/upload/w_400,h_300/"), ...rest }
+    : rest;
+  await User.update(dataToUpdate, {
+    where: { id },
+    individualHooks: avatarPath ? true : false
+  })
+  res.status(200).json({ message: "Cập nhật thành công" });
 });
 exports.forgotPassword = asyncHandler(async (req, res) => {
   const email = req.body?.email;

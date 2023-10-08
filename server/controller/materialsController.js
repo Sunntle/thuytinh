@@ -1,20 +1,51 @@
-const { Materials } = require("../models");
+const { Materials, Notification } = require("../models");
 const { Op } = require("sequelize");
+//const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
+
+let notificationSent = false;
 exports.list = async (req, res) => {
-  try {
-    const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
-    const query = {
-      raw: true,
-    };
-    if (_limit) query.limit = +_limit;
-    if (_offset) query.offset = +_offset;
-    if (q) query.where = { name_material: { [Op.substring]: q } };
-    if (_sort) query.order = [[_sort, _order]];
-    const { count, rows } = await Materials.findAndCountAll(query);
-    res.status(200).json({ total: count, data: rows });
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
+  const { _offset, _limit, _sort, _order, q, _over, ...rest } = req.query;
+  const query = {
+    raw: true,
+  };
+  let over = _over || 30;
+
+  if (_limit) query.limit = +_limit;
+  if (_offset) query.offset = +_offset;
+  if (q) query.where = { name_product: { [Op.like]: `%${q}%` } };
+  if (_sort) query.order = [[_sort, _order]];
+
+  const { count, rows } = await Materials.findAndCountAll(query);
+
+  let chart = await Materials.findAll({
+    attributes: ["id", "price", "amount", "name_material", "unit", "image"],
+    raw: true,
+  });
+
+  let dataChart = [];
+
+  chart.forEach((ele) => {
+    if (ele.unit === "gram") {
+      ele.amount = ele.amount / 1000;
+      ele.unit = "kg";
+    }
+    if (ele.amount <= over) {
+      dataChart.push(ele);
+    }
+  });
+
+  if (dataChart.length > 0 && !notificationSent) {
+    let created = await Notification.create({
+      type: "Nguyên liệu",
+      description: `Có ${dataChart.length} chuẩn bị hết hàng`
+    },
+      { raw: true }
+    );
+    _io.emit("new message", created);
+    notificationSent = true;
   }
+
+  res.status(200).json({ total: count, data: rows, dataChart });
 };
 exports.getDetail = async (req, res) => {
   try {

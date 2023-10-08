@@ -3,7 +3,7 @@ import axios from "../utils/axios";
 
 // ?????????   Order  ????????? //
 export const addOrder = (data) => {
-  return axios.post(`/api/order`, data );
+  return axios.post(`/api/order`, data);
 };
 export const getAllOrder = (params) => {
   return axios.get(`/api/order`, { params });
@@ -16,7 +16,7 @@ export const updateOrder = (body) => {
 };
 // table //
 export const getAllTable = (params) => {
-  return axios.get(`/api/table`, {params});
+  return axios.get(`/api/table`, { params });
 }
 // product //
 export const getAllProduct = (params) => {
@@ -99,7 +99,15 @@ export const callFetchAccount = () => {
 };
 export const callLogout = () => {
   return axios.get(`/api/user/logout`);
-};
+}
+export const callUpdateAccount = (body) => {
+  return axios.put(`/api/user`, body);
+}
+export const callUpdatePassword = (body) => {
+  return axios.post(`/api/user/set-password`, body);
+}
+
+
 // recipe
 export const callFetchRecipe = () => {
   return axios.get(`/api/recipe`);

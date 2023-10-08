@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Table } from "antd";
 import ConfirmComponent from "../../components/confirm";
 import AddNewMaterial from "./add";
+const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
 import {
   addNewMaterial,
   deleteMaterial,
@@ -13,18 +14,22 @@ import {
   getOneMaterial,
 } from "../../services/api";
 import EditMaterial from "./edit";
+import ColumnChart from "../../components/chart/column-chart";
 
 function MaterialPage() {
   const [open, setOpen] = useState(false);
   const [openModelEdit, setOpenModelEdit] = useState(false);
   const [materials, setMaterials] = useState([]);
   const [data, setData] = useState(null);
+  const [dataChart, setDataChart] = useState([]);
   const fetchData = async () => {
     const res = await getAllMaterial();
     setMaterials({
       ...res,
       data: res.data.map((el) => ({ ...el, key: el.id })),
     });
+
+    setDataChart(res.dataChart);
   };
 
   useEffect(() => {
@@ -192,6 +197,25 @@ function MaterialPage() {
   };
   return (
     <div className="my-7 px-5">
+      {dataChart.length > 0 && <Row justify={"space-between"}>
+        <Col xs={24} lg={6}>
+          <h3 className="text-lg text-black font-medium">Thông báo sắp <b className="text-xl text-[#EF4444]"> {dataChart.length} </b> nguyên liệu  gần hết hàng</h3>
+          <h4 className="text-base font-normal text-zinc-700 ">Gồm : {dataChart.map(item => item.name_material.toUpperCase()).join(" ,")}</h4>
+        </Col>
+        <Col xs={24} lg={18}>
+          <ColumnChart
+            series={[
+              {
+                name: "Nguyên liệu gần hết",
+                data: dataChart.map(item => item.amount),
+              },
+            ]}
+            colors="#EF4444"
+            categories={dataChart.map(item => `${item.name_material} (${item.unit})`)}
+          />
+        </Col>
+      </Row>}
+
       <Row justify="space-between" align="center" className="mb-4">
         <Col xs={6}>
           <SearchComponent
@@ -217,12 +241,14 @@ function MaterialPage() {
         open={open}
         handleCancel={handleCancel}
         handleFinish={handleDataForm}
+        unitMasterial={unitMasterial}
       />
       <EditMaterial
         open={openModelEdit}
         handleCancel={() => setOpenModelEdit(false)}
         handleFinish={handleDataForm}
         data={data}
+        unitMasterial={unitMasterial}
       />
     </div>
   );

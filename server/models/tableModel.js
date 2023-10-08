@@ -26,6 +26,7 @@ const Tables = db.sequelize.define(
         },
         status_table: {
             type: DataTypes.TINYINT,
+            defaultValue: 0
         },
     },
     { timestamps: true }
