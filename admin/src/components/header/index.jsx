@@ -275,32 +275,33 @@ function HeaderComponent() {
           </div>
         </div>
 
-        <div className="hidden sm:block flex-1 text-center mx-3">
-          <SearchComponent
-            className="bg-secondaryColor w-full max-w-2xl "
-            textColor={true}
-            size="large"
-            customContent={customContent}
-            onChange={handleSearch}
-          />
-        </div>
-        <div className="flex items-center justify-center gap-x-1">
-          <NotificationsComponent
-            notifications={notifications}
-            openPopover={openPopover}
-            setOpenPopover={setOpenPopover}
-            setNotifications={setNotifications}
-          />
-          <Dropdown menu={menuProps} trigger={["click"]}>
-            <ButtonComponents
-              sizeIconBefore={"text-lg"}
-              sizeIconAfter={"text-xs"}
-              spacingContent={"ms-1 me-3"}
-              className="border-borderSecondaryColor bg-secondaryColor text-white ms-3"
-              iconBefore={<UserOutlined />}
-              iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
-              content={truncateString(user?.user.name, 7)}
-              onClick={() => setIcon(!icon)}
+         <div className="hidden sm:block flex-1 text-center mx-3">
+        <SearchComponent
+          className="bg-secondaryColor w-full max-w-2xl "
+          textColor={true}
+          size="large"
+          customContent={customContent}
+          onChange={handleSearch}
+        />
+      </div>
+      <div className="flex items-center justify-center gap-x-1">
+        <NotificationsComponent
+          notifications={notifications}
+          openPopover={openPopover}
+          setOpenPopover={setOpenPopover}
+          setNotifications={setNotifications}
+        />
+        <Dropdown menu={menuProps} trigger={["click"]}>
+          <ButtonComponents
+            sizeIconBefore={"text-lg"}
+            sizeIconAfter={"text-xs"}
+            spacingContent={"ms-1 me-3"}
+            className="border-borderSecondaryColor bg-secondaryColor text-white ms-3"
+            iconBefore={<UserOutlined />}
+            iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
+            content={truncateString(user?.user.name, 7)}
+            onClick={() => setIcon(!icon)}
+            customAttribute={{ size: "large" }}}
             />
           </Dropdown>
         </div>
@@ -360,7 +361,6 @@ function HeaderComponent() {
                       hidden
                     >
                       <Input />
-
                     </Form.Item>
                     <Form.Item
                       label="Vai trò"
@@ -370,7 +370,6 @@ function HeaderComponent() {
                       }]}
                     >
                       <Input disabled />
-
                     </Form.Item>
                     <Form.Item
                       label="Họ tên"
@@ -397,7 +396,6 @@ function HeaderComponent() {
 
                     >
                       <Input />
-
                     </Form.Item>
                     <Form.Item
                       label="Email"

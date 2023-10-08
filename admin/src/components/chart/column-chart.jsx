@@ -27,7 +27,7 @@ function ColumnChart({ series, colors, customOptions, categories }) {
       },
       yaxis: {
         min: 0,
-        max: 20,
+        tickAmount: 5,
       },
     },
   };
