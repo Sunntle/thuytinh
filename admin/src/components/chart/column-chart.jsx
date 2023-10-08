@@ -2,7 +2,22 @@ import Chart from "react-apexcharts";
 function ColumnChart({ series, colors, customOptions, categories }) {
   const data = {
     series: series,
+
     options: {
+      dataLabels: {
+        enabled: false,
+      },
+      xaxis: {
+        type: "category",
+        categories:
+          typeof categories === "function" ? categories() : categories,
+        tickAmount: 15,
+      },
+      yaxis: {
+        min: 0,
+        max: 20,
+        tickAmount: 5,
+      },
       ...customOptions,
       colors: colors,
       plotOptions: {
@@ -15,14 +30,6 @@ function ColumnChart({ series, colors, customOptions, categories }) {
             enabled: false,
           },
         },
-      },
-      xaxis: {
-        type: "category",
-        categories: categories,
-      },
-      yaxis: {
-        min: 0,
-        tickAmount: 5,
       },
     },
   };
