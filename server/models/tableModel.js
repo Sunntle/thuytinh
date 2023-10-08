@@ -26,9 +26,10 @@ const Tables = db.sequelize.define(
         },
         status_table: {
             type: DataTypes.TINYINT,
+            defaultValue: 0
         },
     },
     { timestamps: true }
 );
-Tables.sync({ alter: true });
+Tables.sync();
 module.exports = Tables;

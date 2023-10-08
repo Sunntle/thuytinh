@@ -1,7 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import LayoutAdmin from "../Layout/admin";
-import LayoutEmployee from '../Layout/employee';
-
 import DashBoard from "../pages/DashBoard";
 import MenuPage from "../pages/menu";
 import OrderPage from "../pages/Order";
@@ -12,12 +10,21 @@ import ReviewsPage from "../pages/reviews";
 import LoginPage from "../pages/login";
 import HomeEmployeePage from "../pages/employee/home";
 import RoleRoute from "../guard/admin";
+import ResMenu from "../pages/restaurant/menu/res-menu";
+import ResChooseTable from "../pages/restaurant/choosetable/res-choosetable";
+import ResRevenue from "../pages/restaurant/revenue/res-revenue";
 import RecipePage from "../pages/recipes";
 import RegisterPage from "../pages/register";
+import SearchPage from "../pages/search";
 const router = createBrowserRouter([
   {
     path: "/admin",
-    element: <RoleRoute role={['R4']} > <LayoutAdmin /></RoleRoute>,
+    element: (
+      <RoleRoute role={["R4"]}>
+        {" "}
+        <LayoutAdmin />
+      </RoleRoute>
+    ),
     children: [
       {
         index: true,
@@ -46,7 +53,8 @@ const router = createBrowserRouter([
       {
         path: "recipe",
         element: <RecipePage />,
-      }, {
+      },
+      {
         path: "reviews",
         element: <ReviewsPage />,
       },
@@ -62,13 +70,33 @@ const router = createBrowserRouter([
   },
   {
     path: "/employee",
-    element: <RoleRoute role={['R2', 'R3', 'R4']}><LayoutEmployee /></RoleRoute>,
+    element: (
+      <RoleRoute role={["R2", "R3", "R4"]}>
+        <LayoutAdmin />
+      </RoleRoute>
+    ),
     children: [
       {
         index: true,
         element: <HomeEmployeePage />,
       },
-    ]
+      {
+        path: "menu",
+        element: <ResMenu />,
+      },
+      {
+        path: "choosetable",
+        element: <ResChooseTable />,
+      },
+      {
+        path: "renvenue",
+        element: <ResRevenue />,
+      },
+      {
+        path: "search",
+        element: <SearchPage />,
+      },
+    ],
   },
 ]);
 export default router;

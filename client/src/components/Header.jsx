@@ -1,9 +1,21 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import panda from "../assets/images/panda.png";
 import {useSelector} from "react-redux";
+import useHttp from "../hooks/useHttp.js";
 
 const Header = () => {
   const customerName = useSelector((state) => state.customerName);
+  const idTable = location.pathname.split("/")[1].split("-")[1];
+  const [table, setTable] = useState(null)
+  const {sendRequest } = useHttp();
+
+  useEffect(() => {
+    const request = {
+      method: 'get',
+      url:`table/${idTable}`
+    }
+    sendRequest(request, setTable)
+  }, [sendRequest, idTable]);
 
   return (
     <div
@@ -18,7 +30,7 @@ const Header = () => {
               Xin chào, <span className="font-medium">{ customerName }</span>
             </span>
             <span className="text-base text-[#FFE6C7]">
-              Bạn đang ngồi bàn số 1
+              Bạn đang ngồi {table?.name_table}
             </span>
           </div>
           <div className="w-12 h-12 border-2 rounded-full border-white">

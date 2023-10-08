@@ -1,17 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
-import Home from "../pages/Home/Home.jsx";
-import Order from "../pages/Order/Order.jsx";
-import Menu from "../pages/Menu/Menu.jsx";
+import Home from "../pages/Home/home.jsx";
+import Order from "../pages/Order/order.jsx";
+import Menu from "../pages/Menu/menu.jsx";
 import Layout from "../layouts/index.jsx";
-import Rate from "../pages/Rating/Rate.jsx";
+import Rate from "../pages/Rating/Rating.jsx";
 import Service from "../pages/Service/Service.jsx";
 import EnterName from "../pages/EnterName/EnterName.jsx";
+import AboutUs from "../pages/AboutUs/AboutUs.jsx";
+import Contact from "../pages/Contact/Contact.jsx";
+
 import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/:id",
+    path: "/:alias",
     children: [
       {
         index: true,
@@ -57,7 +60,7 @@ const router = createBrowserRouter([
         path: "rating",
         element: (
           <Layout>
-            <Rate />
+            <Rate/>
           </Layout>
         ),
       },
@@ -66,6 +69,22 @@ const router = createBrowserRouter([
         element: (
           <Layout>
             <EnterName />
+          </Layout>
+        ),
+      },
+      {
+        path: "about-us",
+        element: (
+          <Layout>
+            <AboutUs />
+          </Layout>
+        ),
+      },
+      {
+        path: "contact",
+        element: (
+          <Layout>
+            <Contact />
           </Layout>
         ),
       },

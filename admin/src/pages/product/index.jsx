@@ -244,7 +244,7 @@ function ProductPage() {
             </Col>
             <Col xs={6} style={{ textAlign: "-webkit-right" }}>
               <ButtonComponents
-                className="border-borderSecondaryColor bg-secondaryColor text-white"
+                className="border-borderSecondaryColor text-main"
                 content={"Thêm mới"}
                 onClick={() => setOpen(true)}
               />
