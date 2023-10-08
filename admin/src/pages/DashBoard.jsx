@@ -42,6 +42,7 @@ const DashBoard = () => {
           <div className="chart-line_area mt-4 rounded-lg">
             <LineChart timeChart={timeChart} setTimeChart={setTimeChart} data={data} />
           </div>
+
           <div className="save-product w-full mt-4">
             <Swiper
               slidesPerView={1}

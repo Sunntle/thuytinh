@@ -1,3 +1,5 @@
+
+const asyncHandler = require('express-async-handler');
 const {
   Tables,
   Order,
@@ -5,7 +7,6 @@ const {
   ImageProduct,
   Product,
 } = require("../models");
-const asyncHandler = require("express-async-handler");
 
 exports.getAll = asyncHandler(async (req, res) => {
   const re = await Tables.findAll({ include: { model: Order } });

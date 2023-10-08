@@ -13,8 +13,8 @@ const { Op, Sequelize } = require("sequelize");
 const { sequelize } = require("../config/connectDatabase");
 
 function currentYear(pa = "startOf") {
-  const date = moment()[pa]("year");
-  return date.format("YYYY-MM-DD");
+  const date = moment()[pa]('year');
+  return date.format('YYYY-MM-DD');
 }
 
 exports.createOrder = asyncHandler(async (req, res) => {
