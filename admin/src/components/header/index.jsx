@@ -231,6 +231,7 @@ function HeaderComponent() {
             iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
             content={truncateString(user?.user.name, 7)}
             onClick={() => setIcon(!icon)}
+            customAttribute={{ size: "large" }}
           />
         </Dropdown>
       </div>

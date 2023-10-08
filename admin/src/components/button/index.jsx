@@ -12,17 +12,27 @@ function ButtonComponents({
   type,
   className,
   htmlType,
+  customAttribute,
 }) {
   return (
     <>
       <Button
+        {...customAttribute}
         htmlType={htmlType || "button"}
         className={`${className} inline-flex justify-center items-center`}
         onClick={onClick}
       >
-        {iconBefore && <div className={`flex justify-center items-center ${sizeIconBefore}`}>{iconBefore}</div>}
+        {iconBefore && (
+          <div className={`flex justify-center items-center ${sizeIconBefore}`}>
+            {iconBefore}
+          </div>
+        )}
         <span className={spacingContent}>{content}</span>
-        {iconAfter && <div className={`flex justify-center items-center ${sizeIconAfter}`}>{iconAfter}</div>}
+        {iconAfter && (
+          <div className={`flex justify-center items-center ${sizeIconAfter}`}>
+            {iconAfter}
+          </div>
+        )}
       </Button>
     </>
   );

@@ -1,5 +1,5 @@
 import { DownCircleFilled, UpCircleFilled } from "@ant-design/icons";
-import { Col, Pagination, Rate, Row, Select, message } from "antd";
+import { Col, Pagination, Popconfirm, Rate, Row, Select, message } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ButtonComponents from "../../components/button";
 import ColumnChart from "../../components/chart/column-chart";
@@ -84,6 +84,9 @@ function ReviewsPage() {
   };
   const handleClear = () => {
     fetchReviews({ _offset: 0, _limit: limit, _time: currentMonth });
+  };
+  const handleCancelConfirm = () => {
+    message.error("Xóa thất bại");
   };
   const dayInMonth = useMemo(() => {
     return getDaysInMonth(2023, currentMonth);
@@ -196,11 +199,19 @@ function ReviewsPage() {
                       </Row>
                     </Col>
                     <Col xs="12">
-                      <ButtonComponents
-                        className="text-white bg-secondaryColor border-none"
-                        content={"Xóa"}
-                        onClick={() => handleDeleteReview(el.id)}
-                      />
+                      <Popconfirm
+                        title="Xóa đánh giá này"
+                        description="Bạn chắc chắn muốn xóa bình luận này?"
+                        onConfirm={() => handleDeleteReview(el.id)}
+                        onCancel={handleCancelConfirm}
+                        okText="Xóa"
+                        cancelText="Hủy"
+                      >
+                        <ButtonComponents
+                          className="text-white bg-secondaryColor border-none"
+                          content={"Xóa"}
+                        />
+                      </Popconfirm>
                     </Col>
                   </Row>
                   <div className="my-3 text-center">

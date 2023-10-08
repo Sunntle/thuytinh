@@ -81,6 +81,7 @@ function NotificationsComponent({
         <Button
           type="primary"
           className="border-borderSecondaryColor bg-secondaryColor"
+          size="large"
         >
           <BellOutlined className="text-white" />
         </Button>
