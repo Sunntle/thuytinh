@@ -22,6 +22,9 @@ function ReviewsPage() {
     _limit: limit,
     _time: currentMonth,
   });
+  const dayInMonth = useMemo(() => {
+    return getDaysInMonth(2023, currentMonth);
+  }, [currentMonth]);
   const fetchReviews = async (params) => {
     const response = await getAllReviews(params);
     setReviewsCurrent(response);
@@ -43,7 +46,7 @@ function ReviewsPage() {
           setPercent(
             ((countReviews?.total - countPrevReviews?.total) /
               countPrevReviews?.total) *
-            100
+              100
           );
         }
         const res = await getAllReviews({
@@ -62,7 +65,7 @@ function ReviewsPage() {
         setLoading(false);
       }
     },
-    [currentMonth]
+    [currentMonth, dayInMonth]
   );
   const handleChangePage = (e) => {
     setPage(e);
@@ -88,9 +91,7 @@ function ReviewsPage() {
   const handleCancelConfirm = () => {
     message.error("Xóa thất bại");
   };
-  const dayInMonth = useMemo(() => {
-    return getDaysInMonth(2023, currentMonth);
-  }, [currentMonth]);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -99,7 +100,7 @@ function ReviewsPage() {
   }
   const handleArrCategories = () => {
     const numbersArray = [];
-    for (let i = 1; i <= getDaysInMonth(2023, currentMonth); i++) {
+    for (let i = 1; i <= dayInMonth; i++) {
       numbersArray.push(i);
     }
     return numbersArray;
@@ -155,12 +156,18 @@ function ReviewsPage() {
             <ColumnChart
               series={[
                 {
-                  name: "Tích cực",
+                  name: "Bình luận",
                   data: dataChart,
                 },
               ]}
               colors={percent >= 0 ? ["#22C55E"] : ["#EF4444"]}
-              categories={dayInMonth}
+              categories={handleArrCategories}
+              customOptions={{
+                yaxis: {
+                  min: 0,
+                  tickAmount: 5,
+                },
+              }}
             />
           </Col>
         </Row>

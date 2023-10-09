@@ -17,7 +17,7 @@ function NotificationsComponent({
   };
   const handleToContent = (index) => {
     const content = notifications[index];
-    const navigateTo = content.name == "order" ? "/admin/order" : "/admin/user";
+    const navigateTo = `/admin/${content.type}`;
     if (content.status == false)
       setNotifications((prev) =>
         prev.map((el) => {

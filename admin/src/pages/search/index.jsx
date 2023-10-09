@@ -57,7 +57,7 @@ function SearchPage() {
     fetchData(pagesize, pagesize * (page - 1));
   };
   const renderCategory = () => {
-    if (category.length < 1)
+    if (category?.length < 1)
       return <h4 className="text-gray-600 pb-3">Không có danh mục phù hợp</h4>;
     return (
       <div className="my-3">

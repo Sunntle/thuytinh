@@ -1,4 +1,13 @@
-import { Button, Form, Input, InputNumber, Modal, Select, Space, Upload } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  Space,
+  Upload,
+} from "antd";
 import ButtonComponents from "../../../components/button";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -15,25 +24,6 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
     price: 0,
     status: 0,
   };
-  //   {
-  //     uid: "0",
-  //     name: "xxx.png",
-  //     status: "uploading",
-  //     percent: 33,
-  //   },
-  //   {
-  //     uid: "-1",
-  //     name: "yyy.png",
-  //     status: "done",
-  //     url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-  //     thumbUrl: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-  //   },
-  //   {
-  //     uid: "-2",
-  //     name: "zzz.png",
-  //     status: "error",
-  //   },
-  // ];
   const handleSubmit = async () => {
     try {
       await form.validateFields();
@@ -69,8 +59,15 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
       ]}
       centered
     >
-      <Form form={form} onFinish={handleFinish} initialValues={initialValues} className="mt-8">
-        <h3 className="font-semibold mb-8 text-main text-lg">Thêm thông tin món ăn</h3>
+      <Form
+        form={form}
+        onFinish={handleFinish}
+        initialValues={initialValues}
+        className="mt-8"
+      >
+        <h3 className="font-semibold mb-8 text-main text-lg">
+          Thêm thông tin món ăn
+        </h3>
         <Form.Item
           name="name_product"
           label="Tên món ăn"
@@ -126,14 +123,17 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
         <Form.Item name="description" label="Mô tả">
           <Input.TextArea />
         </Form.Item>
-        <h3 className="font-semibold mb-8 mt-7 text-main text-lg">Thêm công thức món ăn</h3>
+        <h3 className="font-semibold mb-8 mt-7 text-main text-lg">
+          Thêm công thức món ăn
+        </h3>
         <Form.Item name="descriptionRecipe" label="Mô tả công thức">
           <Input.TextArea onChange={() => setHaveData(true)} />
         </Form.Item>
         {haveData && (
           <p className="italic my-6">
             {" "}
-            <span className="text-red-500">*Lưu ý: </span>Thêm mô tả mà không thêm nguyên liệu thì sẽ không được lưu lại
+            <span className="text-red-500">*Lưu ý: </span>Thêm mô tả mà không
+            thêm nguyên liệu thì sẽ không được lưu lại
           </p>
         )}
         <Form.List name="recipe">
@@ -167,12 +167,20 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
                         key={[field.name, `quantity`]}
                         label="Số lượng"
                         name={[field.name, "quantity"]}
-                        rules={[{ required: true, message: "Nhập số lượng nguyên liệu hoặc xóa" }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Nhập số lượng nguyên liệu hoặc xóa",
+                          },
+                        ]}
                       >
                         <InputNumber min={0} />
                       </Form.Item>
                       {fields.length > 0 ? (
-                        <span className="ms-2 text-gray-500" onClick={() => remove(field.name)}>
+                        <span
+                          className="ms-2 text-gray-500"
+                          onClick={() => remove(field.name)}
+                        >
                           Xóa
                         </span>
                       ) : null}
@@ -180,13 +188,20 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
                   </Space>
                 );
               })}
-              <Button type="dashed" onClick={() => add()} style={{ width: "60%" }} icon={<PlusOutlined />}>
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                style={{ width: "60%" }}
+                icon={<PlusOutlined />}
+              >
                 Add field
               </Button>
             </>
           )}
         </Form.List>
-        <h3 className="font-semibold mb-8 mt-7 text-main text-lg">Thêm hình ảnh món ăn</h3>
+        <h3 className="font-semibold mb-8 mt-7 text-main text-lg">
+          Thêm hình ảnh món ăn
+        </h3>
         <Form.Item
           name="Image"
           rules={[
@@ -203,7 +218,12 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
             return e?.fileList;
           }}
         >
-          <Upload beforeUpload={() => false} listType="picture" multiple={true} defaultFileList={[]}>
+          <Upload
+            beforeUpload={() => false}
+            listType="picture"
+            multiple={true}
+            defaultFileList={[]}
+          >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         </Form.Item>
