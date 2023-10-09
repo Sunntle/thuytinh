@@ -1,7 +1,7 @@
 import { Dropdown, Input } from "antd";
 
 import "./searchStyle.scss";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const { Search } = Input;
 // eslint-disable-next-line react/prop-types
@@ -22,12 +22,15 @@ function SearchComponent({
     onChange(keyword);
     setDropdownVisible(visible);
   };
-  const handleClear = (e) => {
-    const value = e.target.value;
-    if (!value) {
-      onClear();
-    }
-  };
+  const handleClear = useCallback(
+    (e) => {
+      const value = e.target.value;
+      if (!value) {
+        onClear();
+      }
+    },
+    [onClear]
+  );
   const noContent = () => {
     return (
       <div className="bg-white rounded-lg px-5 py-3 shadow-md">
