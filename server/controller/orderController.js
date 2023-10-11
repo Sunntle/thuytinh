@@ -35,7 +35,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
   const result = { orders: order_result, detail: order_detail, product: pro };
   await Tables.update(
     { id_order: order_result.id },
-    { where: { id: idTable, status_table: 0 }, return: true },
+    { where: { id: idTable, status_table: 0 }, return: true }
   );
   res.status(200).json(result);
 });
