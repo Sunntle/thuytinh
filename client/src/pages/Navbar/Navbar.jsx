@@ -1,17 +1,12 @@
 import { AiOutlineShop } from "react-icons/ai";
 
-import { HiOutlineClipboardList, HiSearch } from "react-icons/hi";
+import { HiOutlineClipboardList } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { BiFlag } from "react-icons/bi";
-import { Dropdown, Menu } from "antd";
 
-import { MdOutlineRestaurantMenu, MdRoomService } from "react-icons/md";
-import { HiOutlineClipboardList } from "react-icons/hi";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { CiUser } from "react-icons/ci";
 import { GoSearch } from "react-icons/go";
-import { NavLink } from "react-router-dom";
 
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { useEffect, useState } from "react";
@@ -58,9 +53,9 @@ const Navbar = () => {
   const idTable = location.pathname.split("/")[1].split("-")[1];
 
   useEffect(() => {
-    const compareRegex = regexRouter.test(location.pathname)
-    if(!compareRegex) {
-      navigate('/')
+    const compareRegex = regexRouter.test(location.pathname);
+    if (!compareRegex) {
+      navigate("/");
     }
   }, []);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
