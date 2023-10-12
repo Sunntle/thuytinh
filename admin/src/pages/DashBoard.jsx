@@ -4,8 +4,10 @@ import LineChart from "../components/chart/line-chart";
 import { Col, Rate, Row, Badge } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from 'swiper/modules';
 import { useEffect, useState } from "react";
-import { getDataDashboard } from "../services/api";
+import { getAllProduct, getDataDashboard } from "../services/api";
+import { formatGia } from "../utils/format";
 
 const img =
   "https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000";
@@ -13,13 +15,21 @@ const DashBoard = () => {
 
   const [data, setData] = useState({});
   const [timeChart, setTimeChart] = useState("MONTH");
+  const [dataProduct, setDataProduct] = useState();
 
   useEffect(() => {
     fetchData();
   }, [timeChart])
   const fetchData = async () => {
     const res = await getDataDashboard(timeChart);
+    const { data: dataPr } = await getAllProduct({
+      _sort: "sold",
+      _order: "DESC",
+      _sold: "gte_0",
+      _limit: 10,
+    });
     setData(res)
+    setDataProduct(dataPr)
   }
   return (
     <div className="w-full my-7 px-5">
@@ -44,270 +54,32 @@ const DashBoard = () => {
           </div>
 
           <div className="save-product w-full mt-4">
-            <Swiper
-              slidesPerView={1}
-              className="mySwiper"
-              loop={true}
-              breakpoints={{
-                480: {
-                  slidesPerView: 2,
-                },
-                768: {
-                  slidesPerView: 2,
-                },
-                1024: {
-                  slidesPerView: 3,
-                },
-              }}
-            >
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
+            <div className='w-full'>
+              <div className='text-2xl text-center p-5'>Món ăn phổ biến</div>
+              <Swiper
+                modules={[Autoplay]}
+                autoplay={true}
+                spaceBetween={50}
+                slidesPerView={3}
+              >
+                {dataProduct?.map((item, index) => (
+                  <SwiperSlide>
+                    <div className="w-full pe-5">
+                      <Badge.Ribbon text="Hot" color="red">
+                        <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
+                          <img src={item.imageUrls} />
+                          <div className=' font-medium'>{item.name_product}</div>
+                          <div className='flex justify-between items-center  '>
+                            <p className=' font-medium text-main text-lg'>{formatGia(item.price)}</p>
+                          </div>
                         </div>
-                      </div>
+                      </Badge.Ribbon>
                     </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="w-full pe-5">
-                  <Badge.Ribbon text="15% Off" color="red">
-                    <div className=" border-2 border-gray-300 px-4 py-2 rounded-lg">
-                      <img src={img} />
-                      <div className=" font-medium">
-                        <Rate disabled defaultValue={2} className="text-main" />
-                      </div>
-                      <div className=" font-medium">Banhs pizaa</div>
-                      <div className="flex justify-between items-center  ">
-                        <p className=" font-medium text-main text-lg"> 500000 d</p>
-                        <div className="">
-                          <PlusOutlined size={30} className="p-3 bg-main rounded-lg text-white" />
-                        </div>
-                      </div>
-                    </div>
-                  </Badge.Ribbon>
-                </div>
-              </SwiperSlide>
-            </Swiper>
+                  </SwiperSlide>
+
+                ))}
+              </Swiper>
+            </div>
           </div>
           <div className="recent_order w-full  mt-4">
             <div className="flex justify-between py-3">
