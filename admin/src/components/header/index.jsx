@@ -288,7 +288,6 @@ function HeaderComponent() {
             </Button>
           </div>
         </div>
-
         <div className="hidden sm:block flex-1 text-center mx-3">
           <SearchComponent
             className="bg-secondaryColor w-full max-w-2xl "

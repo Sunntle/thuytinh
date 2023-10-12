@@ -18,7 +18,7 @@ import tableSystem from './table/tableSystem';
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['account']
+    blacklist: ['account','table']
 }
 const rootReducer = combineReducers({
     account: accountReducer,

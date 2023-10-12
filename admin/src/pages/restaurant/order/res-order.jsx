@@ -1,48 +1,51 @@
 import React, { useEffect, useRef, useState } from 'react'
-import "./res-payment.css"
+import "../payment/res-payment.css"
 import { Col, Row, Tabs, Button, Divider, Card, Modal, Spin, message, FloatButton } from "antd"
 import { AiOutlineCheckCircle } from "react-icons/ai"
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { CloseOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
-import { addOrder } from '../../../services/api'
+import { addOrder, getTableId } from '../../../services/api'
 import { RemoveTable } from '../../../redux/table/tableSystem'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
-const ResPayment = () => {
-    const [data, setData] = useState(null);
-    const { carts } = useSelector(state => state.cart)
-    const total = useSelector(state => state.cart)
-    const idTble = useSelector(state => state.table)
-    console.log(idTble.id)
-    // const statustble = useSelector(state => state.table.status_table)
+const ResOrder = () => {
     const dispatch = useDispatch();
+
+    const [data, setData] = useState([]);
+    const idTble = useSelector(state => state.table)
     useEffect(() => {
-        dispatch(getTotal());
-    }, [total])
-    const totalVAT = total.cartTotalAmount + (total.cartTotalAmount * 0.1);
+        const fetchData = async (id) => {
+            const resCa = await getTableId(idTble.id);
+            setData(resCa);
+        }
+        fetchData();
+    }, []);
+    console.log(data)
+    const {order} = data
+    console.log(order?.total);
     //Xu ly dat mon
     const submitOrderList = async (value) => {
-        try {
-            let res;
-            const body = {
-                orders: carts,
-                total: totalVAT,
-                customerName: "Admin",
-                idTable: {id: idTble.id, status_table: idTble.status_table},
-            };
-            console.log(body)
-            res = await addOrder(body);
-            dispatch(RemoveAllCart());
-            dispatch(RemoveTable());
-            message.open({
-                type: "success",
-                content: "Đặt món thành công thành công!",
-            });
-        } catch (err) {
-            console.log(err);
-        }
+        // try {
+        //     let res;
+        //     const body = {
+        //         orders: carts,
+        //         total: totalVAT,
+        //         customerName: "Admin",
+        //         idTable: {id: idTble.id, status_table: idTble.status_table},
+        //     };
+        //     console.log(body)
+        //     res = await addOrder(body);
+        //     dispatch(RemoveAllCart());
+        //     dispatch(RemoveTable());
+        //     message.open({
+        //         type: "success",
+        //         content: "Đặt món thành công thành công!",
+        //     });
+        // } catch (err) {
+        //     console.log(err);
+        // }
     };
     // modal phuong thuc thanh toan
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,28 +97,28 @@ const ResPayment = () => {
             <div className="border-solid border-2 border-main bg-orange-50 shadow-md flex flex-col gap-y-4 p-4 rounded-lg">
                 <div>
                     <span className='font-medium text-lg'>Bàn số: </span>
-                    <span className='font-medium text-main text-lg'></span>
+                    <span className='font-medium text-main text-lg'>{data.id}</span>
                 </div>
                 <Divider className='bg-main m-0' />
-                {carts && carts.map((item, index) =>
+                {order?.order_details?.map((item, index) =>
                     <div key={index}>
                         <div className='product-remove'>
                             <button className='float-right text-red-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
                         </div>
                         <div className='flex item-center my-3'>
                             <div className='flex-none h-16 w-15 mr-4 hover:bg-hoverColor'>
-                                <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item.imageUrls} />
+                                <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item?.product?.ImageProducts?.url} />
                             </div>
                             <div className='flex-grow'>
                                 <div className='flex items-end justify-between'>
-                                    <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.name_product}</span>
-                                    <span className='text-main mb-3'>{item.price} VNĐ</span>
+                                    <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item?.product?.name_product}</span>
+                                    <span className='text-main mb-3'>{item?.product?.price} VNĐ</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
                                     <span>x{item.quantity}</span>
                                     <div className="flex justify-between items-center">
                                         <button className='border-solid border text-main' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="w-3 h-4 sm:w-4 sm:h-4 " /></button>
-                                        <span className="font-medium text-slate-500 text-lg mx-3 text-sm">{item.quantity}</span>
+                                        <span className="font-medium text-slate-500 text-lg mx-3 text-sm">{item?.quantity}</span>
                                         <button className='border-solid border text-main' onClick={() => dispatch(AddCart(item))}><HiPlus className="w-3 h-3 sm:w-4 sm:h-4  " /></button>
                                     </div>
                                 </div>
@@ -129,9 +132,9 @@ const ResPayment = () => {
                         <span>Thuế VAT:</span>
                         <span className='float-right'>10%</span>
                     </div>
-                    <div className='total m-3'>
+                    <div className='total'>
                         <span className='font-medium text-lg'>Tổng tiền:</span>
-                        <span className='float-right text-lg text-main'>{totalVAT} VNĐ</span>
+                        <span className='float-right text-lg text-main'>{order?.total} VNĐ</span>
                     </div>
                     <div className='grid grid-cols-4 mt-12'>
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
@@ -188,4 +191,4 @@ const ResPayment = () => {
         </>
     )
 }
-export default ResPayment;
+export default ResOrder;

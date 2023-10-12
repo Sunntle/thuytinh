@@ -36,6 +36,11 @@ const App = () => {
             colorBgTextActive: "#fff",
             colorText: "#7e808c",
           },
+          Tabs:{
+            inkBarColor:"#FC8019",
+            itemSelectedColor:"#FC8019",
+            itemHoverColor:"#FC8019",
+          }
         },
       }}
     >
