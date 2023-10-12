@@ -1,6 +1,6 @@
 import { BiCategory } from "react-icons/bi";
 import { ShopOutlined } from "@ant-design/icons";
-import { getItem } from "../utils/format";
+import { getItem } from "./format";
 export const limit = 9;
 export const month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 export const days = [

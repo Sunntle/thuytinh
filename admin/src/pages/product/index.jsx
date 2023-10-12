@@ -119,6 +119,11 @@ function ProductPage() {
       sorter: (a, b) => a.price - b.price,
     },
     {
+      title: "Đã bán",
+      dataIndex: "sold",
+      sorter: (a, b) => a.sold - b.sold,
+    },
+    {
       title: "Trạng thái",
       dataIndex: "status",
       sorter: (a, b) => a.status - b.status,

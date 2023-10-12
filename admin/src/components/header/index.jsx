@@ -5,7 +5,6 @@ import {
   DownOutlined,
   FileSearchOutlined,
   LogoutOutlined,
-  MenuUnfoldOutlined,
   RightOutlined,
   UploadOutlined,
   UserOutlined,
@@ -22,6 +21,7 @@ import {
   Upload,
   message,
   Tooltip,
+  Switch,
 } from "antd";
 
 import { useState, useEffect } from "react";
@@ -40,13 +40,12 @@ import {
   callUpdatePassword,
 } from "../../services/api";
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import { ChangeMode } from "../../redux/customize/customize";
 function HeaderComponent() {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [icon, setIcon] = useState(false);
   const [openModalProfile, setOpenModalProfile] = useState(false);
@@ -57,7 +56,9 @@ function HeaderComponent() {
   const [searchKw, setSearchKw] = useState(
     JSON.parse(localStorage.getItem("searchKeyWord")) || []
   );
+  const navigate = useNavigate();
   const user = useSelector((state) => state.account);
+  const customize = useSelector((state) => state.customize);
   const dispatch = useDispatch();
   const items = [
     {
@@ -270,22 +271,11 @@ function HeaderComponent() {
   return (
     <>
       {contextHolder}
-      {/* <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
-
-        <div className="flex items-center justify-between"> */}
-
-      {/*   
-  return ( */}
       <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
         <div className="flex items-center justify-between">
           <div>
             <img src="Logo" className="max-w-md object-cover" alt="" />
             Logo here
-          </div>
-          <div className="block sm:hidden">
-            <Button type="primary" onClick={() => setOpen(true)}>
-              <MenuUnfoldOutlined />
-            </Button>
           </div>
         </div>
 
@@ -299,6 +289,14 @@ function HeaderComponent() {
           />
         </div>
         <div className="flex items-center justify-center gap-x-1">
+          <Switch
+            checked={customize.darkMode}
+            onClick={() =>
+              dispatch(ChangeMode({ darkMode: !customize.darkMode }))
+            }
+            checkedChildren="Dark"
+            unCheckedChildren="Light"
+          />
           <NotificationsComponent
             notifications={notifications}
             openPopover={openPopover}

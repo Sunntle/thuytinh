@@ -5,18 +5,22 @@ import HeaderComponent from "../components/header";
 import { Layout, Menu } from "antd";
 const { Content, Sider } = Layout;
 import { NAV_ITEMS } from "../utils/constant";
-import ButtonComponents from "../components/button";
 import { socket } from "../socket";
+import { useSelector } from "react-redux";
 const LayoutMain = () => {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
+  const customize = useSelector(state => state.customize)
   const navigate = useNavigate();
   const openNotification = useCallback(() => {
     const key = `open${Date.now()}`;
     const btn = (
       <Space>
-        <ButtonComponents type="primary" size="small" content="Xóa tất cả" className="text-main border-secondaryColor" onClick={() => api.destroy()}/>
+        <Button type="primary" size="small" className="p-2" onClick={() => api.destroy()}>
+          Destroy All
+        </Button>
       </Space>
     );
     api.open({
@@ -37,7 +41,9 @@ const LayoutMain = () => {
     socket.on("new message", () =>{
       openNotification()
     })
-    return socket.off("new message")
+    return ()=>{
+      socket.off("new message")
+    }
   },[openNotification])
   const onClick = (e) => {
     navigate(e.key);
@@ -46,34 +52,33 @@ const LayoutMain = () => {
     <div className="bg-main relative">
          <div>
          {contextHolder}
-      <Button type="primary" onClick={openNotification}>
-        Open the notification box
-      </Button>
          </div>
       <header className="sticky top-0 w-full z-10">
         <HeaderComponent />
 
       </header>
       <main className="main_area rounded-t-3xl">
-        <Layout className="layout_area">
+        <Layout className="layout_area" >
           <Sider
+            theme={customize.darkMode ? 'dark' : 'light'}
             breakpoint="lg"
             width={250}
             className="layout_area_sider"
-            collapsible
+            collapsible={!screen}
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
+            onBreakpoint={(screen)=>setScreen(screen)}
           >
             <Menu
               style={{ border: "none" }}
               defaultSelectedKeys={pathname}
-              theme="light"
+              theme={customize.darkMode ? 'dark' : 'light'}
               mode="inline"
               items={NAV_ITEMS}
               onClick={onClick}
             />
           </Sider>
-          <Layout className="bg-white">
+          <Layout className={customize.darkMode ? 'bg-darkModeBg' : 'bg-white'}>
             <Content className="w-full">
               <Outlet />
             </Content>
