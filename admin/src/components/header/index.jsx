@@ -4,15 +4,25 @@ import {
   CloseOutlined,
   DownOutlined,
   FileSearchOutlined,
-  LockOutlined,
   LogoutOutlined,
   MenuUnfoldOutlined,
-  PlusOutlined,
   RightOutlined,
   UploadOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Button, Drawer, Dropdown, Form, Input, Menu, Modal, Tabs, Upload, message, Tooltip } from "antd";
+import {
+  Button,
+  Drawer,
+  Dropdown,
+  Form,
+  Input,
+  Menu,
+  Modal,
+  Tabs,
+  Upload,
+  message,
+  Tooltip,
+} from "antd";
 
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -22,11 +32,16 @@ import NotificationsComponent from "../notification";
 import { NAV_ITEMS } from "../../utils/constant";
 import { doLogoutAction, fetchAccount } from "../../redux/account/accountSlice";
 import { roleRext, truncateString } from "../../utils/format";
-import { callLogout, getAllCate, getAllProduct, callUpdateAccount, callUpdatePassword } from "../../services/api";
+import {
+  callLogout,
+  getAllCate,
+  getAllProduct,
+  callUpdateAccount,
+  callUpdatePassword,
+} from "../../services/api";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 function HeaderComponent() {
-
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
@@ -61,7 +76,6 @@ function HeaderComponent() {
     },
   ];
   const handleMenuClick = async (e) => {
-
     if (e.key == 2) {
       dispatch(doLogoutAction());
       await callLogout();
@@ -69,18 +83,23 @@ function HeaderComponent() {
       setOpenModalProfile(true);
       const { id, name, email, phone, avatar, role } = user.user;
       let data = {
-        id, name, email, phone,
+        id,
+        name,
+        email,
+        phone,
         role: roleRext(role),
-        avatar: [{
-          uid: '1',
-          name: 'anhnen.jpg',
-          status: 'done',
-          url: avatar
-        }]
+        avatar: [
+          {
+            uid: "1",
+            name: "anhnen.jpg",
+            status: "done",
+            url: avatar,
+          },
+        ],
       };
       form.setFieldsValue(data);
     }
-  }
+  };
   const handleRemoveKeyWord = (index) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord"));
     searchArr.splice(index, 1);
@@ -113,7 +132,6 @@ function HeaderComponent() {
       role: user?.user.role,
     });
     socket.on("new message", (arg) => {
-      console.log(arg);
       setNotifications((prev) => {
         const arr = [...prev];
         if (Array.isArray(arg)) {
@@ -124,17 +142,14 @@ function HeaderComponent() {
         return arr;
       });
     });
-
   }, [user?.user.name, user?.user.role]);
-
-
 
   const onFinish = async (values) => {
     const formData = new FormData();
-    const { avatar, role, ...rest } = values;
+    const { avatar, ...rest } = values;
     const val = { ...rest };
     if (avatar[0]?.originFileObj) {
-      val.avatar = avatar[0].originFileObj
+      val.avatar = avatar[0].originFileObj;
     }
     for (const item of Object.entries(val)) {
       formData.append(item[0], item[1]);
@@ -142,12 +157,12 @@ function HeaderComponent() {
     const res = await callUpdateAccount(formData);
     dispatch(fetchAccount());
     messageApi.open({
-      type: 'success',
+      type: "success",
       content: res.message,
     });
-    setOpenModalProfile(false)
+    setOpenModalProfile(false);
     form.resetFields();
-  }
+  };
   const submitResetPass = async (values) => {
     let res = await callUpdatePassword(values);
     messageApi.open({
@@ -155,11 +170,10 @@ function HeaderComponent() {
       content: res.message,
     });
     if (res.success === true) {
-      setOpenModalProfile(false)
+      setOpenModalProfile(false);
       form.resetFields();
     }
-
-  }
+  };
   const customContent = () => {
     return (
       <div className="bg-white rounded-lg px-5 py-3 shadow-md">
@@ -275,33 +289,33 @@ function HeaderComponent() {
           </div>
         </div>
 
-         <div className="hidden sm:block flex-1 text-center mx-3">
-        <SearchComponent
-          className="bg-secondaryColor w-full max-w-2xl "
-          textColor={true}
-          size="large"
-          customContent={customContent}
-          onChange={handleSearch}
-        />
-      </div>
-      <div className="flex items-center justify-center gap-x-1">
-        <NotificationsComponent
-          notifications={notifications}
-          openPopover={openPopover}
-          setOpenPopover={setOpenPopover}
-          setNotifications={setNotifications}
-        />
-        <Dropdown menu={menuProps} trigger={["click"]}>
-          <ButtonComponents
-            sizeIconBefore={"text-lg"}
-            sizeIconAfter={"text-xs"}
-            spacingContent={"ms-1 me-3"}
-            className="border-borderSecondaryColor bg-secondaryColor text-white ms-3"
-            iconBefore={<UserOutlined />}
-            iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
-            content={truncateString(user?.user.name, 7)}
-            onClick={() => setIcon(!icon)}
-            customAttribute={{ size: "large" }}
+        <div className="hidden sm:block flex-1 text-center mx-3">
+          <SearchComponent
+            className="bg-secondaryColor w-full max-w-2xl "
+            textColor={true}
+            size="large"
+            customContent={customContent}
+            onChange={handleSearch}
+          />
+        </div>
+        <div className="flex items-center justify-center gap-x-1">
+          <NotificationsComponent
+            notifications={notifications}
+            openPopover={openPopover}
+            setOpenPopover={setOpenPopover}
+            setNotifications={setNotifications}
+          />
+          <Dropdown menu={menuProps} trigger={["click"]}>
+            <ButtonComponents
+              sizeIconBefore={"text-lg"}
+              sizeIconAfter={"text-xs"}
+              spacingContent={"ms-1 me-3"}
+              className="border-borderSecondaryColor bg-secondaryColor text-white ms-3"
+              iconBefore={<UserOutlined />}
+              iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
+              content={truncateString(user?.user.name, 7)}
+              onClick={() => setIcon(!icon)}
+              customAttribute={{ size: "large" }}
             />
           </Dropdown>
         </div>
@@ -340,209 +354,231 @@ function HeaderComponent() {
           <Tabs
             defaultActiveKey="1"
             centered
-            items={
-              [{
+            items={[
+              {
                 label: `Thông tin`,
                 key: 1,
-                children: <>
-                  <Form
-                    form={form}
-                    name="update profile"
-                    labelCol={{
-                      span: 24,
-                    }}
-                    wrapperCol={{
-                      span: 24,
-                    }}
-                    onFinish={onFinish}
-                    autoComplete="off">
-                    <Form.Item
-                      name="id"
-                      hidden
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      label="Vai trò"
-                      name="role"
-                      rules={[{
-                        required: true
-                      }]}
-                    >
-                      <Input disabled />
-                    </Form.Item>
-                    <Form.Item
-                      label="Họ tên"
-                      name="name"
-                      rules={[{
-                        required: true,
-                        min: 5,
-                        message: 'Vui lòng nhập họ tên (ít nhất 5 kí tự)!'
-                      }]}
-                    >
-                      <Input />
-
-                    </Form.Item>
-                    <Form.Item
-                      label="Số điện thoại"
-                      name="phone"
-                      rules={[
-                        {
-                          required: true,
-                          pattern: /^[0-9]{10}$/,
-                          message: 'Vui lòng nhập số điện thoại đúng định dạng (10 số)',
-                        },
-                      ]}
-
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      label="Email"
-                      name="email"
-                      rules={[
-                        {
-                          required: true,
-                          type: 'email',
-                          message: 'Vui lòng nhập một email hợp lệ (ít nhất 5 kí tự)!',
-                        }
-                      ]}
-                    >
-                      <Input />
-
-                    </Form.Item>
-                    <Form.Item
-                      label="Avatar"
-                      name="avatar"
-                      rules={[{
-                        required: true,
-                        message: 'Vui lòng chon anh'
-                      }]}
-                      valuePropName="fileList"
-                      getValueFromEvent={(e) => {
-                        if (Array.isArray(e)) {
-                          return e;
-                        }
-                        return e?.fileList;
+                children: (
+                  <>
+                    <Form
+                      form={form}
+                      name="update profile"
+                      labelCol={{
+                        span: 24,
                       }}
+                      wrapperCol={{
+                        span: 24,
+                      }}
+                      onFinish={onFinish}
+                      autoComplete="off"
                     >
-                      <Upload
-                        beforeUpload={() => false}
-                        multiple={false}
-                        listType='picture'
-                        maxCount={1}
+                      <Form.Item name="id" hidden>
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label="Vai trò"
+                        name="role"
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
                       >
-                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                      </Upload>
-                    </Form.Item>
-                    <div className="flex justify-end">
-                      <ButtonComponents
-                        content={"Cập nhật"}
-                        key="submit"
-                        htmlType="submit"
-                        className="border-borderSecondaryColor bg-secondaryColor text-white"
-                      />
-                    </div>
-
-                  </Form>
-                </>,
+                        <Input disabled />
+                      </Form.Item>
+                      <Form.Item
+                        label="Họ tên"
+                        name="name"
+                        rules={[
+                          {
+                            required: true,
+                            min: 5,
+                            message: "Vui lòng nhập họ tên (ít nhất 5 kí tự)!",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label="Số điện thoại"
+                        name="phone"
+                        rules={[
+                          {
+                            required: true,
+                            pattern: /^[0-9]{10}$/,
+                            message:
+                              "Vui lòng nhập số điện thoại đúng định dạng (10 số)",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label="Email"
+                        name="email"
+                        rules={[
+                          {
+                            required: true,
+                            type: "email",
+                            message:
+                              "Vui lòng nhập một email hợp lệ (ít nhất 5 kí tự)!",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label="Avatar"
+                        name="avatar"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Vui lòng chon anh",
+                          },
+                        ]}
+                        valuePropName="fileList"
+                        getValueFromEvent={(e) => {
+                          if (Array.isArray(e)) {
+                            return e;
+                          }
+                          return e?.fileList;
+                        }}
+                      >
+                        <Upload
+                          beforeUpload={() => false}
+                          multiple={false}
+                          listType="picture"
+                          maxCount={1}
+                        >
+                          <Button icon={<UploadOutlined />}>
+                            Click to Upload
+                          </Button>
+                        </Upload>
+                      </Form.Item>
+                      <div className="flex justify-end">
+                        <ButtonComponents
+                          content={"Cập nhật"}
+                          key="submit"
+                          htmlType="submit"
+                          className="border-borderSecondaryColor bg-secondaryColor text-white"
+                        />
+                      </div>
+                    </Form>
+                  </>
+                ),
               },
               {
                 label: `Mật khẩu`,
                 key: 2,
-                children: <>
-                  <Form
-                    form={form1}
-                    name="reset_pass"
-                    initialValues={{
-                      remember: true,
-                    }}
-                    labelCol={{
-                      span: 24,
-                    }}
-                    wrapperCol={{
-                      span: 24,
-                    }}
-                    onFinish={submitResetPass}
-                  >
-
-                    <Form.Item
-                      name="current"
-                      label="Mật khẩu hiện tại"
-                      rules={[
-                        {
-                          required: true,
-                          min: 5,
-                          message: 'Vui lòng nhập mật khẩu hiện tại!',
-                        },
-                      ]}
-                      hasFeedback
+                children: (
+                  <>
+                    <Form
+                      form={form1}
+                      name="reset_pass"
+                      initialValues={{
+                        remember: true,
+                      }}
+                      labelCol={{
+                        span: 24,
+                      }}
+                      wrapperCol={{
+                        span: 24,
+                      }}
+                      onFinish={submitResetPass}
                     >
-                      <Input.Password />
-                    </Form.Item>
-                    <Form.Item
-                      name="pass_new"
-                      label="Mật khẩu mới"
-                      dependencies={['current']}
-                      rules={[
-                        {
-                          required: true,
-                          min: 5,
-                          message: 'Vui lòng nhập mật khẩu mới (ít nhất 5 kí tự)!',
-                        },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            if (!value || getFieldValue('current') !== value) {
-                              return Promise.resolve();
-                            }
-                            return Promise.reject(new Error('Tạo mới mật khẩu không trùng hiện tại!'));
+                      <Form.Item
+                        name="current"
+                        label="Mật khẩu hiện tại"
+                        rules={[
+                          {
+                            required: true,
+                            min: 5,
+                            message: "Vui lòng nhập mật khẩu hiện tại!",
                           },
-                        }),
-                      ]}
-                      hasFeedback
-                    >
-                      <Input.Password />
-                    </Form.Item>
-
-                    <Form.Item
-                      name="confirm"
-                      label="Xác nhận mật khẩu mới"
-                      dependencies={['pass_new']}
-                      hasFeedback
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Xác nhận lại mật khẩu !',
-                        },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            if (!value || getFieldValue('pass_new') === value) {
-                              return Promise.resolve();
-                            }
-                            return Promise.reject(new Error('Xác nhận lại không khớp với mật khẩu mới!'));
+                        ]}
+                        hasFeedback
+                      >
+                        <Input.Password />
+                      </Form.Item>
+                      <Form.Item
+                        name="pass_new"
+                        label="Mật khẩu mới"
+                        dependencies={["current"]}
+                        rules={[
+                          {
+                            required: true,
+                            min: 5,
+                            message:
+                              "Vui lòng nhập mật khẩu mới (ít nhất 5 kí tự)!",
                           },
-                        }),
-                      ]}
-                    >
-                      <Input.Password />
-                    </Form.Item>
+                          ({ getFieldValue }) => ({
+                            validator(_, value) {
+                              if (
+                                !value ||
+                                getFieldValue("current") !== value
+                              ) {
+                                return Promise.resolve();
+                              }
+                              return Promise.reject(
+                                new Error(
+                                  "Tạo mới mật khẩu không trùng hiện tại!"
+                                )
+                              );
+                            },
+                          }),
+                        ]}
+                        hasFeedback
+                      >
+                        <Input.Password />
+                      </Form.Item>
 
-                    <div className="flex justify-end">
-                      <ButtonComponents
-                        content={"Cập nhật"}
-                        key="submit"
-                        htmlType="submit"
-                        className="border-borderSecondaryColor bg-secondaryColor text-white"
-                      />
-                    </div>
-                  </Form>
-                </>,
-              }]}
+                      <Form.Item
+                        name="confirm"
+                        label="Xác nhận mật khẩu mới"
+                        dependencies={["pass_new"]}
+                        hasFeedback
+                        rules={[
+                          {
+                            required: true,
+                            message: "Xác nhận lại mật khẩu !",
+                          },
+                          ({ getFieldValue }) => ({
+                            validator(_, value) {
+                              if (
+                                !value ||
+                                getFieldValue("pass_new") === value
+                              ) {
+                                return Promise.resolve();
+                              }
+                              return Promise.reject(
+                                new Error(
+                                  "Xác nhận lại không khớp với mật khẩu mới!"
+                                )
+                              );
+                            },
+                          }),
+                        ]}
+                      >
+                        <Input.Password />
+                      </Form.Item>
+
+                      <div className="flex justify-end">
+                        <ButtonComponents
+                          content={"Cập nhật"}
+                          key="submit"
+                          htmlType="submit"
+                          className="border-borderSecondaryColor bg-secondaryColor text-white"
+                        />
+                      </div>
+                    </Form>
+                  </>
+                ),
+              },
+            ]}
           />
         </Modal>
-      </div >
+      </div>
     </>
-
   );
 }
 

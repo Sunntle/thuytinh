@@ -35,10 +35,11 @@ exports.list = async (req, res) => {
   });
 
   if (dataChart.length > 0 && !notificationSent) {
-    let created = await Notification.create({
-      type: "Nguyên liệu",
-      description: `Có ${dataChart.length} chuẩn bị hết hàng`
-    },
+    let created = await Notification.create(
+      {
+        type: "Nguyên liệu",
+        description: `Có ${dataChart.length} chuẩn bị hết hàng`,
+      },
       { raw: true }
     );
     _io.emit("new message", created);

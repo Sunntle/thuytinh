@@ -22,6 +22,16 @@ function ReviewsPage() {
     _limit: limit,
     _time: currentMonth,
   });
+  const dayInMonth = useMemo(() => {
+    return getDaysInMonth(2023, currentMonth);
+  }, [currentMonth]);
+  const handleArrCategories = useMemo(() => {
+    const numbersArray = [];
+    for (let i = 1; i <= dayInMonth; i++) {
+      numbersArray.push(i);
+    }
+    return numbersArray;
+  },[dayInMonth])
   const fetchReviews = async (params) => {
     const response = await getAllReviews(params);
     setReviewsCurrent(response);
@@ -43,7 +53,7 @@ function ReviewsPage() {
           setPercent(
             ((countReviews?.total - countPrevReviews?.total) /
               countPrevReviews?.total) *
-            100
+              100
           );
         }
         const res = await getAllReviews({
@@ -62,7 +72,7 @@ function ReviewsPage() {
         setLoading(false);
       }
     },
-    [currentMonth]
+    [currentMonth, dayInMonth]
   );
   const handleChangePage = (e) => {
     setPage(e);
@@ -82,28 +92,21 @@ function ReviewsPage() {
       fetchData(filter);
     }
   };
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     fetchReviews({ _offset: 0, _limit: limit, _time: currentMonth });
-  };
+  },[currentMonth])
+  
   const handleCancelConfirm = () => {
     message.error("Xóa thất bại");
   };
-  const dayInMonth = useMemo(() => {
-    return getDaysInMonth(2023, currentMonth);
-  }, [currentMonth]);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
   if (loading) {
     return <Spinner />;
   }
-  const handleArrCategories = () => {
-    const numbersArray = [];
-    for (let i = 1; i <= getDaysInMonth(2023, currentMonth); i++) {
-      numbersArray.push(i);
-    }
-    return numbersArray;
-  };
+  
   return (
     <div className="my-7 px-5">
       <div className="p-5 mb-6 rounded-md border border-solid border-gray-300">
@@ -155,12 +158,12 @@ function ReviewsPage() {
             <ColumnChart
               series={[
                 {
-                  name: "Tích cực",
+                  name: "Bình luận",
                   data: dataChart,
                 },
               ]}
               colors={percent >= 0 ? ["#22C55E"] : ["#EF4444"]}
-              categories={dayInMonth}
+              categories={handleArrCategories}
             />
           </Col>
         </Row>
