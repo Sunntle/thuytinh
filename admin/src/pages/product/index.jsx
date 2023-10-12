@@ -140,8 +140,8 @@ function ProductPage() {
     {
       title: "Action",
       key: "action",
-      fixed: "right",
-      width: "12%",
+      // fixed: "right",
+      // width: "12%",
       render: (_, record) => (
         <div className="h-10 flex items-center cursor-pointer">
           <span
@@ -151,7 +151,7 @@ function ProductPage() {
             Sửa
           </span>
           <ConfirmComponent
-            title="Xác nhận xóa đơn hàng"
+            title="Xác nhận xóa món ăn này?"
             confirm={() => handleDeleteProduct(record.id)}
           >
             Xóa
@@ -239,7 +239,7 @@ function ProductPage() {
         <>
           <Row justify="space-between" align="center" className="mb-4">
             <Col xs={6}>
-              <Title level={4}>Danh sách món ăn</Title>
+              <Title level={3}>Danh sách món ăn</Title>
             </Col>
             <Col xs={6} style={{ textAlign: "-webkit-right" }}>
               <ButtonComponents
@@ -250,9 +250,9 @@ function ProductPage() {
             </Col>
           </Row>
           <Table
-            scroll={{
-              x: 1300,
-            }}
+            // scroll={{
+            //   x: 1300,
+            // }}
             columns={columns}
             dataSource={products?.data}
             onChange={onChange}

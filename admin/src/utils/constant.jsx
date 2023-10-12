@@ -12,7 +12,7 @@ export const days = [
   "Thứ 7",
   "Chủ nhật",
 ];
-export const desc = ["terrible", "bad", "normal", "good", "wonderful"];
+export const desc = ["Rất tệ", "Tệ", "Bình thường", "Ngon", "Tuyệt vời"];
 export const NAV_ITEMS = [
   getItem("Quản lí", null, <BiCategory />, [
     getItem("Dashboard", "/admin"),

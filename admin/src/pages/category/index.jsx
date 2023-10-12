@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import CreateCategory from "./add_cat";
 import ButtonComponents from "../../components/button";
 import {
-  Col,
   Modal,
   Table,
   message,
@@ -12,13 +11,15 @@ import {
   Input,
   Select,
   Upload,
+  Row,
+  Col,
+  Typography,
 } from "antd";
-const { Option } = Select;
 import { delCate, editCate, getCate } from "../../services/api";
 import { formatNgay } from "../../utils/format";
 import ConfirmComponent from "../../components/confirm";
 import { UploadOutlined } from "@ant-design/icons";
-
+const { Title } = Typography;
 const CategoryPage = () => {
   const [form] = Form.useForm();
   const [openModal, setOpenModal] = useState(false);
@@ -76,13 +77,18 @@ const CategoryPage = () => {
   };
   return (
     <div className="px-5 mt-5">
-      <div className="mb-4">
-        <ButtonComponents
+       <Row justify="space-between" align="center" className="mb-4">
+            <Col xs={6}>
+              <Title level={3}>Danh mục</Title>
+            </Col>
+            <Col xs={6} style={{ textAlign: "-webkit-right" }}>
+            <ButtonComponents
           className="text-main border-borderSecondaryColor"
           onClick={handOpen}
           content={"Thêm mới"}
         />
-      </div>
+            </Col>
+          </Row>
       <Table
         columns={[
           {
@@ -129,7 +135,7 @@ const CategoryPage = () => {
                   Sửa
                 </span>
                 <ConfirmComponent
-                  title="Xác nhận xóa đơn hàng"
+                  title="Xác nhận xóa danh mục này?"
                   confirm={() => handDeleteOrder(record.id)}
                 >
                   Xóa
