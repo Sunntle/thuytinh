@@ -20,7 +20,7 @@ const cartSystem = createSlice({
             const nextCartItems = state.carts.filter(item=>item.id!==action.payload.id);
             state.carts = nextCartItems;
         },
-        RemoveAllCart:(state,action) =>{
+        RemoveAllCart:(state) =>{
             state.carts = [];
         },
         DecreaseCart:(state,action) =>{
@@ -34,7 +34,7 @@ const cartSystem = createSlice({
                 state.carts = nextCartItems;
             }
         },
-        getTotal:(state,action)=>{
+        getTotal:(state)=>{
             let{total, quantity} = state.carts.reduce(
                 (cartTotal, cartItem) =>{
                     const {price, quantity} = cartItem;

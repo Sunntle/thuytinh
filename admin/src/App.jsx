@@ -31,17 +31,26 @@ const App = () => {
             itemActiveBg: "#FC8019",
             colorPrimary: "#fff",
             colorPrimaryBorder: "#fd9c4b",
-            colorPrimaryHover: "fd9c4b",
+            colorPrimaryHover: "#fd9c4b",
             colorBgTextHover: "#FC8019",
             colorBgTextActive: "#fff",
             colorText: "#7e808c",
+          },
+          Menu:{
+            itemSelectedColor: "#FFFFFF",
+            itemSelectedBg: "#FC8019",
+            darkItemSelectedBg: "#FC8019",
+            darkSubMenuItemBg:"#001529"
+          },
+          Layout:{
+            lightSiderBg: "#FC8019"
           },
           Tabs:{
             inkBarColor:"#FC8019",
             itemSelectedColor:"#FC8019",
             itemHoverColor:"#FC8019",
           }
-        },
+}
       }}
     >
       <RouterProvider router={router} />
