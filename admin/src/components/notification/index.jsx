@@ -39,7 +39,7 @@ function NotificationsComponent({
             <div
               onClick={() => handleToContent(index)}
               key={index}
-              className="my-2 flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-gray-100 gap-x-2"
+              className="my-2 flex items-center justify-between py-2 rounded-md cursor-pointer hover:bg-gray-100 gap-x-2"
             >
               <div className="flex items-center gap-x-2">
                 <div className="max-w-[50px]">
@@ -49,10 +49,10 @@ function NotificationsComponent({
                   />
                 </div>
                 <div className={el.status == true ? "text-gray-500" : " pe-2"}>
-                  {el.name == "order" ? "Đơn đặt hàng" : "Người dùng"} mới{" "}
+                  {el.type == "material" ? "Nguyên liệu chuẩn bị hết hàng" : el.type == "order" ?  "Đơn hàng mới" : "Người dùng mới"}
                   <span className="font-semibold">#{el.id}</span>
                   <p className="text-main text-sm">
-                    {formatNgay(el.timestamp, "HH:mm:ss DD-MM-YYYY")}
+                    {formatNgay(el.timestamp, "HH:mm DD-MM-YYYY")}
                   </p>
                 </div>
               </div>
