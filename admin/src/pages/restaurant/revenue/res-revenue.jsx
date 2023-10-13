@@ -7,6 +7,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import 'swiper/css/autoplay';
 import { CiViewTimeline } from 'react-icons/ci';
 import { getAllOrder } from '../../../services/api';
+import { calculateDailyRevenue, calculateWeeklyRevenue } from '../../../utils/format';
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 
@@ -49,54 +50,20 @@ const ResRevenue = () => {
             ),
         },
     ];
-    const [totalOrder, setOrder] = useState([])
+    const [totalOrder, setTotalOrder] = useState([]);
+    const [revenue, setRevenue] = useState({ daily: 0, weekly: 0 });
     useEffect(() => {
         const fetchData = async () => {
             const resOrder = await getAllOrder();
-            setOrder(resOrder);
+            setTotalOrder(resOrder.data);
+            const daily = calculateDailyRevenue(resOrder.data);
+            const weekly = calculateWeeklyRevenue(resOrder.data);
+            setRevenue({ daily, weekly });
         }
         fetchData();
     }, []);
-// TỔNG DANH THU NGÀY
-// function calculateDailyRevenue(transactions, targetDate) {
-//     let dailyRevenue = 0;
-//     for (const totalOrder of transactions) {
-//         const transactionDate = new Date(totalOrder.createdAt);
-//         if (transactionDate.toDateString() === targetDate.toDateString()) {
-//             dailyRevenue += totalOrder.total;
-//         }
-//     }
-//     return dailyRevenue;
-// }
-// const targetDate = new Date();
-// const dailyRevenue = calculateDailyRevenue(totalOrder, targetDate);
-// console.log(`Tổng doanh thu cho ngày ${targetDate.toDateString()}: $${dailyRevenue}`);
 
 
-// TỔNG DANH THU TUẦN
-    // function calculateWeeklyRevenue(transactions) {
-    //     const today = new Date();
-    //     const dayOfWeek = today.getDay();
-    //     const startDate = new Date(today);
-    //     startDate.setDate(today.getDate() - dayOfWeek);
-
-    //     const endDate = new Date(today);
-    //     endDate.setDate(today.getDate() - dayOfWeek + 7);
-
-    //     let weeklyRevenue = 0;
-
-    //     for (const totalOrder of transactions) {
-    //         const transactionDate = new Date(totalOrder.date_order);
-    //         if (transactionDate >= startDate && transactionDate <= endDate) {
-    //             weeklyRevenue += totalOrder.total;
-    //         }
-    //     }
-    //     return weeklyRevenue;
-    // }
-    // const weeklyRevenue = calculateWeeklyRevenue(totalOrder);
-    // console.log(`Tổng doanh thu trong tuần này: $${weeklyRevenue}`);
-
-    
     return (
         <>
             <div className='w-full p-10'>
@@ -114,13 +81,13 @@ const ResRevenue = () => {
                                     <span className='text-black font-medium text-sm text-center'>
                                         Tổng tiền tuần
                                     </span>
-                                    <p className='text-2xl font-medium text-green-500 text-center'>0</p>
+                                    <p className='text-2xl font-medium text-green-500 text-center'>{revenue.weekly}</p>
                                 </div>
                                 <div className='w-1/3 p-4 h-full flex flex-col justify-center items  gap-1'>
                                     <span className='text-black font-medium text-sm text-center'>
                                         Tổng tiền ngày
                                     </span>
-                                    <p className='text-2xl font-medium text-red-500 text-center'>0</p>
+                                    <p className='text-2xl font-medium text-red-500 text-center'>{revenue.daily}</p>
                                 </div>
                             </div>
 
@@ -131,8 +98,8 @@ const ResRevenue = () => {
                                     autoplay={true}
                                     spaceBetween={50}
                                     slidesPerView={3}
-                                    onSlideChange={() => console.log('slide change')}
-                                    onSwiper={(swiper) => console.log(swiper)}
+                                // onSlideChange={() => console.log('slide change')}
+                                // onSwiper={(swiper) => console.log(swiper)}
                                 >
                                     <SwiperSlide>
                                         <div className="w-full pe-5">

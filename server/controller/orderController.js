@@ -19,6 +19,8 @@ function currentYear(pa = "startOf") {
 
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, idTable } = req.body;
+  console.log(req.body);
+
   const order_result = await Order.create({ total, name: customerName });
   let val = orders.map((item) => ({
     id_product: item.id,
@@ -49,7 +51,7 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
 
   if (key_sort && val_sort) con.order = [[key_sort, val_sort]];
 
-  const data = await Order.findAll({
+  const { count, rows } = await Order.findAndCountAll({
     ...con,
     include: [
       {
@@ -69,17 +71,12 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
       },
       {
         model: User,
-        attributes: ["name", "email", "phone"],
-        as: "user",
-      },
-      {
-        model: User,
         attributes: ["name"],
         as: "employee",
       },
     ],
   });
-  res.status(200).json(data);
+  res.status(200).json({ total: count, data: rows });
 });
 
 exports.delOrder = asyncHandler(async (req, res) => {

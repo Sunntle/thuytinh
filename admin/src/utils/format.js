@@ -33,3 +33,34 @@ export function truncateString(text, maxLength) {
   }
   return text.substring(0, maxLength) + "...";
 }
+
+export function calculateDailyRevenue(transactions) {
+  let dailyRevenue = 0;
+  for (const totalOrder of transactions) {
+    const transactionDate = new Date(totalOrder.createdAt);
+    if (transactionDate.toDateString() === new Date().toDateString()) {
+      dailyRevenue += totalOrder.total;
+    }
+  }
+  return dailyRevenue;
+}
+
+export function calculateWeeklyRevenue(transactions) {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - dayOfWeek);
+  const endDate = new Date(today);
+  endDate.setDate(today.getDate() - dayOfWeek + 7);
+
+  let weeklyRevenue = 0;
+
+  for (const totalOrder of transactions) {
+    const transactionDate = new Date(totalOrder.createdAt);
+    if (transactionDate >= startDate && transactionDate <= endDate) {
+      weeklyRevenue += totalOrder.total;
+    }
+  }
+
+  return weeklyRevenue;
+}

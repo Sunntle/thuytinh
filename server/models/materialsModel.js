@@ -27,7 +27,7 @@ const Materials = db.sequelize.define(
       type: DataTypes.STRING(1000),
     },
   },
-  {}
+  { timestamps: true }
 );
 Materials.beforeDestroy(async (material, options) => {
   const { image } = material.dataValues;
