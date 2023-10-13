@@ -1,8 +1,7 @@
 const { Materials, Notification } = require("../models");
 const { Op } = require("sequelize");
 //const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
-
-let notificationSent = false;
+let notificationSent = false
 exports.list = async (req, res) => {
   const { _offset, _limit, _sort, _order, q, _over, ...rest } = req.query;
   const query = {
@@ -37,13 +36,13 @@ exports.list = async (req, res) => {
   if (dataChart.length > 0 && !notificationSent) {
     let created = await Notification.create(
       {
-        type: "Nguyên liệu",
-        description: `Có ${dataChart.length} chuẩn bị hết hàng`,
+        type: "material",
+        description: `Có ${dataChart.length} nguyên liệu sắp hết`,
       },
       { raw: true }
     );
-    _io.emit("new message", created);
-    notificationSent = true;
+    _io.of("/admin").emit("new message", created);
+    notificationSent = true
   }
 
   res.status(200).json({ total: count, data: rows, dataChart });
