@@ -37,6 +37,16 @@ exports.createOrder = asyncHandler(async (req, res) => {
     { id_order: order_result.id },
     { where: { id: idTable, status_table: 0 }, return: true },
   );
+  let storeNotification = await Notification.create(
+    {
+      type: "order",
+      description: `Có đơn hàng mới`,
+      content: order_result.id
+    },
+    { raw: true }
+  );
+  _io.of("/admin").emit("new message",storeNotification)
+  _io.of("/client").emit("status order",result)
   res.status(200).json(result);
 });
 

@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const db = require("./config/connectDatabase");
 const { Server } = require("socket.io");
-const { handleNewUser, handleNewOrder, handleDisconnect } = require("./utils/socketHanlers")
+const { handleNewUserConnect, handleDisconnect } = require("./utils/socketHanlers")
 const port = process.env.PORT || 8000;
 require("dotenv").config();
 
@@ -38,8 +38,7 @@ let userConnected = [];
 let storeMessage = [];
 const listPermission = ['R2', 'R3', 'R4'];
 io.on("connection", (socket) => {
-  handleNewUser(socket, userConnected, storeMessage, listPermission)
-  handleNewOrder(socket, userConnected, storeMessage)
+  handleNewUserConnect(socket, userConnected, storeMessage, listPermission)
   handleDisconnect(socket, userConnected, storeMessage, listPermission)
 });
 initRoutes(app);

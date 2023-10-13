@@ -136,3 +136,13 @@ export const deleteReview = (id) => {
 export const getDataDashboard = (type) => {
   return axios.get(`/api/order/thongke`, { params: { type: type } });
 };
+//notifications 
+export const getAllNotification = (params) => {
+  return axios.get(`/api/notification`, { params });
+};
+export const readAll = (body) => {
+  return axios.put(`/api/notification`, body);
+};
+export const readOne = (body) => {
+  return axios.put(`/api/notification`, body);
+};

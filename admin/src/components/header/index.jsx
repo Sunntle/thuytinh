@@ -1,5 +1,3 @@
-import SearchComponent from "../search";
-import ButtonComponents from "../button";
 import {
   CloseOutlined,
   DownOutlined,
@@ -17,30 +15,33 @@ import {
   Input,
   Menu,
   Modal,
+  Switch,
   Tabs,
+  Tooltip,
   Upload,
   message,
-  Tooltip,
-  Switch,
 } from "antd";
+import ButtonComponents from "../button";
+import SearchComponent from "../search";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { socket } from "../../socket";
-import NotificationsComponent from "../notification";
-import { NAV_ITEMS } from "../../utils/constant";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { doLogoutAction, fetchAccount } from "../../redux/account/accountSlice";
-import { roleRext, truncateString } from "../../utils/format";
+import { ChangeMode } from "../../redux/customize/customize";
+import { addNewMessage, fetchNotification } from "../../redux/notification/notificationSystem";
 import {
   callLogout,
-  getAllCate,
-  getAllProduct,
   callUpdateAccount,
   callUpdatePassword,
+  getAllCate,
+  getAllProduct,
 } from "../../services/api";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { ChangeMode } from "../../redux/customize/customize";
+import { socket } from "../../socket";
+import { NAV_ITEMS } from "../../utils/constant";
+import { roleRext, truncateString } from "../../utils/format";
+import NotificationsComponent from "../notification";
 function HeaderComponent() {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
@@ -50,7 +51,6 @@ function HeaderComponent() {
   const [icon, setIcon] = useState(false);
   const [openModalProfile, setOpenModalProfile] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
-  const [notifications, setNotifications] = useState([]);
   const [categories, setCategories] = useState([]);
   const [data, setData] = useState(null);
   const [searchKw, setSearchKw] = useState(
@@ -58,6 +58,7 @@ function HeaderComponent() {
   );
   const navigate = useNavigate();
   const user = useSelector((state) => state.account);
+  const noti = useSelector((state) => state.notifications);
   const customize = useSelector((state) => state.customize);
   const dispatch = useDispatch();
   const items = [
@@ -76,6 +77,9 @@ function HeaderComponent() {
       icon: <LogoutOutlined />,
     },
   ];
+  useEffect(() => {
+    dispatch(fetchNotification());
+  }, [dispatch]);
   const handleMenuClick = async (e) => {
     if (e.key == 2) {
       dispatch(doLogoutAction());
@@ -115,36 +119,24 @@ function HeaderComponent() {
     navigate(`/employee/search?keyword=${searchArr[0]}`);
   };
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       const dataProducts = await getAllProduct({
         _sort: "sold",
         _order: "DESC",
         _limit: 8,
       });
-      const dataCate = await getAllCate({});
+      const dataCate = await getAllCate();
       setCategories(dataCate);
       setData(dataProducts);
     };
-    fetchProducts();
+    fetchData();
   }, []);
-  useEffect(() => {
-    socket.emit("new user", {
-      userName: user?.user.name,
-      role: user?.user.role,
-    });
-    socket.on("new message", (arg) => {
-      setNotifications((prev) => {
-        const arr = [...prev];
-        if (Array.isArray(arg)) {
-          arr.unshift(...arg);
-        } else {
-          arr.unshift(arg);
-        }
-        return arr;
-      });
-    });
-  }, [user?.user.name, user?.user.role]);
 
+  useEffect(() => {
+    socket.on("new message", (arg) => {
+      dispatch(addNewMessage(arg))
+    });
+  }, [dispatch]);
   const onFinish = async (values) => {
     const formData = new FormData();
     const { avatar, ...rest } = values;
@@ -298,10 +290,9 @@ function HeaderComponent() {
             unCheckedChildren="Light"
           />
           <NotificationsComponent
-            notifications={notifications}
+            notifications={noti.content}
             openPopover={openPopover}
             setOpenPopover={setOpenPopover}
-            setNotifications={setNotifications}
           />
           <Dropdown menu={menuProps} trigger={["click"]}>
             <ButtonComponents

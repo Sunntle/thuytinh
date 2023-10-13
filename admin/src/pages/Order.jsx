@@ -72,7 +72,7 @@ const OrderPage = () => {
 
   const fetchData = async () => {
     const res = await getAllOrder(query);
-    const avl = res.map((item) => {
+    const avl = res.success && res.map((item) => {
       let data = {
         id: item.id,
         name: item.name,
