@@ -25,6 +25,13 @@ function ReviewsPage() {
   const dayInMonth = useMemo(() => {
     return getDaysInMonth(2023, currentMonth);
   }, [currentMonth]);
+  const handleArrCategories = useMemo(() => {
+    const numbersArray = [];
+    for (let i = 1; i <= dayInMonth; i++) {
+      numbersArray.push(i);
+    }
+    return numbersArray;
+  },[dayInMonth])
   const fetchReviews = async (params) => {
     const response = await getAllReviews(params);
     setReviewsCurrent(response);
@@ -85,9 +92,10 @@ function ReviewsPage() {
       fetchData(filter);
     }
   };
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     fetchReviews({ _offset: 0, _limit: limit, _time: currentMonth });
-  };
+  },[currentMonth])
+  
   const handleCancelConfirm = () => {
     message.error("Xóa thất bại");
   };
@@ -98,13 +106,7 @@ function ReviewsPage() {
   if (loading) {
     return <Spinner />;
   }
-  const handleArrCategories = () => {
-    const numbersArray = [];
-    for (let i = 1; i <= dayInMonth; i++) {
-      numbersArray.push(i);
-    }
-    return numbersArray;
-  };
+  
   return (
     <div className="my-7 px-5">
       <div className="p-5 mb-6 rounded-md border border-solid border-gray-300">
@@ -162,12 +164,6 @@ function ReviewsPage() {
               ]}
               colors={percent >= 0 ? ["#22C55E"] : ["#EF4444"]}
               categories={handleArrCategories}
-              customOptions={{
-                yaxis: {
-                  min: 0,
-                  tickAmount: 5,
-                },
-              }}
             />
           </Col>
         </Row>

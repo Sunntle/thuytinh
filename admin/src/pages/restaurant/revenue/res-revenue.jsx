@@ -2,16 +2,44 @@ import { Badge, Col, Rate, Row, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from 'swiper/modules';
-// import {Autoplay} from 'swiper';
 import { PlusOutlined } from '@ant-design/icons';
 import 'swiper/css/autoplay';
 import { CiViewTimeline } from 'react-icons/ci';
-import { getAllOrder } from '../../../services/api';
-import { calculateDailyRevenue, calculateWeeklyRevenue } from '../../../utils/format';
+import { calculateDailyRevenue, calculateWeeklyRevenue, formatGia } from '../../../utils/format';
+import { getAllOrder, getAllProduct, getDataDashboard } from '../../../services/api';
+import PieChart from '../../../components/chart/pie-chart';
+import LineChart from '../../../components/chart/line-chart';
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 
 const ResRevenue = () => {
+    const [data, setData] = useState({});
+    const [timeChart, setTimeChart] = useState("MONTH");
+    const [dataProduct, setDataProduct] = useState();
+
+    useEffect(() => {
+        fetchData();
+    }, [timeChart])
+    const fetchData = async () => {
+        const res = await getDataDashboard(timeChart);
+        const { data: dataPr } = await getAllProduct({
+            _sort: "sold",
+            _order: "DESC",
+            _sold: "gte_0",
+            _limit: 10,
+        });
+        setData(res)
+        setDataProduct(dataPr)
+    }
+
+    // const [totalOrder, setOrder] = useState([])
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const resOrder = await getAllOrder();
+    //         setOrder(resOrder);
+    //     }
+    //     fetchData();
+    // }, []);
     const columns = [
         {
             title: 'Mã đơn hàng',
@@ -90,8 +118,9 @@ const ResRevenue = () => {
                                     <p className='text-2xl font-medium text-red-500 text-center'>{revenue.daily}</p>
                                 </div>
                             </div>
-
-                            <div className='w-full'>
+                            <div className="chart-line_area mt-4 rounded-lg">
+                                <LineChart timeChart={timeChart} setTimeChart={setTimeChart} data={data} />
+                            </div>                            <div className='w-full'>
                                 <div className='text-2xl text-center p-5'>Món ăn phổ biến</div>
                                 <Swiper
                                     modules={[Autoplay]}
@@ -101,109 +130,22 @@ const ResRevenue = () => {
                                 // onSlideChange={() => console.log('slide change')}
                                 // onSwiper={(swiper) => console.log(swiper)}
                                 >
-                                    <SwiperSlide>
-                                        <div className="w-full pe-5">
-                                            <Badge.Ribbon text="Hot" color="red">
-                                                <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
-                                                    <img src={img} />
-                                                    <div className=' font-medium'><Rate disabled defaultValue={2} className='text-main' /></div>
-                                                    <div className=' font-medium'>Banhs pizaa</div>
-                                                    <div className='flex justify-between items-center  '>
-                                                        <p className=' font-medium text-main text-lg'> 500000 d</p>
-                                                        <div className=''>
-                                                            <PlusOutlined size={30} className='p-3 bg-main rounded-lg text-white' />
+                                    {dataProduct?.map((item, index) => (
+                                        <SwiperSlide>
+                                            <div className="w-full pe-5">
+                                                <Badge.Ribbon text="Hot" color="red">
+                                                    <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
+                                                        <img src={item.imageUrls} />
+                                                        <div className=' font-medium'>{item.name_product}</div>
+                                                        <div className='flex justify-between items-center  '>
+                                                            <p className=' font-medium text-main text-lg'>{formatGia(item.price)}</p>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </Badge.Ribbon>
-                                        </div>
-                                    </SwiperSlide>
-                                    <SwiperSlide>
-                                        <div className="w-full pe-5">
-                                            <Badge.Ribbon text="Hot" color="red">
-                                                <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
-                                                    <img src={img} />
-                                                    <div className=' font-medium'><Rate disabled defaultValue={2} className='text-main' /></div>
-                                                    <div className=' font-medium'>Banhs pizaa</div>
-                                                    <div className='flex justify-between items-center  '>
-                                                        <p className=' font-medium text-main text-lg'> 500000 d</p>
-                                                        <div className=''>
-                                                            <PlusOutlined size={30} className='p-3 bg-main rounded-lg text-white' />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Badge.Ribbon>
-                                        </div>
-                                    </SwiperSlide>
-                                    <SwiperSlide>
-                                        <div className="w-full pe-5">
-                                            <Badge.Ribbon text="Hot" color="red">
-                                                <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
-                                                    <img src={img} />
-                                                    <div className=' font-medium'><Rate disabled defaultValue={2} className='text-main' /></div>
-                                                    <div className=' font-medium'>Banhs pizaa</div>
-                                                    <div className='flex justify-between items-center  '>
-                                                        <p className=' font-medium text-main text-lg'> 500000 d</p>
-                                                        <div className=''>
-                                                            <PlusOutlined size={30} className='p-3 bg-main rounded-lg text-white' />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Badge.Ribbon>
-                                        </div>
-                                    </SwiperSlide>
-                                    <SwiperSlide>
-                                        <div className="w-full pe-5">
-                                            <Badge.Ribbon text="Hot" color="red">
-                                                <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
-                                                    <img src={img} />
-                                                    <div className=' font-medium'><Rate disabled defaultValue={2} className='text-main' /></div>
-                                                    <div className=' font-medium'>Banhs pizaa</div>
-                                                    <div className='flex justify-between items-center  '>
-                                                        <p className=' font-medium text-main text-lg'> 500000 d</p>
-                                                        <div className=''>
-                                                            <PlusOutlined size={30} className='p-3 bg-main rounded-lg text-white' />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Badge.Ribbon>
-                                        </div>
-                                    </SwiperSlide>
-                                    <SwiperSlide>
-                                        <div className="w-full pe-5">
-                                            <Badge.Ribbon text="Hot" color="red">
-                                                <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
-                                                    <img src={img} />
-                                                    <div className=' font-medium'><Rate disabled defaultValue={2} className='text-main' /></div>
-                                                    <div className=' font-medium'>Banhs pizaa</div>
-                                                    <div className='flex justify-between items-center  '>
-                                                        <p className=' font-medium text-main text-lg'> 500000 d</p>
-                                                        <div className=''>
-                                                            <PlusOutlined size={30} className='p-3 bg-main rounded-lg text-white' />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Badge.Ribbon>
-                                        </div>
-                                    </SwiperSlide>
-                                    <SwiperSlide>
-                                        <div className="w-full pe-5">
-                                            <Badge.Ribbon text="Hot" color="red">
-                                                <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
-                                                    <img src={img} />
-                                                    <div className=' font-medium'><Rate disabled defaultValue={2} className='text-main' /></div>
-                                                    <div className=' font-medium'>Banhs pizaa</div>
-                                                    <div className='flex justify-between items-center  '>
-                                                        <p className=' font-medium text-main text-lg'> 500000 d</p>
-                                                        <div className=''>
-                                                            <PlusOutlined size={30} className='p-3 bg-main rounded-lg text-white' />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Badge.Ribbon>
-                                        </div>
-                                    </SwiperSlide>
+                                                </Badge.Ribbon>
+                                            </div>
+                                        </SwiperSlide>
 
+                                    ))}
                                 </Swiper>
                             </div>
                         </Col>
@@ -223,44 +165,12 @@ const ResRevenue = () => {
                                 </div>
                             </div>
                             <div className='flex flex-col mt-6 border-solid border-2 rounded border-orange-400'>
-                                <div className='flex flex-row my-3'>
-                                    <div className=' border-2 rounded-md ms-5 flex justify-end'>
-                                        <CiViewTimeline size={40} className='text-main' />
-                                    </div>
-                                    <div className='flex flex-col justify-center items-start  ms-5'>
-                                        <span className='text-neutral-500 font-medium'>Cá</span>
-                                        <span className=' text-gray-500 font-medium mt-1'>123</span>
+                                <div className="border-2 rounded-lg p-4 ">
+                                    <span className="font-medium text-lg">Món ăn phổ biến</span>
+                                    <div className="overflow-hidden w-full p-2">
+                                        <PieChart data={data?.category || []} />
                                     </div>
                                 </div>
-                                <div className='flex flex-row my-3'>
-                                    <div className=' border-2 rounded-md ms-5 flex justify-end'>
-                                        <CiViewTimeline size={40} className='text-main' />
-                                    </div>
-                                    <div className='flex flex-col justify-center items-start  ms-5'>
-                                        <span className='text-neutral-500 font-medium'>Tôm</span>
-                                        <span className=' text-gray-500 font-medium mt-1'>123</span>
-                                    </div>
-                                </div>
-                                <div className='flex flex-row my-3'>
-                                    <div className=' border-2 rounded-md ms-5 flex justify-end'>
-                                        <CiViewTimeline size={40} className='text-main' />
-                                    </div>
-                                    <div className='flex flex-col justify-center items-start  ms-5'>
-                                        <span className='text-neutral-500 font-medium'>Cua</span>
-                                        <span className=' text-gray-500 font-medium mt-1'>123</span>
-                                    </div>
-                                </div>
-                                <div className='flex flex-row my-3'>
-                                    <div className=' border-2 rounded-md ms-5 flex justify-end'>
-                                        <CiViewTimeline size={40} className='text-main' />
-                                    </div>
-                                    <div className='flex flex-col justify-center items-start  ms-5'>
-                                        <span className='text-neutral-500 font-medium'>Gà</span>
-                                        <span className=' text-gray-500 font-medium mt-1'>123</span>
-                                    </div>
-                                </div>
-
-
                             </div>
 
                         </Col>
