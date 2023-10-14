@@ -10,7 +10,6 @@ const {
   Tables,
 } = require("../models");
 const { Op, Sequelize } = require("sequelize");
-const { sequelize } = require("../config/connectDatabase");
 
 function currentYear(pa = "startOf") {
   const date = moment()[pa]('year');
@@ -21,12 +20,18 @@ exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, idTable } = req.body;
   console.log(req.body);
 
-  const order_result = await Order.create({ total, name: customerName });
+  let isTable = await Tables.findOne({
+    where: { id: idTable, status_table: 0 }
+  })
+  if (isTable) return res.status(200).json({ success: false, data: "Bàn đã có người đặt !" });
+
+  const order_result = await Order.create({ total, name: customerName, id_table: idTable });
   let val = orders.map((item) => ({
     id_product: item.id,
     quantity: item.quantity,
     id_order: order_result.id,
   }));
+  console.log(val);
   const order_detail = await OrderDetail.bulkCreate(val);
   let pro = await Product.findAll({
     where: {
@@ -35,11 +40,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
     include: [{ model: ImageProduct, attributes: ["url", "id"] }],
   });
   const result = { orders: order_result, detail: order_detail, product: pro };
-  await Tables.update(
-    { id_order: order_result.id },
-    { where: { id: idTable, status_table: 0 }, return: true }
-  );
-  res.status(200).json(result);
+  res.status(200).json(result)
 });
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {

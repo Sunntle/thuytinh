@@ -13,7 +13,7 @@ const Reviews = db.sequelize.define(
       type: DataTypes.STRING(1000)
     },
     id_order: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
     description: {
       type: DataTypes.STRING,

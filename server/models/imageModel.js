@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
+const Product = require("./productModel");
 const cloudinary = require("cloudinary").v2;
 const ImageProduct = db.sequelize.define(
   "ImageProduct",

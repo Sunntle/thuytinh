@@ -14,9 +14,6 @@ const Tables = db.sequelize.define(
         qr_code: {
             type: DataTypes.STRING,
         },
-        id_order: {
-            type: DataTypes.INTEGER,
-        },
         total_booked: {
             type: DataTypes.INTEGER,
             defaultValue: 0

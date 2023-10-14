@@ -10,23 +10,26 @@ const {
 
 exports.getAll = asyncHandler(async (req, res) => {
   const re = await Tables.findAll({
-    include: {
-      model: Order, include: {
+    include: [{
+      model: Order,
+      limit: 1,
+      order: [["updatedAt", "desc"]],
+
+      include: {
         model: OrderDetail,
-        include: [
-          {
-            model: Product,
-            as: "product",
-            include: [
-              {
-                model: ImageProduct,
-                attributes: ["url"],
-              },
-            ],
-          },
-        ],
-      },
-    }
+        include: [{
+          model: Product,
+          as: "product",
+          include: [
+            {
+              model: ImageProduct,
+              attributes: ["url"],
+            }
+          ]
+        }]
+      }
+    }]
+
   });
   res.status(200).json(re);
 });

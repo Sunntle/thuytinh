@@ -14,9 +14,9 @@ import {
   DatePicker,
   Typography,
 } from "antd";
-import { getAllOrder, updateOrder } from "../services/api";
-import { formatNgay, formatGia } from "../utils/format";
-import ConfirmComponent from "../components/confirm";
+import { getAllOrder, updateOrder } from "../../services/api";
+import { formatNgay, formatGia } from "../../utils/format";
+import ConfirmComponent from "../../components/confirm";
 import moment from "moment";
 const options = [];
 for (let i = 1; i < 10; i++) {

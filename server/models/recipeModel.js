@@ -22,7 +22,7 @@ const Recipes = db.sequelize.define(
       type: DataTypes.STRING(1000),
     },
   },
-  {}
+  { timestamps: true }
 );
 Recipes.sync();
 module.exports = Recipes;

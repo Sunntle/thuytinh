@@ -78,17 +78,7 @@ const OrderListModal = ({
         ...body,
       };
       sendRequest(request, setData);
-      if (data) {
-        dispatch(
-          addSelectedItems({
-            products: data.product,
-            total: total,
-          }),
-        );
-        dispatch(getIdOrder(data?.orders.id));
-        dispatch(emptyOrder());
-        console.log("Đặt món thành công");
-      }
+      dispatch(emptyOrder());
     } catch (err) {
       console.log(err);
     }

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AddTable } from '../../../redux/table/tableSystem';
 import { getAllTable } from '../../../services/api';
 import { Modal } from 'antd';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ResOrder from '../order/res-order';
 
 const ResChooseTable = () => {
@@ -45,7 +45,7 @@ const ResChooseTable = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk= () => {
+  const handleOk = () => {
     setIsModalOpen(false);
   };
 
@@ -55,17 +55,16 @@ const ResChooseTable = () => {
   // ==================================================================
   const items = [
     {
-        key: '1',
-        label:`Tất cả`,
-        children:     <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
+      key: '1',
+      label: `Tất cả`,
+      children: <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {tableData.map((table, index) => (
           <div key={index}>
             <span
-              className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${
-                table.status_table
-                  ? 'bg-main text-white border-yellow-400 border-3px border-solid'
-                  : 'bg-[#D1D5DB] text-white'
-              } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
+              className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
+                ? 'bg-main text-white border-yellow-400 border-3px border-solid'
+                : 'bg-[#D1D5DB] text-white'
+                } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
             >
               <FiUsers className="w-6 h-6 mb-2" />
               Bàn {table.id}
@@ -88,12 +87,12 @@ const ResChooseTable = () => {
                     </button>
                     <Modal
                       footer={null}
-                      title={`Chi tiết bàn ${selectedTable.id}`}
+                      title={`Chi tiết bàn ${selectedTable?.id}`}
                       open={isModalOpen}
                       onOk={handleOk}
                       onCancel={handleCancel}
                     >
-                      <ResOrder id={table.id}/>{console.log(table.id)} 
+                      <ResOrder id={table.id} />
                     </Modal>
                   </div>
                 </div>
@@ -104,19 +103,18 @@ const ResChooseTable = () => {
       </div>,
     },
     {
-        key: '2',
-        label:`Ngoài trời`,
-        children:<div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
+      key: '2',
+      label: `Ngoài trời`,
+      children: <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {tableData.map((table, index) => {
           if (table.position === 'Ngoài trời') {
             return (
               <div key={index}>
                 <span
-                  className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${
-                    table.status_table
-                      ? 'bg-main text-white border-yellow-400 border-3px border-solid'
-                      : 'bg-[#D1D5DB] text-white'
-                  } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
+                  className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
+                    ? 'bg-main text-white border-yellow-400 border-3px border-solid'
+                    : 'bg-[#D1D5DB] text-white'
+                    } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
                 >
                   <FiUsers className="w-6 h-6 mb-2" />
                   Bàn {table.id}
@@ -139,12 +137,12 @@ const ResChooseTable = () => {
                         </button>
                         <Modal
                           footer={null}
-                          title={`Chi tiết bàn ${selectedTable.id}`}
+                          title={`Chi tiết bàn ${selectedTable?.id}`}
                           open={isModalOpen}
                           onOk={handleOk}
                           onCancel={handleCancel}
                         >
-                          <ResOrder/>
+                          <ResOrder />
                         </Modal>
                       </div>
                     </div>
@@ -159,19 +157,18 @@ const ResChooseTable = () => {
       ,
     },
     {
-        key: '3',
-        label:`Trong nhà` ,
-        children:<div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
+      key: '3',
+      label: `Trong nhà`,
+      children: <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {tableData.map((table, index) => {
           if (table.position === 'Trong nhà') {
             return (
               <div key={index}>
                 <span
-                  className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${
-                    table.status_table
-                      ? 'bg-main text-white border-yellow-400 border-3px border-solid'
-                      : 'bg-[#D1D5DB] text-white'
-                  } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
+                  className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
+                    ? 'bg-main text-white border-yellow-400 border-3px border-solid'
+                    : 'bg-[#D1D5DB] text-white'
+                    } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
                 >
                   <FiUsers className="w-6 h-6 mb-2" />
                   Bàn {table.id}
@@ -199,7 +196,7 @@ const ResChooseTable = () => {
                           onOk={handleOk}
                           onCancel={handleCancel}
                         >
-                          <ResOrder/>
+                          <ResOrder />
                         </Modal>
                       </div>
                     </div>
@@ -213,14 +210,14 @@ const ResChooseTable = () => {
       </div>
       ,
     },
-];
+  ];
   return (
     <>
-     <div className='w-full p-10'>
-          <Tabs className='mx-6 text-slate-500 active:text-main' defaultActiveKey="1" items={items} />
-     </div>
+      <div className='w-full p-10'>
+        <Tabs className='mx-6 text-slate-500 active:text-main' defaultActiveKey="1" items={items} />
+      </div>
     </>
-    
+
   )
 }
 export default ResChooseTable;
