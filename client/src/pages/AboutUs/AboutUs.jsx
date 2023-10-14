@@ -175,7 +175,6 @@ const AboutUs = () => {
             ))}
         </Swiper>
       </section>
-
       <Reason />
     </div>
   );

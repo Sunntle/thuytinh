@@ -9,60 +9,60 @@ const Footer = () => {
           <div className="flex flex-grow">
             <h1 className="text-2xl text-white font-semibold">Logo Here</h1>
           </div>
-          <div className="flex space-x-12">
+          <div className="flex space-x-20">
             <div className="flex flex-col space-y-2">
-              <span className="text-white hover:text-primary transition-colors">
+              <span className="text-white hover:text-primary transition-colors cursor-pointer">
                 Về chúng tôi
               </span>
-              <span className="text-white hover:text-primary transition-colors">
+              <span className="text-white hover:text-primary transition-colors cursor-pointer">
                 Thực đơn
               </span>
-              <span className="text-white hover:text-primary transition-colors">
+              <span className="text-white hover:text-primary transition-colors cursor-pointer">
                 Dịch vụ
               </span>
-              <span className="text-white hover:text-primary transition-colors">
+              <span className="text-white hover:text-primary transition-colors cursor-pointer">
                 Giao hàng
               </span>
             </div>
             <div className="flex flex-col space-y-2">
-              <span className="text-white hover:text-primary transition-colors">
+              <span className="cursor-pointer text-white hover:text-primary transition-colors">
                 Hỗ trợ
               </span>
-              <span className="text-white hover:text-primary transition-colors">
+              <span className="cursor-pointer text-white hover:text-primary transition-colors">
                 Đặt câu hỏi
               </span>
-              <span className="text-white hover:text-primary transition-colors">
+              <span className="cursor-pointer text-white hover:text-primary transition-colors">
                 Đặt món
               </span>
-              <span className="text-white hover:text-primary transition-colors">
+              <span className="cursor-pointer text-white hover:text-primary transition-colors">
                 Liên hệ
               </span>
             </div>
             <div className="flex flex-col space-y-2">
               <a
                 href="URL của Facebook"
-                className="text-white hover:text-primary transition-colors flex items-center"
+                className="cursor-pointer text-white hover:text-primary transition-colors flex items-center"
               >
                 <FaFacebook className="w-5 h-5 mr-1" />
                 Facebook
               </a>
               <a
                 href="URL của Instagram"
-                className="text-white hover:text-primary transition-colors flex items-center"
+                className="cursor-pointer text-white hover:text-primary transition-colors flex items-center"
               >
                 <FaInstagram className="w-5 h-5 mr-1" />
                 Instagram
               </a>
               <a
                 href="URL của Twitter"
-                className="text-white hover:text-primary transition-colors flex items-center"
+                className="cursor-pointer text-white hover:text-primary transition-colors flex items-center"
               >
                 <FaTwitter className="w-5 h-5 mr-1" />
                 Twitter
               </a>
               <a
                 href="URL của Youtube"
-                className="text-white hover:text-primary transition-colors flex items-center"
+                className="cursor-pointer text-white hover:text-primary transition-colors flex items-center"
               >
                 <FaYoutube className="w-5 h-5 mr-1" />
                 Youtube
@@ -76,30 +76,14 @@ const Footer = () => {
               © 2023 Thuy Tinh. All rights reserved
             </span>
           </div>
-
-          <div className="flex justify-end items-center space-x-6">
-            <a
-              href="URL của Chính sách bảo mật"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-primary transition-colors"
-            >
+          <div className="flex justify-end items-center space-x-12">
+            <a className="cursor-pointer text-white hover:text-primary transition-colors">
               Chính sách bảo mật
             </a>
-            <a
-              href="URL của Điều khoản sử dụng"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-primary transition-colors"
-            >
+            <a className="cursor-pointer text-white hover:text-primary transition-colors">
               Điều khoản sử dụng
             </a>
-            <a
-              href="URL của Định giá"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-primary transition-colors"
-            >
+            <a className="cursor-pointer text-white hover:text-primary transition-colors">
               Định giá
             </a>
           </div>
