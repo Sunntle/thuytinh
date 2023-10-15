@@ -1,33 +1,37 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import panda from "../assets/images/panda.png";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import useHttp from "../hooks/useHttp.js";
+import { fetchTableById } from "../services/api.js";
 
 const Header = () => {
   const customerName = useSelector((state) => state.customerName);
   const idTable = location.pathname.split("/")[1].split("-")[1];
-  const [table, setTable] = useState(null)
-  const {sendRequest } = useHttp();
+  const [table, setTable] = useState(null);
+  const { sendRequest } = useHttp();
 
   useEffect(() => {
-    const request = {
-      method: 'get',
-      url:`table/${idTable}`
-    }
-    sendRequest(request, setTable)
+    sendRequest(fetchTableById(idTable), setTable);
   }, [sendRequest, idTable]);
+
+  // if (!table)
+  //   return (
+  //     <>
+  //       <span className="flex justify-center items-center">Không lấy được dữ liệu</span>
+  //     </>
+  //   );
 
   return (
     <div
       className={`w-full h-20 z-40 relative lg:hidden bg-primary rounded-b-3xl drop-shadow-md px-6 text-white flex items-center ${
-          customerName ? "justify-between" : "justify-center"
+        customerName ? "justify-between" : "justify-center"
       }`}
     >
       {customerName ? (
         <>
           <div className="flex flex-col">
             <span className="text-white text-lg">
-              Xin chào, <span className="font-medium">{ customerName }</span>
+              Xin chào, <span className="font-medium">{customerName}</span>
             </span>
             <span className="text-base text-[#FFE6C7]">
               Bạn đang ngồi {table?.name_table}

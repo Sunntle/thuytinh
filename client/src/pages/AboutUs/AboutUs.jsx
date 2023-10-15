@@ -10,14 +10,11 @@ import "swiper/css/scrollbar";
 import useHttp from "../../hooks/useHttp.js";
 import { truncateString } from "../../utils/format.js";
 import { socket } from "../../services/socket";
-import { useParams } from "react-router-dom";
 import { Rate } from "antd";
 
 const AboutUs = () => {
   const [slideProduct, setSlideRating] = useState(null);
   const { sendRequest } = useHttp();
-  const { slug } = useParams();
-  console.log(slug);
 
   useEffect(() => {
     const request = {
@@ -159,6 +156,7 @@ const AboutUs = () => {
                     <img
                       className="w-full h-full rounded-full"
                       src="https://i.pinimg.com/564x/85/25/83/852583511c3109d7a4efa0c3a233be1e.jpg"
+                      alt={"img"}
                     />
                   </div>
                   <div className="flex flex-col p-4 text-slate-500">

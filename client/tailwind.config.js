@@ -14,7 +14,7 @@ export default {
       },
       animation: {
         'swing': 'swing 1s infinite'
-      }
+      },
     },
   },
   plugins: [],

@@ -5,7 +5,7 @@ import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import { Badge, Button } from "antd";
+import { Badge } from "antd";
 import moment from "moment";
 import { AiFillPlusCircle } from "react-icons/ai";
 import "swiper/css";
@@ -18,24 +18,19 @@ import { socket } from "../../services/socket";
 
 import Reason from "../../components/Reason.jsx";
 import Banner from "../../components/Banner.jsx";
-import { useLocation } from "react-router-dom";
-
+import {fetchProduct} from "../../services/api.js";
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
-  const location = useLocation();
 
   useEffect(() => {
-    const request = {
-      method: "get",
-      url: "/product",
-    };
-    sendRequest(request, setSlideProduct);
+    sendRequest(fetchProduct(), setSlideProduct);
   }, [sendRequest]);
 
   useEffect(() => {
     socket.emit("new user", { userName: "Taile", role: "R1" });
   }, []);
+
   const onClickCheckSocket = () => {
     socket.emit("new order", {
       id: 12706,
