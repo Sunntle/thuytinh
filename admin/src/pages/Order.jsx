@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Col,
   Drawer,
@@ -18,6 +18,8 @@ import { getAllOrder, updateOrder } from "../services/api";
 import { formatNgay, formatGia } from "../utils/format";
 import ConfirmComponent from "../components/confirm";
 import moment from "moment";
+import { useLocation } from 'react-router-dom';
+import { useSelector } from "react-redux";
 const options = [];
 for (let i = 1; i < 10; i++) {
   options.push({
@@ -65,12 +67,9 @@ const OrderPage = () => {
     key_sort: "createdAt",
     val_sort: "DESC",
   });
-
-  useEffect(() => {
-    fetchData();
-  }, [query]);
-
-  const fetchData = async () => {
+  const notifications = useSelector(state => state.notifications)
+  const location = useLocation();
+  const fetchData = useCallback(async (query) => {
     const res = await getAllOrder(query);
     const avl = res.success && res.map((item) => {
       let data = {
@@ -89,7 +88,16 @@ const OrderPage = () => {
       return data;
     });
     setDataOrder(avl);
-  };
+  },[]);
+  useEffect(() => {
+    fetchData(query);
+  }, [query,fetchData]);
+  useEffect(()=>{
+    if(notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)){
+      fetchData(query)
+      console.log("fetched");
+    }
+  },[notifications,location,fetchData,query])
   const columns = [
     {
       title: "Mã đơn hàng",
