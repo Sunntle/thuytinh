@@ -13,30 +13,30 @@ const LayoutMain = () => {
   const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
   const customize = useSelector(state => state.customize)
+  const notifications = useSelector(state => state.notifications)
   const navigate = useNavigate();
   const openNotification = useCallback(() => {
     const key = `open${Date.now()}`;
     const btn = (
       <Space>
         <Button type="primary" size="small" className="p-2" onClick={() => api.destroy()}>
-          Destroy All
+          Ẩn thông báo
         </Button>
       </Space>
     );
     api.open({
       message: 'Thông báo mới',
-      description:
-        'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
+      description:notifications.lastNotification && notifications.lastNotification?.description,
       btn,
       key,
       placement: 'bottomRight',
-      onClose: () => {
-    console.log(
-      'Notification was closed. Either the close button was clicked or duration time elapsed.',
-    );
-  },
+  //     onClose: () => {
+  //   console.log(
+  //     'Notification was closed. Either the close button was clicked or duration time elapsed.',
+  //   );
+  // },
     });
-  },[api]);
+  },[api,notifications]);
   useEffect(()=>{
     socket.on("new message", () =>{
       openNotification()

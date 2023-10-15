@@ -24,7 +24,7 @@ function NotificationsComponent({
     navigate(navigateTo);
   };
   const getCountNoti = useMemo(() =>{
-    return notifications.length > 0 ? notifications.filter((el) => el.status == 0).length : 0
+    return notifications && notifications.length > 0 ? notifications.filter((el) => el.status == 0).length : 0
    },[notifications])
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)

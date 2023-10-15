@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllNotification, readAll, readOne } from "../../services/api";
 const initialState = {
     content: [],
-    isLoading: false
+    isLoading: false,
+    lastNotification: null
 }
 export const fetchNotification = createAsyncThunk('account/fetchNotification', async () => {
     const response = await getAllNotification({_sort: "createdAt", _order: "DESC", _limit: 5});
@@ -18,6 +19,7 @@ export const maskAllRead = createAsyncThunk('account/maskAllRead', async (_, thu
 })
 export const maskAsRead = createAsyncThunk('account/maskAsRead', async (notification, thunkApi) => {
     const listNoti = thunkApi.getState().notifications.content
+    console.log(listNoti);
     if (notification.status === 0){
         const updatedNotifications = listNoti.map((item) => {
             if (item.id === notification.id) {
@@ -27,7 +29,9 @@ export const maskAsRead = createAsyncThunk('account/maskAsRead', async (notifica
           });
           await readOne({ listId: [notification] }); 
           return updatedNotifications;
-      }
+    }else{
+        return listNoti
+    }
 })
 const notificationSystem = createSlice({
     name: "notification",
@@ -37,6 +41,7 @@ const notificationSystem = createSlice({
             const arr = [action.payload, ...state.content];
             arr.length > 5 && arr.pop();
             state.content = arr;
+            state.lastNotification = arr[0];
         },
     },
     extraReducers: builder => {
@@ -49,10 +54,12 @@ const notificationSystem = createSlice({
             })
             .addCase(fetchNotification.fulfilled, (state, action) => {
                 state.content = action.payload;
+                state.lastNotification=null
                 state.isLoading = false
             })
             .addCase(maskAllRead.fulfilled, (state, action)=>{
                 state.content = action.payload
+                state.lastNotification=null
             })
             .addCase(maskAsRead.fulfilled, (state, action)=>{
                 state.content = action.payload

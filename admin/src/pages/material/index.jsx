@@ -1,6 +1,6 @@
 import { Col, Row, Typography, message } from "antd";
 import ButtonComponents from "../../components/button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Table } from "antd";
 import ConfirmComponent from "../../components/confirm";
 import AddNewMaterial from "./add";
@@ -14,6 +14,8 @@ import {
 } from "../../services/api";
 import EditMaterial from "./edit";
 import ColumnChart from "../../components/chart/column-chart";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 const { Title } = Typography;
 function MaterialPage() {
   const [open, setOpen] = useState(false);
@@ -21,7 +23,9 @@ function MaterialPage() {
   const [materials, setMaterials] = useState([]);
   const [data, setData] = useState(null);
   const [dataChart, setDataChart] = useState([]);
-  const fetchData = async () => {
+  const notifications = useSelector(state => state.notifications)
+  const location = useLocation();
+  const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
     setMaterials({
       ...res,
@@ -29,12 +33,17 @@ function MaterialPage() {
     });
 
     setDataChart(res.dataChart);
-  };
+  },[]);
 
   useEffect(() => {
     fetchData();
-  }, []);
-
+  }, [fetchData]);
+  useEffect(()=>{
+    if(notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)){
+      fetchData()
+      console.log("fetched");
+    }
+  },[notifications,location,fetchData])
   const handleDeleteMaterial = async (id_material) => {
     const res = await deleteMaterial(id_material);
     console.log(res);
