@@ -3,7 +3,7 @@ import axios from "../utils/axios";
 
 // ?????????   Order  ????????? //
 export const addOrder = (data) => {
-  return axios.post(`/api/order`, data );
+  return axios.post(`/api/order`, data);
 };
 export const getAllOrder = (params) => {
   return axios.get(`/api/order`, { params });
@@ -16,7 +16,13 @@ export const updateOrder = (body) => {
 };
 // table //
 export const getAllTable = (params) => {
-  return axios.get(`/api/table`, {params});
+  return axios.get(`/api/table`, { params });
+}
+export const getTableId = (id_order) => {
+  return axios.get(`/api/table/${id_order}`); 
+}
+export const updateTables = (data) => {
+  return axios.put(`/api/table`, { data });
 }
 // product //
 export const getAllProduct = (params) => {
@@ -87,32 +93,40 @@ export const addNewMaterial = (data) => {
   return axios.post(`/api/material`, data);
 };
 
-//account 
+//account
 export const callLogin = (body) => {
   return axios.post(`/api/user/login`, body);
-}
+};
 export const callRegister = (body) => {
   return axios.post(`/api/user/register`, body);
-}
+};
 export const callFetchAccount = () => {
   return axios.get(`/api/user/current`);
-}
+};
 export const callLogout = () => {
   return axios.get(`/api/user/logout`);
 }
+export const callUpdateAccount = (body) => {
+  return axios.put(`/api/user`, body);
+}
+export const callUpdatePassword = (body) => {
+  return axios.post(`/api/user/set-password`, body);
+}
+
+
 // recipe
 export const callFetchRecipe = () => {
   return axios.get(`/api/recipe`);
-}
+};
 export const callCreateRecipe = (body) => {
   return axios.post(`/api/recipe`, body);
-}
+};
 export const callDelRecipe = (id) => {
   return axios.delete(`/api/recipe/` + id);
-}
+};
 export const callUpdateRecipe = (body) => {
   return axios.put(`/api/recipe`, body);
-}
+};
 //recipe
 export const editRecipeByIdProduct = (data) => {
   return axios.put(`/api/recipe/product/${data.id}`, data);
@@ -120,12 +134,21 @@ export const editRecipeByIdProduct = (data) => {
 //reviews
 export const getAllReviews = (params) => {
   return axios.get(`/api/review`, { params });
-}
+};
 export const deleteReview = (id) => {
   return axios.delete(`/api/review/` + id);
 };
 
 export const getDataDashboard = (type) => {
   return axios.get(`/api/order/thongke`, { params: { type: type } });
-}
-
+};
+//notifications 
+export const getAllNotification = (params) => {
+  return axios.get(`/api/notification`, { params });
+};
+export const readAll = (body) => {
+  return axios.put(`/api/notification`, body);
+};
+export const readOne = (body) => {
+  return axios.put(`/api/notification`, body);
+};

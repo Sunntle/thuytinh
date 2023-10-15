@@ -34,10 +34,8 @@ export const accountSlide = createSlice({
             state.user = action.payload;
         },
         doLogoutAction: (state) => {
-            state.isAuthenticated = false;
-            state.isLoading = false;
-            state.user = {};
             localStorage.removeItem('access_token');
+            return initialState
         }
     },
     extraReducers: builder => {

@@ -1,8 +1,8 @@
-import { Button, Form, Input, InputNumber, Modal, Upload } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Select, Upload } from "antd";
 import ButtonComponents from "../../../components/button";
 import { UploadOutlined } from "@ant-design/icons";
 
-function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish }) {
+function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish, unitMasterial }) {
   const [form] = Form.useForm();
   const handleSubmit = async () => {
     try {
@@ -40,7 +40,14 @@ function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish }) {
       ]}
       centered
     >
-      <Form form={form} onFinish={handleFinish} initialValues={{ price: 0 }} className="mt-8">
+      <Form form={form} onFinish={handleFinish} initialValues={{ price: 0 }} className="mt-8"
+        labelCol={{
+          span: 24,
+        }}
+        wrapperCol={{
+          span: 24,
+        }}
+      >
         <h3 className="font-semibold mb-8 text-main text-lg">Thêm thông tin nguyên liệu nhà hàng</h3>
         <Form.Item
           name="name_material"
@@ -54,36 +61,46 @@ function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish }) {
         >
           <Input placeholder="Ví dụ: Cua..." />
         </Form.Item>
-        <Form.Item label="Giá">
-          <Form.Item name="price" noStyle>
-            <InputNumber min={0} />
-          </Form.Item>
-          <span
-            className="ant-form-text"
-            style={{
-              marginLeft: 8,
-            }}
+
+        <div className="grid grid-cols-2 gap-4">
+          <Form.Item
+            name="unit"
+            label="Đơn vị"
+            rules={[
+              {
+                required: true,
+                message: "Bạn phải điền đơn vị tính nguyên liệu",
+              },
+            ]}
           >
-            vnđ
-          </span>
-        </Form.Item>
-        <Form.Item label="Số lượng">
-          <Form.Item name="amount" noStyle>
-            <InputNumber min={0} />
+            <Select placeholder="Đơn vị của nguyên liệu " options={
+              unitMasterial.map(item => ({ value: item, label: item.toUpperCase() }))
+            } />
           </Form.Item>
-        </Form.Item>
-        <Form.Item
-          name="unit"
-          label="Đơn vị"
-          rules={[
+          <Form.Item label="Giá (vnđ)" name="price" rules={[
+            {
+              required: true,
+              message: "Bạn phải nhập giá",
+            }
+          ]}>
+            <InputNumber className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={(value) => value.replace(/\$\s?|(,*)/g, '')} />
+          </Form.Item>
+
+          <Form.Item label="Số lượng" name="amount" rules={[
             {
               required: true,
               message: "Bạn phải điền đơn vị tính nguyên liệu",
-            },
-          ]}
-        >
-          <Input placeholder="Ví dụ: gram, kg, cái,..." />
-        </Form.Item>
+            }
+          ]} >
+            <InputNumber min={0} className="w-full" />
+          </Form.Item>
+
+        </div>
+
+
+
+
         <Form.Item
           name="Image"
           rules={[

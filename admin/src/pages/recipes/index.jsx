@@ -8,6 +8,9 @@ import {
   Select,
   Input,
   Divider,
+  Row,
+  Col,
+  Typography,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
@@ -21,6 +24,7 @@ import ConfirmComponent from "../../components/confirm";
 import ButtonComponents from "../../components/button";
 import CreateRecipe from "./add_recipe";
 const init = { show: false, data: [] };
+const { Title } = Typography;
 const RecipePage = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState();
@@ -117,14 +121,18 @@ const RecipePage = () => {
   };
   return (
     <div className="my-7 px-5">
-      <div className="text-center text-2xl my-3">Công thức từng sản phẩm</div>
-      <div>
-        <ButtonComponents
-          className="border-borderSecondaryColor text-main"
-          onClick={() => setOpenModal(true)}
-          content={"Thêm mới"}
-        />
-      </div>
+      <Row justify="space-between" align="center" className="mb-4">
+        <Col xs={6}>
+          <Title level={3}>Công thức sản phẩm</Title>
+        </Col>
+        <Col xs={6} style={{ textAlign: "-webkit-right" }}>
+          <ButtonComponents
+            className="border-borderSecondaryColor text-main"
+            onClick={() => setOpenModal(true)}
+            content={"Thêm mới"}
+          />
+        </Col>
+      </Row>
       <Table
         className="mt-3"
         columns={[

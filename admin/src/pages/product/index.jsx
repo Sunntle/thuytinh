@@ -1,5 +1,4 @@
-import { Col, Row, message } from "antd";
-import SearchComponent from "../../components/search";
+import { Col, Row, Typography, message } from "antd";
 import ButtonComponents from "../../components/button";
 import { useEffect, useState } from "react";
 import { Table } from "antd";
@@ -18,6 +17,7 @@ import AddNewProduct from "./add";
 import EditProduct from "./edit";
 import { socket } from "../../socket";
 import Spinner from "../../components/spinner";
+const { Title } = Typography;
 function ProductPage() {
   const [open, setOpen] = useState(false);
   const [openModelEdit, setOpenModelEdit] = useState(false);
@@ -64,7 +64,6 @@ function ProductPage() {
     {
       title: "Hình ảnh",
       dataIndex: "imageUrls",
-      fixed: "left",
       render: (_, record) => (
         <img
           className="w-full"
@@ -99,7 +98,7 @@ function ProductPage() {
       filterMode: "tree",
       filterSearch: true,
       onFilter: (value, record) => record.name_product.startsWith(value),
-      width: "20%",
+      // width: "20%",
     },
     {
       title: "Loại",
@@ -118,6 +117,11 @@ function ProductPage() {
       title: "Giá",
       dataIndex: "price",
       sorter: (a, b) => a.price - b.price,
+    },
+    {
+      title: "Đã bán",
+      dataIndex: "sold",
+      sorter: (a, b) => a.sold - b.sold,
     },
     {
       title: "Trạng thái",
@@ -141,8 +145,8 @@ function ProductPage() {
     {
       title: "Action",
       key: "action",
-      fixed: "right",
-      width: "12%",
+      // fixed: "right",
+      // width: "12%",
       render: (_, record) => (
         <div className="h-10 flex items-center cursor-pointer">
           <span
@@ -152,7 +156,7 @@ function ProductPage() {
             Sửa
           </span>
           <ConfirmComponent
-            title="Xác nhận xóa đơn hàng"
+            title="Xác nhận xóa món ăn này?"
             confirm={() => handleDeleteProduct(record.id)}
           >
             Xóa
@@ -240,7 +244,7 @@ function ProductPage() {
         <>
           <Row justify="space-between" align="center" className="mb-4">
             <Col xs={6}>
-              <SearchComponent background={"bg-transparent"} size="medium" />
+              <Title level={3}>Danh sách món ăn</Title>
             </Col>
             <Col xs={6} style={{ textAlign: "-webkit-right" }}>
               <ButtonComponents
@@ -251,9 +255,9 @@ function ProductPage() {
             </Col>
           </Row>
           <Table
-            scroll={{
-              x: 1300,
-            }}
+            // scroll={{
+            //   x: 1300,
+            // }}
             columns={columns}
             dataSource={products?.data}
             onChange={onChange}

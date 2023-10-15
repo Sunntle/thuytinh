@@ -7,7 +7,7 @@ exports.list = async (req, res) => {
     const query = { raw: true };
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
-    if (q) query.where = { name_product: { [Op.like]: `%${q}%` } };
+    if (q) query.where = { name_category: { [Op.substring]: q } };
     if (_sort) query.order = [[_sort, _order]];
     const response = await Category.findAll(query);
     res.status(200).json(response);
@@ -28,16 +28,19 @@ exports.addCate = async (req, res) => {
 exports.updateCate = async (req, res) => {
   try {
     const { id, ...rest } = req.body;
-    const thumbnail = req?.file?.path?.replace("/upload/", "/upload/w_400,h_300/");
+    const thumbnail = req?.file?.path?.replace(
+      "/upload/",
+      "/upload/w_400,h_300/"
+    );
     if (thumbnail) {
       const data = { thumbnail, ...rest };
       await Category.update(data, {
         where: { id },
-        individualHooks: true
+        individualHooks: true,
       });
     } else {
       await Category.update(rest, {
-        where: { id }
+        where: { id },
       });
     }
 
@@ -52,7 +55,7 @@ exports.removeCate = async (req, res) => {
     await Category.destroy({
       where: { id },
       include: [{ model: Product }],
-      individualHooks: true
+      individualHooks: true,
     });
     res.status(200).json("Xóa danh mục thành công");
   } catch (err) {

@@ -1,10 +1,11 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
 const cloudinary = require("cloudinary").v2;
+
+const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
 const Materials = db.sequelize.define(
   "Materials",
   {
-    // Model attributes are defined here
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -20,7 +21,7 @@ const Materials = db.sequelize.define(
       type: DataTypes.STRING,
     },
     unit: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM(unitMasterial)
     },
     image: {
       type: DataTypes.STRING(1000),

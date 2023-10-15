@@ -7,7 +7,6 @@ const Banner = () => {
     "https://images.pexels.com/photos/13262499/pexels-photo-13262499.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     "https://images.pexels.com/photos/16845597/pexels-photo-16845597/free-photo-of-mon-an-dia-b-a-t-i-nhung.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
   ];
-
   return (
     <Carousel autoplay className="mt-[-20px]">
       {imageUrls.map((imageUrl, index) => (

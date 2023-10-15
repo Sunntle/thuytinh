@@ -1,9 +1,8 @@
-import product from "../../assets/images/product.png";
 import { Button, Divider, Modal } from "antd";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import { BiPencil } from "react-icons/bi";
 import { formatCurrency } from "../../utils/format.js";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { emptySeletedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
 import useHttp from "../../hooks/useHttp.js";
 

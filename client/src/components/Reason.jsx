@@ -1,7 +1,7 @@
 import { BsBookmarkCheckFill } from "react-icons/bs";
 import { FaShippingFast } from "react-icons/fa";
 import { RiServiceFill } from "react-icons/ri";
-import {truncateString} from "../utils/format.js";
+import { truncateString } from "../utils/format.js";
 
 const AboutUs = () => {
   return (
@@ -32,7 +32,10 @@ const AboutUs = () => {
               </h2>
             </div>
             <p className="py-4 text-sm text-gray-500">
-              {truncateString('Nếu bạn muốn có sự chuẩn bị tốt nhất cho một cuộc hẹn, bạn không thể thiếu sự chuẩn bị trước cho việc đặt bàn tại nhà hàng của chúng tôi.', 130)}
+              {truncateString(
+                "Nếu bạn muốn có sự chuẩn bị tốt nhất cho một cuộc hẹn, bạn không thể thiếu sự chuẩn bị trước cho việc đặt bàn tại nhà hàng của chúng tôi.",
+                130,
+              )}
             </p>
             <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
               Xem Menu
@@ -57,7 +60,10 @@ const AboutUs = () => {
               </h2>
             </div>
             <p className="py-4 text-sm text-gray-500">
-              {truncateString('Bạn không cần phải tốn công đến nhà hàng để đặt món, nhà hàng Thuỷ Tinh sẽ cung cấp dịch vụ giao hàng tận nơi đến cho quý khách hàng.', 130)}
+              {truncateString(
+                "Bạn không cần phải tốn công đến nhà hàng để đặt món, nhà hàng Thuỷ Tinh sẽ cung cấp dịch vụ giao hàng tận nơi đến cho quý khách hàng.",
+                130,
+              )}
             </p>
             <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
               Xem Menu
@@ -82,7 +88,10 @@ const AboutUs = () => {
               </h2>
             </div>
             <p className="py-4 text-sm text-gray-500 ">
-              {truncateString('Nhà hàng Thuỷ Tinh luôn đặt khách hàng trong tim. Chúng tôi khẳng định sẽ tận tâm, lắng nghe và phục vụ khách hàng bằng những gì mình có.', 130)}
+              {truncateString(
+                "Nhà hàng Thuỷ Tinh luôn đặt khách hàng trong tim. Chúng tôi khẳng định sẽ tận tâm, lắng nghe và phục vụ khách hàng bằng những gì mình có.",
+                130,
+              )}
             </p>
             <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
               Xem Menu

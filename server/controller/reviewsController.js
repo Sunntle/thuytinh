@@ -13,7 +13,13 @@ exports.list = async (req, res) => {
     };
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
-    if (q) query.where = { name: { [Op.like]: `%${q}%` } };
+    if (q)
+      query.where = {
+        [Op.or]: [
+          { name: { [Op.substring]: q } },
+          { description: { [Op.substring]: q } },
+        ],
+      };
     if (_sort) query.order = [[_sort, _order]];
     if (_group) {
       query.group = [_group];
@@ -26,12 +32,20 @@ exports.list = async (req, res) => {
       const formattedNextMonthDate = nextMonthDate.format(
         "YYYY-MM-DD HH:mm:ss"
       );
-      query.where = {
-        ...query.where,
-        createdAt: {
-          [Op.between]: [forrmatedCurrentDate, formattedNextMonthDate],
-        },
-      };
+      if (q) {
+        query.where[Op.or].push({
+          createdAt: {
+            [Op.between]: [formattedCurrentDate, formattedNextMonthDate],
+          },
+        });
+      } else {
+        query.where = {
+          ...query.where,
+          createdAt: {
+            [Op.between]: [forrmatedCurrentDate, formattedNextMonthDate],
+          },
+        };
+      }
     }
     const { count, rows } = await Reviews.findAndCountAll(query);
     res.status(200).json({ total: count, data: rows });
