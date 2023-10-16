@@ -14,16 +14,18 @@ import {
 import storage from 'redux-persist/lib/storage'
 import cartSystem from './cartsystem/cartSystem';
 import tableSystem from './table/tableSystem';
+import listTableSystem from './table/listTableSystem';
 
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['account','table']
+    blacklist: ['account']
 }
 const rootReducer = combineReducers({
     account: accountReducer,
     cart: cartSystem,
-    table: tableSystem
+    table: tableSystem,
+    tablelist: listTableSystem,
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
