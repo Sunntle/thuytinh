@@ -15,6 +15,7 @@ import ResRevenue from "../pages/restaurant/revenue/res-revenue";
 import RecipePage from "../pages/recipes";
 import RegisterPage from "../pages/register";
 import SearchPage from "../pages/search";
+import UserPage from "../pages/user";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: "reviews",
         element: <ReviewsPage />,
+      },
+      {
+        path: "user",
+        element: <UserPage />,
       },
     ],
   },

@@ -15,7 +15,7 @@ router.put("/", [verifyAccessToken, parser.single("avatar")], updateAccount);
 
 router.get("/forgot", forgotPassword);
 router.post("/set-forgot", setForgotPassword);
-router.get("/get-all", verifyAccessToken, getAllUser);
+router.get("/get-all" ,verifyAccessToken, getAllUser);
 router.delete("/:id", [verifyAccessToken, [isRole('R4')]], deleteUser);
 
 module.exports = router;

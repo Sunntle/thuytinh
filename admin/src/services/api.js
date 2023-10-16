@@ -94,6 +94,12 @@ export const addNewMaterial = (data) => {
 };
 
 //account
+export const getAllUser = (params) => {
+  return axios.get(`/api/user/get-all`,{ params });
+};
+export const getDetailUser = (params) => {
+  return axios.get(`/api/user/get-detail`,{ params });
+};
 export const callLogin = (body) => {
   return axios.post(`/api/user/login`, body);
 };

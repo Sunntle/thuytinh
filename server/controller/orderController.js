@@ -31,6 +31,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
       id: { [Op.in]: order_detail.map((item) => item.id_product) },
     },
     include: [{ model: ImageProduct, attributes: ["url", "id"] }],
+    individualHooks: true,
   });
   const result = { orders: order_result, detail: order_detail, product: pro };
   await Tables.update(

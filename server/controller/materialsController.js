@@ -75,9 +75,10 @@ exports.updateMaterial = async (req, res) => {
   try {
     const image = req.file?.path.replace("/upload/", "/upload/w_400,h_300/");
     await Materials.update(
-      { ...req.body, image },
+      { ...req.body, image,updatedAt: new Date().toISOString() },
       {
         where: { id: +req.body.id },
+      individualHooks: true,
       }
     );
     res.status(200).json("Cập nhật công thức thành công !");
