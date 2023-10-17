@@ -1,5 +1,4 @@
-
-const asyncHandler = require('express-async-handler');
+const asyncHandler = require("express-async-handler");
 const {
   Tables,
   Order,
@@ -7,6 +6,7 @@ const {
   ImageProduct,
   Product,
 } = require("../models");
+const { where } = require("sequelize");
 
 exports.getAll = asyncHandler(async (req, res) => {
   const re = await Tables.findAll({ include: { model: Order } });
@@ -60,6 +60,25 @@ exports.update = asyncHandler(async (req, res) => {
     where: { id: id },
   });
   res.status(200).json("Cập thành công");
+});
+
+exports.updateStatus = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const updatedTable = await Tables.update(
+      {
+        id_order: null,
+        status_table: 0,
+      },
+      { where: { id: id } },
+    );
+
+    if (updatedTable)
+      return res.status(200).json({ message: "Cập nhật thành công" });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 });
 
 exports.del = asyncHandler(async (req, res) => {

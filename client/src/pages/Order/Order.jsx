@@ -5,11 +5,12 @@ import { formatCurrency } from "../../utils/format.js";
 import { useDispatch } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchTableById } from "../../services/api.js";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import instance from "../../utils/axiosConfig.js";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [payment, setPayment] = useState(null)
+  const [payment, setPayment] = useState(null);
   const { sendRequest } = useHttp();
   const [data, setData] = useState([]);
   const idTable = location.pathname.split("/")[1].split("-")[1];
@@ -42,13 +43,18 @@ const Order = () => {
       ...values
     }
     await sendRequest(request, setPayment)
-    // window.location.href= payment
+    // try {
+    //   const { data } = await instance.put(`/table/${idTable}`);
+    //   console.log(data)
+    // } catch (err) {
+    //   console.log(err);
+    // }
     form.resetFields();
   };
 
   useEffect(() => {
     if (payment !== null) {
-      window.location.href = payment
+      window.location.href = String(payment);
     }
   }, [payment]);
 
@@ -150,7 +156,15 @@ const Order = () => {
           >
             <div className="w-full flex flex-col justify-center items-center space-y-1">
               <Form form={form} onFinish={onFinish}>
-                <Form.Item rules={[{ required: true, message: "Vui lòng chọn phương thức thanh toán" }]} name="bankCode">
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn phương thức thanh toán",
+                    },
+                  ]}
+                  name="bankCode"
+                >
                   <Radio.Group>
                     <Radio value="">Cổng thanh toán VNPAYQR</Radio>
                     <Radio value="VNPAYQR">
