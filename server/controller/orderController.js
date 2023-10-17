@@ -31,12 +31,23 @@ exports.createOrder = asyncHandler(async (req, res) => {
       id: { [Op.in]: order_detail.map((item) => item.id_product) },
     },
     include: [{ model: ImageProduct, attributes: ["url", "id"] }],
+    individualHooks: true,
   });
   const result = { orders: order_result, detail: order_detail, product: pro };
   await Tables.update(
     { id_order: order_result.id },
     { where: { id: idTable, status_table: 0 }, return: true },
   );
+  let storeNotification = await Notification.create(
+    {
+      type: "order",
+      description: `Có đơn hàng mới`,
+      content: order_result.id
+    },
+    { raw: true }
+  );
+  _io.of("/admin").emit("new message",storeNotification)
+  _io.of("/client").emit("status order",result)
   res.status(200).json(result);
 });
 

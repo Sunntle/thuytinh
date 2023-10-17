@@ -8,7 +8,6 @@ import MaterialPage from "../pages/material";
 import CategoryPage from "../pages/category";
 import ReviewsPage from "../pages/reviews";
 import LoginPage from "../pages/login";
-import HomeEmployeePage from "../pages/employee/home";
 import RoleRoute from "../guard/admin";
 import ResMenu from "../pages/restaurant/menu/res-menu";
 import ResChooseTable from "../pages/restaurant/choosetable/res-choosetable";
@@ -16,6 +15,7 @@ import ResRevenue from "../pages/restaurant/revenue/res-revenue";
 import RecipePage from "../pages/recipes";
 import RegisterPage from "../pages/register";
 import SearchPage from "../pages/search";
+import UserPage from "../pages/user";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -58,6 +58,10 @@ const router = createBrowserRouter([
         path: "reviews",
         element: <ReviewsPage />,
       },
+      {
+        path: "user",
+        element: <UserPage />,
+      },
     ],
   },
   {
@@ -78,7 +82,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <HomeEmployeePage />,
+        element: <ResMenu />,
       },
       {
         path: "menu",

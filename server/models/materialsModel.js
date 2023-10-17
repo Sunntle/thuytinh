@@ -34,5 +34,9 @@ Materials.beforeDestroy(async (material, options) => {
   const public_id = image.split("/").at(-1).split(".")[0];
   await cloudinary.uploader.destroy("NhaHangThuyTinh/" + public_id);
 });
+Materials.beforeUpdate(async (material, options) => {
+  const {_previousDataValues, dataValues} = material
+  console.log(material);
+})
 Materials.sync();
 module.exports = Materials;

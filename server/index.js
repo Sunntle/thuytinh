@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const db = require("./config/connectDatabase");
 const { Server } = require("socket.io");
-const { handleNewUser, handleNewOrder, handleDisconnect } = require("./utils/socketHanlers")
+const { handleNewUserConnect, handleDisconnect } = require("./utils/socketHanlers")
 const port = process.env.PORT || 8000;
 require("dotenv").config();
 
@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
+    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL,process.env.CLIENT_URL_TEST, process.env.ADMIN_URL_TEST],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -28,19 +28,15 @@ const server = app.listen(port, (req, res) => {
 
 const io = new Server(server, {
   cors: {
-    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
+    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL, process.env.CLIENT_URL_TEST, process.env.ADMIN_URL_TEST],
     methods: ["GET", "POST"]
   }
 })
 global.__basedir = __dirname;
 global._io = io;
-let userConnected = [];
-let storeMessage = [];
-const listPermission = ['R2', 'R3', 'R4'];
-io.on("connection", (socket) => {
-  handleNewUser(socket, userConnected, storeMessage, listPermission)
-  handleNewOrder(socket, userConnected, storeMessage)
-  handleDisconnect(socket, userConnected, storeMessage, listPermission)
+io.of("/admin").on("connection", (socket) => {
+  handleNewUserConnect(socket)
+  handleDisconnect(socket)
 });
 initRoutes(app);
 db.connectDatabase();

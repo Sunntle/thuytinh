@@ -1,11 +1,8 @@
-import SearchComponent from "../search";
-import ButtonComponents from "../button";
 import {
   CloseOutlined,
   DownOutlined,
   FileSearchOutlined,
   LogoutOutlined,
-  MenuUnfoldOutlined,
   RightOutlined,
   UploadOutlined,
   UserOutlined,
@@ -18,46 +15,51 @@ import {
   Input,
   Menu,
   Modal,
+  Switch,
   Tabs,
+  Tooltip,
   Upload,
   message,
-  Tooltip,
 } from "antd";
+import ButtonComponents from "../button";
+import SearchComponent from "../search";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { socket } from "../../socket";
-import NotificationsComponent from "../notification";
-import { NAV_ITEMS } from "../../utils/constant";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { doLogoutAction, fetchAccount } from "../../redux/account/accountSlice";
-import { roleRext, truncateString } from "../../utils/format";
+import { ChangeMode } from "../../redux/customize/customize";
+import { addNewMessage, fetchNotification } from "../../redux/notification/notificationSystem";
 import {
   callLogout,
-  getAllCate,
-  getAllProduct,
   callUpdateAccount,
   callUpdatePassword,
+  getAllCate,
+  getAllProduct,
 } from "../../services/api";
-import { Swiper, SwiperSlide } from "swiper/react";
-
+import { socket } from "../../socket";
+import { NAV_ITEMS } from "../../utils/constant";
+import { roleRext, truncateString } from "../../utils/format";
+import NotificationsComponent from "../notification";
 function HeaderComponent() {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [icon, setIcon] = useState(false);
   const [openModalProfile, setOpenModalProfile] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
-  const [notifications, setNotifications] = useState([]);
   const [categories, setCategories] = useState([]);
   const [data, setData] = useState(null);
   const [searchKw, setSearchKw] = useState(
     JSON.parse(localStorage.getItem("searchKeyWord")) || []
   );
+  const navigate = useNavigate();
   const user = useSelector((state) => state.account);
+  const noti = useSelector((state) => state.notifications);
+  const customize = useSelector((state) => state.customize);
   const dispatch = useDispatch();
   const items = [
     {
@@ -75,6 +77,9 @@ function HeaderComponent() {
       icon: <LogoutOutlined />,
     },
   ];
+  useEffect(() => {
+    dispatch(fetchNotification());
+  }, [dispatch]);
   const handleMenuClick = async (e) => {
     if (e.key == 2) {
       dispatch(doLogoutAction());
@@ -114,40 +119,28 @@ function HeaderComponent() {
     navigate(`/employee/search?keyword=${searchArr[0]}`);
   };
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       const dataProducts = await getAllProduct({
         _sort: "sold",
         _order: "DESC",
         _limit: 8,
       });
-      const dataCate = await getAllCate({});
+      const dataCate = await getAllCate();
       setCategories(dataCate);
       setData(dataProducts);
     };
-    fetchProducts();
+    fetchData();
   }, []);
-  useEffect(() => {
-    socket.emit("new user", {
-      userName: user?.user.name,
-      role: user?.user.role,
-    });
-    socket.on("new message", (arg) => {
-      setNotifications((prev) => {
-        const arr = [...prev];
-        if (Array.isArray(arg)) {
-          arr.unshift(...arg);
-        } else {
-          arr.unshift(arg);
-        }
-        return arr;
-      });
-    });
-  }, [user?.user.name, user?.user.role]);
 
+  useEffect(() => {
+    socket.on("new message", (arg) => {
+      dispatch(addNewMessage(arg))
+    });
+  }, [dispatch]);
   const onFinish = async (values) => {
     const formData = new FormData();
-    const { avatar, ...rest } = values;
-    const val = { ...rest };
+    const { avatar, role, ...rest } = values;
+    const val = { ...rest, role: roleRext(role) };
     if (avatar[0]?.originFileObj) {
       val.avatar = avatar[0].originFileObj;
     }
@@ -270,25 +263,13 @@ function HeaderComponent() {
   return (
     <>
       {contextHolder}
-      {/* <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
-
-        <div className="flex items-center justify-between"> */}
-
-      {/*   
-  return ( */}
       <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
         <div className="flex items-center justify-between">
           <div>
             <img src="Logo" className="max-w-md object-cover" alt="" />
             Logo here
           </div>
-          <div className="block sm:hidden">
-            <Button type="primary" onClick={() => setOpen(true)}>
-              <MenuUnfoldOutlined />
-            </Button>
-          </div>
         </div>
-
         <div className="hidden sm:block flex-1 text-center mx-3">
           <SearchComponent
             className="bg-secondaryColor w-full max-w-2xl "
@@ -299,11 +280,18 @@ function HeaderComponent() {
           />
         </div>
         <div className="flex items-center justify-center gap-x-1">
+          <Switch
+            checked={customize.darkMode}
+            onClick={() =>
+              dispatch(ChangeMode({ darkMode: !customize.darkMode }))
+            }
+            checkedChildren="Dark"
+            unCheckedChildren="Light"
+          />
           <NotificationsComponent
-            notifications={notifications}
+            notifications={noti.content}
             openPopover={openPopover}
             setOpenPopover={setOpenPopover}
-            setNotifications={setNotifications}
           />
           <Dropdown menu={menuProps} trigger={["click"]}>
             <ButtonComponents

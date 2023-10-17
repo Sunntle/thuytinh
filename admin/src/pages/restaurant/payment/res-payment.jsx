@@ -16,6 +16,7 @@ const ResPayment = () => {
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
     const idTble = useSelector(state => state.table)
+
     // const statustble = useSelector(state => state.table.status_table)
     const dispatch = useDispatch();
     useEffect(() => {
@@ -32,11 +33,14 @@ const ResPayment = () => {
                 customerName: "Admin",
                 idTable: idTble.id,
                 // idTable: {id: idTble.id, status_table: idTble.status_table},
+
             };
             console.log(body)
             res = await addOrder(body);
             dispatch(RemoveAllCart());
+
             // dispatch(RemoveTable());
+
             message.open({
                 type: "success",
                 content: "Đặt món thành công thành công!",
@@ -45,6 +49,7 @@ const ResPayment = () => {
             console.log(err);
         }
     };
+
     // Xu ly update order
     useEffect(() => {
         const fetchData = async (id) => {
@@ -125,6 +130,7 @@ const ResPayment = () => {
     //         console.log(err);
     //     }
     // }
+
     // modal phuong thuc thanh toan
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
@@ -222,7 +228,9 @@ const ResPayment = () => {
                             <button className='bg-blue-500 text-white' onClick={submitOrderList}>Đặt món</button>
                         </div>
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
+
                             <button className='bg-indigo-500 text-white' onClick={sumitUpdateOrder}>Cập nhật</button>
+
                         </div>
                         <div className='flex justify-center col-span-2 m-1'>
                             <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>

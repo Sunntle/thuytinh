@@ -13,7 +13,7 @@ const sendEmail = asyncHandler(async (email, html) => {
 
 
     let info = await transporter.sendMail({
-        from: '"Thủy Kinh" <thuytinh.com>',
+        from: '"Thủy Tinh" <thuytinh.com>',
         to: email,
         subject: "Forgot Password ✔",
         html: html,

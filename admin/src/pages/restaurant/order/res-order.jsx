@@ -14,6 +14,7 @@ const ResOrder = () => {
     const dispatch = useDispatch();
 
     const [data, setData] = useState([]);
+
     const idTble = useSelector((state) => state.table)
     // useEffect(() => {
     //     const fetchData = async (id) => {
@@ -45,6 +46,7 @@ const ResOrder = () => {
     }, [idTble.id]);
     const { order } = data;
     // console.log(data)
+
     // modal phuong thuc thanh toan
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
@@ -138,9 +140,11 @@ const ResOrder = () => {
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
                             <button className='bg-red-500 text-white' onClick={() => dispatch(RemoveAllCart())}>Hủy</button>
                         </div>
+
                             <div className='flex justify-center font-semibold col-span-2 m-1'>
                                 <button className='bg-blue-500 text-white' onClick={() => dispatch(AddCart())}>Đặt món</button>
                             </div>
+
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
                             <button className='bg-indigo-500 text-white'>In bill</button>
                         </div>

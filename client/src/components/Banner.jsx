@@ -1,25 +1,33 @@
 import React from "react";
+import { Carousel } from "antd";
 
 const Banner = () => {
-
+  const imageUrls = [
+    "https://images.pexels.com/photos/1150447/pexels-photo-1150447.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.pexels.com/photos/13262499/pexels-photo-13262499.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.pexels.com/photos/16845597/pexels-photo-16845597/free-photo-of-mon-an-dia-b-a-t-i-nhung.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+  ];
   return (
-    <section className="relative mt-[-20px] h-96 w-full bg-cover bg-center bg-gray-300 bg-[url('https://static.thehoneycombers.com/wp-content/uploads/sites/2/2022/03/sydney-restaurants-woodcut-900x643.png')]">
-      <div className="flex flex-col items-center justify-center absolute inset-0 bg-black bg-opacity-40">
-        <h1 className="text-center text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-200">
-          Nhà hàng Thuỷ Tinh - Lung linh cho mọi bữa tiệc
-        </h1>
-        <div className="rounded-full p-1 box-border mt-8 bg-white overflow-hidden w-80 md:w-96 flex items-center">
-          <input
-            type="text"
-            className="rounded-full px-4 outline-none w-full"
-            placeholder="Tìm kiếm..."
-          />
-          <button className="text-sm bg-primary py-3 px-6 rounded-full text-white poppins hover:bg-[#F0A500E5] transition duration-300 hover:scale-105 transform">
-            Search
-          </button>
+    <Carousel autoplay className="mt-[-20px]">
+      {imageUrls.map((imageUrl, index) => (
+        <div key={index}>
+          <div className="h-[400px] lg:h-[600px]">
+            <div
+              className="w-full h-full bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${imageUrl})`,
+              }}
+            >
+              <div className="px-16 w-full h-full bg-black bg-opacity-20 flex flex-col items-start justify-center">
+                <button className="px-6 py-2 z-30 w-30 h-12 text-primary bg-white bg-opacity-20 whitespace-nowrap text-center">
+                  Xem Menu
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      ))}
+    </Carousel>
   );
 };
 

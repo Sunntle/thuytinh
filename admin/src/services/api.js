@@ -94,6 +94,12 @@ export const addNewMaterial = (data) => {
 };
 
 //account
+export const getAllUser = (params) => {
+  return axios.get(`/api/user/get-all`,{ params });
+};
+export const getDetailUser = (id) => {
+  return axios.get(`/api/user/detail/${id}`);
+};
 export const callLogin = (body) => {
   return axios.post(`/api/user/login`, body);
 };
@@ -141,4 +147,14 @@ export const deleteReview = (id) => {
 
 export const getDataDashboard = (type) => {
   return axios.get(`/api/order/thongke`, { params: { type: type } });
+};
+//notifications 
+export const getAllNotification = (params) => {
+  return axios.get(`/api/notification`, { params });
+};
+export const readAll = (body) => {
+  return axios.put(`/api/notification`, body);
+};
+export const readOne = (body) => {
+  return axios.put(`/api/notification`, body);
 };

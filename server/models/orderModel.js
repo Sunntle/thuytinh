@@ -21,6 +21,10 @@ const Order = db.sequelize.define("orders", {
     type: DataTypes.STRING,
     defaultValue: 1
   },
+  payment_gateway: {
+    type: DataTypes.TINYINT,
+    defaultValue: 1
+  },
   total: {
     type: DataTypes.INTEGER,
   },

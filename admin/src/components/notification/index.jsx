@@ -1,45 +1,42 @@
-import { Badge, Button, Popover } from "antd";
+import { Badge, Button, Popover, Select } from "antd";
 import { formatNgay } from "../../utils/format";
 import { BellOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useCallback, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { maskAllRead, maskAsRead } from "../../redux/notification/notificationSystem";
+
 
 function NotificationsComponent({
   notifications,
   openPopover,
   setOpenPopover,
-  setNotifications,
 }) {
   const navigate = useNavigate();
-  const handleCheckedAll = () => {
-    if (notifications.some((el) => el.status == false)) {
-      setNotifications((prev) => prev.map((el) => ({ ...el, status: true })));
-    }
-  };
+  const dispatch = useDispatch();
+  const handleCheckedAll = useCallback(async() => {
+    dispatch(maskAllRead())
+  },[dispatch])
   const handleToContent = (index) => {
     const content = notifications[index];
     const navigateTo = `/admin/${content.type}`;
-    if (content.status == false)
-      setNotifications((prev) =>
-        prev.map((el) => {
-          if (el.id == content.id) {
-            el.status = true;
-          }
-          return el;
-        })
-      );
+    dispatch(maskAsRead(content))
     navigate(navigateTo);
   };
+  const getCountNoti = useMemo(() =>{
+    return notifications && notifications.length > 0 ? notifications.filter((el) => el.status == 0).length : 0
+   },[notifications])
   const content = () => {
-    if (notifications?.length < 1)
-      return <p className="text-gray-500">Không có thông báo mới</p>;
+    if (!Array.isArray(notifications) || notifications.length < 1)
+      return <p className="text-gray-500 px-3">Không có thông báo nào</p>;
     return (
-      <>
-        {notifications?.map((el, index) => {
+      <Select getPopupContainer={(trigger) => trigger.parentElement}>
+        {notifications.map((el, index) => {
           return (
-            <div
+            <Select.Option
               onClick={() => handleToContent(index)}
               key={index}
-              className="my-2 flex items-center justify-between py-2 rounded-md cursor-pointer hover:bg-gray-100 gap-x-2"
+              className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 gap-x-2"
             >
               <div className="flex items-center gap-x-2">
                 <div className="max-w-[50px]">
@@ -48,36 +45,35 @@ function NotificationsComponent({
                     src="https://t4.ftcdn.net/jpg/05/86/91/55/360_F_586915596_gPqgxPdgdJ4OXjv6GCcDWNxTjKDWZ3JD.jpg"
                   />
                 </div>
-                <div className={el.status == true ? "text-gray-500" : " pe-2"}>
-                  {el.type == "material" ? "Nguyên liệu chuẩn bị hết hàng" : el.type == "order" ?  "Đơn hàng mới" : "Người dùng mới"}
-                  <span className="font-semibold">#{el.id}</span>
+                <div className={el.status == 1 ? "text-gray-500" : " pe-2"}>
+                <span className="font-semibold">#{el.id}</span> {el.description} 
                   <p className="text-main text-sm">
-                    {formatNgay(el.timestamp, "HH:mm DD-MM-YYYY")}
+                    {formatNgay(el.createdAt, "HH:mm DD-MM-YYYY")}
                   </p>
                 </div>
               </div>
-              {el.status == false && (
+              {el.status == 0 && (
                 <div>
                   <Badge status="processing" color="#fc8e32" />
                 </div>
               )}
-            </div>
+            </Select.Option>
           );
         })}
         <a onClick={handleCheckedAll}>Đánh dấu tất cả đã đọc</a>
-      </>
+      </Select>
     );
   };
   return (
     <Popover
       content={content}
-      title={<p className="text-xl">Thông báo</p>}
+      title={<p className="text-xl px-3">Thông báo</p>}
       trigger="click"
       open={openPopover}
       onOpenChange={() => setOpenPopover(!openPopover)}
       placement="topRight"
     >
-      <Badge count={notifications?.filter((el) => el.status == false)?.length}>
+      <Badge count={getCountNoti}>
         <Button
           type="primary"
           className="border-borderSecondaryColor bg-secondaryColor"

@@ -25,7 +25,6 @@ function MenuPage() {
         _discount: "gt_0",
         _limit: 10,
       });
-      console.log(resProducts);
       setDiscount(resProductsDiscount);
       setProducts(resProducts);
       setCategories(resCate);
@@ -38,7 +37,7 @@ function MenuPage() {
       <div className="mb-6">
         <div className="flex justify-between items-center">
           <h4 className="font-bold text-lg mb-2 text-slate-700">Danh mục</h4>
-          <Link to="/" style={{ color: "#FC8019" }}>
+          <Link to="/admin/category" style={{ color: "#FC8019" }}>
             Xem tất cả
           </Link>
         </div>
@@ -92,7 +91,7 @@ function MenuPage() {
           <h4 className="font-bold text-lg mb-2 text-slate-700">
             Sản phẩm bán chạy
           </h4>
-          <Link to="/" style={{ color: "#FC8019" }}>
+          <Link to="/admin/product" style={{ color: "#FC8019" }}>
             Xem tất cả
           </Link>
         </div>
@@ -168,7 +167,7 @@ function MenuPage() {
           <h4 className="font-bold text-lg mb-2 text-slate-700">
             Món giảm giá
           </h4>
-          <Link to="/" style={{ color: "#FC8019" }}>
+          <Link to="/admin/product" style={{ color: "#FC8019" }}>
             Xem tất cả
           </Link>
         </div>

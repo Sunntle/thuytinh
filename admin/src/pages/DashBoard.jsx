@@ -63,7 +63,9 @@ const DashBoard = () => {
                 slidesPerView={3}
               >
                 {dataProduct?.map((item, index) => (
-                  <SwiperSlide>
+
+                  <SwiperSlide key={index}>
+
                     <div className="w-full pe-5">
                       <Badge.Ribbon text="Hot" color="red">
                         <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>

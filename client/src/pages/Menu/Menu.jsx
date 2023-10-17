@@ -9,6 +9,7 @@ import { Spin } from "antd";
 import useDebounce from "../../hooks/useDebounce.js";
 import ProductList from "../../components/ProductList/ProductList.jsx";
 import CategoryList from "../../components/CategoryList/CategoryList.jsx";
+import * as apiService from "../../services/api.js";
 
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -21,29 +22,14 @@ const Menu = () => {
   const debouncedValue = useDebounce(searchValue, 100);
 
   useEffect(() => {
-    const categoryRequest = {
-      method: "get",
-      url: "/category",
-    };
-
-    const productRequest = {
-      method: "get",
-      url: "/product",
-    };
-
-    sendRequest(categoryRequest, setCategories);
-    sendRequest(productRequest, setFoods);
+    sendRequest(apiService.fetchCategories(), setCategories);
+    sendRequest(apiService.fetchProduct(), setFoods);
   }, [sendRequest]);
-
 
   const handleGetAllFood = (index) => {
     try {
       setActiveIndex(index === activeIndex ? null : index);
-      const request = {
-        method: "get",
-        url: "/product",
-      };
-      sendRequest(request, setFoods);
+      sendRequest(apiService.fetchProduct(), setFoods);
     } catch (err) {
       console.log(error);
     }
@@ -52,11 +38,7 @@ const Menu = () => {
   const handleFilterFoodByCategory = (index) => {
     try {
       setActiveIndex(index === activeIndex ? null : index);
-      const request = {
-        method: "get",
-        url: `/product/category/${index}`,
-      };
-      sendRequest(request, setFoods);
+      sendRequest(apiService.fetchProductsByCategory(index), setFoods);
     } catch (err) {
       console.error(err);
     }
@@ -70,11 +52,7 @@ const Menu = () => {
     if (e.key === "Enter") {
       if (searchValue.trim() !== "") {
         try {
-          const request = {
-            method: "get",
-            url: `product/search?query=${debouncedValue}`,
-          };
-          sendRequest(request, setFoods);
+          sendRequest(apiService.searchProducts(debouncedValue), setFoods);
         } catch (err) {
           console.error(err);
         }
@@ -85,6 +63,7 @@ const Menu = () => {
   const showOrderListModal = () => {
     setIsOrderModalOpen(true);
   };
+
   const handleOk = () => {
     setIsOrderModalOpen(false);
   };
@@ -148,29 +127,29 @@ const Menu = () => {
           />
         </div>
         {/* Filter with material */}
-        {activeIndex !== 0 && (
-          <div className="relative w-full text-sm">
-            <div className=" flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">
-              <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">
-                Tôm
-              </button>
-              <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">
-                Cua
-              </button>
-              <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">
-                Cá
-              </button>
-              <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">
-                Ốc
-              </button>
-              <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">
-                Mực
-              </button>
-            </div>
-            {/* Overlay */}
-            <div className="absolute right-0 bottom-0 w-12 h-1/2 bg-white bg-opacity-60"></div>
-          </div>
-        )}
+        {/*{activeIndex !== 0 && (*/}
+        {/*  <div className="relative w-full text-sm">*/}
+        {/*    <div className=" flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">*/}
+        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
+        {/*        Tôm*/}
+        {/*      </button>*/}
+        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
+        {/*        Cua*/}
+        {/*      </button>*/}
+        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
+        {/*        Cá*/}
+        {/*      </button>*/}
+        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
+        {/*        Ốc*/}
+        {/*      </button>*/}
+        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
+        {/*        Mực*/}
+        {/*      </button>*/}
+        {/*    </div>*/}
+        {/*    /!* Overlay *!/*/}
+        {/*    <div className="absolute right-0 bottom-0 w-12 h-1/2 bg-white bg-opacity-60"></div>*/}
+        {/*  </div>*/}
+        {/*)}*/}
         {/*Food*/}
         <ProductList foods={foods} />
       </div>
