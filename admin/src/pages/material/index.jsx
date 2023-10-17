@@ -1,7 +1,6 @@
-import { Col, Row, message } from "antd";
-import SearchComponent from "../../components/search";
+import { Col, Row, Typography, message } from "antd";
 import ButtonComponents from "../../components/button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Table } from "antd";
 import ConfirmComponent from "../../components/confirm";
 import AddNewMaterial from "./add";
@@ -15,14 +14,18 @@ import {
 } from "../../services/api";
 import EditMaterial from "./edit";
 import ColumnChart from "../../components/chart/column-chart";
-
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+const { Title } = Typography;
 function MaterialPage() {
   const [open, setOpen] = useState(false);
   const [openModelEdit, setOpenModelEdit] = useState(false);
   const [materials, setMaterials] = useState([]);
   const [data, setData] = useState(null);
   const [dataChart, setDataChart] = useState([]);
-  const fetchData = async () => {
+  const notifications = useSelector(state => state.notifications)
+  const location = useLocation();
+  const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
     setMaterials({
       ...res,
@@ -30,12 +33,17 @@ function MaterialPage() {
     });
 
     setDataChart(res.dataChart);
-  };
+  },[]);
 
   useEffect(() => {
     fetchData();
-  }, []);
-
+  }, [fetchData]);
+  useEffect(()=>{
+    if(notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)){
+      fetchData()
+      console.log("fetched");
+    }
+  },[notifications,location,fetchData])
   const handleDeleteMaterial = async (id_material) => {
     const res = await deleteMaterial(id_material);
     console.log(res);
@@ -197,36 +205,45 @@ function MaterialPage() {
   };
   return (
     <div className="my-7 px-5">
-      {dataChart.length > 0 && <Row justify={"space-between"}>
-        <Col xs={24} lg={6}>
-          <h3 className="text-lg text-black font-medium">Thông báo sắp <b className="text-xl text-[#EF4444]"> {dataChart.length} </b> nguyên liệu  gần hết hàng</h3>
-          <h4 className="text-base font-normal text-zinc-700 ">Gồm : {dataChart.map(item => item.name_material.toUpperCase()).join(" ,")}</h4>
-        </Col>
-        <Col xs={24} lg={18}>
-          <ColumnChart
-            series={[
-              {
-                name: "Nguyên liệu gần hết",
-                data: dataChart.map(item => item.amount),
-              },
-            ]}
-            colors="#EF4444"
-            categories={dataChart.map(item => `${item.name_material} (${item.unit})`)}
-          />
-        </Col>
-      </Row>}
+      {dataChart.length > 0 && (
+        <Row justify={"space-between"}>
+          <Col xs={24} lg={6}>
+            <h3 className="text-lg text-black font-medium">
+              Thông báo sắp{" "}
+              <b className="text-xl text-[#EF4444]"> {dataChart.length} </b>{" "}
+              nguyên liệu gần hết hàng
+            </h3>
+            <h4 className="text-base font-normal text-zinc-700 ">
+              Gồm :{" "}
+              {dataChart
+                .map((item) => item.name_material.toUpperCase())
+                .join(" ,")}
+            </h4>
+          </Col>
+          <Col xs={24} lg={18}>
+            <ColumnChart
+              series={[
+                {
+                  name: "Nguyên liệu gần hết",
+                  data: dataChart.map((item) => item.amount),
+                },
+              ]}
+              colors="#EF4444"
+              categories={dataChart.map(
+                (item) => `${item.name_material} (${item.unit})`
+              )}
+            />
+          </Col>
+        </Row>
+      )}
 
       <Row justify="space-between" align="center" className="mb-4">
         <Col xs={6}>
-          <SearchComponent
-            background={"bg-transparent"}
-            size="medium"
-          ></SearchComponent>
+          <Title level={4}>Danh sách nguyên liệu</Title>
         </Col>
         <Col xs={6} style={{ textAlign: "-webkit-right" }}>
           <ButtonComponents
-            borderColor={"border-borderSecondaryColor"}
-            backgroundColor={"bg-secondaryColor"}
+            className="border-borderSecondaryColor text-main"
             content={"Thêm mới"}
             onClick={() => setOpen(true)}
           />
