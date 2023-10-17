@@ -3,7 +3,7 @@ import banner from "../../assets/images/banner.jpg";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { PiFishSimpleBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import CallStaff from "../../components/CallStaff.jsx";
+import { CallStaff } from "../../components/index.js";
 
 const Service = () => {
   const navigate = useNavigate();

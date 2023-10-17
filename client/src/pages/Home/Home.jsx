@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
+import { Badge } from "antd";
+import moment from "moment";
+import { AiFillPlusCircle } from "react-icons/ai";
+import { fetchProduct } from "../../services/api.js";
+import { Banner, Reason } from "../../components/index.js";
+import useHttp from "../../hooks/useHttp.js";
+import { formatCurrency, truncateString } from "../../utils/format.js";
+import { socket } from "../../services/socket";
 
 // import Swiper core and required modules
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import { Badge } from "antd";
-import moment from "moment";
-import { AiFillPlusCircle } from "react-icons/ai";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import useHttp from "../../hooks/useHttp.js";
-import { formatCurrency, truncateString } from "../../utils/format.js";
-import { socket } from "../../services/socket";
 
-import Reason from "../../components/Reason.jsx";
-import Banner from "../../components/Banner.jsx";
-import {fetchProduct} from "../../services/api.js";
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();

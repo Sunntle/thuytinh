@@ -2,11 +2,8 @@ import { Button, Divider, Form, Modal, Radio } from "antd";
 import { useEffect, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { formatCurrency } from "../../utils/format.js";
-import { useDispatch } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchTableById } from "../../services/api.js";
-import { useNavigate } from "react-router-dom";
-import instance from "../../utils/axiosConfig.js";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
