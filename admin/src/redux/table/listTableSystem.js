@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-const tableSystem = createSlice({
-    name: "table",
+
+const listTableSystem = createSlice({
+    name: "listtable",
     initialState: null,
     reducers:{
-        AddTable:(state,action) => {
+        AddTableList:(state,action) => {
             state = action.payload
             return state
             // state.tables.push(action.payload);
@@ -14,5 +15,5 @@ const tableSystem = createSlice({
         },
     }
 })
-export const {AddTable, RemoveTable} = tableSystem.actions;
-export default tableSystem.reducer;
+export const {AddTableList, RemoveTable} = listTableSystem.actions;
+export default listTableSystem.reducer;

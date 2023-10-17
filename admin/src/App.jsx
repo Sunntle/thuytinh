@@ -42,6 +42,7 @@ const App = () => {
             colorBgTextActive: "#fff",
             colorText: "#7e808c",
           },
+
           Menu:{
             itemSelectedColor: "#FFFFFF",
             itemSelectedBg: "#FC8019",
@@ -51,13 +52,18 @@ const App = () => {
           Layout:{
             lightSiderBg: "#FC8019"
           },
+
           Tabs:{
             inkBarColor:"#FC8019",
             itemSelectedColor:"#FC8019",
             itemHoverColor:"#FC8019",
           }
+
+        },
+
 }
-      }}
+
+      }
     >
       <RouterProvider router={router} />
     </ConfigProviderAntd>
