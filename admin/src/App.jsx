@@ -1,4 +1,4 @@
-import { ConfigProvider as ConfigProviderAntd } from "antd";
+import { ConfigProvider as ConfigProviderAntd, theme } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
@@ -11,6 +11,8 @@ const nextCallAccount = ['/', '/register'];
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.account);
+  const { defaultAlgorithm, darkAlgorithm } = theme;
+  const customize = useSelector(state => state.customize)
 
   useEffect(() => {
     if (!nextCallAccount.includes(window.location.pathname)) {
@@ -28,6 +30,7 @@ const App = () => {
   return (
     <ConfigProviderAntd
       theme={{
+        algorithm: customize.darkMode ? darkAlgorithm : defaultAlgorithm,
         components: {
           Button: {
             colorPrimary: "#FC8019",

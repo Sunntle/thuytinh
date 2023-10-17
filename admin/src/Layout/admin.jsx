@@ -49,7 +49,7 @@ const LayoutMain = () => {
     navigate(e.key);
   };
   return (
-    <div className="bg-main relative">
+    <div className={`bg-main relative ${customize.darkMode ? 'dark' : ''}`}>
          <div>
          {contextHolder}
          </div>
@@ -78,7 +78,7 @@ const LayoutMain = () => {
               onClick={onClick}
             />
           </Sider>
-          <Layout className={customize.darkMode ? 'bg-darkModeBg' : 'bg-white'}>
+          <Layout className="bg-white dark:bg-darkModeBg dark:text-white">
             <Content className="w-full">
               <Outlet />
             </Content>
