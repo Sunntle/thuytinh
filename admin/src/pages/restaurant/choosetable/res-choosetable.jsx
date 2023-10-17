@@ -4,11 +4,15 @@ import { ButtonTable } from './ButtonTable';
 
 import { FiUsers } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddTable } from '../../../redux/table/tableSystem';
+
+import { AddTable, RemoveTable } from '../../../redux/table/tableSystem';
+
 import { getAllTable } from '../../../services/api';
 import { Modal } from 'antd';
 import {useNavigate} from 'react-router-dom';
 import ResOrder from '../order/res-order';
+
+import { AddTableList } from '../../../redux/table/listTableSystem';
 
 const ResChooseTable = () => {
   const navigate = useNavigate();
@@ -30,9 +34,12 @@ const ResChooseTable = () => {
     const updatedData = [...tableData];
     updatedData[index].status_table = 1;
     setTableData(updatedData);
+
+    // console.log(updatedData[index])
     setSelectedTable(updatedData[index]);
     dispatch(AddTable(updatedData[index]));
-    // navigate('/employee/menu');
+    dispatch(AddTableList(updatedData[index]));
+    navigate('/employee/menu');
   };
 
   const handlePaymentClick = (index) => {
@@ -44,6 +51,13 @@ const ResChooseTable = () => {
   const showModal = () => {
     setIsModalOpen(true);
   };
+
+  const handleDetailTable = (index) => {
+    const tables = tableData
+    dispatch(AddTable(tables[index]));
+    showModal();
+  }
+
 
   const handleOk= () => {
     setIsModalOpen(false);
@@ -83,12 +97,16 @@ const ResChooseTable = () => {
                     Đang sử dụng
                   </span>
                   <div className=" mt-3">
-                    <button className="mt-2 col-span-2 h-10 w-20 text-white block bg-green-500 rounded" onClick={showModal}>
+
+                    <button className="mt-2 col-span-2 h-10 w-20 text-white block bg-green-500 rounded" onClick={() => handleDetailTable(index)}>
+
                       Chi tiết
                     </button>
                     <Modal
                       footer={null}
-                      title={`Chi tiết bàn ${selectedTable.id}`}
+
+                      // title={`Chi tiết bàn ${selectedTable.id}`}
+
                       open={isModalOpen}
                       onOk={handleOk}
                       onCancel={handleCancel}
@@ -123,7 +141,9 @@ const ResChooseTable = () => {
                   {table.status_table === 0 && (
                     <button
                       className="bg-main text-white font-semibold h-10 w-20 rounded mt-3"
-                      onClick={() => handleTableClick(index)}
+
+                      onClick={() => handleDetailTable(index)}
+
                     >
                       Sử dụng
                     </button>
@@ -134,12 +154,16 @@ const ResChooseTable = () => {
                         Đang sử dụng
                       </span>
                       <div className=" mt-3">
-                        <button className="mt-2 col-span-2 h-10 w-20 text-white block bg-green-500 rounded" onClick={showModal}>
+
+                        <button className="mt-2 col-span-2 h-10 w-20 text-white block bg-green-500 rounded" onClick={() => handleDetailTable(index)}>
+
                           Chi tiết
                         </button>
                         <Modal
                           footer={null}
-                          title={`Chi tiết bàn ${selectedTable.id}`}
+
+                          // title={`Chi tiết bàn ${selectedTable.id}`}
+
                           open={isModalOpen}
                           onOk={handleOk}
                           onCancel={handleCancel}
@@ -153,7 +177,9 @@ const ResChooseTable = () => {
               </div>
             );
           }
-          return null; // Nếu không phải "trong nhà", thì không hiển thị gì cả.
+
+          return null;
+
         })}
       </div>
       ,
@@ -194,7 +220,9 @@ const ResChooseTable = () => {
                         </button>
                         <Modal
                           footer={null}
-                          title={`Chi tiết bàn ${selectedTable.id}`}
+
+                          // title={`Chi tiết bàn ${selectedTable.id}`}
+
                           open={isModalOpen}
                           onOk={handleOk}
                           onCancel={handleCancel}

@@ -1,29 +1,26 @@
-import { Button, Divider, Modal } from "antd";
-import {useEffect, useState} from "react";
+import { Button, Divider, Form, Modal, Radio } from "antd";
+import { useEffect, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { formatCurrency } from "../../utils/format.js";
 import { useDispatch } from "react-redux";
-import { emptySeletedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
 import useHttp from "../../hooks/useHttp.js";
+import { fetchTableById } from "../../services/api.js";
+import {useNavigate} from "react-router-dom";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const { products, total } = useSelector((state) => state.selectedItem);
-  const dispatch = useDispatch();
+  const [payment, setPayment] = useState(null)
   const { sendRequest } = useHttp();
   const [data, setData] = useState([]);
   const idTable = location.pathname.split("/")[1].split("-")[1];
+  const [form] = Form.useForm();
 
   useEffect(() => {
-    const request = {
-      method: "get",
-      url: `/table/${idTable}`,
-    };
-    sendRequest(request, setData);
+    sendRequest(fetchTableById(idTable), setData);
   }, [idTable, sendRequest]);
 
   const { order } = data;
-  const VAT = order?.total + (order?.total * 0.1)
+  const VAT = order?.total + order?.total * 0.1 || 0;
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -31,12 +28,29 @@ const Order = () => {
 
   const handleOk = () => {
     setIsModalOpen(false);
-    dispatch(emptySeletedItems());
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  const onFinish = async (values) => {
+    values = {...values, amount: 100000}
+    const request = {
+      method: 'post',
+      url: '/payment/create_payment_url',
+      ...values
+    }
+    await sendRequest(request, setPayment)
+    // window.location.href= payment
+    form.resetFields();
+  };
+
+  useEffect(() => {
+    if (payment !== null) {
+      window.location.href = payment
+    }
+  }, [payment]);
 
   return (
     <div className="pb-24 mt-4 lg:mt-0 lg:pt-24">
@@ -70,7 +84,9 @@ const Order = () => {
                       <span className="text-sm md:text-base font-medium">
                         Giá: {formatCurrency(item?.product?.price)}
                       </span>
-                      <span className="text-xs md:text-base font-medium">Số lượng: {item?.quantity}</span>
+                      <span className="text-xs md:text-base font-medium">
+                        Số lượng: {item?.quantity}
+                      </span>
                       <div className="flex items-center justify-start space-x-1">
                         <BiPencil className="w-3 h-3" />
                         <span className="text-xs md:text-sm">Ghi chú: </span>
@@ -89,9 +105,9 @@ const Order = () => {
               <div className="sticky top-0 xl:top-24 border p-5 shadow-sm rounded-lg">
                 <div className="w-full flex justify-between items-center">
                   <span className="text-lg font-medium text-slate-800">
-                    Tổng ({order?.order_details?.length} món)
+                    Tổng ({order?.order_details?.length || 0} món)
                   </span>
-                  <span>{formatCurrency(order?.total)}</span>
+                  <span>{formatCurrency(order?.total || 0)}</span>
                 </div>
                 <div className="w-full flex justify-between items-center">
                   <span className="text-lg font-medium text-slate-800">
@@ -118,7 +134,7 @@ const Order = () => {
             </div>
           </div>
           <Modal
-            title="Nhân viên đang đến."
+            title="Phương thức thanh toán"
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}
@@ -132,10 +148,27 @@ const Order = () => {
               </button>,
             ]}
           >
-            <p className="text-gray-700">
-              Quý khách vui lòng kiểm tra món lại 1 lần nữa. Nhân viên sẽ đến
-              thanh toán trong giây lát.
-            </p>
+            <div className="w-full flex flex-col justify-center items-center space-y-1">
+              <Form form={form} onFinish={onFinish}>
+                <Form.Item rules={[{ required: true, message: "Vui lòng chọn phương thức thanh toán" }]} name="bankCode">
+                  <Radio.Group>
+                    <Radio value="">Cổng thanh toán VNPAYQR</Radio>
+                    <Radio value="VNPAYQR">
+                      Thanh toán qua ứng dụng hỗ trợ VNPAYQR
+                    </Radio>
+                    <Radio value="VNBANK">
+                      Thanh toán qua ATM-Tài khoản ngân hàng nội địa
+                    </Radio>
+                    <Radio value="INTCARD">Thanh toán qua thẻ quốc tế</Radio>
+                  </Radio.Group>
+                </Form.Item>
+                <Form.Item>
+                  <Button type={"primary"} htmlType={"submit"}>
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
           </Modal>
         </div>
       </div>
