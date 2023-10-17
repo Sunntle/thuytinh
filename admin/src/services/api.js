@@ -97,8 +97,8 @@ export const addNewMaterial = (data) => {
 export const getAllUser = (params) => {
   return axios.get(`/api/user/get-all`,{ params });
 };
-export const getDetailUser = (params) => {
-  return axios.get(`/api/user/get-detail`,{ params });
+export const getDetailUser = (id) => {
+  return axios.get(`/api/user/detail/${id}`);
 };
 export const callLogin = (body) => {
   return axios.post(`/api/user/login`, body);

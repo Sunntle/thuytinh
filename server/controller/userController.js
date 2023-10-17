@@ -118,6 +118,18 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     data: data,
   });
 });
+exports.getDetailUser = asyncHandler(async (req, res) => {
+  const _id=  req.params.id
+  const user = await User.findOne({
+    raw: true,
+    where:{id: _id},
+    include: Order
+  });
+  return res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
 exports.setPassUser = asyncHandler(async (req, res) => {
   const id = req.user?.id;
   const { pass_new, current } = req.body;
