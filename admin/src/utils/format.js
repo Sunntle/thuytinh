@@ -28,18 +28,21 @@ export const roleRext = (params) => {
 }
 
 export function truncateString(text, maxLength) {
-  if(!text) return;
+  if (!text) return;
   if (text.length <= maxLength) {
     return text;
   }
   return text.substring(0, maxLength) + "...";
 }
 
+
 export function calculateDailyRevenue(transactions) {
+  const today = new Date();
   let dailyRevenue = 0;
   for (const totalOrder of transactions) {
     const transactionDate = new Date(totalOrder.createdAt);
-    if (transactionDate.toDateString() === new Date().toDateString()) {
+    console.log(transactionDate.toDateString());
+    if (transactionDate.toDateString() === today.toDateString()) {
       dailyRevenue += totalOrder.total;
     }
   }

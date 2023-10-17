@@ -6,58 +6,49 @@ const {
   OrderDetail,
   ImageProduct,
   Product,
+  TableByOrder,
 } = require("../models");
+const { apiQueryRest } = require('../utils/const');
 
 exports.getAll = asyncHandler(async (req, res) => {
-  const re = await Tables.findAll({
-    include: [{
-      model: Order,
-      limit: 1,
-      order: [["updatedAt", "desc"]],
 
-      include: {
-        model: OrderDetail,
-        include: [{
-          model: Product,
-          as: "product",
-          include: [
-            {
-              model: ImageProduct,
-              attributes: ["url"],
-            }
-          ]
-        }]
-      }
-    }]
-
-  });
+  let query = { ...apiQueryRest(req.query) }
+  const re = await Tables.findAll(query);
   res.status(200).json(re);
 });
 
 exports.getId = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  const re = await Tables.findByPk(id, {
-    include: [
-      {
-        model: Order,
-        include: {
-          model: OrderDetail,
-          include: [
-            {
-              model: Product,
-              as: "product",
-              include: [
-                {
-                  model: ImageProduct,
-                  attributes: ["url"],
-                },
-              ],
-            },
-          ],
-        },
-      },
-    ],
-  });
+
+  const { id_order } = req.query;
+  const { id } = req.params;
+  let re = {}
+  if (id_order) {
+    re.order = await Order.findByPk(id_order, {
+      include: {
+        model: OrderDetail,
+        as: "orderToDetail",
+        include: [
+          {
+            model: Product,
+            as: "product",
+            include: [
+              {
+                model: ImageProduct,
+                attributes: ["url"],
+              }
+            ]
+          }
+        ]
+      }
+    })
+    re.table = await TableByOrder.findAll({
+      where: { orderId: id_order },
+      include: { model: Tables },
+      raw: true, nest: true
+    });
+  } else {
+    re.table = await Tables.findByPk(id);
+  }
   res.status(200).json(re);
 });
 

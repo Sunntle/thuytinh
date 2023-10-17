@@ -30,10 +30,11 @@ const ResPayment = () => {
                 orders: carts,
                 total: totalVAT,
                 customerName: "Admin",
-                idTable: {id: idTble.id, status_table: idTble.status_table},
+                idTable: { id: idTble.id, status_table: idTble.status_table },
             };
             console.log(body)
             res = await addOrder(body);
+            console.log(res);
             dispatch(RemoveAllCart());
             dispatch(RemoveTable());
             message.open({

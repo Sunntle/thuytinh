@@ -30,9 +30,6 @@ const Order = db.sequelize.define("orders", {
   total: {
     type: DataTypes.INTEGER,
   },
-  id_table: {
-    type: DataTypes.INTEGER,
-  },
   status: {
     type: DataTypes.TINYINT(1),
     defaultValue: 1
@@ -41,5 +38,5 @@ const Order = db.sequelize.define("orders", {
     type: DataTypes.INTEGER,
   }
 }, { timestamps: true });
-Order.sync();
+// Order.sync();
 module.exports = Order;

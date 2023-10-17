@@ -102,10 +102,6 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
             type: "category",
             categories: chart_order?.labels || [],
           },
-          yaxis: {
-            min: 0,
-            max: 50,
-          },
         }}
         series={[{ data: chart_order?.values || [] }]}
         type="area"

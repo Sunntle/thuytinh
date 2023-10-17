@@ -37,10 +37,10 @@ global._io = io;
 let userConnected = [];
 let storeMessage = [];
 const listPermission = ['R2', 'R3', 'R4'];
-io.on("connection", (socket) => {
-  handleNewUserConnect(socket, userConnected, storeMessage, listPermission)
-  handleDisconnect(socket, userConnected, storeMessage, listPermission)
-});
+// io.on("connection", (socket) => {
+//   handleNewUserConnect(socket, userConnected, storeMessage, listPermission)
+//   handleDisconnect(socket, userConnected, storeMessage, listPermission)
+// });
 initRoutes(app);
 db.connectDatabase();
 

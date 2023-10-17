@@ -1,4 +1,4 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Op } = require("sequelize");
 const db = require("../config/connectDatabase");
 const Tables = db.sequelize.define(
     "Tables",
@@ -19,7 +19,8 @@ const Tables = db.sequelize.define(
             defaultValue: 0
         },
         position: {
-            type: DataTypes.ENUM('Ngoài trời', 'Trong nhà')
+            // in: trong nhà , out : ngoài nhà
+            type: DataTypes.ENUM('in', 'out')
         },
         status_table: {
             type: DataTypes.TINYINT,
@@ -28,5 +29,16 @@ const Tables = db.sequelize.define(
     },
     { timestamps: true }
 );
-Tables.sync();
+Tables.prototype.updateStatusTable = async (arr, status_table) => {
+    await Tables.update({ status_table }, { where: { id: { [Op.in]: arr } } })
+}
+Tables.prototype.checkStatus = async (arr, status_table) => {
+    const list = await Tables.findAll({
+        where: {
+            id: { [Op.in]: arr },
+            status_table
+        }, raw: true
+    });
+    return list.length === 0 ? true : false
+}
 module.exports = Tables;

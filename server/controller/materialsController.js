@@ -1,49 +1,61 @@
-const { Materials, Notification } = require("../models");
-const { Op } = require("sequelize");
-//const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
+const { Materials, Notification, Product, Recipes } = require("../models");
+const { Op, literal } = require("sequelize");
+const { unitMasterial } = require("../utils/const");
+const { apiQueryRest } = require('../utils/const')
+
+const overMasterial = ["2", "500", "9", "5", "50", "20", "10"];
 
 
 let notificationSent = false
 exports.list = async (req, res) => {
-  const { _offset, _limit, _sort, _order, q, _over, ...rest } = req.query;
-  const query = {
-    raw: true,
+
+  let query = {
+    ...apiQueryRest(req.query), nest: true
   };
-  let over = _over || 30;
-
-  if (_limit) query.limit = +_limit;
-  if (_offset) query.offset = +_offset;
-  if (q) query.where = { name_material: { [Op.substring]: q } };
-  if (_sort) query.order = [[_sort, _order]];
-
   const { count, rows } = await Materials.findAndCountAll(query);
 
-  let chart = await Materials.findAll({
+  const dataChart = await Materials.findAll({
     attributes: ["id", "price", "amount", "name_material", "unit", "image"],
-    raw: true,
-  });
-
-  let dataChart = [];
-
-  chart.forEach((ele) => {
-    if (ele.unit === "gram") {
-      ele.amount = ele.amount / 1000;
-      ele.unit = "kg";
-    }
-    if (ele.amount <= over) {
-      dataChart.push(ele);
-    }
+    where: {
+      [Op.or]: unitMasterial.map((unit, index) => ({
+        unit: unit,
+        amount: { [Op.lte]: parseFloat(overMasterial[index]) },
+      })),
+    },
+    raw: true
   });
 
   if (dataChart.length > 0 && !notificationSent) {
-    let created = await Notification.create(
-      {
-        type: "material",
-        description: `Có ${dataChart.length} nguyên liệu sắp hết`,
+    let created = await Notification.create({
+      type: "material",
+      description: `Có ${dataChart.length} nguyên liệu sắp hết`
+    }, { raw: true }
+    );
+    let findIdProduct = await Recipes.findAll({
+      attributes: ["id_product"],
+      where: {
+        id_material: { [Op.in]: dataChart.map(item => item.id) }
       },
-      { raw: true }
+      group: ['id_product'],
+      raw: true
+    })
+    await Product.update({ status: 3 }, {
+      where: {
+        id: {
+          [Op.in]: findIdProduct.map(item => item.id_product),
+        },
+        status: {
+          [Op.lt]: 3
+        }
+      }
+    });
+    let createdProduct = await Notification.create({
+      type: "product",
+      description: `Có ${findIdProduct.length} sản phẩm gần hết hàng`
+    }, { raw: true }
     );
     _io.of("/admin").emit("new message", created);
+    _io.of("/admin").emit("new message", createdProduct);
     notificationSent = true
   }
 

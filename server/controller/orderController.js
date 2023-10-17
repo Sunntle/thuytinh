@@ -1,4 +1,5 @@
 const moment = require("moment");
+const { apiQueryRest } = require('../utils/const')
 const asyncHandler = require("express-async-handler");
 const {
   Order,
@@ -8,6 +9,9 @@ const {
   User,
   Category,
   Tables,
+  Materials,
+  Notification,
+  TableByOrder,
 } = require("../models");
 const { Op, Sequelize } = require("sequelize");
 
@@ -17,61 +21,51 @@ function currentYear(pa = "startOf") {
 }
 
 exports.createOrder = asyncHandler(async (req, res) => {
-  const { orders, customerName, total, idTable } = req.body;
-  console.log(req.body);
+  const { orders, customerName, total, table } = req.body;
+  const arrTable = table || [2, 3];
+  console.log(await Tables.prototype.checkStatus(arrTable, 0));
+  if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
 
-  let isTable = await Tables.findOne({
-    where: { id: idTable, status_table: 0 }
-  })
-  if (isTable) return res.status(200).json({ success: false, data: "Bàn đã có người đặt !" });
+  const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
+  if (approve.length === 0) return res.status(200).json({ success: false, data: "Sản phẩm hết nguyên liệu" });
+  const order_result = await Order.create({ total, name: customerName });
 
-  const order_result = await Order.create({ total, name: customerName, id_table: idTable });
-  let val = orders.map((item) => ({
+  let dataTable = await TableByOrder.bulkCreate(arrTable.map(item => ({ tableId: item, orderId: order_result.id })))
+  await Tables.prototype.updateStatusTable(arrTable, 1)
+
+
+  let val = approve.map((item) => ({
     id_product: item.id,
-    quantity: item.quantity,
-    id_order: order_result.id,
+    quantity: item.qtyOrder,
+    id_order: order_result.id
   }));
-  console.log(val);
-  const order_detail = await OrderDetail.bulkCreate(val);
-  let pro = await Product.findAll({
-    where: {
-      id: { [Op.in]: order_detail.map((item) => item.id_product) },
-    },
-    include: [{ model: ImageProduct, attributes: ["url", "id"] }],
-  });
-  const result = { orders: order_result, detail: order_detail, product: pro };
 
-  await Tables.update(
-    { id_order: order_result.id },
-    { where: { id: idTable, status_table: 0 }, return: true },
-  );
+  const order_detail = await OrderDetail.bulkCreate(val);
+  let product = await Product.findAll({
+    where: { id: { [Op.in]: order_detail.map((item) => item.id_product) } }, include: [{ model: ImageProduct, attributes: ["url", "id"] }]
+  });
+  let result = { orders: order_result, detail: order_detail, product, tableByOrder: dataTable };
+
+
   let storeNotification = await Notification.create(
-    {
-      type: "order",
-      description: `Có đơn hàng mới`,
-      content: order_result.id
-    },
-    { raw: true }
+    { type: "order", description: `Có đơn hàng mới`, content: order_result.id }, { raw: true }
   );
   _io.of("/admin").emit("new message", storeNotification)
   _io.of("/client").emit("status order", result)
-  res.status(200).json(result);
+  res.status(200).json({ success: true, data: result });
+
 });
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {
-  const { key_sort, val_sort, page, limit } = req.query;
-  const page_current = +page || 1;
-  const li = limit || 10;
-  const offset = +(page_current > 0 ? (page_current - 1) * li : 0);
-  let con = { limit: li, offset: offset };
-
-  if (key_sort && val_sort) con.order = [[key_sort, val_sort]];
-
+  let query = {
+    ...apiQueryRest(req.query), nest: true
+  };
   const { count, rows } = await Order.findAndCountAll({
-    ...con,
+    ...query,
     include: [
       {
         model: OrderDetail,
+        as: "orderToOrderDetail",
         include: [
           {
             model: Product,

@@ -12,6 +12,7 @@ const useHttp = () => {
         ...request,
       });
       getData(response);
+      console.log(response);
     } catch (err) {
       setError(err.message || "Something went wrong!");
     }

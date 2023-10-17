@@ -78,7 +78,7 @@ const OrderListModal = ({
         ...body,
       };
       sendRequest(request, setData);
-      dispatch(emptyOrder());
+      // dispatch(emptyOrder());
     } catch (err) {
       console.log(err);
     }

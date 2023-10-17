@@ -13,6 +13,8 @@ const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popul
 
 
 const ResRevenue = () => {
+    const [totalOrder, setTotalOrder] = useState([]);
+    const [revenue, setRevenue] = useState({ daily: 0, weekly: 0 });
     const [data, setData] = useState({});
     const [timeChart, setTimeChart] = useState("MONTH");
     const [dataProduct, setDataProduct] = useState();
@@ -78,14 +80,13 @@ const ResRevenue = () => {
             ),
         },
     ];
-    const [totalOrder, setTotalOrder] = useState([]);
-    const [revenue, setRevenue] = useState({ daily: 0, weekly: 0 });
+
     useEffect(() => {
         const fetchData = async () => {
-            const resOrder = await getAllOrder();
-            setTotalOrder(resOrder.data);
-            const daily = calculateDailyRevenue(resOrder.data);
-            const weekly = calculateWeeklyRevenue(resOrder.data);
+            const { data } = await getAllOrder();
+            setTotalOrder(data);
+            const daily = calculateDailyRevenue(data);
+            const weekly = calculateWeeklyRevenue(data);
             setRevenue({ daily, weekly });
         }
         fetchData();
