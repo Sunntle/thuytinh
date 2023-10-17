@@ -20,7 +20,7 @@ exports.add = asyncHandler(async (req, res) => {
 })
 exports.maskAsRead = asyncHandler(async (req, res) => {
     const {listId} = req.body
-    const response = await Notification.update({status: 1},{
+    const response = await Notification.update({status: 1, updatedAt: new Date().toISOString()},{
         where:{
             id: listId.map(el=> el.id)
         }

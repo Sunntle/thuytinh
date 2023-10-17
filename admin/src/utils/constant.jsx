@@ -23,6 +23,7 @@ export const NAV_ITEMS = [
     getItem("Công thức", "/admin/recipe"),
     getItem("Hóa đơn ", "/admin/order"),
     getItem("Đánh giá", "/admin/reviews"),
+    getItem("Tài khoản", "/admin/user"),
   ]),
   getItem("Nhà hàng", null, <ShopOutlined />, [
     getItem("Chọn bàn","/employee/choosetable"),

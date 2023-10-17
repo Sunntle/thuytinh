@@ -6,6 +6,7 @@ import "./app.scss";
 import Spinner from "./components/spinner";
 import { fetchAccount } from "./redux/account/accountSlice";
 import router from "./routes";
+import { socket } from "./socket";
 const nextCallAccount = ['/', '/register'];
 const App = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,11 @@ const App = () => {
       dispatch(fetchAccount());
     }
   }, [dispatch]);
+  useEffect(()=>{
+    if(user.isAuthenticated){
+      socket.emit("user connect", user.user)
+    }
+  },[user])
   if (user && user.isLoading) {
     return <Spinner />;
   }
