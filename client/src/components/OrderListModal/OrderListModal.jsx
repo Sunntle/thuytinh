@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {memo, useEffect, useState} from "react";
 import { Button, Modal } from "antd";
 import "./main.css";
 import { BiSolidTrash } from "react-icons/bi";
@@ -12,8 +12,8 @@ import {
   removeFromOrder,
 } from "../../redux/Order/orderSlice.js";
 import useHttp from "../../hooks/useHttp.js";
-import { addSelectedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
-import { getIdOrder } from "../../redux/Rating/ratingSlice.js";
+import { addOrder } from "../../services/api.js";
+import {addSelectedItems} from "../../redux/SelectedItem/selectedItemsSlice.js";
 
 const { confirm } = Modal;
 const OrderListModal = ({
@@ -26,7 +26,7 @@ const OrderListModal = ({
   const orders = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const idTable = location.pathname.split("/")[1].split("-")[1];
-  const { sendRequest } = useHttp();
+  const { sendRequest, isLoading } = useHttp();
   const dispatch = useDispatch();
   // Calculate Total Bill
   const total = orders.reduce((acc, cur) => {
@@ -52,6 +52,7 @@ const OrderListModal = ({
       },
     });
   };
+
   const handleIncreaseQuantity = (data) => {
     if (data) {
       dispatch(increaseQuantity(data));
@@ -64,7 +65,7 @@ const OrderListModal = ({
     }
   };
 
-  const submitOrderList = () => {
+  const submitOrderList = async () => {
     const body = {
       orders: orders,
       total: total,
@@ -72,28 +73,15 @@ const OrderListModal = ({
       idTable: idTable,
     };
     try {
-      const request = {
-        method: "post",
-        url: "/order",
-        ...body,
-      };
-      sendRequest(request, setData);
-      if (data) {
-        dispatch(
-          addSelectedItems({
-            products: data.product,
-            total: total,
-          }),
-        );
-        dispatch(getIdOrder(data?.orders.id));
-        dispatch(emptyOrder());
-        console.log("Đặt món thành công");
-      }
+      await sendRequest(addOrder(body), setData);
+      dispatch(emptyOrder());
+      console.log("Đặt món thành công");
     } catch (err) {
       console.log(err);
     }
     setIsOrderModalOpen(false);
   };
+
   return (
     <Modal
       className="lg:hidden"

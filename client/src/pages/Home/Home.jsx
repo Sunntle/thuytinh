@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
-import { Badge, Button } from "antd";
+import { Badge } from "antd";
 import moment from "moment";
 import { AiFillPlusCircle } from "react-icons/ai";
 import "swiper/css";
@@ -16,27 +16,23 @@ import { formatCurrency, truncateString } from "../../utils/format.js";
 import { socket } from "../../services/socket";
 import Reason from "../../components/Reason.jsx";
 import Banner from "../../components/Banner.jsx";
+import {fetchProduct} from "../../services/api.js";
 import { useLocation, useParams } from "react-router-dom";
 import image1 from "../../assets/images/image1.png";
 import image4 from "../../assets/images/image4.png";
 import image2 from "../../assets/images/image2.png";
-
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
-  const location = useLocation();
 
   useEffect(() => {
-    const request = {
-      method: "get",
-      url: "/product",
-    };
-    sendRequest(request, setSlideProduct);
+    sendRequest(fetchProduct(), setSlideProduct);
   }, [sendRequest]);
 
   useEffect(() => {
     socket.emit("new user", { userName: "Taile", role: "R1" });
   }, []);
+
   const onClickCheckSocket = () => {
     socket.emit("new order", {
       id: 12706,

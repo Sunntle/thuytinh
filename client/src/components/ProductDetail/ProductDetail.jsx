@@ -4,20 +4,32 @@ import "./main.css";
 import { formatCurrency } from "../../utils/format.js";
 import useHttp from "../../hooks/useHttp.js";
 import { HiMiniXMark } from "react-icons/hi2";
+import {fetchProductById} from "../../services/api.js";
 
 const ProductDetail = ({ openDrawer, onClose, id }) => {
   const [productDetail, setProductDetail] = useState({});
   const { sendRequest, isLoading } = useHttp();
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
 
   useEffect(() => {
-    const request = {
-      method: "get",
-      url: `product/${id}`,
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024);
     };
-    sendRequest(request, setProductDetail);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  if (isLargeScreen) {
+    return null;
+  }
+
+  useEffect(() => {
+    sendRequest(fetchProductById(id), setProductDetail);
   }, [sendRequest, id]);
 
-  console.log(productDetail);
   return isLoading ? (
     <Drawer
       height={"80%"}
@@ -31,7 +43,7 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
         </span>
       }
     >
-      <div className="w-full h-full flex flex-col justify-center items-center">
+      <div className="w-full h-full flex flex-col justify-center items-center lg:hidden">
         <Spin size={"large"} />
         <span className="mt-4 font-semibold text-lg">
           Quý khách vui lòng đợi trong giây lát !
@@ -55,7 +67,7 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
       <div className="text-slate-500">
         <div className="w-auto h-48">
           <img
-            className="w-full h-full rounded"
+            className="w-full h-full rounded shadow-md"
             src={
               productDetail?.imageUrls || productDetail?.ImageProducts?.[0].url
             }
