@@ -22,9 +22,15 @@ export function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate()
 }
 export const roleRext = (params) => {
-  if ("R1" === params) return "Khách hàng"
-  else if ("R2" === params) return "Nhân viên"
-  else if ("R4" === params) return "Admin"
+  switch(params){
+    case "R1": return "Khách hàng";
+    case "R4" : return "Admin";
+    case "Khách hàng": return "R1";
+    case "Admin": return "R4";
+    case "Nhân viên": return "R2";
+    default:
+      return "Nhân viên";
+  }
 }
 
 export function truncateString(text, maxLength) {

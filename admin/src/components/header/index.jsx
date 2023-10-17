@@ -139,8 +139,8 @@ function HeaderComponent() {
   }, [dispatch]);
   const onFinish = async (values) => {
     const formData = new FormData();
-    const { avatar, ...rest } = values;
-    const val = { ...rest };
+    const { avatar, role, ...rest } = values;
+    const val = { ...rest, role: roleRext(role) };
     if (avatar[0]?.originFileObj) {
       val.avatar = avatar[0].originFileObj;
     }

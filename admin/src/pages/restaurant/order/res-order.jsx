@@ -14,39 +14,39 @@ const ResOrder = () => {
     const dispatch = useDispatch();
 
     const [data, setData] = useState([]);
-    const idTble = useSelector(state => state.table)
+
+    const idTble = useSelector((state) => state.table)
+    // useEffect(() => {
+    //     const fetchData = async (id) => {
+    //         try {
+    //             const resCa = await getTableId(idTble.id);
+    //             setData(resCa);
+    //         } catch (error) {
+    //         }
+    //     };
+    //     fetchData(idTble.id);
+    // }, [idTble.id]);
+    // console.log(data?.order?.order_details)
+    // const { order } = data;
+    // const order_details = order?.order_details
+    // console.log(order_details?.product)
+
     useEffect(() => {
         const fetchData = async (id) => {
-            const resCa = await getTableId(idTble.id);
-            setData(resCa);
-        }
-        fetchData();
-    }, []);
-    console.log(data)
-    const {order} = data
-    console.log(order?.total);
-    //Xu ly dat mon
-    const submitOrderList = async (value) => {
-        // try {
-        //     let res;
-        //     const body = {
-        //         orders: carts,
-        //         total: totalVAT,
-        //         customerName: "Admin",
-        //         idTable: {id: idTble.id, status_table: idTble.status_table},
-        //     };
-        //     console.log(body)
-        //     res = await addOrder(body);
-        //     dispatch(RemoveAllCart());
-        //     dispatch(RemoveTable());
-        //     message.open({
-        //         type: "success",
-        //         content: "Đặt món thành công thành công!",
-        //     });
-        // } catch (err) {
-        //     console.log(err);
-        // }
-    };
+            try {
+                const resCa = await getTableId(idTble.id);
+                console.log("Response from API:", resCa);
+                setData(resCa);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+    
+        fetchData(idTble.id);
+    }, [idTble.id]);
+    const { order } = data;
+    // console.log(data)
+
     // modal phuong thuc thanh toan
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
@@ -140,9 +140,11 @@ const ResOrder = () => {
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
                             <button className='bg-red-500 text-white' onClick={() => dispatch(RemoveAllCart())}>Hủy</button>
                         </div>
-                        <div className='flex justify-center font-semibold col-span-2 m-1'>
-                            <button className='bg-blue-500 text-white' onClick={submitOrderList}>Đặt món</button>
-                        </div>
+
+                            <div className='flex justify-center font-semibold col-span-2 m-1'>
+                                <button className='bg-blue-500 text-white' onClick={() => dispatch(AddCart())}>Đặt món</button>
+                            </div>
+
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
                             <button className='bg-indigo-500 text-white'>In bill</button>
                         </div>
@@ -187,6 +189,7 @@ const ResOrder = () => {
                         </div>
                     </div>
                 </div>
+
             </div>
         </>
     )

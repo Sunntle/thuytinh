@@ -6,16 +6,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { CloseOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
-import { addOrder } from '../../../services/api'
+import { addOrder, getTableId, updateOrder } from '../../../services/api'
 import { RemoveTable } from '../../../redux/table/tableSystem'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const ResPayment = () => {
     const [data, setData] = useState(null);
+    const [orderDetails, setOrderDetails] = useState(null);
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
     const idTble = useSelector(state => state.table)
-    console.log(idTble.id)
+
     // const statustble = useSelector(state => state.table.status_table)
     const dispatch = useDispatch();
     useEffect(() => {
@@ -30,13 +31,17 @@ const ResPayment = () => {
                 orders: carts,
                 total: totalVAT,
                 customerName: "Admin",
-                idTable: { id: idTble.id, status_table: idTble.status_table },
+                idTable: idTble.id,
+                // idTable: {id: idTble.id, status_table: idTble.status_table},
+
             };
             console.log(body)
             res = await addOrder(body);
             console.log(res);
             dispatch(RemoveAllCart());
-            dispatch(RemoveTable());
+
+            // dispatch(RemoveTable());
+
             message.open({
                 type: "success",
                 content: "Đặt món thành công thành công!",
@@ -45,6 +50,88 @@ const ResPayment = () => {
             console.log(err);
         }
     };
+
+    // Xu ly update order
+    useEffect(() => {
+        const fetchData = async (id) => {
+            try {
+                const resCa = await getTableId(idTble.id);
+                console.log("Response from API:", resCa);
+                setData(resCa);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData(idTble.id);
+    }, [idTble.id]);
+    // const  order  = data
+    useEffect(() => {
+        setOrderDetails(data)
+    }, [data])
+
+    // console.log(orderDetails?.order?.total)
+    const totalOld = orderDetails?.order?.total;
+    const order_details = data?.order?.order_details || [];
+    // console.log(order?.total);
+
+    // const quantityCurr = carts.map((item) => ({
+    //     quantity: item.quantity
+    // }));
+    // console.log(quantityCurr)
+    // const quantityold = order_details.map((item) => ({
+    //     quantity: item.quantity
+    // }));
+    // console.log(quantityold)
+
+    const sumitUpdateOrder = async (value) => {
+        try {
+            let res;
+
+            const updatedQuantities = carts.map((cartItem) => {
+                const matchingOrderDetail = order_details.find((orderItem) => orderItem.id_product === cartItem.id);
+
+
+                if (matchingOrderDetail) {
+                    const updatedQuantity = cartItem.quantity + matchingOrderDetail.quantity;
+                    return {
+                        id_product: cartItem.id,
+                        quantity: updatedQuantity
+                    };
+                }
+
+                // return {
+                //     id_product: cartItem.id,
+                //     quantity: cartItem.quantity
+                // };
+            });
+            console.log(updatedQuantities)
+            const updateTotal = totalVAT + totalOld
+            const body = {
+                id: orderDetails.id_order,
+                updatedQuantities,
+                updateTotal
+            };
+
+            res = await updateOrder(body);
+            console.log(res)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    // const sumitUpdateOrder = async (value) => {
+    //     try {
+    //         let res;
+    //         const body = {
+    //             id: order.id,
+    //             rest: carts
+    //         }
+    //         res = await updateOrder(body);
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // }
+
     // modal phuong thuc thanh toan
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
@@ -142,7 +229,9 @@ const ResPayment = () => {
                             <button className='bg-blue-500 text-white' onClick={submitOrderList}>Đặt món</button>
                         </div>
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
-                            <button className='bg-indigo-500 text-white'>In bill</button>
+
+                            <button className='bg-indigo-500 text-white' onClick={sumitUpdateOrder}>Cập nhật</button>
+
                         </div>
                         <div className='flex justify-center col-span-2 m-1'>
                             <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>

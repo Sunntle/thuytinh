@@ -6,6 +6,7 @@ import "./app.scss";
 import Spinner from "./components/spinner";
 import { fetchAccount } from "./redux/account/accountSlice";
 import router from "./routes";
+import { socket } from "./socket";
 const nextCallAccount = ['/', '/register'];
 const App = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,11 @@ const App = () => {
       dispatch(fetchAccount());
     }
   }, [dispatch]);
+  useEffect(()=>{
+    if(user.isAuthenticated){
+      socket.emit("user connect", user.user)
+    }
+  },[user])
   if (user && user.isLoading) {
     return <Spinner />;
   }
@@ -36,6 +42,7 @@ const App = () => {
             colorBgTextActive: "#fff",
             colorText: "#7e808c",
           },
+
           Menu:{
             itemSelectedColor: "#FFFFFF",
             itemSelectedBg: "#FC8019",
@@ -45,13 +52,18 @@ const App = () => {
           Layout:{
             lightSiderBg: "#FC8019"
           },
+
           Tabs:{
             inkBarColor:"#FC8019",
             itemSelectedColor:"#FC8019",
             itemHoverColor:"#FC8019",
           }
+
+        },
+
 }
-      }}
+
+      }
     >
       <RouterProvider router={router} />
     </ConfigProviderAntd>

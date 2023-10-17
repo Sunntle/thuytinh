@@ -1,4 +1,4 @@
-import { Badge, Button, Popover } from "antd";
+import { Badge, Button, Popover, Select } from "antd";
 import { formatNgay } from "../../utils/format";
 import { BellOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -24,16 +24,16 @@ function NotificationsComponent({
     navigate(navigateTo);
   };
   const getCountNoti = useMemo(() => {
-    return notifications?.length > 0 ? notifications.filter((el) => el.status == 0).length : 0
+    return notifications && notifications.length > 0 ? notifications.filter((el) => el.status == 0).length : 0
   }, [notifications])
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)
       return <p className="text-gray-500 px-3">Không có thông báo nào</p>;
     return (
-      <>
+      <Select getPopupContainer={(trigger) => trigger.parentElement}>
         {notifications.map((el, index) => {
           return (
-            <div
+            <Select.Option
               onClick={() => handleToContent(index)}
               key={index}
               className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 gap-x-2"
@@ -57,11 +57,11 @@ function NotificationsComponent({
                   <Badge status="processing" color="#fc8e32" />
                 </div>
               )}
-            </div>
+            </Select.Option>
           );
         })}
         <a onClick={handleCheckedAll}>Đánh dấu tất cả đã đọc</a>
-      </>
+      </Select>
     );
   };
   return (
