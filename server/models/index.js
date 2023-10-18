@@ -53,7 +53,7 @@ Product.hasMany(OrderDetail, {
 Product.hasMany(Recipes, { foreignKey: "id_product", sourceKey: "id" });
 Materials.hasMany(Recipes, { foreignKey: "id_material", sourceKey: "id" });
 Order.hasOne(Reviews, { sourceKey: "id", foreignKey: "id_order", onDelete: "CASCADE", onUpdate: "CASCADE" })
-User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee", as: "ordersByEmployee" });
+User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee" });
 
 Category.sync();
 Product.sync();

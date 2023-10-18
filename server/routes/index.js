@@ -7,6 +7,7 @@ const orderRouter = require('./orderRouter');
 const tableRouter = require("./tableRoute");
 const imageRouter = require('./imageRoute');
 const reviewsRouter = require('./reviewsRoute')
+const paymentRouter = require('./paymentRoute')
 const notiRouter = require('./notificationRoute')
 const { notFound, errHandler } = require("../middlewares/err");
 const initRoutes = (app) => {
@@ -19,7 +20,8 @@ const initRoutes = (app) => {
   app.use("/api/table", tableRouter);
   app.use("/api/image", imageRouter);
   app.use("/api/review", reviewsRouter)
+  app.use("/api/payment", paymentRouter)
   app.use("/api/notification", notiRouter)
-  app.use(notFound, errHandler)
+  // app.use(notFound, errHandler)
 };
 module.exports = initRoutes;

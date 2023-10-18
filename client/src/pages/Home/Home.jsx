@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 // import Swiper core and required modules
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-
 // Import Swiper styles
-import { Badge, Button } from "antd";
+import { Badge } from "antd";
 import moment from "moment";
 import { AiFillPlusCircle } from "react-icons/ai";
 import "swiper/css";
@@ -15,27 +14,25 @@ import "swiper/css/scrollbar";
 import useHttp from "../../hooks/useHttp.js";
 import { formatCurrency, truncateString } from "../../utils/format.js";
 import { socket } from "../../services/socket";
-
 import Reason from "../../components/Reason.jsx";
 import Banner from "../../components/Banner.jsx";
-import { useLocation } from "react-router-dom";
-
+import {fetchProduct} from "../../services/api.js";
+import { useLocation, useParams } from "react-router-dom";
+import image1 from "../../assets/images/image1.png";
+import image4 from "../../assets/images/image4.png";
+import image2 from "../../assets/images/image2.png";
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
-  const location = useLocation();
 
   useEffect(() => {
-    const request = {
-      method: "get",
-      url: "/product",
-    };
-    sendRequest(request, setSlideProduct);
+    sendRequest(fetchProduct(), setSlideProduct);
   }, [sendRequest]);
 
   useEffect(() => {
     socket.emit("new user", { userName: "Taile", role: "R1" });
   }, []);
+
   const onClickCheckSocket = () => {
     socket.emit("new order", {
       id: 12706,
@@ -115,6 +112,26 @@ const Home = () => {
             </SwiperSlide>
           ))}
       </Swiper>
+      <section className="mt-20 px-16 flex items-center justify-between">
+        <div className="w-1/3 group relative">
+          <img src={image1} className="h-72 w-full group-hover:opacity-90" />
+        </div>
+        <div className="w-1/3 group relative">
+          <div className="hidden lg:flex z-30 absolute left-16 top-1/2 items-center justify-between text-white">
+            <span className="w-24 h-px bg-white"></span>
+            <span className="cursor-pointer font-light text-sm whitespace-nowrap px-4 py-2 border border-white">
+              Xem thêm
+            </span>
+            <span className="w-24 h-px bg-white"></span>
+          </div>
+          <div className="absolute w-full z-10 h-72 bg-black bg-opacity-40"></div>
+          <img src={image4} className="h-72 w-full group-hover:opacity-80" />
+        </div>
+        <div className="w-1/3 group relative">
+          <img src={image2} className="h-72 w-full group-hover:opacity-90" />
+        </div>
+      </section>
+
       <Reason />
     </div>
   );
