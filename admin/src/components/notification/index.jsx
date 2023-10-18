@@ -1,12 +1,13 @@
-import { Badge, Button, Popover, Select } from "antd";
+import { Badge, Button, Popover } from "antd";
 import { formatNgay } from "../../utils/format";
 import { BellOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
-import { maskAllRead, maskAsRead } from "../../redux/notification/notificationSystem";
-
-
+import {
+  maskAllRead,
+  maskAsRead,
+} from "../../redux/notification/notificationSystem";
 function NotificationsComponent({
   notifications,
   openPopover,
@@ -14,26 +15,28 @@ function NotificationsComponent({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleCheckedAll = useCallback(async() => {
-    dispatch(maskAllRead())
-  },[dispatch])
+  const handleCheckedAll = useCallback(async () => {
+    dispatch(maskAllRead());
+  }, [dispatch]);
   const handleToContent = (index) => {
     const content = notifications[index];
     const navigateTo = `/admin/${content.type}`;
-    dispatch(maskAsRead(content))
+    dispatch(maskAsRead(content));
     navigate(navigateTo);
   };
-  const getCountNoti = useMemo(() =>{
-    return notifications && notifications.length > 0 ? notifications.filter((el) => el.status == 0).length : 0
-   },[notifications])
+  const getCountNoti = useMemo(() => {
+    return notifications && notifications.length > 0
+      ? notifications.filter((el) => el.status == 0).length
+      : 0;
+  }, [notifications]);
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)
       return <p className="text-gray-500 px-3">Không có thông báo nào</p>;
     return (
-      <Select getPopupContainer={(trigger) => trigger.parentElement}>
+      <div className="max-h-[300px] overflow-y-scroll relative">
         {notifications.map((el, index) => {
           return (
-            <Select.Option
+            <div
               onClick={() => handleToContent(index)}
               key={index}
               className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 gap-x-2"
@@ -46,7 +49,8 @@ function NotificationsComponent({
                   />
                 </div>
                 <div className={el.status == 1 ? "text-gray-500" : " pe-2"}>
-                <span className="font-semibold">#{el.id}</span> {el.description} 
+                  <span className="font-semibold">#{el.id}</span>{" "}
+                  {el.description}
                   <p className="text-main text-sm">
                     {formatNgay(el.createdAt, "HH:mm DD-MM-YYYY")}
                   </p>
@@ -57,17 +61,16 @@ function NotificationsComponent({
                   <Badge status="processing" color="#fc8e32" />
                 </div>
               )}
-            </Select.Option>
+            </div>
           );
         })}
-        <a onClick={handleCheckedAll}>Đánh dấu tất cả đã đọc</a>
-      </Select>
+      </div>
     );
   };
   return (
     <Popover
       content={content}
-      title={<p className="text-xl px-3">Thông báo</p>}
+      title={<div className="flex items-center justify-between"><p className="m-0 text-xl">Thông báo</p><p className="cursor-pointer" onClick={handleCheckedAll}>Đánh dấu tất cả đã đọc</p></div>}
       trigger="click"
       open={openPopover}
       onOpenChange={() => setOpenPopover(!openPopover)}

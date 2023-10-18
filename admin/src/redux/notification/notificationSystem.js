@@ -15,11 +15,12 @@ export const maskAllRead = createAsyncThunk('account/maskAllRead', async (_, thu
         const arr = listNoti.map((el) => ({ ...el, status: 1 }))
         await readAll({listId: arr});
         return arr
+    }else{
+        return listNoti
     }
 })
 export const maskAsRead = createAsyncThunk('account/maskAsRead', async (notification, thunkApi) => {
     const listNoti = thunkApi.getState().notifications.content
-    console.log(listNoti);
     if (notification.status === 0){
         const updatedNotifications = listNoti.map((item) => {
             if (item.id === notification.id) {
@@ -32,6 +33,7 @@ export const maskAsRead = createAsyncThunk('account/maskAsRead', async (notifica
     }else{
         return listNoti
     }
+
 })
 const notificationSystem = createSlice({
     name: "notification",
