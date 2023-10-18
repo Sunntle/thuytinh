@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux';
 import { AddCart } from '../../../redux/cartsystem/cartSystem';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
 const ResMenu = () => {
     const [product, setProduct] = useState([]);

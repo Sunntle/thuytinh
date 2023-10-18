@@ -39,11 +39,11 @@ const RecipePage = () => {
     const [data, productResponse, materialResponse] = await Promise.all([
       callFetchRecipe(),
       getAllProduct(),
-      getAllMaterial(),
+      getAllMaterial()
     ]);
     const con = materialResponse.data.map((item) => ({
       value: item.id,
-      label: item.name_material,
+      label: `${item.name_material}  (${item.unit})`
     }));
     const conProduct = productResponse.data
       .filter((item) => {
@@ -160,14 +160,11 @@ const RecipePage = () => {
             render: (_, record) =>
               record.materials.map((item) => (
                 <div key={Math.random()} className="flex gap-2">
-                  <div className="w-1/6 font-medium text-base">
+                  <div className=" font-medium text-base">
                     {item.name_material}
                   </div>
-                  <div className="flex-grow text-base">
-                    {item.descriptionRecipe}
-                  </div>
-                  <div className="w-1/6 text-gray-500 text-base">
-                    {item.amount}/{item.unit}
+                  <div className=" text-gray-500 text-base">
+                    {item.quantity}/{item.unit}
                   </div>
                 </div>
               )),

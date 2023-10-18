@@ -37,6 +37,7 @@ const ResPayment = () => {
             };
             console.log(body)
             res = await addOrder(body);
+            console.log(res);
             dispatch(RemoveAllCart());
 
             // dispatch(RemoveTable());
@@ -66,11 +67,11 @@ const ResPayment = () => {
     // const  order  = data
     useEffect(() => {
         setOrderDetails(data)
-    },[data])
+    }, [data])
 
     // console.log(orderDetails?.order?.total)
     const totalOld = orderDetails?.order?.total;
-    const order_details = data?.order?.order_details || []; 
+    const order_details = data?.order?.order_details || [];
     // console.log(order?.total);
 
     // const quantityCurr = carts.map((item) => ({
@@ -85,10 +86,10 @@ const ResPayment = () => {
     const sumitUpdateOrder = async (value) => {
         try {
             let res;
-    
+
             const updatedQuantities = carts.map((cartItem) => {
                 const matchingOrderDetail = order_details.find((orderItem) => orderItem.id_product === cartItem.id);
-    
+
 
                 if (matchingOrderDetail) {
                     const updatedQuantity = cartItem.quantity + matchingOrderDetail.quantity;
@@ -97,7 +98,7 @@ const ResPayment = () => {
                         quantity: updatedQuantity
                     };
                 }
-    
+
                 // return {
                 //     id_product: cartItem.id,
                 //     quantity: cartItem.quantity
@@ -110,7 +111,7 @@ const ResPayment = () => {
                 updatedQuantities,
                 updateTotal
             };
-    
+
             res = await updateOrder(body);
             console.log(res)
         } catch (err) {

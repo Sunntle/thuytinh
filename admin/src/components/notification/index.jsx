@@ -14,18 +14,18 @@ function NotificationsComponent({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleCheckedAll = useCallback(async() => {
+  const handleCheckedAll = useCallback(async () => {
     dispatch(maskAllRead())
-  },[dispatch])
+  }, [dispatch])
   const handleToContent = (index) => {
     const content = notifications[index];
     const navigateTo = `/admin/${content.type}`;
     dispatch(maskAsRead(content))
     navigate(navigateTo);
   };
-  const getCountNoti = useMemo(() =>{
+  const getCountNoti = useMemo(() => {
     return notifications && notifications.length > 0 ? notifications.filter((el) => el.status == 0).length : 0
-   },[notifications])
+  }, [notifications])
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)
       return <p className="text-gray-500 px-3">Không có thông báo nào</p>;
@@ -46,7 +46,7 @@ function NotificationsComponent({
                   />
                 </div>
                 <div className={el.status == 1 ? "text-gray-500" : " pe-2"}>
-                <span className="font-semibold">#{el.id}</span> {el.description} 
+                  <span className="font-semibold">#{el.id}</span> {el.description}
                   <p className="text-main text-sm">
                     {formatNgay(el.createdAt, "HH:mm DD-MM-YYYY")}
                   </p>

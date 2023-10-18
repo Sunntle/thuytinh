@@ -65,7 +65,6 @@ const DashBoard = () => {
                 {dataProduct?.map((item, index) => (
 
                   <SwiperSlide key={index}>
-
                     <div className="w-full pe-5">
                       <Badge.Ribbon text="Hot" color="red">
                         <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
@@ -78,7 +77,6 @@ const DashBoard = () => {
                       </Badge.Ribbon>
                     </div>
                   </SwiperSlide>
-
                 ))}
               </Swiper>
             </div>
