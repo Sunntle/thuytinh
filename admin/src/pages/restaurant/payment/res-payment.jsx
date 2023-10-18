@@ -58,24 +58,12 @@ const ResPayment = () => {
         };
         fetchData(idTble.id);
     }, [idTble.id]);
-    // const  order  = data
     useEffect(() => {
         setOrderDetails(data)
     },[data])
 
-    // console.log(orderDetails?.order?.total)
     const totalOld = orderDetails?.order?.total;
     const order_details = data?.order?.order_details || []; 
-    // console.log(order?.total);
-
-    // const quantityCurr = carts.map((item) => ({
-    //     quantity: item.quantity
-    // }));
-    // console.log(quantityCurr)
-    // const quantityold = order_details.map((item) => ({
-    //     quantity: item.quantity
-    // }));
-    // console.log(quantityold)
 
     const sumitUpdateOrder = async (value) => {
         try {
@@ -107,24 +95,12 @@ const ResPayment = () => {
             };
     
             res = await updateOrder(body);
+            dispatch(RemoveAllCart());
             console.log(res)
         } catch (err) {
             console.log(err);
         }
     }
-
-    // const sumitUpdateOrder = async (value) => {
-    //     try {
-    //         let res;
-    //         const body = {
-    //             id: order.id,
-    //             rest: carts
-    //         }
-    //         res = await updateOrder(body);
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // }
     // modal phuong thuc thanh toan
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {

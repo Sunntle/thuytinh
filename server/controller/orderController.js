@@ -102,29 +102,6 @@ exports.updateOrder = asyncHandler(async (req, res) => {
   res.status(200).json("Update thành công");
 });
 
-// exports.updateOrder = asyncHandler(async (req, res) => {
-//   const { id, ...rest } = req.body;
-
-//   const order = rest
-//   console.log(order);
-  
-//   const existingOrder = await OrderDetail.findOne({ where: { id_order: id } });
-//   // console.log(existingOrder)
-//   // if(existingOrder) {
-//   //   await existingOrder.update({
-//   //     quantity: existingOrder.quantity + rest?.quantity
-//   //   })
-//   // }
-
-//   // if (existingOrder) {
-//   //   await existingOrder.update(rest);
-//   //   res.status(200).json("Cập nhật thành công");
-//   // } else {
-//   //   await Order.create({ id, ...rest });
-//   //   res.status(201).json("Tạo mới thành công");
-//   // }
-// });
-
 exports.dashBoard = asyncHandler(async (req, res) => {
   let data = {};
   const type = req.query.type;
