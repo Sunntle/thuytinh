@@ -13,7 +13,7 @@ import {
 } from "../../redux/Order/orderSlice.js";
 import useHttp from "../../hooks/useHttp.js";
 import { addOrder } from "../../services/api.js";
-import {addSelectedItems} from "../../redux/SelectedItem/selectedItemsSlice.js";
+import { addSelectedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
 
 const { confirm } = Modal;
 const OrderListModal = ({

@@ -18,6 +18,12 @@ export const updateOrder = (body) => {
 export const getAllTable = (params) => {
   return axios.get(`/api/table`, { params });
 }
+export const getTableId = (id_order) => {
+  return axios.get(`/api/table/${id_order}`); 
+}
+export const updateTables = (data) => {
+  return axios.put(`/api/table`, { data });
+}
 // product //
 export const getAllProduct = (params) => {
   return axios.get(`/api/product`, { params });
@@ -88,6 +94,12 @@ export const addNewMaterial = (data) => {
 };
 
 //account
+export const getAllUser = (params) => {
+  return axios.get(`/api/user/get-all`,{ params });
+};
+export const getDetailUser = (id) => {
+  return axios.get(`/api/user/detail/${id}`);
+};
 export const callLogin = (body) => {
   return axios.post(`/api/user/login`, body);
 };
@@ -106,7 +118,9 @@ export const callUpdateAccount = (body) => {
 export const callUpdatePassword = (body) => {
   return axios.post(`/api/user/set-password`, body);
 }
-
+export const removeUser = (id)=>{
+  return axios.delete(`/api/user/${id}`)
+}
 
 // recipe
 export const callFetchRecipe = () => {
@@ -135,4 +149,17 @@ export const deleteReview = (id) => {
 
 export const getDataDashboard = (type) => {
   return axios.get(`/api/order/thongke`, { params: { type: type } });
+};
+//notifications 
+export const getAllNotification = (params) => {
+  return axios.get(`/api/notification`, { params });
+};
+export const readAll = (body) => {
+  return axios.put(`/api/notification`, body);
+};
+export const readOne = (body) => {
+  return axios.put(`/api/notification`, body);
+};
+export const deleteOne = (id) => {
+  return axios.delete(`/api/notification/${id}`);
 };

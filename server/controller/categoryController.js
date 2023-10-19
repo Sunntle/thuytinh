@@ -1,14 +1,11 @@
 const { Category, Product } = require("../models");
 const { Op } = require("sequelize");
-
+const { apiQueryRest } = require('../utils/const')
 exports.list = async (req, res) => {
   try {
-    const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
-    const query = { raw: true };
-    if (_limit) query.limit = +_limit;
-    if (_offset) query.offset = +_offset;
-    if (q) query.where = { name_category: { [Op.substring]: q } };
-    if (_sort) query.order = [[_sort, _order]];
+    let query = {
+      ...apiQueryRest({...req.query, title: "name_category"}), nest: true
+    };
     const response = await Category.findAll(query);
     res.status(200).json(response);
   } catch (err) {

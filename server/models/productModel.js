@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
 const ImageProduct = require("./imageModel");
+const Category = require("./categoryModel");
 const cloudinary = require("cloudinary").v2;
 const Product = db.sequelize.define(
   "Product",
@@ -45,5 +46,5 @@ Product.beforeDestroy(async (product, options) => {
     await cloudinary.uploader.destroy("NhaHangThuyTinh/" + public_id);
   }
 });
-Product.sync({ alter: true });
+// Product.sync({ alter: true });
 module.exports = Product;

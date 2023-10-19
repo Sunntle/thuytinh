@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AddTable } from '../../../redux/table/tableSystem';
 import { getAllTable } from '../../../services/api';
 import { Modal } from 'antd';
-import ResPayment from '../payment/res-payment';
+import { useNavigate } from 'react-router-dom';
+import ResOrder from '../order/res-order';
 
 export const ButtonTable = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [tableData, setTableData] = useState([]);
-  const tables = useSelector((state) => state.table);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTable, setSelectedTable] = useState(null);
 
@@ -27,6 +28,7 @@ export const ButtonTable = () => {
     setTableData(updatedData);
     setSelectedTable(updatedData[index]);
     dispatch(AddTable(updatedData[index]));
+    // navigate('/employee/menu');
   };
 
   const handlePaymentClick = (index) => {
@@ -46,17 +48,15 @@ export const ButtonTable = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  console.log(tableData)
   return (
     <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
       {tableData.map((table, index) => (
         <div key={index}>
           <span
-            className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${
-              table.status_table
-                ? 'bg-main text-white border-yellow-400 border-3px border-solid'
-                : 'bg-[#D1D5DB] text-white'
-            } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
+            className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
+              ? 'bg-main text-white border-yellow-400 border-3px border-solid'
+              : 'bg-[#D1D5DB] text-white'
+              } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
           >
             <FiUsers className="w-6 h-6 mb-2" />
             Bàn {table.id}
@@ -70,7 +70,7 @@ export const ButtonTable = () => {
             )}
             {table.status_table === 1 && (
               <div>
-                <span className="mt-2 text-white block grid justify-items-center">
+                <span className="mt-2 text-white  grid justify-items-center">
                   Đang sử dụng
                 </span>
                 <div className=" mt-3">
@@ -79,12 +79,12 @@ export const ButtonTable = () => {
                   </button>
                   <Modal
                     footer={null}
-                    title={`Chi tiết bàn ${selectedTable.id}`}
-                    visible={isModalOpen}
+                    title={`Chi tiết bàn ${selectedTable?.id}`}
+                    open={isModalOpen}
                     onOk={handleOk}
                     onCancel={handleCancel}
                   >
-                    <ResPayment />
+                    <ResOrder />
                   </Modal>
                 </div>
               </div>

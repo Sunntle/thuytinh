@@ -39,15 +39,13 @@ body {
   line-height: 1;
 }
 
-@mixin bg-color {
-  background-color: white !important;
-  color: #000 !important;
-}
-
+// .ant-switch.ant-switch-checked {
+//   background-color: #DC4446 !important;
+// }
 .main_area {
-  overflow: hidden;
-  background: white !important;
-
+  // overflow: hidden;
+  // background: white !important;
+ 
   .ant-menu-submenu-title {
     color: #fc8019 !important;
   }
@@ -59,26 +57,6 @@ body {
   .ant-menu-item-selected {
     color: white !important;
     background-color: #fc8019 !important;
-  }
-
-  .layout_area {
-    padding-top: 20px;
-    background: white !important;
-
-    &_sider {
-      @include bg-color;
-
-      .ant-menu-item {
-        font-size: 1rem;
-        font-weight: 500;
-        color: rgb(75 85 99);
-
-      }
-
-      .ant-layout-sider-trigger {
-        @include bg-color;
-      }
-    }
   }
 }
 
@@ -94,15 +72,6 @@ body {
   width: 18px;
   height: 18px;
 }
-
-@media only screen and (max-width: 640px) {
-  .main_area {
-    .layout_area_sider {
-      display: none;
-    }
-  }
-}
-
 .bd {
   border: 2px solid red;
 }

@@ -57,12 +57,12 @@ function SearchPage() {
     fetchData(pagesize, pagesize * (page - 1));
   };
   const renderCategory = () => {
-    if (category.length < 1)
+    if (category?.length < 1)
       return <h4 className="text-gray-600 pb-3">Không có danh mục phù hợp</h4>;
     return (
       <div className="my-3">
         <Title level={4} className="font-semibol">
-          Danh mục: <span className="text-main">{category.total}</span>
+          Danh mục: <span className="text-main">{category?.total}</span>
         </Title>
         <Swiper
           speed={1500}
@@ -112,14 +112,14 @@ function SearchPage() {
     );
   };
   const renderProduct = () => {
-    if (product.total === 0)
+    if (product?.total === 0)
       return (
         <h4 className=" text-gray-600  pb-3">Không có sản phẩm phù hợp</h4>
       );
     return (
       <div className="my-3">
         <Title level={4} className="font-semibol">
-          Món án: <span className="text-main">{product.total}</span>
+          Món án: <span className="text-main">{product?.total}</span>
         </Title>
         <Row gutter={[10, 10]}>
           {product?.data.map((el, index) => (
@@ -140,7 +140,7 @@ function SearchPage() {
                   {el.name_product}
                 </Link>
                 <p className="text-gray-500">
-                  {truncateString(el.description, 40)}
+                  {truncateString(el?.description, 40)}
                 </p>
                 <p className="text-main text-xl">{formatGia(el.price)}</p>
                 <ButtonComponents
@@ -156,7 +156,7 @@ function SearchPage() {
           <Pagination
             responsive={true}
             defaultCurrent={1}
-            total={product.total}
+            total={product?.total}
             onChange={handlePageChange}
           />
         </div>
@@ -164,7 +164,7 @@ function SearchPage() {
     );
   };
   const renderMaterial = () => {
-    if (material.total === 0)
+    if (material?.total === 0)
       return (
         <h4 className=" text-gray-600 pb-3">Không có nguyên liệu phù hợp</h4>
       );
@@ -172,10 +172,11 @@ function SearchPage() {
       <div>
         <div className="my-3">
           <Title level={4} className="font-semibold">
-            Nguyên liệu: <span className="text-main">{material.total}</span>
+            Nguyên liệu: <span className="text-main">{material?.total}</span>
           </Title>
+          <div className="">
           {material?.data.map((el, index) => (
-            <div key={index} className="flex items-center">
+            <div key={index} className="flex items-center gap-5 pb-4">
               <div>
                 <img
                   className="w-full"
@@ -187,23 +188,23 @@ function SearchPage() {
               <div>
                 <Link
                   to={`/employee/menu?material=${el.id}`}
-                  className="text-black font-semibold text-xl hover:text-main"
+                  className="font-semibold text-xl hover:text-main"
                 >
                   {el.name_material}
                 </Link>
-                <p className="text-gray-500  my-1">
-                  Số lượng: {el.amount}
-                  {el.unit}
+                <p className="text-gray-500  my-2">
+                  Số lượng: {el.amount} {el.unit}
                 </p>
                 <p className="text-main text-lg">{formatGia(el.price)}</p>
               </div>
             </div>
           ))}
+          </div>
           <div className="text-right">
             <Pagination
               responsive={true}
               defaultCurrent={1}
-              total={material.total}
+              total={material?.total}
               onChange={handlePageChange}
             />
           </div>

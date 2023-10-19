@@ -3,12 +3,13 @@ const {
   generateRefreshToken,
   generateHash,
 } = require("../middlewares/jwt");
-const { User, Order } = require("../models");
-
+const { User, Order, Notification } = require("../models");
+const { Op } = require("sequelize");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/mail");
 const validator = require("validator");
+const { getAllUserOnline } = require("../utils/socketHanlers");
 
 exports.register = asyncHandler(async (req, res) => {
   const { name, password, email } = req.body;
@@ -22,6 +23,15 @@ exports.register = asyncHandler(async (req, res) => {
     defaults: { ...req.body },
   });
   if (created) {
+    let storeNotification = await Notification.create(
+      {
+        type: "user",
+        description: `Người dùng mới`,
+        content: user.id
+      },
+      { raw: true }
+    );
+    _io.of("/admin").emit("new message",storeNotification)
     res.status(200).json({ success: true, data: user });
   } else {
     res.status(200).json({ success: false, mes: "Email đã tồn tại rồi nha" });
@@ -61,10 +71,63 @@ exports.login = asyncHandler(async (req, res) => {
   }
 });
 exports.getAllUser = asyncHandler(async (req, res) => {
-  const result = await User.findAll({ include: Order });
+  const { _offset, _limit, _sort, _order, q,_like, ...rest } = req.query;
+  const query = {
+    raw: true,
+    include: 
+      {
+        model: Order,
+      },
+  };
+    if (_limit) query.limit = +_limit;
+    if (_offset) query.offset = +_offset;
+    if (q) 
+    query.where = {
+      [Op.or]: [
+        { name: { [Op.substring]: q } },
+        { email: { [Op.substring]: q } },
+      ],
+    };
+    if (_sort) query.order = [[_sort, _order]];
+    if(_like){
+      const [a,b,c] = _like.split("_")
+      query.where = query.where || {};
+      query.where[Op.or] = query.where[Op.or] || [];
+      let symbol = Op.substring
+      if(c=="not"){
+        symbol = Op.notLike
+      }
+      query.where[Op.or].push({
+        [a]: {
+          [symbol]: b,
+        },
+      });
+    }
+  const {count, rows} = await User.findAndCountAll(query);
+  const adminOnline = getAllUserOnline()
+  const data = rows.map(itemA => {
+    const matchingItemB = adminOnline.find((itemB) => itemB.id === itemA.id);
+    if (matchingItemB) {
+      itemA.status = true;
+    }
+    return itemA
+  })
   return res.status(200).json({
     success: true,
-    data: result,
+    total: count,
+    data: data,
+  });
+});
+exports.getDetailUser = asyncHandler(async (req, res) => {
+  const _id=  req.params.id
+  const user = await User.findOne({
+    raw: true,
+    where:{id: _id},
+    include: Order
+  });
+  return res.status(200).json({
+    success: true,
+    data: user,
   });
 });
 exports.setPassUser = asyncHandler(async (req, res) => {

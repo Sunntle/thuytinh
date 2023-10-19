@@ -1,5 +1,5 @@
 import { DownCircleFilled, UpCircleFilled } from "@ant-design/icons";
-import { Col, Pagination, Popconfirm, Rate, Row, Select, message } from "antd";
+import { Col, Pagination, Popconfirm, Rate, Row, Select, message, Typography } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ButtonComponents from "../../components/button";
 import ColumnChart from "../../components/chart/column-chart";
@@ -22,6 +22,16 @@ function ReviewsPage() {
     _limit: limit,
     _time: currentMonth,
   });
+  const dayInMonth = useMemo(() => {
+    return getDaysInMonth(2023, currentMonth);
+  }, [currentMonth]);
+  const handleArrCategories = useMemo(() => {
+    const numbersArray = [];
+    for (let i = 1; i <= dayInMonth; i++) {
+      numbersArray.push(i);
+    }
+    return numbersArray;
+  },[dayInMonth])
   const fetchReviews = async (params) => {
     const response = await getAllReviews(params);
     setReviewsCurrent(response);
@@ -43,7 +53,7 @@ function ReviewsPage() {
           setPercent(
             ((countReviews?.total - countPrevReviews?.total) /
               countPrevReviews?.total) *
-            100
+              100
           );
         }
         const res = await getAllReviews({
@@ -62,7 +72,7 @@ function ReviewsPage() {
         setLoading(false);
       }
     },
-    [currentMonth]
+    [currentMonth, dayInMonth]
   );
   const handleChangePage = (e) => {
     setPage(e);
@@ -82,36 +92,29 @@ function ReviewsPage() {
       fetchData(filter);
     }
   };
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     fetchReviews({ _offset: 0, _limit: limit, _time: currentMonth });
-  };
+  },[currentMonth])
+  
   const handleCancelConfirm = () => {
     message.error("Xóa thất bại");
   };
-  const dayInMonth = useMemo(() => {
-    return getDaysInMonth(2023, currentMonth);
-  }, [currentMonth]);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
   if (loading) {
     return <Spinner />;
   }
-  const handleArrCategories = () => {
-    const numbersArray = [];
-    for (let i = 1; i <= getDaysInMonth(2023, currentMonth); i++) {
-      numbersArray.push(i);
-    }
-    return numbersArray;
-  };
+  
   return (
     <div className="my-7 px-5">
       <div className="p-5 mb-6 rounded-md border border-solid border-gray-300">
         <Row align={"middle"} justify={"center"}>
           <Col sm={24} md={8}>
-            <h3 className="text-2xl font-bold text-gray-700 mb-3">
+            <Typography.Title level={2} >
               Phản hồi từ khách hàng
-            </h3>
+            </Typography.Title>
             <p className="text-gray-500 mb-6">
               {formatNgay(new Date(), "HH:mm DD-MM-YYYY")}
             </p>
@@ -123,9 +126,9 @@ function ReviewsPage() {
                 className="lg:text-xl text-gray-700 mb-3 font-semibold"
               ></Select>
             </h4>
-            <span className="text-3xl font-bold text-gray-700">
+            <Typography.Title style={{ display: "inline"}}>
               {reviews?.total}
-            </span>
+            </Typography.Title>
             <span className="mx-3">lượt đánh giá</span>
             <span
               style={percent >= 0 ? { color: "#22C55E" } : { color: "#EF4444" }}
@@ -155,20 +158,20 @@ function ReviewsPage() {
             <ColumnChart
               series={[
                 {
-                  name: "Tích cực",
+                  name: "Bình luận",
                   data: dataChart,
                 },
               ]}
-              colors={percent >= 0 ? ["#22C55E"] : ["#EF4444"]}
-              categories={dayInMonth}
+              colors={["#22C55E"]}
+              categories={handleArrCategories}
             />
           </Col>
         </Row>
       </div>
       <div className="mb-6 p-5 rounded-md border border-solid border-gray-300">
-        <h3 className="text-lg lg:text-2xl font-bold text-gray-700 mb-3">
+        <Typography.Title level={3}>
           Đánh giá gần đây
-        </h3>
+        </Typography.Title>
         <SearchComponent
           className="max-w-md"
           onChange={handleSearch}
@@ -180,7 +183,7 @@ function ReviewsPage() {
             return (
               <Col key={index} xs={24} sm={12} lg={8}>
                 <div className="p-8 rounded-md border border-solid border-gray-300">
-                  <Row gutter={[20, 20]} justify="space-between">
+                  <Row gutter={[20, 20]} justify="space-between" align={"middle"}>
                     <Col xs="12">
                       <Row
                         gutter={[20, 20]}
@@ -195,9 +198,9 @@ function ReviewsPage() {
                           />
                         </Col>
                         <Col xs="12" md="8">
-                          <h4 className="lg:text-xl text-gray-700 font-semibold">
+                          <Typography.Title level={4}>
                             {el.name}
-                          </h4>
+                          </Typography.Title>
                           <p className="text-gray-500 my-2">
                             {formatNgay(el.createdAt, "HH:mm DD-MM-YYYY")}
                           </p>
@@ -235,7 +238,7 @@ function ReviewsPage() {
                       ""
                     )}
                   </div>
-                  <p className="text-gray-500 h-16">{el.description}</p>
+                  <Typography.Paragraph className=" h-16">{el.description}</Typography.Paragraph>
                   <p className="text-gray-500 my-3 font-semibold">
                     {formatNgay(el["order.createdAt"])}
                   </p>

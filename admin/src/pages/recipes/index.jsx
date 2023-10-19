@@ -8,6 +8,9 @@ import {
   Select,
   Input,
   Divider,
+  Row,
+  Col,
+  Typography,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
@@ -21,6 +24,7 @@ import ConfirmComponent from "../../components/confirm";
 import ButtonComponents from "../../components/button";
 import CreateRecipe from "./add_recipe";
 const init = { show: false, data: [] };
+const { Title } = Typography;
 const RecipePage = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState();
@@ -35,11 +39,11 @@ const RecipePage = () => {
     const [data, productResponse, materialResponse] = await Promise.all([
       callFetchRecipe(),
       getAllProduct(),
-      getAllMaterial(),
+      getAllMaterial()
     ]);
     const con = materialResponse.data.map((item) => ({
       value: item.id,
-      label: item.name_material,
+      label: `${item.name_material}  (${item.unit})`
     }));
     const conProduct = productResponse.data
       .filter((item) => {
@@ -117,14 +121,18 @@ const RecipePage = () => {
   };
   return (
     <div className="my-7 px-5">
-      <div className="text-center text-2xl my-3">Công thức từng sản phẩm</div>
-      <div>
-        <ButtonComponents
-          className="border-borderSecondaryColor text-main"
-          onClick={() => setOpenModal(true)}
-          content={"Thêm mới"}
-        />
-      </div>
+      <Row justify="space-between" align="center" className="mb-4">
+        <Col xs={6}>
+          <Title level={3}>Công thức sản phẩm</Title>
+        </Col>
+        <Col xs={6} style={{ textAlign: "-webkit-right" }}>
+          <ButtonComponents
+            className="border-borderSecondaryColor text-main"
+            onClick={() => setOpenModal(true)}
+            content={"Thêm mới"}
+          />
+        </Col>
+      </Row>
       <Table
         className="mt-3"
         columns={[
@@ -152,14 +160,11 @@ const RecipePage = () => {
             render: (_, record) =>
               record.materials.map((item) => (
                 <div key={Math.random()} className="flex gap-2">
-                  <div className="w-1/6 font-medium text-base">
+                  <div className=" font-medium text-base">
                     {item.name_material}
                   </div>
-                  <div className="flex-grow text-base">
-                    {item.descriptionRecipe}
-                  </div>
-                  <div className="w-1/6 text-gray-500 text-base">
-                    {item.amount}/{item.unit}
+                  <div className=" text-gray-500 text-base">
+                    {item.quantity}/{item.unit}
                   </div>
                 </div>
               )),
