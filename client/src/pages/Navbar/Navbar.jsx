@@ -49,12 +49,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   const idTable = location.pathname.split("/")[1].split("-")[1];
 
-  useEffect(() => {
-    const compareRegex = regexRouter.test(location.pathname);
-    if (!compareRegex) {
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const compareRegex = regexRouter.test(location.pathname);
+  //   if (!compareRegex) {
+  //     navigate("/");
+  //   }
+  // }, []);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
 
   const handleMenuMouseEnter = () => {

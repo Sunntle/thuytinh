@@ -7,9 +7,8 @@ const cookieParser = require("cookie-parser");
 const db = require("./config/connectDatabase");
 const { Server } = require("socket.io");
 const { handleNewUserConnect, handleDisconnect, handleCallStaff } = require("./utils/socketHanlers")
-const port = process.env.PORT || 8000;
 require("dotenv").config();
-
+const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(
