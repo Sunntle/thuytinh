@@ -14,7 +14,7 @@ const EnterName = () => {
 
   useEffect(() => {
     if (userName) {
-      navigate(`/ban-${idTable}/home`);
+      navigate(`/ban-${idTable}/service`);
     }
   }, []);
 

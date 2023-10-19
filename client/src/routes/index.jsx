@@ -13,27 +13,47 @@ import Contact from "../pages/Contact/Contact.jsx";
 import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
+import LayoutContainer from "../layouts/LayoutContainer";
 
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <LayoutContainer />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "home",
+        element: <Home />,
+      },
+      {
+        path: "about",
+        element: <AboutUs />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+      {
+        path: "thankyou",
+        element: <ThanksPage />,
+      },
+    ],
+   
+  },
+  {
     path: "/:alias",
-    element:<Layout/>,
+    element: <Layout />,
     children: [
       {
         index: true,
         element: <EnterName />,
       },
       {
-        path: "home",
-        element: (
-            <Home />
-        ),
-      },
-      {
         path: "service",
-        element: (
-            <Service />
-        ),
+        element: <Service />,
       },
       {
         path: "login",
@@ -41,41 +61,19 @@ const router = createBrowserRouter([
       },
       {
         path: "order",
-        element: (
-            <Order />
-        ),
+        element: <Order />,
       },
       {
         path: "menu",
-        element: (
-            <Menu />
-        ),
+        element: <Menu />,
       },
       {
         path: "rating",
-        element: (
-            <Rate/>
-        ),
+        element: <Rate />,
       },
-      {
-        path: "about",
-        element: (
-            <AboutUs />
-        ),
-      },
-      {
-        path: "contact",
-        element: (
-            <Contact />
-        ),
-      },
-      {
-        path: "thankyou",
-        element: (<ThanksPage />)
-      }
     ],
   },
-  {path: "/url-return", element:<PaymentSuccess />},
+  { path: "/url-return", element: <PaymentSuccess /> },
   {
     path: "*",
     element: <PageNotFound />,

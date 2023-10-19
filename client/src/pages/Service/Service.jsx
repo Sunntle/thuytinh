@@ -1,4 +1,3 @@
-import React from "react";
 import banner from "../../assets/images/banner.jpg";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { PiFishSimpleBold } from "react-icons/pi";
@@ -8,7 +7,6 @@ import { CallStaff } from "../../components/index.js";
 const Service = () => {
   const navigate = useNavigate();
   const idTable = location.pathname.split("/")[1].split("-")[1];
-
   return (
     <div className="relative text-slate-800 pb-24 lg:py-24">
       {/* Header */}
