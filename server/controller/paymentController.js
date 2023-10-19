@@ -103,19 +103,10 @@ exports.VnpIPN = async (req, res) => {
             res.status(200).json({ RspCode: "00", Message: "Success" });
           }
         } else {
-<<<<<<< HEAD
-          res
-            .status(200)
-            .json({
-              RspCode: "02",
-              Message: "This order has been updated to the payment status",
-            });
-=======
           res.status(200).json({
             RspCode: "02",
             Message: "This order has been updated to the payment status",
           });
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
         }
       } else {
         res.status(200).json({ RspCode: "04", Message: "Amount invalid" });
@@ -130,11 +121,7 @@ exports.VnpIPN = async (req, res) => {
 
 exports.ReturnURL = async (req, res, next) => {
   let vnp_Params = req.query;
-<<<<<<< HEAD
-  console.log(req.query)
-=======
   console.log(req.query);
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 
   let secureHash = vnp_Params["vnp_SecureHash"];
 

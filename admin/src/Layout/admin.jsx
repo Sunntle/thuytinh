@@ -13,13 +13,10 @@ const LayoutMain = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
-  
+
   const customize = useSelector(state => state.customize)
   const notifications = useSelector(state => state.notifications)
-<<<<<<< HEAD
-=======
   const dispatch = useDispatch();
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
   const navigate = useNavigate();
   const openNotification = useCallback(() => {
     const key = `open${Date.now()}`;
@@ -33,34 +30,34 @@ const LayoutMain = () => {
     );
     api.open({
       message: 'Thông báo mới',
-      description:notifications.lastNotification && notifications.lastNotification?.description,
+      description: notifications.lastNotification && notifications.lastNotification?.description,
       btn,
       key,
       placement: 'bottomRight',
-  //     onClose: () => {
-  //   console.log(
-  //     'Notification was closed. Either the close button was clicked or duration time elapsed.',
-  //   );
-  // },
+      //     onClose: () => {
+      //   console.log(
+      //     'Notification was closed. Either the close button was clicked or duration time elapsed.',
+      //   );
+      // },
     });
-  },[api,notifications]);
-  useEffect(()=>{
-    socket.on("new message", (arg) =>{
+  }, [api, notifications]);
+  useEffect(() => {
+    socket.on("new message", (arg) => {
       dispatch(addNewMessage(arg))
       openNotification()
     })
-    return ()=>{
+    return () => {
       socket.off("new message")
     }
-  },[openNotification,dispatch])
+  }, [openNotification, dispatch])
   const onClick = (e) => {
     navigate(e.key);
   };
   return (
     <div className={`bg-main relative ${customize.darkMode ? 'dark' : ''}`}>
-         <div>
-         {contextHolder}
-         </div>
+      <div>
+        {contextHolder}
+      </div>
       <header className="sticky top-0 w-full z-10 shadow-lg">
         <HeaderComponent />
 
@@ -75,7 +72,7 @@ const LayoutMain = () => {
             collapsible={!screen}
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
-            onBreakpoint={(screen)=>setScreen(screen)}
+            onBreakpoint={(screen) => setScreen(screen)}
           >
             <Menu
               style={{ border: "none" }}
@@ -87,7 +84,7 @@ const LayoutMain = () => {
             />
           </Sider>
           <Layout className="bg-white dark:bg-darkModeBg dark:text-white">
-            <Content className="w-full" style={{minHeight: "100vh"}}>
+            <Content className="w-full" style={{ minHeight: "100vh" }}>
               <Outlet />
             </Content>
           </Layout>

@@ -15,21 +15,35 @@ const { Op } = require('sequelize');
 
 
 exports.getAll = asyncHandler(async (req, res) => {
-  let query = { ...apiQueryRest(req.query) };
+  let query = { ...apiQueryRest(req.query), raw: true };
   let tables = await Tables.findAll(query);
 
   const tableByOrder = await Order.findAll({
-    include: [{ model: TableByOrder, as: "TableByOrder" },
-    { model: OrderDetail, as: "orderToDetail", include: { model: Product, as: "product", include: { model: ImageProduct, attributes: ["url"] } } }],
-    where: { status: { [Op.lt]: 3 } }, raw: true, nest: true
+    include: [{ model: TableByOrder },
+    {
+      model: OrderDetail, include: [
+        {
+          model: Product,
+          include: [
+            {
+              model: ImageProduct,
+              attributes: ["url"],
+            },
+          ],
+        },
+      ],
+    }
+    ],
+    where: { status: { [Op.lt]: 3 } },
   });
 
   tables.forEach(table => {
-    const match = tableByOrder.find(order => order.TableByOrder && order.TableByOrder.tableId === table.id);
-    if (match) {
-      const { TableByOrder, ...data } = match
-      table.order = data
-    }
+    tableByOrder.forEach(element => {
+      const { TableByOrders: tables, ...data } = element.toJSON();
+      if (tables.findIndex(item => +item.tableId === +table.id) > -1) {
+        table.order = data;
+      }
+    });
   });
   res.status(200).json(tables);
 });
@@ -42,8 +56,8 @@ exports.getId = asyncHandler(async (req, res) => {
   if (id_order) {
     re = await TableByOrder.findAll({
       where: { orderId: id_order },
-      include: [{ model: Tables }, { model: Order, include: { model: OrderDetail, as: "orderToDetail", include: { model: Product, as: "product", include: { model: ImageProduct } } } }],
-      raw: true, nest: true
+      include: [{ model: Tables }, { model: Order, include: { model: OrderDetail, include: { model: Product, include: { model: ImageProduct } } } }],
+      nest: true
     });
   } else {
     re = await Tables.findByPk(id);
