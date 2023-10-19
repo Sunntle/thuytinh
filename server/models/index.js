@@ -29,7 +29,7 @@ Product.belongsTo(Category, {
 ImageProduct.belongsTo(Product, { foreignKey: "id_product" });
 
 
-Order.hasMany(TableByOrder, { foreignKey: 'orderId', as: "order" });
+Order.hasMany(TableByOrder, { foreignKey: 'orderId', as: "TableByOrder" });
 TableByOrder.belongsTo(Order, { foreignKey: 'orderId' });
 
 Tables.hasMany(TableByOrder, { foreignKey: 'tableId', as: "tableOrders" });

@@ -16,7 +16,10 @@ const LayoutMain = () => {
   
   const customize = useSelector(state => state.customize)
   const notifications = useSelector(state => state.notifications)
+<<<<<<< HEAD
+=======
   const dispatch = useDispatch();
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
   const navigate = useNavigate();
   const openNotification = useCallback(() => {
     const key = `open${Date.now()}`;

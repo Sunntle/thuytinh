@@ -28,5 +28,5 @@ const Reviews = db.sequelize.define(
   },
   {}
 );
-// Reviews.sync();
+// Reviews.sync()
 module.exports = Reviews;

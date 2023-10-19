@@ -11,46 +11,42 @@ const {
 const { where } = require("sequelize");
 
 const { apiQueryRest } = require('../utils/const');
+const { Op } = require('sequelize');
 
 
 exports.getAll = asyncHandler(async (req, res) => {
+  let query = { ...apiQueryRest(req.query) };
+  let tables = await Tables.findAll(query);
 
-  let query = { ...apiQueryRest({...req.query, title: "name_table"}) }
-  const re = await Tables.findAll(query);
-  res.status(200).json(re);
+  const tableByOrder = await Order.findAll({
+    include: [{ model: TableByOrder, as: "TableByOrder" },
+    { model: OrderDetail, as: "orderToDetail", include: { model: Product, as: "product", include: { model: ImageProduct, attributes: ["url"] } } }],
+    where: { status: { [Op.lt]: 3 } }, raw: true, nest: true
+  });
+
+  tables.forEach(table => {
+    const match = tableByOrder.find(order => order.TableByOrder && order.TableByOrder.tableId === table.id);
+    if (match) {
+      const { TableByOrder, ...data } = match
+      table.order = data
+    }
+  });
+  res.status(200).json(tables);
 });
 
 exports.getId = asyncHandler(async (req, res) => {
-
+  let re = null;
   const { id_order } = req.query;
   const { id } = req.params;
-  let re = {}
+
   if (id_order) {
-    re.order = await Order.findByPk(id_order, {
-      include: {
-        model: OrderDetail,
-        as: "orderToDetail",
-        include: [
-          {
-            model: Product,
-            as: "product",
-            include: [
-              {
-                model: ImageProduct,
-                attributes: ["url"],
-              }
-            ]
-          }
-        ]
-      }
-    })
-    re.table = await TableByOrder.findAll({
+    re = await TableByOrder.findAll({
       where: { orderId: id_order },
-      include: { model: Tables },
+      include: [{ model: Tables }, { model: Order, include: { model: OrderDetail, as: "orderToDetail", include: { model: Product, as: "product", include: { model: ImageProduct } } } }],
       raw: true, nest: true
     });
   } else {
-    re.table = await Tables.findByPk(id);
+    re = await Tables.findByPk(id);
   }
   res.status(200).json(re);
 });

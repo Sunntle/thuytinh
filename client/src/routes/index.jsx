@@ -12,7 +12,10 @@ import Contact from "../pages/Contact/Contact.jsx";
 
 import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
+<<<<<<< HEAD
+=======
 import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 
 const router = createBrowserRouter([
   {
