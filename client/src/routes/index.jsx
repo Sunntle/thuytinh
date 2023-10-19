@@ -12,6 +12,7 @@ import Contact from "../pages/Contact/Contact.jsx";
 
 import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
+import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,7 @@ const router = createBrowserRouter([
       }
     ],
   },
+  {path: "/url-return", element:<PaymentSuccess />},
   {
     path: "*",
     element: <PageNotFound />,
