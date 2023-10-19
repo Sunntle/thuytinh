@@ -22,14 +22,17 @@ exports.list = async (req, res) => {
         "sold",
         "id_category",
         "discount",
-        [Sequelize.literal(subquery), "imageUrls"],
-        [Sequelize.literal("`Category`.`name_category`"), "categoryName"],
+        // [Sequelize.literal(subquery), "imageUrls"],
+        // [Sequelize.literal("`Category`.`name_category`"), "categoryName"],
       ],
       include: [
         {
           model: Category,
           attributes: [],
         },
+        {
+          model: ImageProduct
+        }
       ],
     };
     if (_limit) query.limit = +_limit;
