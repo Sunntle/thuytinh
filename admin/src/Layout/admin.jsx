@@ -13,7 +13,6 @@ const LayoutMain = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
-  
   const customize = useSelector(state => state.customize)
   const dispatch = useDispatch();
   const navigate = useNavigate();

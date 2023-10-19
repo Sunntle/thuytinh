@@ -18,7 +18,6 @@ import "swiper/css/scrollbar";
 import image1 from "../../assets/images/image1.png";
 import image4 from "../../assets/images/image4.png";
 import image2 from "../../assets/images/image2.png";
-
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();

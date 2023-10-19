@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="flex flex-grow">
             <h1 className="text-2xl text-white font-semibold">Logo Here</h1>
           </div>
-          <div className="flex space-x-20">
+          <div className="flex space-x-24">
             <div className="flex flex-col space-y-2">
               <span className="text-white hover:text-primary transition-colors cursor-pointer">
                 Về chúng tôi
@@ -77,7 +77,7 @@ const Footer = () => {
               © 2023 Thuy Tinh. All rights reserved
             </span>
           </div>
-          <div className="flex justify-end items-center space-x-12">
+          <div className="flex justify-end items-center space-x-16">
             <a className="cursor-pointer text-white hover:text-primary transition-colors">
               Chính sách bảo mật
             </a>

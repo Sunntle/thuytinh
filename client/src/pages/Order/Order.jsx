@@ -2,12 +2,23 @@ import { Button, Divider, Form, Modal, Radio } from "antd";
 import { useEffect, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { formatCurrency } from "../../utils/format.js";
+<<<<<<< HEAD
+import { useDispatch } from "react-redux";
+import useHttp from "../../hooks/useHttp.js";
+import { fetchTableById } from "../../services/api.js";
+import {useNavigate} from "react-router-dom";
+
+const Order = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [payment, setPayment] = useState(null)
+=======
 import useHttp from "../../hooks/useHttp.js";
 import { fetchTableById } from "../../services/api.js";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [payment, setPayment] = useState(null);
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
   const { sendRequest } = useHttp();
   const [data, setData] = useState([]);
   const idTable = location.pathname.split("/")[1].split("-")[1];
@@ -40,18 +51,26 @@ const Order = () => {
       ...values
     }
     await sendRequest(request, setPayment)
+<<<<<<< HEAD
+    // window.location.href= payment
+=======
     // try {
     //   const { data } = await instance.put(`/table/${idTable}`);
     //   console.log(data)
     // } catch (err) {
     //   console.log(err);
     // }
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
     form.resetFields();
   };
 
   useEffect(() => {
     if (payment !== null) {
+<<<<<<< HEAD
+      window.location.href = payment
+=======
       window.location.href = String(payment);
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
     }
   }, [payment]);
 
@@ -153,6 +172,9 @@ const Order = () => {
           >
             <div className="w-full flex flex-col justify-center items-center space-y-1">
               <Form form={form} onFinish={onFinish}>
+<<<<<<< HEAD
+                <Form.Item rules={[{ required: true, message: "Vui lòng chọn phương thức thanh toán" }]} name="bankCode">
+=======
                 <Form.Item
                   rules={[
                     {
@@ -162,6 +184,7 @@ const Order = () => {
                   ]}
                   name="bankCode"
                 >
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
                   <Radio.Group>
                     <Radio value="">Cổng thanh toán VNPAYQR</Radio>
                     <Radio value="VNPAYQR">

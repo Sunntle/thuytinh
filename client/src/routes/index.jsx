@@ -14,7 +14,6 @@ import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
 import LayoutContainer from "../layouts/LayoutContainer";
-
 const router = createBrowserRouter([
   {
     path: "/",

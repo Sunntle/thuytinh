@@ -8,9 +8,9 @@ const Service = () => {
   const navigate = useNavigate();
   const idTable = location.pathname.split("/")[1].split("-")[1];
   return (
-    <div className="relative text-slate-800 pb-24 lg:py-24">
+    <div className="relative text-slate-800 pb-24 lg:py-24 px-6 lg:px-16">
       {/* Header */}
-      <div className="flex flex-col px-6 mt-8 space-y-6">
+      <div className="flex flex-col mt-8 space-y-6">
         <div className="w-full h-44 lg:h-[450px] rounded-lg">
           <img
             className="w-full h-full rounded-lg object-fill"

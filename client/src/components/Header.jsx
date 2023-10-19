@@ -14,6 +14,13 @@ const Header = () => {
     sendRequest(fetchTableById(idTable), setTable);
   }, [sendRequest, idTable]);
 
+  // if (!table)
+  //   return (
+  //     <>
+  //       <span className="flex justify-center items-center">Không lấy được dữ liệu</span>
+  //     </>
+  //   );
+
   return (
     <div
       className={`w-full h-20 z-40 relative lg:hidden bg-primary rounded-b-3xl drop-shadow-md px-6 text-white flex items-center ${

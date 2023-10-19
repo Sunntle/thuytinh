@@ -125,7 +125,7 @@ const ResChooseTable = () => {
       label: `Ngoài trời`,
       children: <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {tableData.map((table, index) => {
-          if (table.position === 'Ngoài trời') {
+          if (table.position === 'out') {
             return (
               <div key={index}>
                 <span
@@ -187,7 +187,7 @@ const ResChooseTable = () => {
       label: `Trong nhà`,
       children: <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {tableData.map((table, index) => {
-          if (table.position === 'Trong nhà') {
+          if (table.position === 'in') {
             return (
               <div key={index}>
                 <span
