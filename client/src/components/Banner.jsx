@@ -19,9 +19,9 @@ const Banner = () => {
               }}
             >
               <div className="px-16 w-full h-full bg-black bg-opacity-20 flex flex-col items-start justify-center">
-                <button className="px-6 py-2 z-30 w-30 h-12 text-primary bg-white bg-opacity-20 whitespace-nowrap text-center">
+                {/* <button className="px-6 py-2 z-30 w-30 h-12 text-primary bg-white bg-opacity-20 whitespace-nowrap text-center">
                   Xem Menu
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

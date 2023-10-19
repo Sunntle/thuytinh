@@ -5,7 +5,7 @@ import { truncateString } from "../utils/format.js";
 
 const AboutUs = () => {
   return (
-    <div className="max-w-screen-xl lg:mx-16 my-12">
+    <div className="lg:px-16 my-12 px-6">
       <h1 className="text-4xl font-bold text-primary pb-4">
         Tại sao bạn chọn chúng tôi
       </h1>

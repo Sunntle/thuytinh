@@ -27,7 +27,7 @@ import { formatCurrency, truncateString } from "../../utils/format.js";
 import { socket } from "../../services/socket";
 import Reason from "../../components/Reason.jsx";
 import Banner from "../../components/Banner.jsx";
-import {fetchProduct} from "../../services/api.js";
+import { fetchProduct } from "../../services/api.js";
 import { useLocation, useParams } from "react-router-dom";
 import image1 from "../../assets/images/image1.png";
 import image4 from "../../assets/images/image4.png";
@@ -127,9 +127,9 @@ const Home = () => {
             </SwiperSlide>
           ))}
       </Swiper>
-      <section className="mt-20 px-16 flex items-center justify-between">
+      <section className="mt-12 px-6 lg:px-16 flex items-center justify-between">
         <div className="w-1/3 group relative">
-          <img src={image1} className="h-72 w-full group-hover:opacity-90" />
+          <img src={image1} className="h-60 lg:h-72 w-full group-hover:opacity-90" />
         </div>
         <div className="w-1/3 group relative">
           <div className="hidden lg:flex z-30 absolute left-16 top-1/2 items-center justify-between text-white">
@@ -139,11 +139,11 @@ const Home = () => {
             </span>
             <span className="w-24 h-px bg-white"></span>
           </div>
-          <div className="absolute w-full z-10 h-72 bg-black bg-opacity-40"></div>
-          <img src={image4} className="h-72 w-full group-hover:opacity-80" />
+          <div className="absolute w-full z-10 h-60 lg:h-72 bg-black bg-opacity-40"></div>
+          <img src={image4} className="h-60 lg:h-72 w-full group-hover:opacity-80" />
         </div>
         <div className="w-1/3 group relative">
-          <img src={image2} className="h-72 w-full group-hover:opacity-90" />
+          <img src={image2} className="h-60 lg:h-72 w-full group-hover:opacity-90" />
         </div>
       </section>
 
