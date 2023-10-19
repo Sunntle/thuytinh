@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Drawer, Spin } from "antd";
 import "./main.css";
 import { formatCurrency } from "../../utils/format.js";
 import useHttp from "../../hooks/useHttp.js";
 import { HiMiniXMark } from "react-icons/hi2";
-import {fetchProductById} from "../../services/api.js";
+import { fetchProductById } from "../../services/api.js";
 
 const ProductDetail = ({ openDrawer, onClose, id }) => {
   const [productDetail, setProductDetail] = useState({});
@@ -16,9 +16,9 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
       setIsLargeScreen(window.innerWidth >= 1024);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -85,4 +85,4 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
   );
 };
 
-export default ProductDetail;
+export default memo(ProductDetail);

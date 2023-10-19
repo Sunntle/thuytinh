@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Form, Rate, Modal, Input } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
-import {fetchTableById} from "../../services/api.js";
+import { fetchTableById } from "../../services/api.js";
 
 const desc = ["Rất tệ", "Tệ", "Tạm được", "Tốt", "Rất tuyệt vời"];
 
@@ -13,10 +13,10 @@ const Rating = () => {
   const idTable = location.pathname.split("/")[1].split("-")[1];
   const customerName = useSelector((state) => state.customerName);
   const { sendRequest } = useHttp();
-  const [dataTable, setDataTable] = useState()
+  const [dataTable, setDataTable] = useState();
 
   useEffect(() => {
-    sendRequest(fetchTableById(idTable), setDataTable)
+    sendRequest(fetchTableById(idTable), setDataTable);
   }, []);
 
   const onFinish = async (values) => {
@@ -34,7 +34,7 @@ const Rating = () => {
         ...dataToSend,
       });
       setIsModalOpen(true);
-      form.resetFields()
+      form.resetFields();
       console.log("Gửi đánh giá thành công");
     } catch (error) {
       console.error("Lỗi khi gửi dữ liệu lên server", error);
