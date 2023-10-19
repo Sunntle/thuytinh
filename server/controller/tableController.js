@@ -12,7 +12,7 @@ const { apiQueryRest } = require('../utils/const');
 
 exports.getAll = asyncHandler(async (req, res) => {
 
-  let query = { ...apiQueryRest(req.query) }
+  let query = { ...apiQueryRest({...req.query, title: "name_table"}) }
   const re = await Tables.findAll(query);
   res.status(200).json(re);
 });

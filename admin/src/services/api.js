@@ -118,7 +118,9 @@ export const callUpdateAccount = (body) => {
 export const callUpdatePassword = (body) => {
   return axios.post(`/api/user/set-password`, body);
 }
-
+export const removeUser = (id)=>{
+  return axios.delete(`/api/user/${id}`)
+}
 
 // recipe
 export const callFetchRecipe = () => {
@@ -157,4 +159,7 @@ export const readAll = (body) => {
 };
 export const readOne = (body) => {
   return axios.put(`/api/notification`, body);
+};
+export const deleteOne = (id) => {
+  return axios.delete(`/api/notification/${id}`);
 };

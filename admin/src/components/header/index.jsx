@@ -1,4 +1,4 @@
-import {
+import Icon,{
   CloseOutlined,
   DownOutlined,
   FileSearchOutlined,
@@ -24,13 +24,13 @@ import {
 import ButtonComponents from "../button";
 import SearchComponent from "../search";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { doLogoutAction, fetchAccount } from "../../redux/account/accountSlice";
 import { ChangeMode } from "../../redux/customize/customize";
-import { addNewMessage, fetchNotification } from "../../redux/notification/notificationSystem";
+import { fetchNotification } from "../../redux/notification/notificationSystem";
 import {
   callLogout,
   callUpdateAccount,
@@ -38,10 +38,12 @@ import {
   getAllCate,
   getAllProduct,
 } from "../../services/api";
-import { socket } from "../../socket";
-import { NAV_ITEMS } from "../../utils/constant";
+import { LightSvg, NAV_ITEMS } from "../../utils/constant";
 import { roleRext, truncateString } from "../../utils/format";
 import NotificationsComponent from "../notification";
+import { DarkSvg } from "../../utils/constant";
+const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
+const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
 function HeaderComponent() {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
@@ -61,7 +63,7 @@ function HeaderComponent() {
   const noti = useSelector((state) => state.notifications);
   const customize = useSelector((state) => state.customize);
   const dispatch = useDispatch();
-  const items = [
+  const items = useMemo(()=>([
     {
       label: <span className="font-semibold">{user?.user.name}</span>,
       key: "3",
@@ -76,48 +78,51 @@ function HeaderComponent() {
       key: "2",
       icon: <LogoutOutlined />,
     },
-  ];
+  ]),[user?.user.name]);
   useEffect(() => {
     dispatch(fetchNotification());
   }, [dispatch]);
-  const handleMenuClick = async (e) => {
-    if (e.key == 2) {
-      dispatch(doLogoutAction());
-      await callLogout();
-    } else if (e.key == 1) {
-      setOpenModalProfile(true);
-      const { id, name, email, phone, avatar, role } = user.user;
-      let data = {
-        id,
-        name,
-        email,
-        phone,
-        role: roleRext(role),
-        avatar: [
-          {
-            uid: "1",
-            name: "anhnen.jpg",
-            status: "done",
-            url: avatar,
-          },
-        ],
-      };
-      form.setFieldsValue(data);
+  const handleMenuClick = useCallback(()=>{
+    async (e) => {
+      if (e.key == 2) {
+        dispatch(doLogoutAction());
+        await callLogout();
+      } else if (e.key == 1) {
+        setOpenModalProfile(true);
+        const { id, name, email, phone, avatar, role } = user.user;
+        let data = {
+          id,
+          name,
+          email,
+          phone,
+          role: roleRext(role),
+          avatar: [
+            {
+              uid: "1",
+              name: "anhnen.jpg",
+              status: "done",
+              url: avatar,
+            },
+          ],
+        };
+        form.setFieldsValue(data);
+      }
     }
-  };
+  },[dispatch, form, user.user]);
   const handleRemoveKeyWord = (index) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord"));
     searchArr.splice(index, 1);
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
   };
-  const handleSearch = (keyword) => {
+  const handleSearch = useCallback((keyword) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
     searchArr.unshift(keyword);
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
     navigate(`/employee/search?keyword=${searchArr[0]}`);
-  };
+  },[navigate]);
+
   useEffect(() => {
     const fetchData = async () => {
       const dataProducts = await getAllProduct({
@@ -132,12 +137,7 @@ function HeaderComponent() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    socket.on("new message", (arg) => {
-      dispatch(addNewMessage(arg))
-    });
-  }, [dispatch]);
-  const onFinish = async (values) => {
+  const onFinish = useCallback(async (values) => {
     const formData = new FormData();
     const { avatar, role, ...rest } = values;
     const val = { ...rest, role: roleRext(role) };
@@ -155,8 +155,8 @@ function HeaderComponent() {
     });
     setOpenModalProfile(false);
     form.resetFields();
-  };
-  const submitResetPass = async (values) => {
+  },[dispatch, form, messageApi]);
+  const submitResetPass = useCallback(async (values) => {
     let res = await callUpdatePassword(values);
     messageApi.open({
       type: res.success ? "success" : "error",
@@ -166,31 +166,33 @@ function HeaderComponent() {
       setOpenModalProfile(false);
       form.resetFields();
     }
-  };
+  },[form, messageApi]);
   const customContent = () => {
     return (
       <div className="bg-white rounded-lg px-5 py-3 shadow-md">
         <h4 className="text-gray-500 mb-3">Tìm kiếm gần đây</h4>
         <Swiper
           speed={1000}
-          slidesPerView={6}
-          spaceBetween={20}
-          className="mySwiper my-5"
+          slidesPerView={7}
+          spaceBetween={15}
+          className="mySwiper my-5 text-center"
         >
           {searchKw.length > 0 ? (
             searchKw.map((el, index) => {
               return (
                 <SwiperSlide key={index}>
                   <div className="inline-flex items-center">
+                    <div className="w-[50px]">
                     <Link
                       to={`/employee/search?keyword=${el}`}
-                      className="p-1 text-main hover:text-gray-500"
+                      className="p-1 text-main hover:text-gray-500 whitespace-nowrap"
                     >
-                      {truncateString(el, 7)}
+                      {truncateString(el, 6)}
                     </Link>
+                    </div>
                     <Tooltip title="remove">
                       <Button
-                        className="border-none shadow-none hover:bg-gray-300 text-gray-300 "
+                        className="border-none bg-transparent shadow-none hover:bg-gray-300 text-gray-300 "
                         shape="circle"
                         icon={<CloseOutlined />}
                         onClick={() => handleRemoveKeyWord(index)}
@@ -256,10 +258,10 @@ function HeaderComponent() {
     );
   };
 
-  const menuProps = {
+  const menuProps = useMemo(()=>({
     items,
     onClick: handleMenuClick,
-  };
+  }),[handleMenuClick, items])
   return (
     <>
       {contextHolder}
@@ -279,14 +281,14 @@ function HeaderComponent() {
             onChange={handleSearch}
           />
         </div>
-        <div className="flex items-center justify-center gap-x-1">
+        <div className="flex items-center justify-center gap-x-4">
           <Switch
             checked={customize.darkMode}
-            onClick={() =>
+            onClick={() => 
               dispatch(ChangeMode({ darkMode: !customize.darkMode }))
             }
-            checkedChildren="Dark"
-            unCheckedChildren="Light"
+            checkedChildren={<DarkIcon/>}
+            unCheckedChildren={<LightIcon/>}
           />
           <NotificationsComponent
             notifications={noti.content}
@@ -298,7 +300,7 @@ function HeaderComponent() {
               sizeIconBefore={"text-lg"}
               sizeIconAfter={"text-xs"}
               spacingContent={"ms-1 me-3"}
-              className="border-borderSecondaryColor bg-secondaryColor text-white ms-3"
+              className="border-borderSecondaryColor bg-secondaryColor text-white"
               iconBefore={<UserOutlined />}
               iconAfter={icon ? <DownOutlined /> : <RightOutlined />}
               content={truncateString(user?.user.name, 7)}

@@ -1,8 +1,22 @@
+const { Notification } = require("../models");
+
 const userConnected = []
+const callStaff = []
 const listPermission = ['R2', 'R3', 'R4'];
 exports.getAllUserOnline=()=>{
   return userConnected
 }
+exports.handleCallStaff = (
+  socket
+) => {
+  socket.on("call staff", async(idTable) => {
+    callStaff.push({ socketId: socket.id, idTable: idTable});
+    const res = await Notification.create({
+      type: "call-staff", description: "Gọi nhân viên !!!",
+    },{ raw: true })
+    _io.of('/admin').emit("new message", res);
+  });
+};
 exports.handleNewUserConnect = (
   socket
 ) => {

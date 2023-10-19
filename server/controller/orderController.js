@@ -58,7 +58,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {
   let query = {
-    ...apiQueryRest(req.query), nest: true
+    ...apiQueryRest({...req.query, title: "name"}), nest: true
   };
   const { count, rows } = await Order.findAndCountAll({
     ...query,

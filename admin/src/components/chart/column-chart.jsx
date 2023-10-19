@@ -1,5 +1,7 @@
 import Chart from "react-apexcharts";
-function ColumnChart({ series, colors, customOptions, categories }) {
+import { useSelector } from "react-redux";
+function ColumnChart({ series, colors, customOptions, categories,tooltip }) {
+  const customize = useSelector(state=> state.customize)
   const data = {
     series: series,
     options: {
@@ -11,6 +13,14 @@ function ColumnChart({ series, colors, customOptions, categories }) {
         categories:
           typeof categories === "function" ? categories() : categories,
         tickAmount: 15,
+      },
+      tooltip:{
+        theme: customize.darkMode ? 'dark' : 'light',
+        style: {
+          fontSize: '12px',
+          backgroundColor: "#fc8019"
+        },
+        ...tooltip
       },
       yaxis: {
         min: 0,
