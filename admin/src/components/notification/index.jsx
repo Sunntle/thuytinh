@@ -1,12 +1,18 @@
+<<<<<<< HEAD
 import { Badge, Button, Popover, Select } from "antd";
+=======
+import { Badge, Button, Popover, Tooltip, Typography, message } from "antd";
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 import { formatNgay } from "../../utils/format";
-import { BellOutlined } from "@ant-design/icons";
+import { BellOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
-import { maskAllRead, maskAsRead } from "../../redux/notification/notificationSystem";
-
-
+import {
+  deleteNotification,
+  maskAllRead,
+  maskAsRead,
+} from "../../redux/notification/notificationSystem";
 function NotificationsComponent({
   notifications,
   openPopover,
@@ -14,31 +20,50 @@ function NotificationsComponent({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleCheckedAll = useCallback(async () => {
-    dispatch(maskAllRead())
-  }, [dispatch])
-  const handleToContent = (index) => {
+  const handleCheckedAll = useCallback(() => {
+    dispatch(maskAllRead());
+  }, [dispatch]);
+  const handleToContent = useCallback((index) => {
     const content = notifications[index];
     const navigateTo = `/admin/${content.type}`;
-    dispatch(maskAsRead(content))
-    navigate(navigateTo);
-  };
+    dispatch(maskAsRead(content));
+    content.type != "call-staff" && navigate(navigateTo);
+  },[dispatch, navigate, notifications])
+
+  const handleDelete = async(id)=>{
+    dispatch(deleteNotification(id));
+    message.open({type: "success", content: "Xóa thông báo thành công"})
+  }
   const getCountNoti = useMemo(() => {
+<<<<<<< HEAD
     return notifications && notifications.length > 0 ? notifications.filter((el) => el.status == 0).length : 0
   }, [notifications])
+=======
+    return notifications && notifications.length > 0
+      ? notifications.filter((el) => el.status == 0).length
+      : 0;
+  }, [notifications]);
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)
       return <p className="text-gray-500 px-3">Không có thông báo nào</p>;
     return (
+<<<<<<< HEAD
       <Select getPopupContainer={(trigger) => trigger.parentElement}>
         {notifications.map((el, index) => {
           return (
             <Select.Option
               onClick={() => handleToContent(index)}
+=======
+      <div className="max-h-[400px] overflow-y-scroll">
+        {notifications.map((el, index) => {
+          return (
+            <div
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
               key={index}
-              className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 gap-x-2"
+              className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 hover:text-main gap-x-2"
             >
-              <div className="flex items-center gap-x-2">
+              <div  onClick={() => handleToContent(index)} className="flex items-center gap-x-2 ">
                 <div className="max-w-[50px]">
                   <img
                     className="w-full  rounded-md "
@@ -46,15 +71,17 @@ function NotificationsComponent({
                   />
                 </div>
                 <div className={el.status == 1 ? "text-gray-500" : " pe-2"}>
-                  <span className="font-semibold">#{el.id}</span> {el.description}
+                  {/* <span className="font-semibold">#{el.id}</span>{" "} */}
+                  {el.description}
                   <p className="text-main text-sm">
                     {formatNgay(el.createdAt, "HH:mm DD-MM-YYYY")}
                   </p>
                 </div>
               </div>
-              {el.status == 0 && (
-                <div>
+              <div className="px-2">
+                {el.status == 0 ? (
                   <Badge status="processing" color="#fc8e32" />
+<<<<<<< HEAD
                 </div>
               )}
             </Select.Option>
@@ -62,12 +89,38 @@ function NotificationsComponent({
         })}
         <a onClick={handleCheckedAll}>Đánh dấu tất cả đã đọc</a>
       </Select>
+=======
+                ) : (
+                  <div onClick={()=>handleDelete(el.id)}><DeleteOutlined /></div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
     );
   };
   return (
     <Popover
       content={content}
-      title={<p className="text-xl px-3">Thông báo</p>}
+      title={
+        <div className="flex items-center justify-between">
+          <Typography.Title
+        level={4}
+        style={{
+          margin: 0,
+        }} className="m-0">Thông báo</Typography.Title>
+          <Tooltip title="Đánh dấu tất cả đã đọc" placement="bottom">
+            <Button
+              className="border-0"
+              shape="circle"
+              icon={<CheckOutlined />}
+              onClick={handleCheckedAll}
+            />
+          </Tooltip>
+        </div>
+      }
       trigger="click"
       open={openPopover}
       onOpenChange={() => setOpenPopover(!openPopover)}

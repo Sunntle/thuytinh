@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const db = require("./config/connectDatabase");
 const { Server } = require("socket.io");
-const { handleNewUserConnect, handleDisconnect } = require("./utils/socketHanlers")
+const { handleNewUserConnect, handleDisconnect, handleCallStaff } = require("./utils/socketHanlers")
 const port = process.env.PORT || 8000;
 require("dotenv").config();
 
@@ -36,6 +36,10 @@ global.__basedir = __dirname;
 global._io = io;
 io.of("/admin").on("connection", (socket) => {
   handleNewUserConnect(socket)
+<<<<<<< HEAD
+=======
+  handleCallStaff(socket)
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
   handleDisconnect(socket)
 });
 initRoutes(app);

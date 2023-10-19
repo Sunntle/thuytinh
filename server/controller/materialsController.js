@@ -10,7 +10,7 @@ let notificationSent = false
 exports.list = async (req, res) => {
 
   let query = {
-    ...apiQueryRest(req.query), nest: true
+    ...apiQueryRest({...req.query, title: "name_material"}), nest: true
   };
   const { count, rows } = await Materials.findAndCountAll(query);
 

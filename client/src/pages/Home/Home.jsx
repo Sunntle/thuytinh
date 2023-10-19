@@ -1,12 +1,23 @@
 import { useEffect, useState } from "react";
+import { Badge } from "antd";
+import moment from "moment";
+import { AiFillPlusCircle } from "react-icons/ai";
+import { fetchProduct } from "../../services/api.js";
+import { Banner, Reason } from "../../components/index.js";
+import useHttp from "../../hooks/useHttp.js";
+import { formatCurrency, truncateString } from "../../utils/format.js";
+import { socket } from "../../services/socket";
 
 // import Swiper core and required modules
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
+<<<<<<< HEAD
 import { Badge } from "antd";
 import moment from "moment";
 import { AiFillPlusCircle } from "react-icons/ai";
+=======
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -21,6 +32,10 @@ import { useLocation, useParams } from "react-router-dom";
 import image1 from "../../assets/images/image1.png";
 import image4 from "../../assets/images/image4.png";
 import image2 from "../../assets/images/image2.png";
+<<<<<<< HEAD
+=======
+
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();

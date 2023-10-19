@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { memo, useEffect, useState } from "react";
+=======
+import {memo, useEffect, useMemo, useState} from "react";
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 import { Button, Modal } from "antd";
 import "./main.css";
 import { BiSolidTrash } from "react-icons/bi";
@@ -29,10 +33,10 @@ const OrderListModal = ({
   const { sendRequest, isLoading } = useHttp();
   const dispatch = useDispatch();
   // Calculate Total Bill
-  const total = orders.reduce((acc, cur) => {
+  const total = useMemo(() => orders.reduce((acc, cur) => {
     acc += cur.quantity * cur.price;
     return acc;
-  }, 0);
+  }, 0),[])
   const showDeleteConfirm = (id) => {
     confirm({
       title: "Bạn muốn xóa món ăn này ?",

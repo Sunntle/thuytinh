@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
-import "./index.css";
 import { FiSearch } from "react-icons/fi";
 import { BiFoodMenu } from "react-icons/bi";
 import useHttp from "../../hooks/useHttp.js";
 import { useSelector } from "react-redux";
-import OrderListModal from "../../components/OrderListModal/OrderListModal.jsx";
 import { Spin } from "antd";
 import useDebounce from "../../hooks/useDebounce.js";
+<<<<<<< HEAD
 import ProductList from "../../components/ProductList/ProductList.jsx";
 import CategoryList from "../../components/CategoryList/CategoryList.jsx";
 import * as apiService from "../../services/api.js";
+=======
+import * as apiService from "../../services/api.js";
+import "./index.css";
+import {
+  CategoryList,
+  OrderListModal,
+  ProductList,
+} from "../../components/index.js";
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");

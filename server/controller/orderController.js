@@ -56,7 +56,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {
   let query = {
-    ...apiQueryRest(req.query), nest: true
+    ...apiQueryRest({ ...req.query, title: "name" }), nest: true
   };
   const { count, rows } = await Order.findAndCountAll({
     ...query,
@@ -94,15 +94,14 @@ exports.delOrder = asyncHandler(async (req, res) => {
 });
 exports.updateOrder = asyncHandler(async (req, res) => {
   const { id, updatedQuantities, updateTotal } = req.body;
-  console.log(req.body);
-  // await Order.update({ total: updateTotal }, { where: { id: id } });
-  // await Promise.all(updatedQuantities.map(async (item) => {
-  //   await OrderDetail.update({ quantity: item.quantity }, {
-  //     where: { id_order: id, id_product: item.id_product },
-  //   });
-  // }));
-
-
+  console.log(id)
+  console.log(updatedQuantities)
+  await Order.update({ total: updateTotal }, { where: { id: id } });
+  await Promise.all(updatedQuantities.map(async (item) => {
+    await OrderDetail.update({ quantity: item.quantity }, {
+      where: { id_order: id, id_product: item.id_product },
+    });
+  }));
   res.status(200).json("Update thành công");
 });
 

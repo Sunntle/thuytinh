@@ -6,17 +6,24 @@ import { Layout, Menu } from "antd";
 const { Content, Sider } = Layout;
 import { NAV_ITEMS } from "../utils/constant";
 import { socket } from "../socket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewMessage } from "../redux/notification/notificationSystem";
 const LayoutMain = () => {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
+  
   const customize = useSelector(state => state.customize)
   const notifications = useSelector(state => state.notifications)
+<<<<<<< HEAD
+=======
+  const dispatch = useDispatch();
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
   const navigate = useNavigate();
   const openNotification = useCallback(() => {
     const key = `open${Date.now()}`;
+    console.log(notifications)
     const btn = (
       <Space>
         <Button type="primary" size="small" className="p-2" onClick={() => api.destroy()}>
@@ -38,27 +45,28 @@ const LayoutMain = () => {
     });
   },[api,notifications]);
   useEffect(()=>{
-    socket.on("new message", () =>{
+    socket.on("new message", (arg) =>{
+      dispatch(addNewMessage(arg))
       openNotification()
     })
     return ()=>{
       socket.off("new message")
     }
-  },[openNotification])
+  },[openNotification,dispatch])
   const onClick = (e) => {
     navigate(e.key);
   };
   return (
-    <div className="bg-main relative">
+    <div className={`bg-main relative ${customize.darkMode ? 'dark' : ''}`}>
          <div>
          {contextHolder}
          </div>
-      <header className="sticky top-0 w-full z-10">
+      <header className="sticky top-0 w-full z-10 shadow-lg">
         <HeaderComponent />
 
       </header>
       <main className="main_area rounded-t-3xl">
-        <Layout className="layout_area" >
+        <Layout className="layout_area ">
           <Sider
             theme={customize.darkMode ? 'dark' : 'light'}
             breakpoint="lg"
@@ -78,8 +86,8 @@ const LayoutMain = () => {
               onClick={onClick}
             />
           </Sider>
-          <Layout className={customize.darkMode ? 'bg-darkModeBg' : 'bg-white'}>
-            <Content className="w-full">
+          <Layout className="bg-white dark:bg-darkModeBg dark:text-white">
+            <Content className="w-full" style={{minHeight: "100vh"}}>
               <Outlet />
             </Content>
           </Layout>

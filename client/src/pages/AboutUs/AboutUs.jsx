@@ -1,16 +1,25 @@
-import Reason from "../../components/Reason.jsx";
 import product from "../../assets/images/product.png";
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
 import useHttp from "../../hooks/useHttp.js";
 import { truncateString } from "../../utils/format.js";
 import { socket } from "../../services/socket";
 import { Rate } from "antd";
+import { Reason } from "../../components/index.js";
+
+// CSS
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+<<<<<<< HEAD
+import useHttp from "../../hooks/useHttp.js";
+import { truncateString } from "../../utils/format.js";
+import { socket } from "../../services/socket";
+import { Rate } from "antd";
+=======
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 
 const AboutUs = () => {
   const [slideProduct, setSlideRating] = useState(null);
