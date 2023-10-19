@@ -4,11 +4,7 @@ import "./main.css";
 import { formatCurrency } from "../../utils/format.js";
 import useHttp from "../../hooks/useHttp.js";
 import { HiMiniXMark } from "react-icons/hi2";
-<<<<<<< HEAD
-import {fetchProductById} from "../../services/api.js";
-=======
 import { fetchProductById } from "../../services/api.js";
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 
 const ProductDetail = ({ openDrawer, onClose, id }) => {
   const [productDetail, setProductDetail] = useState({});
@@ -20,15 +16,9 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
       setIsLargeScreen(window.innerWidth >= 1024);
     };
 
-<<<<<<< HEAD
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-=======
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
     };
   }, []);
 
