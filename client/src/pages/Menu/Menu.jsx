@@ -83,8 +83,8 @@ const Menu = () => {
   }
 
   return (
-    <div className="pb-24 text-slate-800 lg:px-12">
-      <div className="flex flex-col px-6 mt-8 space-y-4 lg:mt-24">
+    <div className="pb-24 text-slate-800 lg:px-16 px-6">
+      <div className="flex flex-col mt-8 space-y-4 lg:mt-24">
         <div className="lg:hidden grid grid-cols-12 gap-4 text-slate-500 ">
           <div className="col-span-10 w-full h-12 bg-slate-100 rounded-lg flex justify-start items-center space-x-3 px-2">
             <FiSearch className="w-5 h-5" />
@@ -107,12 +107,12 @@ const Menu = () => {
               {orders.length}
             </span>
           </div>
-          <OrderListModal
+          {/* <OrderListModal
             isModalOpen={isOrderModalOpen}
             handleOk={handleOk}
             handleCancel={handleCancel}
             setIsOrderModalOpen={setIsOrderModalOpen}
-          />
+          /> */}
         </div>
         {/*Category*/}
         <div className="relative w-full text-sm">
