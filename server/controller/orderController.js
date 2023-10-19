@@ -22,21 +22,20 @@ function currentYear(pa = "startOf") {
 
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table } = req.body;
-  const arrTable = table || [2, 3];
-  console.log(await Tables.prototype.checkStatus(arrTable, 0));
+  const arrTable = table || [1, 2];
+
   if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
 
   const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
   if (approve.length === 0) return res.status(200).json({ success: false, data: "Sản phẩm hết nguyên liệu" });
   const order_result = await Order.create({ total, name: customerName });
-
-  let dataTable = await TableByOrder.bulkCreate(arrTable.map(item => ({ tableId: item, orderId: order_result.id })))
+  let dataTable = await TableByOrder.bulkCreate(arrTable.map(item => ({ tableId: item, orderId: order_result.id })));
   await Tables.prototype.updateStatusTable(arrTable, 1)
-
+  let tableData = await TableByOrder.findAll({ include: { model: Tables }, where: { id: { [Op.in]: dataTable.map(i => i.id) } } })
 
   let val = approve.map((item) => ({
     id_product: item.id,
-    quantity: item.qtyOrder,
+    quantity: item.quantity,
     id_order: order_result.id
   }));
 
@@ -44,8 +43,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
   let product = await Product.findAll({
     where: { id: { [Op.in]: order_detail.map((item) => item.id_product) } }, include: [{ model: ImageProduct, attributes: ["url", "id"] }]
   });
-  let result = { orders: order_result, detail: order_detail, product, tableByOrder: dataTable };
-
+  let result = { orders: order_result, detail: order_detail, product, tableByOrder: tableData };
 
   let storeNotification = await Notification.create(
     { type: "order", description: `Có đơn hàng mới`, content: order_result.id }, { raw: true }
@@ -96,14 +94,13 @@ exports.delOrder = asyncHandler(async (req, res) => {
 });
 exports.updateOrder = asyncHandler(async (req, res) => {
   const { id, updatedQuantities, updateTotal } = req.body;
-  console.log(id)
-  console.log(updatedQuantities)
-  await Order.update({ total: updateTotal }, { where: { id: id } });
-  await Promise.all(updatedQuantities.map(async (item) => {
-    await OrderDetail.update({ quantity: item.quantity }, {
-      where: { id_order: id, id_product: item.id_product },
-    });
-  }));
+  console.log(req.body);
+  // await Order.update({ total: updateTotal }, { where: { id: id } });
+  // await Promise.all(updatedQuantities.map(async (item) => {
+  //   await OrderDetail.update({ quantity: item.quantity }, {
+  //     where: { id_order: id, id_product: item.id_product },
+  //   });
+  // }));
 
 
   res.status(200).json("Update thành công");

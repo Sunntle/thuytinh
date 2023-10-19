@@ -1,7 +1,7 @@
 
 const { Op } = require("sequelize");
-// const Recipes = require("../models/recipeModel");
-// const Materials = require("../models/materialsModel")
+const Recipes = require("../models/recipeModel");
+const Materials = require("../models/materialsModel");
 const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
 const apiQueryRest = (params) => {
     const { _offset, _limit, _sort, _order, ...rest } = params;
@@ -39,7 +39,7 @@ const handleTotalQty = async (pr) => {
     });
     return totalQuantity
 }
-const checkQtyMaterials = async (data) => {
+const checkQtyMaterials = async (data, model) => {
     let checkOver = await Materials.findAll({
         attributes: ["id", "amount"], where: {
             [Op.or]: data.map((item) => ({

@@ -26,5 +26,5 @@ const Notification = db.sequelize.define(
     { timestamps: true }
 );
 
-Notification.sync();
+// Notification.sync();
 module.exports = Notification;

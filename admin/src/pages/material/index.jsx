@@ -16,7 +16,7 @@ import EditMaterial from "./edit";
 import ColumnChart from "../../components/chart/column-chart";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-const { Title } = Typography;
+const { Title, Text } = Typography;
 function MaterialPage() {
   const [open, setOpen] = useState(false);
   const [openModelEdit, setOpenModelEdit] = useState(false);
@@ -33,17 +33,17 @@ function MaterialPage() {
     });
 
     setDataChart(res.dataChart);
-  },[]);
+  }, []);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-  useEffect(()=>{
-    if(notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)){
+  useEffect(() => {
+    if (notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)) {
       fetchData()
       console.log("fetched");
     }
-  },[notifications,location,fetchData])
+  }, [notifications, location, fetchData])
   const handleDeleteMaterial = async (id_material) => {
     const res = await deleteMaterial(id_material);
     console.log(res);
@@ -213,12 +213,12 @@ function MaterialPage() {
               <b className="text-xl text-[#EF4444]"> {dataChart.length} </b>{" "}
               nguyên liệu gần hết hàng
             </h3>
-            <h4 className="text-base font-normal text-zinc-700 ">
+            <Text className="">
               Gồm :{" "}
               {dataChart
                 .map((item) => item.name_material.toUpperCase())
                 .join(" ,")}
-            </h4>
+            </Text>
           </Col>
           <Col xs={24} lg={18}>
             <ColumnChart

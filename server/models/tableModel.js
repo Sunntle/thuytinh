@@ -41,5 +41,5 @@ Tables.prototype.checkStatus = async (arr, status_table) => {
     });
     return list.length === 0 ? true : false
 }
-Tables.sync()
+// Tables.sync()
 module.exports = Tables;

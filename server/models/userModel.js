@@ -71,5 +71,5 @@ User.prototype.comparePassword = async function (p) {
     throw new Error("Error comparing passwords");
   }
 };
-User.sync()
+// User.sync()
 module.exports = User;

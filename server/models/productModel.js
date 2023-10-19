@@ -46,5 +46,5 @@ Product.beforeDestroy(async (product, options) => {
     await cloudinary.uploader.destroy("NhaHangThuyTinh/" + public_id);
   }
 });
-Product.sync();
+// Product.sync();
 module.exports = Product;

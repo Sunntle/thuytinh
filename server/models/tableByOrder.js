@@ -18,5 +18,5 @@ const TableByOrder = db.sequelize.define(
     },
     { timestamps: true }
 );
-TableByOrder.sync()
+// TableByOrder.sync()
 module.exports = TableByOrder;

@@ -35,6 +35,6 @@ OrderDetail.beforeUpdate(async (item) => {
   console.log(item);
 });
 
-OrderDetail.sync()
+// OrderDetail.sync()
 
 module.exports = OrderDetail;
