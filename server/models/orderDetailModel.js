@@ -1,6 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
-const bcrypt = require("bcrypt");
+const Product = require("./productModel");
+const Recipes = require("./recipeModel");
+const Materials = require("./materialsModel");
 require("dotenv").config();
 
 const OrderDetail = db.sequelize.define("order_detail", {
@@ -22,5 +24,12 @@ const OrderDetail = db.sequelize.define("order_detail", {
     type: DataTypes.INTEGER,
   },
 });
-OrderDetail.sync();
+
+OrderDetail.beforeBulkCreate(async (item) => {
+  await Promise.all(item.map(async (pr) => {
+    const { id_product, quantity } = pr.dataValues;
+    return Product.increment("sold", { by: quantity, where: { id: id_product } });
+  }));
+});
+// OrderDetail.sync({ force: true });
 module.exports = OrderDetail;

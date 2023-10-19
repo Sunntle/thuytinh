@@ -1,10 +1,11 @@
-import { Badge, Button, Popover } from "antd";
+import { Badge, Button, Popover, Tooltip, Typography, message } from "antd";
 import { formatNgay } from "../../utils/format";
-import { BellOutlined } from "@ant-design/icons";
+import { BellOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import {
+  deleteNotification,
   maskAllRead,
   maskAsRead,
 } from "../../redux/notification/notificationSystem";
@@ -15,15 +16,20 @@ function NotificationsComponent({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleCheckedAll = useCallback(async () => {
+  const handleCheckedAll = useCallback(() => {
     dispatch(maskAllRead());
   }, [dispatch]);
-  const handleToContent = (index) => {
+  const handleToContent = useCallback((index) => {
     const content = notifications[index];
     const navigateTo = `/admin/${content.type}`;
     dispatch(maskAsRead(content));
-    navigate(navigateTo);
-  };
+    content.type != "call-staff" && navigate(navigateTo);
+  },[dispatch, navigate, notifications])
+
+  const handleDelete = async(id)=>{
+    dispatch(deleteNotification(id));
+    message.open({type: "success", content: "Xóa thông báo thành công"})
+  }
   const getCountNoti = useMemo(() => {
     return notifications && notifications.length > 0
       ? notifications.filter((el) => el.status == 0).length
@@ -33,15 +39,14 @@ function NotificationsComponent({
     if (!Array.isArray(notifications) || notifications.length < 1)
       return <p className="text-gray-500 px-3">Không có thông báo nào</p>;
     return (
-      <div className="max-h-[300px] overflow-y-scroll relative">
+      <div className="max-h-[400px] overflow-y-scroll">
         {notifications.map((el, index) => {
           return (
             <div
-              onClick={() => handleToContent(index)}
               key={index}
-              className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 gap-x-2"
+              className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 hover:text-main gap-x-2"
             >
-              <div className="flex items-center gap-x-2">
+              <div  onClick={() => handleToContent(index)} className="flex items-center gap-x-2 ">
                 <div className="max-w-[50px]">
                   <img
                     className="w-full  rounded-md "
@@ -49,18 +54,20 @@ function NotificationsComponent({
                   />
                 </div>
                 <div className={el.status == 1 ? "text-gray-500" : " pe-2"}>
-                  <span className="font-semibold">#{el.id}</span>{" "}
+                  {/* <span className="font-semibold">#{el.id}</span>{" "} */}
                   {el.description}
                   <p className="text-main text-sm">
                     {formatNgay(el.createdAt, "HH:mm DD-MM-YYYY")}
                   </p>
                 </div>
               </div>
-              {el.status == 0 && (
-                <div>
+              <div className="px-2">
+                {el.status == 0 ? (
                   <Badge status="processing" color="#fc8e32" />
-                </div>
-              )}
+                ) : (
+                  <div onClick={()=>handleDelete(el.id)}><DeleteOutlined /></div>
+                )}
+              </div>
             </div>
           );
         })}
@@ -70,7 +77,23 @@ function NotificationsComponent({
   return (
     <Popover
       content={content}
-      title={<div className="flex items-center justify-between"><p className="m-0 text-xl">Thông báo</p><p className="cursor-pointer" onClick={handleCheckedAll}>Đánh dấu tất cả đã đọc</p></div>}
+      title={
+        <div className="flex items-center justify-between">
+          <Typography.Title
+        level={4}
+        style={{
+          margin: 0,
+        }} className="m-0">Thông báo</Typography.Title>
+          <Tooltip title="Đánh dấu tất cả đã đọc" placement="bottom">
+            <Button
+              className="border-0"
+              shape="circle"
+              icon={<CheckOutlined />}
+              onClick={handleCheckedAll}
+            />
+          </Tooltip>
+        </div>
+      }
       trigger="click"
       open={openPopover}
       onOpenChange={() => setOpenPopover(!openPopover)}

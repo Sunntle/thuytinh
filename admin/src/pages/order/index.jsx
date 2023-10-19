@@ -14,9 +14,9 @@ import {
   DatePicker,
   Typography,
 } from "antd";
-import { getAllOrder, updateOrder } from "../services/api";
-import { formatNgay, formatGia } from "../utils/format";
-import ConfirmComponent from "../components/confirm";
+import { getAllOrder, updateOrder } from "../../services/api";
+import { formatNgay, formatGia } from "../../utils/format";
+import ConfirmComponent from "../../components/confirm";
 import moment from "moment";
 import { useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
@@ -88,99 +88,82 @@ const OrderPage = () => {
       return data;
     });
     setDataOrder(avl);
-  },[]);
+  }, []);
   useEffect(() => {
     fetchData(query);
-  }, [query,fetchData]);
-  useEffect(()=>{
-    if(notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)){
+  }, [query, fetchData]);
+  useEffect(() => {
+    if (notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)) {
       fetchData(query)
       console.log("fetched");
     }
-  },[notifications,location,fetchData,query])
+  }, [notifications, location, fetchData, query])
   const columns = [
     {
-      title: "Mã đơn hàng",
-      dataIndex: "id",
+      title: 'Mã đơn hàng',
+      dataIndex: 'id',
       render: (_, record) => (
-        <span
-          className="font-medium cursor-pointer"
-          onClick={() => showDetail(record)}
-        >
-          TTLGH{record.id}
-        </span>
-      ),
+        <span className='font-medium cursor-pointer' onClick={() => showDetail(record)}>TTLGH{record.id}</span>
+      )
     },
     {
-      title: "Họ tên",
-      dataIndex: "name",
+      title: 'Họ tên',
+      dataIndex: 'name',
     },
     {
-      title: "Số điện thoại",
-      dataIndex: "phone",
+      title: 'Số điện thoại',
+      dataIndex: 'phone',
     },
     {
-      title: "Người phụ trách",
-      dataIndex: "employee",
+      title: 'Người phụ trách',
+      dataIndex: 'employee',
     },
     {
-      title: "Số lượng",
-      dataIndex: "quantity",
+      title: 'Số lượng',
+      dataIndex: 'quantity',
     },
     {
-      title: "Bàn",
-      dataIndex: "id_table",
+      title: 'Bàn',
+      dataIndex: 'id_table',
     },
     {
-      title: "Thanh toán",
-      dataIndex: "payment",
+      title: 'Thanh toán',
+      dataIndex: 'payment',
     },
     {
-      title: "Ngày đặt",
-      dataIndex: "date_order",
+      title: 'Ngày đặt',
+      dataIndex: 'date_order',
     },
     {
-      title: "Tổng tiền",
-      dataIndex: "total",
+      title: 'Tổng tiền',
+      dataIndex: 'total',
       render: (_, record) => (
-        <span className="text-main font-medium text-lg">
-          {formatGia(record.total)}
-        </span>
-      ),
+        <span className='text-main font-medium text-lg'>{formatGia(record.total)}</span>
+      )
     },
     {
-      title: "Điều chỉnh",
-      key: "action",
+      title: 'Điều chỉnh',
+      key: 'action',
       render: (_, record) => (
-        <div className="h-10 flex items-center cursor-pointer">
-          <span
-            className="bg-orange-500 px-4 rounded-md py-2 text-white"
-            onClick={() => showModalUpdate(record)}
-          >
-            Sửa
-          </span>
-          <ConfirmComponent
-            title="Xác nhận xóa đơn hàng"
-            confirm={() => handDeleteOrder(record.id)}
-          >
-            Xóa
-          </ConfirmComponent>
+        <div className='h-10 flex items-center cursor-pointer'>
+          <span className='bg-orange-500 px-4 rounded-md py-2 text-white' onClick={() => showModalUpdate(record)} >Sửa</span>
+          <ConfirmComponent title="Xác nhận xóa đơn hàng" confirm={() => handDeleteOrder(record.id)} >Xóa</ConfirmComponent>
         </div>
       ),
     },
   ];
   const showDetail = (record) => {
     setOpenOrderDetail({ show: true, data: record.meta });
-  };
+  }
   const showModalUpdate = (record) => {
     let data = { ...record };
     data.date_order = moment(data.meta.date_order);
-    setOpenModalUpdate({ data, show: true });
+    setOpenModalUpdate({ data, show: true })
     form.setFieldsValue(data);
-  };
+  }
   const handDeleteOrder = async (id) => {
     // const res = await delOrder(id);
-    fetchData();
+    fetchData()
     message.success(id);
   };
   const onClose = () => {
@@ -197,6 +180,7 @@ const OrderPage = () => {
     fetchData();
     onClose();
   };
+
   return (
     <div className=" px-5">
       <Row justify="space-between" align="center" className="mb-4">

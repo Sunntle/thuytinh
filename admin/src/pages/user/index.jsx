@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ConfirmComponent from "../../components/confirm";
 import {
   Button,
@@ -16,11 +16,12 @@ import {
   callUpdatePassword,
   getAllUser,
   getDetailUser,
+  removeUser,
 } from "../../services/api";
 import { formatNgay, roleRext } from "../../utils/format";
 import { socket } from "../../socket";
 import { fetchAccount } from "../../redux/account/accountSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UploadOutlined } from "@ant-design/icons";
 import ButtonComponents from "../../components/button";
 const { Title } = Typography;
@@ -29,18 +30,23 @@ function UserPage() {
   const [user, setUser] = useState(null);
   const [openModalProfile, setOpenModalProfile] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const userStore = useSelector(state=> state.account)
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   const dispatch = useDispatch();
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = useCallback(async () => {
+    try{
       const dataAdmin = await getAllUser({ _like: "role_R1_not" });
       const dataUser = await getAllUser({ _like: "role_R1" });
       dataAdmin.success && setAdmin(dataAdmin);
       dataUser.success && setUser(dataUser);
-    };
+    }catch(err){
+      console.log(err);
+    }
+  },[])
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
   const handleEdit = async (idUser) => {
     setOpenModalProfile(true);
     const user = await getDetailUser(idUser);
@@ -62,8 +68,19 @@ function UserPage() {
     };
     form.setFieldsValue(data);
   };
-  const handleDelete = async (data) => {
-    console.log(data);
+  const handleDelete = async (id) => {
+    if(id === userStore.user.id) {
+      message.error("Không thể xóa chính bản thân mình !!")
+      return 
+    }
+    try{
+      await removeUser(id)
+      await fetchData()
+      message.success("Xóa thành công")
+    }catch(err){
+      console.log(err);
+      message.error("Xảy ra lỗi, xóa thất bại")
+    }
   };
 
   const onChange = (pagination, filters, sorter, extra) => {

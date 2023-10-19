@@ -53,15 +53,16 @@ const App = () => {
             darkSubMenuItemBg:"#001529"
           },
           Layout:{
-            lightSiderBg: "#FC8019"
+            lightSiderBg: "#FC8019",
+            triggerBg: "#000000",
+            siderBg: "#FC8019",
           },
 
           Tabs:{
             inkBarColor:"#FC8019",
             itemSelectedColor:"#FC8019",
             itemHoverColor:"#FC8019",
-          }
-
+          },
         },
 
 }

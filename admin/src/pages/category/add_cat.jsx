@@ -8,7 +8,7 @@ const optionsStatus = [
     { value: 1, label: "Hiện" },
 ];
 const CreateCategory = ({ openModal, handleCancel, fetchData }) => {
-
+    const [form] = Form.useForm();
     const onFinish = async (values) => {
         const formData = new FormData();
         const { thumbnail, ...rest } = values;
@@ -18,7 +18,8 @@ const CreateCategory = ({ openModal, handleCancel, fetchData }) => {
         }
         const res = await addCate(formData);
         handleCancel();
-        fetchData()
+        fetchData();
+        form.resetFields()
     };
 
     return (
@@ -30,6 +31,7 @@ const CreateCategory = ({ openModal, handleCancel, fetchData }) => {
             >
 
                 <Form
+                    form={form}
                     name="basic"
                     labelCol={{
                         span: 24,
