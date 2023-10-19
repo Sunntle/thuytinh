@@ -16,6 +16,7 @@ import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
 const router = createBrowserRouter([
   {
     path: "/:alias",
+    element:<Layout/>,
     children: [
       {
         index: true,
@@ -24,17 +25,13 @@ const router = createBrowserRouter([
       {
         path: "home",
         element: (
-          <Layout>
             <Home />
-          </Layout>
         ),
       },
       {
         path: "service",
         element: (
-          <Layout>
             <Service />
-          </Layout>
         ),
       },
       {
@@ -44,41 +41,31 @@ const router = createBrowserRouter([
       {
         path: "order",
         element: (
-          <Layout>
             <Order />
-          </Layout>
         ),
       },
       {
         path: "menu",
         element: (
-          <Layout>
             <Menu />
-          </Layout>
         ),
       },
       {
         path: "rating",
         element: (
-          <Layout>
             <Rate/>
-          </Layout>
         ),
       },
       {
         path: "about",
         element: (
-          <Layout>
             <AboutUs />
-          </Layout>
         ),
       },
       {
         path: "contact",
         element: (
-          <Layout>
             <Contact />
-          </Layout>
         ),
       },
       {

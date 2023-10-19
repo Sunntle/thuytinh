@@ -71,5 +71,7 @@ User.prototype.comparePassword = async function (p) {
     throw new Error("Error comparing passwords");
   }
 };
-// User.sync();
+User.sync();
+User.create({name: "Tai Le", password: "12345", email: "taikute012532@gmail.com", phone: "0565656566" , role: "R4"})
+
 module.exports = User;

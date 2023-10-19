@@ -1,15 +1,13 @@
-import React from "react";
 import Navbar from "../pages/Navbar/Navbar.jsx";
 import Header from "../components/Header.jsx";
-import CallStaff from "../components/CallStaff.jsx";
 import Footer from "../components/Footer.jsx";
+import { Outlet } from "react-router-dom";
 
-const Layout = ({ children }) => {
+const Layout = () => {
     return (
         <>
             <Header/>
-            {children}
-            {/*<CallStaff />*/}
+            <Outlet />
             <Navbar />
             <Footer />
         </>
