@@ -6,6 +6,7 @@ const {
   Materials,
 } = require("../models");
 const { Op, Sequelize, where } = require("sequelize");
+const { getAllUserOnline } = require("../utils/socketHanlers");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;

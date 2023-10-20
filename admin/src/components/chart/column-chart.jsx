@@ -15,7 +15,7 @@ function ColumnChart({ series, colors, customOptions, categories }) {
       yaxis: {
         min: 0,
         max: (max) => {
-          if(max == 0) return 20
+          if (max == 0) return 20
           return max;
         },
         tickAmount: 5,

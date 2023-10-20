@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { formatCurrency, truncateString } from "../../utils/format.js";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { addToOrder } from "../../redux/Order/orderSlice.js";
@@ -10,14 +10,30 @@ const Product = (props) => {
   const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [productDetail, setProductDetail] = useState(false);
+
   const imageUrl = useMemo(
     () => props.item.imageUrls || props.item.ImageProducts?.[0]?.url,
     [props.item],
   );
 
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const showProductDetail = () => {
-    setOpenDrawer(true);
-    setProductDetail(true);
+    if (!isLargeScreen) {
+      setOpenDrawer(true);
+      setProductDetail(true);
+    }
   };
 
   const onClose = () => {

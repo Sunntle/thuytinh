@@ -1,5 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
+const User = require("./userModel");
+const Tables = require("./tableModel");
 
 require("dotenv").config();
 
@@ -21,13 +23,20 @@ const Order = db.sequelize.define("orders", {
     type: DataTypes.STRING,
     defaultValue: 1
   },
+  payment_gateway: {
+    type: DataTypes.TINYINT,
+    defaultValue: 1
+  },
   total: {
     type: DataTypes.INTEGER,
   },
+  status: {
+    type: DataTypes.TINYINT(1),
+    defaultValue: 1
+  },
   id_employee: {
     type: DataTypes.INTEGER,
-    defaultValue: null
   }
 }, { timestamps: true });
-Order.sync();
+// Order.sync();
 module.exports = Order;

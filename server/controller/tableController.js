@@ -6,37 +6,45 @@ const {
   OrderDetail,
   ImageProduct,
   Product,
+  TableByOrder,
 } = require("../models");
+const { apiQueryRest } = require('../utils/const');
+const { Op } = require('sequelize');
 
 exports.getAll = asyncHandler(async (req, res) => {
-  const re = await Tables.findAll({ include: { model: Order } });
-  res.status(200).json(re);
+  let query = { ...apiQueryRest(req.query) };
+  let tables = await Tables.findAll(query);
+
+  const tableByOrder = await Order.findAll({
+    include: [{ model: TableByOrder, as: "TableByOrder" },
+    { model: OrderDetail, as: "orderToDetail", include: { model: Product, as: "product", include: { model: ImageProduct, attributes: ["url"] } } }],
+    where: { status: { [Op.lt]: 3 } }, raw: true, nest: true
+  });
+
+  tables.forEach(table => {
+    const match = tableByOrder.find(order => order.TableByOrder && order.TableByOrder.tableId === table.id);
+    if (match) {
+      const { TableByOrder, ...data } = match
+      table.order = data
+    }
+  });
+  res.status(200).json(tables);
 });
 
 exports.getId = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  const re = await Tables.findByPk(id, {
-    include: [
-      {
-        model: Order,
-        include: {
-          model: OrderDetail,
-          include: [
-            {
-              model: Product,
-              as: "product",
-              include: [
-                {
-                  model: ImageProduct,
-                  attributes: ["url"],
-                },
-              ],
-            },
-          ],
-        },
-      },
-    ],
-  });
+  let re = null;
+  const { id_order } = req.query;
+  const { id } = req.params;
+
+  if (id_order) {
+    re = await TableByOrder.findAll({
+      where: { orderId: id_order },
+      include: [{ model: Tables }, { model: Order, include: { model: OrderDetail, as: "orderToDetail", include: { model: Product, as: "product", include: { model: ImageProduct } } } }],
+      raw: true, nest: true
+    });
+  } else {
+    re = await Tables.findByPk(id);
+  }
   res.status(200).json(re);
 });
 

@@ -7,6 +7,7 @@ export default {
         main: "#FC8019",
         secondaryColor: "#fc8e32",
         borderSecondaryColor: "#fd9c4b",
+        darkModeBg: "#001529"
       },
     },
     screens: {
