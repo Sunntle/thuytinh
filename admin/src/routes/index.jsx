@@ -85,7 +85,7 @@ const router = createBrowserRouter([
         element: <ResMenu />,
       },
       {
-        path: "menu/:id",
+        path: "menu",
         element: <ResMenu />,
       },
       {

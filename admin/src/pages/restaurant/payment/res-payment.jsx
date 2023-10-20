@@ -14,11 +14,11 @@ const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popul
 
 const ResPayment = () => {
     const {id} = useParams()
-    const [data, setData] = useState(null);
     const [orderDetails, setOrderDetails] = useState(null);
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
     const idTble = useSelector(state => state.table)
+    const tablelist = useSelector((state) => state.tablelist);
 
     // const statustble = useSelector(state => state.table.status_table)
     const dispatch = useDispatch();
@@ -56,64 +56,23 @@ const ResPayment = () => {
     };
 
     // Xu ly update order
-    useEffect(() => {
-        const fetchData = async (id) => {
-            try {
-                const resCa = await getTableId(id);
-                console.log("Response from API:", resCa);
-                setData(resCa);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-        fetchData(id);
-    }, [id]);
-    useEffect(() => {
-        setOrderDetails(data)
-    }, [data])
+    const order_details = tablelist?.order?.order_details;
+    console.log(order_details)
+    const totalOld = tablelist?.total;
 
-    const totalOld = orderDetails?.order?.total;
-    const order_details = data?.order?.order_details || []; 
-    // console.log(order?.total);
-
-    // const quantityCurr = carts.map((item) => ({
-    //     quantity: item.quantity
-    // }));
-    // console.log(quantityCurr)
-    // const quantityold = order_details.map((item) => ({
-    //     quantity: item.quantity
-    // }));
-    // console.log(quantityold)
 
     const sumitUpdateOrder = async (value) => {
         try {
             let res;
 
-            const updatedQuantities = carts.map((cartItem) => {
-                const matchingOrderDetail = order_details.find((orderItem) => orderItem.id_product === cartItem.id);
-
-
-                if (matchingOrderDetail) {
-                    const updatedQuantity = cartItem.quantity + matchingOrderDetail.quantity;
-                    return {
-                        id_product: cartItem.id,
-                        quantity: updatedQuantity
-                    };
-                }
-
-                // return {
-                //     id_product: cartItem.id,
-                //     quantity: cartItem.quantity
-                // };
-            });
-            console.log(updatedQuantities)
-            const updateTotal = totalVAT + totalOld
             const body = {
-                id: orderDetails.id_order,
-                updatedQuantities,
-                updateTotal
+                id_order: tablelist.order.id,
+                carts: carts,
+                id_table: tablelist.id,
+                total: totalVAT
+                
             };
-
+            console.log(body)
             res = await updateOrder(body);
             dispatch(RemoveAllCart());
             console.log(res)
@@ -122,18 +81,6 @@ const ResPayment = () => {
         }
     }
 
-    // const sumitUpdateOrder = async (value) => {
-    //     try {
-    //         let res;
-    //         const body = {
-    //             id: order.id,
-    //             rest: carts
-    //         }
-    //         res = await updateOrder(body);
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // }
     // modal phuong thuc thanh toan
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
@@ -184,7 +131,7 @@ const ResPayment = () => {
             <div className="border-solid border-2 border-main bg-orange-50 shadow-md flex flex-col gap-y-4 p-4 rounded-lg">
                 <div>
                     <span className='font-medium text-lg'>Bàn số: </span>
-                    <span className='font-medium text-main text-lg'></span>
+                    <span className='font-medium text-main text-lg'>{tablelist.id}</span>
                 </div>
                 <Divider className='bg-main m-0' />
                 {carts && carts.map((item, index) =>

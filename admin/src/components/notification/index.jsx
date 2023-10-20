@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Badge, Button, Popover, Select } from "antd";
-=======
 import { Badge, Button, Popover, Tooltip, Typography, message } from "antd";
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 import { formatNgay } from "../../utils/format";
 import { BellOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -35,31 +31,18 @@ function NotificationsComponent({
     message.open({type: "success", content: "Xóa thông báo thành công"})
   }
   const getCountNoti = useMemo(() => {
-<<<<<<< HEAD
-    return notifications && notifications.length > 0 ? notifications.filter((el) => el.status == 0).length : 0
-  }, [notifications])
-=======
     return notifications && notifications.length > 0
       ? notifications.filter((el) => el.status == 0).length
       : 0;
   }, [notifications]);
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)
       return <p className="text-gray-500 px-3">Không có thông báo nào</p>;
     return (
-<<<<<<< HEAD
-      <Select getPopupContainer={(trigger) => trigger.parentElement}>
-        {notifications.map((el, index) => {
-          return (
-            <Select.Option
-              onClick={() => handleToContent(index)}
-=======
       <div className="max-h-[400px] overflow-y-scroll">
         {notifications.map((el, index) => {
           return (
             <div
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
               key={index}
               className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 hover:text-main gap-x-2"
             >
@@ -81,15 +64,6 @@ function NotificationsComponent({
               <div className="px-2">
                 {el.status == 0 ? (
                   <Badge status="processing" color="#fc8e32" />
-<<<<<<< HEAD
-                </div>
-              )}
-            </Select.Option>
-          );
-        })}
-        <a onClick={handleCheckedAll}>Đánh dấu tất cả đã đọc</a>
-      </Select>
-=======
                 ) : (
                   <div onClick={()=>handleDelete(el.id)}><DeleteOutlined /></div>
                 )}
@@ -98,7 +72,6 @@ function NotificationsComponent({
           );
         })}
       </div>
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
     );
   };
   return (

@@ -15,10 +15,10 @@ const TableByOrder = require("./tableByOrder")
 
 Recipes.belongsTo(Product, { foreignKey: "id_product" });
 Recipes.belongsTo(Materials, { foreignKey: "id_material" });
-Order.belongsTo(User, { foreignKey: "id_employee", as: "employee" });
+Order.belongsTo(User, { foreignKey: "id_employee" });
 Reviews.belongsTo(Order, { foreignKey: "id_order" })
-OrderDetail.belongsTo(Order, { foreignKey: "id_order", as: "orderToOrderDetail" });
-OrderDetail.belongsTo(Product, { foreignKey: "id_product", as: "product" });
+OrderDetail.belongsTo(Order, { foreignKey: "id_order" });
+OrderDetail.belongsTo(Product, { foreignKey: "id_product" });
 Product.belongsTo(Category, {
     foreignKey: "id_category",
     onDelete: "CASCADE",
@@ -29,18 +29,17 @@ Product.belongsTo(Category, {
 ImageProduct.belongsTo(Product, { foreignKey: "id_product" });
 
 
-Order.hasMany(TableByOrder, { foreignKey: 'orderId', as: "TableByOrder" });
+Order.hasMany(TableByOrder, { foreignKey: 'orderId' });
 TableByOrder.belongsTo(Order, { foreignKey: 'orderId' });
 
-Tables.hasMany(TableByOrder, { foreignKey: 'tableId', as: "tableOrders" });
+Tables.hasMany(TableByOrder, { foreignKey: 'tableId' });
 TableByOrder.belongsTo(Tables, { foreignKey: 'tableId' })
 
 
-Order.hasMany(OrderDetail, { foreignKey: "id_order", as: "orderToDetail" });
+Order.hasMany(OrderDetail, { sourceKey: "id", foreignKey: "id_order" });
 Product.hasMany(ImageProduct, { foreignKey: "id_product", sourceKey: "id" });
 Category.hasMany(Product, {
     foreignKey: "id_category",
-    sourceKey: "id",
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
 });

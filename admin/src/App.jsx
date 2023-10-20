@@ -62,12 +62,7 @@ const App = () => {
             inkBarColor:"#FC8019",
             itemSelectedColor:"#FC8019",
             itemHoverColor:"#FC8019",
-<<<<<<< HEAD
-          }
-
-=======
           },
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
         },
 
 }

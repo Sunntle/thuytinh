@@ -23,6 +23,7 @@ function currentYear(pa = "startOf") {
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table } = req.body;
   const arrTable = table || [1, 2];
+
   if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
 
   const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
@@ -62,24 +63,20 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
     include: [
       {
         model: OrderDetail,
-        as: "orderToOrderDetail",
-        include: [
+        include:
+        {
+          model: Product,
+          include:
           {
-            model: Product,
-            as: "product",
-            include: [
-              {
-                model: ImageProduct,
-                attributes: ["url"],
-              },
-            ],
-          },
-        ],
+            model: ImageProduct,
+            attributes: ["url"],
+          }
+        },
+
       },
       {
         model: User,
         attributes: ["name"],
-        as: "employee",
       },
     ],
   });
@@ -92,7 +89,9 @@ exports.delOrder = asyncHandler(async (req, res) => {
   res.status(200).json("Xóa đơn hàng thành công");
 });
 exports.updateOrder = asyncHandler(async (req, res) => {
-  const { id, updatedQuantities, updateTotal } = req.body;
+const { id, updatedQuantities, updateTotal } = req.body;
+  console.log(id)
+  console.log(updatedQuantities)
   await Order.update({ total: updateTotal }, { where: { id: id } });
   await Promise.all(updatedQuantities.map(async (item) => {
     await OrderDetail.update({ quantity: item.quantity }, {
@@ -101,6 +100,29 @@ exports.updateOrder = asyncHandler(async (req, res) => {
   }));
   res.status(200).json("Update thành công");
 });
+
+// exports.updateOrder = asyncHandler(async (req, res) => {
+//   const { id, ...rest } = req.body;
+
+//   const order = rest
+//   console.log(order);
+
+//   const existingOrder = await OrderDetail.findOne({ where: { id_order: id } });
+//   // console.log(existingOrder)
+//   // if(existingOrder) {
+//   //   await existingOrder.update({
+//   //     quantity: existingOrder.quantity + rest?.quantity
+//   //   })
+//   // }
+
+//   // if (existingOrder) {
+//   //   await existingOrder.update(rest);
+//   //   res.status(200).json("Cập nhật thành công");
+//   // } else {
+//   //   await Order.create({ id, ...rest });
+//   //   res.status(201).json("Tạo mới thành công");
+//   // }
+// });
 
 exports.dashBoard = asyncHandler(async (req, res) => {
   let data = {};
@@ -160,7 +182,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     (acc, item) => {
       acc.labels.push(`${info}${item[type]}`);
       acc.values.push(item["totalOrder"]);
-      return acc;
+return acc;
     },
     { labels: [], values: [] },
   );
