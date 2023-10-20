@@ -4,7 +4,7 @@ const { apiQueryRest } = require('../utils/const')
 exports.list = async (req, res) => {
   try {
     let query = {
-      ...apiQueryRest(req.query), nest: true
+      ...apiQueryRest({...req.query, title: "name_category"}), nest: true
     };
     const response = await Category.findAll(query);
     res.status(200).json(response);

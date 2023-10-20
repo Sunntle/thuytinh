@@ -38,5 +38,9 @@ const Order = db.sequelize.define("orders", {
     type: DataTypes.INTEGER,
   }
 }, { timestamps: true });
-// Order.sync();
+<<<<<<< HEAD
+// Order.sync()
+=======
+Order.sync();
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 module.exports = Order;

@@ -1,16 +1,18 @@
-import Reason from "../../components/Reason.jsx";
 import product from "../../assets/images/product.png";
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
 import useHttp from "../../hooks/useHttp.js";
 import { truncateString } from "../../utils/format.js";
 import { socket } from "../../services/socket";
 import { Rate } from "antd";
+import { Reason } from "../../components/index.js";
+
+// CSS
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
 const AboutUs = () => {
   const [slideProduct, setSlideRating] = useState(null);
@@ -119,8 +121,8 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-      <section className="px-16 my-12 w-full h-full">
-        <h2 className="text-5xl text-center text-primary w-full font-semibold mb-14">
+      <section className="lg:px-16 px-6 my-12 w-full h-full">
+        <h2 className="text-4xl text-center text-primary w-full font-semibold mb-14">
           Đánh giá của khách hàng
         </h2>
         <Swiper
@@ -149,28 +151,31 @@ const AboutUs = () => {
           onSlideChange={() => console.log("slide change")}
         >
           {slideProduct &&
-            slideProduct?.data?.map((rating) => (
-              <SwiperSlide key={rating.id}>
-                <div className="flex p-2 border hover:shadow-lg cursor-pointer transition-all">
-                  <div className="w-full">
-                    <img
-                      className="w-full h-full rounded-full"
-                      src="https://i.pinimg.com/564x/85/25/83/852583511c3109d7a4efa0c3a233be1e.jpg"
-                      alt={"img"}
-                    />
-                  </div>
-                  <div className="flex flex-col p-4 text-slate-500">
-                    <span>{rating.name}</span>
-                    <span className="whitespace-nowrap">
-                      <Rate value={rating.rate} />
-                    </span>
-                    <span className="text-xs">
-                      {truncateString(rating.description, 20)}
-                    </span>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
+            slideProduct?.data?.map((rating) => {
+              if (rating.rate >= 3) {
+                return (
+                  <SwiperSlide key={rating.id}>
+                    <div className="flex p-2 border hover:shadow-lg cursor-pointer transition-all">
+                      <div className="w-full">
+                        <img
+                          className="w-full h-full rounded-full"
+                          src="https://i.pinimg.com/564x/85/25/83/852583511c3109d7a4efa0c3a233be1e.jpg"
+                          alt={"img"}
+                        />
+                      </div>
+                      <div className="flex flex-col p-4 text-slate-500">
+                        <span>{rating.name}</span>
+                        <span className="whitespace-nowrap">
+                          <Rate value={rating.rate} />
+                        </span>
+                        <span className="text-xs">{rating.description}</span>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                );
+              }
+              return null;
+            })}
         </Swiper>
       </section>
       <Reason />

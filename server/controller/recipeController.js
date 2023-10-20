@@ -5,11 +5,10 @@ const { apiQueryRest } = require('../utils/const')
 exports.list = async (req, res) => {
   let query = {
     include: [{ model: Product, include: ImageProduct }, { model: Materials }],
-    ...apiQueryRest(req.query), nest: true
+    ...apiQueryRest({...req.query, title: "descriptionRecipe"}), nest: true
   };
 
   const response = await Recipes.findAll(query);
-  console.log(response);
   const result = response.reduce((con, cur) => {
     const existingProduct = con.find((item) => item.product.id === cur.Product.id);
     const ma = { quantity: cur.quantity, id_recipe: cur.id, ...cur.Material, descriptionRecipe: cur.descriptionRecipe }

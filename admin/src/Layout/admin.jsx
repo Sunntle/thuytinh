@@ -6,16 +6,17 @@ import { Layout, Menu } from "antd";
 const { Content, Sider } = Layout;
 import { NAV_ITEMS } from "../utils/constant";
 import { socket } from "../socket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewMessage } from "../redux/notification/notificationSystem";
 const LayoutMain = () => {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
   const customize = useSelector(state => state.customize)
-  const notifications = useSelector(state => state.notifications)
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const openNotification = useCallback(() => {
+  const openNotification = useCallback((arg) => {
     const key = `open${Date.now()}`;
     const btn = (
       <Space>
@@ -26,7 +27,7 @@ const LayoutMain = () => {
     );
     api.open({
       message: 'Thông báo mới',
-      description:notifications.lastNotification && notifications.lastNotification?.description,
+      description:arg && arg.description,
       btn,
       key,
       placement: 'bottomRight',
@@ -36,29 +37,30 @@ const LayoutMain = () => {
   //   );
   // },
     });
-  },[api,notifications]);
+  },[api]);
   useEffect(()=>{
-    socket.on("new message", () =>{
-      openNotification()
+    socket.on("new message", (arg) =>{
+      dispatch(addNewMessage(arg))
+      openNotification(arg)
     })
     return ()=>{
       socket.off("new message")
     }
-  },[openNotification])
+  },[openNotification,dispatch])
   const onClick = (e) => {
     navigate(e.key);
   };
   return (
-    <div className="bg-main relative">
+    <div className={`bg-main relative ${customize.darkMode ? 'dark' : ''}`}>
          <div>
          {contextHolder}
          </div>
-      <header className="sticky top-0 w-full z-10">
+      <header className="sticky top-0 w-full z-10 shadow-lg">
         <HeaderComponent />
 
       </header>
       <main className="main_area rounded-t-3xl">
-        <Layout className="layout_area" >
+        <Layout className="layout_area ">
           <Sider
             theme={customize.darkMode ? 'dark' : 'light'}
             breakpoint="lg"
@@ -78,8 +80,8 @@ const LayoutMain = () => {
               onClick={onClick}
             />
           </Sider>
-          <Layout className={customize.darkMode ? 'bg-darkModeBg' : 'bg-white'}>
-            <Content className="w-full">
+          <Layout className="bg-white dark:bg-darkModeBg dark:text-white">
+            <Content className="w-full" style={{minHeight: "100vh"}}>
               <Outlet />
             </Content>
           </Layout>

@@ -1,4 +1,4 @@
-import { ConfigProvider as ConfigProviderAntd } from "antd";
+import { ConfigProvider as ConfigProviderAntd, theme } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
@@ -11,6 +11,8 @@ const nextCallAccount = ['/', '/register'];
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.account);
+  const { defaultAlgorithm, darkAlgorithm } = theme;
+  const customize = useSelector(state => state.customize)
 
   useEffect(() => {
     if (!nextCallAccount.includes(window.location.pathname)) {
@@ -28,6 +30,7 @@ const App = () => {
   return (
     <ConfigProviderAntd
       theme={{
+        algorithm: customize.darkMode ? darkAlgorithm : defaultAlgorithm,
         components: {
           Button: {
             colorPrimary: "#FC8019",
@@ -50,15 +53,21 @@ const App = () => {
             darkSubMenuItemBg:"#001529"
           },
           Layout:{
-            lightSiderBg: "#FC8019"
+            lightSiderBg: "#FC8019",
+            triggerBg: "#000000",
+            siderBg: "#FC8019",
           },
 
           Tabs:{
             inkBarColor:"#FC8019",
             itemSelectedColor:"#FC8019",
             itemHoverColor:"#FC8019",
+<<<<<<< HEAD
           }
 
+=======
+          },
+>>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
         },
 
 }
