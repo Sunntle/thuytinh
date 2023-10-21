@@ -1,29 +1,43 @@
-import { useEffect, useState } from "react";
+/* eslint-disable react/prop-types */
+import {  useCallback, useEffect, useState } from "react";
 import serviceImg from "../../assets/images/Service 24_7-pana.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
 import { useNavigate } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
-const EnterName = () => {
+import useHttp from "../../hooks/useHttp.js";
+const EnterName = (props) => {
   const [customerName, setCustomerName] = useState("");
+  const { sendRequest } = useHttp();
+  const customerNameState = useSelector(state => state.customerName)
+  const idTable = location.pathname.split("/")[1].split("-")[1]
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const name = useOutletContext()
-  useEffect(() => {
-    if (name !== "") {
-      navigate(`/ban-1/menu`); // get ban` in redux -> pass here
-    }
-  }, [name, navigate]);
+  // useEffect(() => {
+  //   if(customerNameState.isLoading == false && customerNameState.name.length > 0){
+  //     navigate(`/ban-${customerNameState.tables[0]}/menu`);
+  //   }
+  // }, [navigate,customerNameState]);
 
-  const handleChangeName = (e) => {
+  const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
-  };
+  },[]);
+  const storeToken = useCallback((data)=>{
+    localStorage.setItem("tableToken",data)
+  },[])
 
-  const handleSubmitName = () => {
-    dispatch(getCustomerName(customerName));
-    navigate(`/ban-${idTable}/menu`);
-  };
-
+  const handleSubmitName = useCallback(async() => {
+    const data = {tables: [idTable], name: customerName, timestamp: new Date().valueOf()}
+    await sendRequest({
+      method: 'put',
+      url: '/table/token',
+      ...data
+    }, storeToken)
+    dispatch(getCustomerName(data))
+    // navigate(`/ban-${customerNameState.tables[0]}/menu`);
+  },[customerName, dispatch, idTable, sendRequest, storeToken]);
+  console.log(props.children);
+  if(customerNameState.isLoading) return "Loading...."
+  if(customerNameState.name.length > 0) return props.children
   return (
     <div className="h-screen w-screen flex items-center">
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">

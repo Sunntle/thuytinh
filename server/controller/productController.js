@@ -5,8 +5,7 @@ const {
   Category,
   Materials,
 } = require("../models");
-const { Op, Sequelize, where } = require("sequelize");
-const { getAllUserOnline } = require("../utils/socketHanlers");
+const { Op } = require("sequelize");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -104,26 +103,27 @@ exports.addItem = async (req, res) => {
     const { recipe, descriptionRecipe, ...rest } = req.body;
     const img = req.files;
     if (rest.id_category) {
-      const response = await Product.create(rest);
-      if (response && img && img.length > 0) {
-        const data = img.map((file) => ({
-          url: file.path.replace("/upload/", "/upload/w_400,h_300/"),
-          id_product: response.id,
-        }));
-        await ImageProduct.bulkCreate(data);
-      }
-      if (response && recipe != "undefined" && recipe.length > 0) {
-        const dataRecipe = JSON.parse(recipe).map((el) => {
-          return {
-            id_material: el.materials,
-            id_product: response.id,
-            quantity: el.quantity,
-            descriptionRecipe: descriptionRecipe,
-          };
-        });
-        await Recipes.bulkCreate(dataRecipe);
-      }
-      res.status(201).json(response);
+      console.log(rest);
+      // const response = await Product.create(rest);
+      // if (response && img && img.length > 0) {
+      //   const data = img.map((file) => ({
+      //     url: file.path.replace("/upload/", "/upload/w_400,h_300/"),
+      //     id_product: response.id,
+      //   }));
+      //   await ImageProduct.bulkCreate(data);
+      // }
+      // if (response && recipe != "undefined" && recipe.length > 0) {
+      //   const dataRecipe = JSON.parse(recipe).map((el) => {
+      //     return {
+      //       id_material: el.materials,
+      //       id_product: response.id,
+      //       quantity: el.quantity,
+      //       descriptionRecipe: descriptionRecipe,
+      //     };
+      //   });
+      //   await Recipes.bulkCreate(dataRecipe);
+      // }
+      // res.status(201).json(response);
     } else {
       res.status(400).json({ error: "Sản phẩm phải có id của danh mục" });
     }

@@ -97,7 +97,7 @@ exports.updateStatusAndToken = asyncHandler(async (req, res) => {
   },
     { where: { id: { [Op.in]: tables } } },
   );
-  res.status(200).json("Cập nhật thành công");
+  res.status(200).json(token);
 });
 
 exports.del = asyncHandler(async (req, res) => {

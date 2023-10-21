@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import Home from "../pages/Home/home.jsx";
 import Order from "../pages/Order/order.jsx";
@@ -9,7 +9,7 @@ import Service from "../pages/Service/Service.jsx";
 import EnterName from "../pages/EnterName/EnterName.jsx";
 import AboutUs from "../pages/AboutUs/AboutUs.jsx";
 import Contact from "../pages/Contact/Contact.jsx";
-
+import CheckTable from "../guard/CheckTable"
 import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
@@ -40,15 +40,24 @@ const router = createBrowserRouter([
         element: <ThanksPage />,
       },
     ],
-   
   },
   {
     path: "/:alias",
-    element: <Layout />,
+    element: (
+      <CheckTable>
+        <EnterName>
+          <Layout />
+        </EnterName>
+      </CheckTable>
+    ),
     children: [
       {
         index: true,
-        element: <EnterName />,
+        element: <Menu />,
+      },
+      {
+        path: "menu",
+        element: <Navigate to=".." />
       },
       {
         path: "service",
@@ -62,10 +71,7 @@ const router = createBrowserRouter([
         path: "order",
         element: <Order />,
       },
-      {
-        path: "menu",
-        element: <Menu />,
-      },
+
       {
         path: "rating",
         element: <Rate />,

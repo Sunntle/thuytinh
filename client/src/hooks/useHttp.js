@@ -8,8 +8,9 @@ const useHttp = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios[request.method](request.url, {
-        ...request,
+      const {method, url, ...rest} = request
+      const response = await axios[method](url, {
+          ...rest,
       });
       getData(response);
     } catch (err) {
