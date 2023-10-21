@@ -1,29 +1,30 @@
-import { useEffect, useState } from "react";
+import {  useCallback, useEffect, useState } from "react";
 import serviceImg from "../../assets/images/Service 24_7-pana.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
 import { useNavigate } from "react-router-dom";
-import { useOutletContext } from "react-router-dom";
 const EnterName = () => {
   const [customerName, setCustomerName] = useState("");
+  const customerNameState = useSelector(state => state.customerName)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const name = useOutletContext()
   useEffect(() => {
-    if (name !== "") {
-      navigate(`/ban-1/menu`); // get ban` in redux -> pass here
+    if(customerNameState.isLoading == false && customerNameState.name.length > 0){
+      navigate(`/ban-${customerNameState.tables[0]}/menu`);
     }
-  }, [name, navigate]);
+  }, [navigate,customerNameState]);
 
-  const handleChangeName = (e) => {
+  const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
-  };
+  },[]);
 
-  const handleSubmitName = () => {
-    dispatch(getCustomerName(customerName));
-    navigate(`/ban-${idTable}/menu`);
-  };
-
+  const handleSubmitName = useCallback(() => {
+    const data = {tables: [customerNameState.tables], name: customerName, timestamp: new Date().valueOf()}
+    console.log(data);
+    dispatch(getCustomerName(data))
+    navigate(`/ban-${customerNameState.tables[0]}/menu`);
+  },[customerName, customerNameState.tables, dispatch, navigate]);
+  if(customerNameState.isLoading) return "Loading...."
   return (
     <div className="h-screen w-screen flex items-center">
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">

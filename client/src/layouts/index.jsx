@@ -2,27 +2,40 @@ import Navbar from "../pages/Navbar/Navbar.jsx";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import { Outlet, useLocation } from "react-router-dom";
-import {  useMemo } from "react";
+import {  useEffect } from "react";
 import SelectTable from "../pages/SelectTable/index.jsx";
-
+import {  getPreciseDistance } from 'geolib';
+import { useDispatch, useSelector } from "react-redux";
+import { initTable } from "../redux/CustomerName/customerNameSlice.js";
 const Layout = () => {
-    //1.1 get ban` -> emit backend get accesstoken(thong tin ban`) -> store accesstoken in redux 
-    //1.2 ban` kh co' -> chon. ban`
-    //2 nhap ten xong moi duoc di tiep-> store ten cua khach hang duoi redux
     const location = useLocation();
-    //get token from backend, set current table
-    const token = localStorage.getItem("tableToken")
-    const handleGetCurrent = useMemo(()=>{
-        //send to backend token -> decode -> return ban + ten
-        //store ban+ten -> redux
-        return {tableId: 1, name: "abc"}
+    const dispatch = useDispatch();
+    const customerName = useSelector(state => state.customerName)
+    useEffect(()=>{
+        dispatch(initTable({tables: [location.pathname.split("/")[1].split("-")[1]], name: "", timestamp: new Date().valueOf()}))
     },[])
-    const initalIdTable = token ? handleGetCurrent()?.tableId : location.pathname.split("/")[1].split("-")[1]
-    const name = token ?  handleGetCurrent()?.name : ""
+    //test
+    useEffect(()=>{
+        const position1 = {
+          latitude: 10.779984,
+          longitude: 106.675157,
+        };
+        navigator.geolocation.getCurrentPosition((position) => {
+            const position2 = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              };
+        const distance = getPreciseDistance(position1, position2);
+        console.log(distance)
+        });
+    },[])
+    
     return (
         <>
             <Header/>
-            {initalIdTable ? <Outlet context={name}/> : <SelectTable/>}
+            <div className="main-layout">
+            {customerName.isLoading == false ? <Outlet/> : <SelectTable/>}
+            </div>
             <Navbar />
             <Footer />
         </>

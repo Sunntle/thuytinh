@@ -5,13 +5,13 @@ const initialState = {
     isLoading: false,
     lastNotification: null
 }
-export const fetchNotification = createAsyncThunk('account/fetchNotification', async () => {
+export const fetchNotification = createAsyncThunk('notification/fetchNotification', async () => {
     const response = await getAllNotification({ _sort: "createdAt", _order: "DESC", _limit: 10 });
     let lastNotification = null
     if (response.some(el => el.status == 0)) lastNotification = response[0]
     return { data: response, lastNotification }
 })
-export const maskAllRead = createAsyncThunk('account/maskAllRead', async (_, thunkApi) => {
+export const maskAllRead = createAsyncThunk('notification/maskAllRead', async (_, thunkApi) => {
     const listNoti = thunkApi.getState().notifications.content
     if (listNoti.some((el) => el.status == 0 || el.status === false)) {
         const arr = listNoti.map((el) => ({ ...el, status: 1 }))
@@ -21,7 +21,7 @@ export const maskAllRead = createAsyncThunk('account/maskAllRead', async (_, thu
         return listNoti
     }
 })
-export const maskAsRead = createAsyncThunk('account/maskAsRead', async (notification, thunkApi) => {
+export const maskAsRead = createAsyncThunk('notification/maskAsRead', async (notification, thunkApi) => {
     const listNoti = thunkApi.getState().notifications.content
     if (notification.status === 0 || notification.status === false){
         const updatedNotifications = listNoti.map((item) => {
