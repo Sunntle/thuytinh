@@ -4,28 +4,29 @@ const { Op } = require("sequelize");
 const { apiQueryRest } = require('../utils/const')
 exports.list = async (req, res) => {
   let query = {
-    include: [{ model: Product, include: ImageProduct }, { model: Materials }],
-    ...apiQueryRest({...req.query, title: "descriptionRecipe"}), nest: true
+    attributes: ["quantity", "id"],
+    include: [{ model: Product, include: { model: ImageProduct, attributes: ["url"] } }, { model: Materials, attributes: ["name_material", "amount", "unit", "id"] }],
+    ...apiQueryRest({ ...req.query, title: "descriptionRecipe" }), nest: true
   };
 
-  const response = await Recipes.findAll(query);
-  const result = response.reduce((con, cur) => {
-    const existingProduct = con.find((item) => item.product.id === cur.Product.id);
-    const ma = { quantity: cur.quantity, id_recipe: cur.id, ...cur.Material, descriptionRecipe: cur.descriptionRecipe }
+  let recipes = await Recipes.findAll(query);
+  const result = recipes.reduce((con, cur) => {
+    const { Product, quantity, id, Material, descriptionRecipe } = cur.toJSON()
+    const existingProduct = con.find((item) => item.product.id === Product.id);
+    const mate = { quantity, id_recipe: id, ...Material, descriptionRecipe: descriptionRecipe }
     if (existingProduct) {
-      existingProduct.quantity += cur.quantity;
-      existingProduct.materials.push(ma);
+      existingProduct.quantity += quantity;
+      existingProduct.materials.push(mate);
     } else {
       con.push({
-        product: cur.Product,
+        product: Product,
         quantity: cur.quantity,
-        materials: [ma]
+        materials: [mate]
       });
     }
     return con;
   }, []);
   res.status(200).json(result);
-
 };
 exports.getRecipeByProduct = async (req, res) => {
   try {

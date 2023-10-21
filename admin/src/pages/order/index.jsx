@@ -14,7 +14,7 @@ import {
   DatePicker,
   Typography,
 } from "antd";
-import { getAllOrder, updateOrder } from "../../services/api";
+import { delOrder, getAllOrder, updateOrder } from "../../services/api";
 import { formatNgay, formatGia } from "../../utils/format";
 import ConfirmComponent from "../../components/confirm";
 import moment from "moment";
@@ -59,19 +59,20 @@ const initData = {
   data: [],
 };
 const OrderPage = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [dataOrder, setDataOrder] = useState([]);
   const [openModalUpdate, setOpenModalUpdate] = useState(initData);
   const [openOrderDetail, setOpenOrderDetail] = useState(initData);
   const [query, setQuery] = useState({
-    key_sort: "createdAt",
-    val_sort: "DESC",
+    _sort: "createdAt",
+    _order: "DESC",
   });
   const notifications = useSelector(state => state.notifications)
   const location = useLocation();
   const fetchData = useCallback(async (query) => {
-    const res = await getAllOrder(query);
-    const avl = res.success && res.map((item) => {
+    const { data, total } = await getAllOrder(query);
+    const avl = total > 0 && data.map((item) => {
       let data = {
         id: item.id,
         name: item.name,
@@ -162,9 +163,13 @@ const OrderPage = () => {
     form.setFieldsValue(data);
   }
   const handDeleteOrder = async (id) => {
-    // const res = await delOrder(id);
-    fetchData()
-    message.success(id);
+    const res = await delOrder(id);
+    console.log(res);
+    fetchData(query)
+    messageApi.open({
+      type: 'success',
+      content: "Đã xóa đơn " + id
+    });
   };
   const onClose = () => {
     setOpenOrderDetail(initData);
@@ -177,12 +182,13 @@ const OrderPage = () => {
   const onFinish = async (values) => {
     let res = await updateOrder(values);
     console.log(res);
-    fetchData();
+    fetchData(query);
     onClose();
   };
 
   return (
     <div className=" px-5">
+      {contextHolder}
       <Row justify="space-between" align="center" className="mb-4">
         <Col xs={6}>
           <Title level={3}>Công thức sản phẩm</Title>

@@ -54,19 +54,26 @@ Materials.hasMany(Recipes, { foreignKey: "id_material", sourceKey: "id" });
 Order.hasOne(Reviews, { sourceKey: "id", foreignKey: "id_order", onDelete: "CASCADE", onUpdate: "CASCADE" })
 User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee" });
 
-Category.sync();
-Product.sync();
-Notification.sync();
-Tables.sync();
-User.sync();
-Order.sync();
-OrderDetail.sync();
+// Category.sync();
+// Product.sync();
+// Notification.sync();
+// Tables.sync();
+// User.sync();
+// Order.sync();
+// OrderDetail.sync();
+// ImageProduct.sync();
+// Materials.sync();
+// Reviews.sync();
+// Recipes.sync();
+// TableByOrder.sync();
+async function synchronizeModels() {
+    try {
+        await sequelize.sync();
+        console.log('Models synchronized successfully.');
+    } catch (error) {
+        console.error('Error synchronizing models:', error);
+    }
+}
 
-ImageProduct.sync();
-Materials.sync();
-
-Reviews.sync();
-Recipes.sync();
-TableByOrder.sync();
-
+synchronizeModels();
 module.exports = { TableByOrder, Notification, Tables, User, Order, Category, Product, ImageProduct, Recipes, Materials, OrderDetail, Reviews };

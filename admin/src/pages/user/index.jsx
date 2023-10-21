@@ -30,17 +30,17 @@ function UserPage() {
   const [user, setUser] = useState(null);
   const [openModalProfile, setOpenModalProfile] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-  const userStore = useSelector(state=> state.account)
+  const userStore = useSelector(state => state.account)
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   const dispatch = useDispatch();
   const fetchData = useCallback(async () => {
-    try{
+    try {
       const dataAdmin = await getAllUser({ _like: "role_R1_not" });
       const dataUser = await getAllUser({ _like: "role_R1" });
       dataAdmin.success && setAdmin(dataAdmin);
       dataUser.success && setUser(dataUser);
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
   }, [])
@@ -50,7 +50,8 @@ function UserPage() {
   const handleEdit = async (idUser) => {
     setOpenModalProfile(true);
     const user = await getDetailUser(idUser);
-    const { id, name, email, phone, avatar, role } = user.user;
+    console.log(user);
+    const { id, name, email, phone, avatar, role } = user.data;
     let data = {
       id,
       name,
@@ -465,6 +466,7 @@ function UserPage() {
         columns={columnsAdmin}
         dataSource={admin?.data}
         onChange={onChange}
+        rowKey={"id"}
       />
     );
   };
@@ -474,6 +476,7 @@ function UserPage() {
         columns={columnsUser}
         dataSource={user?.data}
         onChange={onChange}
+        rowKey={"id"}
       />
     );
   };
