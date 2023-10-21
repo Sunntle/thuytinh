@@ -18,6 +18,9 @@ const Tables = db.sequelize.define(
             type: DataTypes.INTEGER,
             defaultValue: 0
         },
+        token: {
+            type: DataTypes.STRING,
+        },
         position: {
             // in: trong nhà , out : ngoài nhà
             type: DataTypes.ENUM('in', 'out')
