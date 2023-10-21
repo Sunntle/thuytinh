@@ -20,8 +20,7 @@ import {
 } from "../../services/api";
 import { formatNgay, roleRext } from "../../utils/format";
 import { socket } from "../../socket";
-import { fetchAccount } from "../../redux/account/accountSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { UploadOutlined } from "@ant-design/icons";
 import ButtonComponents from "../../components/button";
 const { Title } = Typography;
@@ -33,13 +32,28 @@ function UserPage() {
   const userStore = useSelector(state => state.account)
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
-  const dispatch = useDispatch();
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (role) => {
     try {
-      const dataAdmin = await getAllUser({ _like: "role_R1_not" });
-      const dataUser = await getAllUser({ _like: "role_R1" });
-      dataAdmin.success && setAdmin(dataAdmin);
-      dataUser.success && setUser(dataUser);
+      switch (role) {
+        case "admin": {
+          const dataAdmin = await getAllUser({ _like: "role_R1_not" });
+          dataAdmin.success && setAdmin(dataAdmin);
+          break;
+        }
+        case "user": {
+          const dataUser = await getAllUser({ _like: "role_R1" });
+          dataUser.success && setUser(dataUser);
+          break;
+        }
+        default:{
+          const dataAdmin = await getAllUser({ _like: "role_R1_not" });
+          dataAdmin.success && setAdmin(dataAdmin);
+          const dataUser = await getAllUser({ _like: "role_R1" });
+          dataUser.success && setUser(dataUser);
+        }
+      }
+      
+      
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +64,6 @@ function UserPage() {
   const handleEdit = async (idUser) => {
     setOpenModalProfile(true);
     const user = await getDetailUser(idUser);
-    console.log(user);
     const { id, name, email, phone, avatar, role } = user.data;
     let data = {
       id,
@@ -117,13 +130,13 @@ function UserPage() {
       formData.append(item[0], item[1]);
     }
     const res = await callUpdateAccount(formData);
-    dispatch(fetchAccount());
     messageApi.open({
       type: "success",
       content: res.message,
     });
+    if(val.role !== "R1") fetchData("admin")
+    else fetchData("user")
     setOpenModalProfile(false);
-    form.resetFields();
   };
   const submitResetPass = async (values) => {
     let res = await callUpdatePassword(values);
@@ -375,7 +388,7 @@ function UserPage() {
         <img
           key={record.id}
           className="w-full"
-          style={{ maxWidth: "150px" }}
+          style={{ maxWidth: "120px" }}
           src={record?.avatar}
           alt=""
         />
