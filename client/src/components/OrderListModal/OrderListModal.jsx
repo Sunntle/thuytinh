@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { memo, useEffect, useState } from "react";
-=======
 import {memo, useEffect, useMemo, useState} from "react";
->>>>>>> 571f44a2286a29a98c9de53b72d596c14502ce9b
 import { Button, Modal } from "antd";
 import "./main.css";
 import { BiSolidTrash } from "react-icons/bi";

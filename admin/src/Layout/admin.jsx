@@ -13,14 +13,12 @@ const LayoutMain = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
-
   const customize = useSelector(state => state.customize)
   const notifications = useSelector(state => state.notifications)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const openNotification = useCallback(() => {
+  const openNotification = useCallback((arg) => {
     const key = `open${Date.now()}`;
-    console.log(notifications)
     const btn = (
       <Space>
         <Button type="primary" size="small" className="p-2" onClick={() => api.destroy()}>
@@ -30,7 +28,7 @@ const LayoutMain = () => {
     );
     api.open({
       message: 'Thông báo mới',
-      description: notifications.lastNotification && notifications.lastNotification?.description,
+      description:arg && arg.description,
       btn,
       key,
       placement: 'bottomRight',
@@ -44,7 +42,7 @@ const LayoutMain = () => {
   useEffect(() => {
     socket.on("new message", (arg) => {
       dispatch(addNewMessage(arg))
-      openNotification()
+      openNotification(arg)
     })
     return () => {
       socket.off("new message")

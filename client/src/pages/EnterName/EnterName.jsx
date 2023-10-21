@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import serviceImg from "../../assets/images/Service 24_7-pana.png";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
-import { useLocation, useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 const EnterName = () => {
   const [customerName, setCustomerName] = useState("");
-  const userName = useSelector((state) => state.customerName);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
-  const idTable = location.pathname.split("/")[1].split("-")[1];
-
+  const name = useOutletContext()
   useEffect(() => {
-    if (userName) {
-      navigate(`/ban-${idTable}/home`);
+    if (name !== "") {
+      navigate(`/ban-1/menu`); // get ban` in redux -> pass here
     }
-  }, []);
+  }, [name, navigate]);
 
   const handleChangeName = (e) => {
     setCustomerName(e.target.value);

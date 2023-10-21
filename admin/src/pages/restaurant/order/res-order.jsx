@@ -6,49 +6,37 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { CloseOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
+import { useNavigate } from 'react-router-dom';
 import { addOrder, getTableId } from '../../../services/api'
 import { RemoveTable } from '../../../redux/table/tableSystem'
+import { AddTableList } from '../../../redux/table/listTableSystem'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const ResOrder = () => {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
-
-    const idTble = useSelector((state) => state.table)
-    // useEffect(() => {
-    //     const fetchData = async (id) => {
-    //         try {
-    //             const resCa = await getTableId(idTble.id);
-    //             setData(resCa);
-    //         } catch (error) {
-    //         }
-    //     };
-    //     fetchData(idTble.id);
-    // }, [idTble.id]);
-    // console.log(data?.order?.order_details)
-    // const { order } = data;
-    // const order_details = order?.order_details
-    // console.log(order_details?.product)
-
-    useEffect(() => {
-        const fetchData = async (id) => {
-            try {
-                const resCa = await getTableId(idTble.id);
-                console.log("Response from API:", resCa);
-                setData(resCa);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-    
-        fetchData(idTble.id);
-    }, [idTble.id]);
-    const { order } = data;
-    // console.log(data)
-
-    // modal phuong thuc thanh toan
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen2, setIsModalOpen2] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const tablelist = useSelector((state) => state.tablelist);
+    console.log(tablelist)
+    const order_details = tablelist?.order?.order_details;
+    console.log(order_details)
+
+    //them mon moi
+    const handleUpdate = (index) => {
+        index.order.order_details.forEach(item => {
+            dispatch(AddCart({ quantity: item.quantity, ...item.Product }))
+        });
+        dispatch(AddTableList(index))
+        navigate('/employee/menu/');
+    }
+    // modal phuong thuc thanh toan
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -59,10 +47,6 @@ const ResOrder = () => {
         setIsModalOpen(false);
     };
     // modal cho thanh toan
-    const [isModalOpen2, setIsModalOpen2] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [confirmLoading, setConfirmLoading] = useState(false);
-    const [messageApi, contextHolder] = message.useMessage();
     const handle = () => {
         setIsModalOpen2(false);
     };
@@ -100,25 +84,25 @@ const ResOrder = () => {
                     <span className='font-medium text-main text-lg'>{data.id}</span>
                 </div>
                 <Divider className='bg-main m-0' />
-                {order?.order_details?.map((item, index) =>
+                {order_details && order_details.map((item, index) =>
                     <div key={index}>
                         <div className='product-remove'>
                             <button className='float-right text-red-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
                         </div>
                         <div className='flex item-center my-3'>
                             <div className='flex-none h-16 w-15 mr-4 hover:bg-hoverColor'>
-                                <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item?.product?.ImageProducts?.url} />
+                                {/* <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item.product.ImageProducts.url} /> */}
                             </div>
                             <div className='flex-grow'>
                                 <div className='flex items-end justify-between'>
-                                    <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item?.product?.name_product}</span>
-                                    <span className='text-main mb-3'>{item?.product?.price} VNĐ</span>
+                                    <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.Product.name_product}</span>
+                                    <span className='text-main mb-3'>{item.Product.price} VNĐ</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
                                     <span>x{item.quantity}</span>
                                     <div className="flex justify-between items-center">
                                         <button className='border-solid border text-main' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="w-3 h-4 sm:w-4 sm:h-4 " /></button>
-                                        <span className="font-medium text-slate-500 text-lg mx-3 text-sm">{item?.quantity}</span>
+                                        <span className="font-medium text-slate-500 text-lg mx-3 text-sm">{item.quantity}</span>
                                         <button className='border-solid border text-main' onClick={() => dispatch(AddCart(item))}><HiPlus className="w-3 h-3 sm:w-4 sm:h-4  " /></button>
                                     </div>
                                 </div>
@@ -134,16 +118,16 @@ const ResOrder = () => {
                     </div>
                     <div className='total'>
                         <span className='font-medium text-lg'>Tổng tiền:</span>
-                        <span className='float-right text-lg text-main'>{order?.total} VNĐ</span>
+                        <span className='float-right text-lg text-main'>{tablelist?.order?.total} VNĐ</span>
                     </div>
                     <div className='grid grid-cols-4 mt-12'>
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
                             <button className='bg-red-500 text-white' onClick={() => dispatch(RemoveAllCart())}>Hủy</button>
                         </div>
 
-                            <div className='flex justify-center font-semibold col-span-2 m-1'>
-                                <button className='bg-blue-500 text-white' onClick={() => dispatch(AddCart())}>Đặt món</button>
-                            </div>
+                        <div className='flex justify-center font-semibold col-span-2 m-1'>
+                            <button className='bg-blue-500 text-white' onClick={() => handleUpdate(tablelist)}>Thêm món mới</button>
+                        </div>
 
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
                             <button className='bg-indigo-500 text-white'>In bill</button>

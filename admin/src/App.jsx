@@ -57,11 +57,10 @@ const App = () => {
             triggerBg: "#000000",
             siderBg: "#FC8019",
           },
-
-          Tabs: {
-            inkBarColor: "#FC8019",
-            itemSelectedColor: "#FC8019",
-            itemHoverColor: "#FC8019",
+          Tabs:{
+            inkBarColor:"#FC8019",
+            itemSelectedColor:"#FC8019",
+            itemHoverColor:"#FC8019",
           },
         },
 

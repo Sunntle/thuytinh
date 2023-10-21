@@ -89,7 +89,7 @@ exports.delOrder = asyncHandler(async (req, res) => {
   res.status(200).json("Xóa đơn hàng thành công");
 });
 exports.updateOrder = asyncHandler(async (req, res) => {
-  const { id, updatedQuantities, updateTotal } = req.body;
+const { id, updatedQuantities, updateTotal } = req.body;
   console.log(id)
   console.log(updatedQuantities)
   await Order.update({ total: updateTotal }, { where: { id: id } });
@@ -182,7 +182,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     (acc, item) => {
       acc.labels.push(`${info}${item[type]}`);
       acc.values.push(item["totalOrder"]);
-      return acc;
+return acc;
     },
     { labels: [], values: [] },
   );

@@ -16,7 +16,7 @@ import EditMaterial from "./edit";
 import ColumnChart from "../../components/chart/column-chart";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-const { Title } = Typography;
+const { Title, Text } = Typography;
 function MaterialPage() {
   const [open, setOpen] = useState(false);
   const [openModelEdit, setOpenModelEdit] = useState(false);

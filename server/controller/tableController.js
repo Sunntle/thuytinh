@@ -14,7 +14,6 @@ const { apiQueryRest } = require('../utils/const');
 const { Op } = require('sequelize');
 const { generateTable } = require("../middlewares/jwt");
 
-
 exports.getAll = asyncHandler(async (req, res) => {
   let query = { ...apiQueryRest(req.query), raw: true };
   let tables = await Tables.findAll(query);
@@ -65,6 +64,7 @@ exports.getId = asyncHandler(async (req, res) => {
   }
   res.status(200).json(re);
 });
+
 
 exports.create = asyncHandler(async (req, res) => {
   const { name_table } = req.body;

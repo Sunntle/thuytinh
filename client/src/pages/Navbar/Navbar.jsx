@@ -49,12 +49,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   const idTable = location.pathname.split("/")[1].split("-")[1];
 
-  useEffect(() => {
-    const compareRegex = regexRouter.test(location.pathname);
-    if (!compareRegex) {
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const compareRegex = regexRouter.test(location.pathname);
+  //   if (!compareRegex) {
+  //     navigate("/");
+  //   }
+  // }, []);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
 
   const handleMenuMouseEnter = () => {
@@ -96,13 +96,13 @@ const Navbar = () => {
         <nav className="lg:flex lg:space-x-6">
           <NavLink
             to="/"
-            className="font-medium text-base hover:text-primary transition-colors duration-300"
+            className="font-normal text-base hover:text-primary transition-colors duration-300"
           >
             Trang chủ
           </NavLink>
           <NavLink
             to="/service"
-            className="font-medium text-base hover:text-primary transition-colors duration-300"
+            className="font-normal text-base hover:text-primary transition-colors duration-300"
           >
             Dịch vụ
           </NavLink>
@@ -116,7 +116,7 @@ const Navbar = () => {
                 isMenuHovered ? "text-primary" : "text-current"
               }`}
             >
-              <NavLink to="/menu" className="font-medium text-base">
+              <NavLink to="/menu" className="font-normal text-base">
                 Thực đơn
               </NavLink>
               <div
@@ -166,13 +166,13 @@ const Navbar = () => {
           </div>
           <NavLink
             to="/contact"
-            className="font-medium text-base hover:text-primary transition-colors duration-300"
+            className="font-normal text-base hover:text-primary transition-colors duration-300"
           >
             Liên hệ
           </NavLink>
           <NavLink
             to="/about-us"
-            className="font-medium text-base hover:text-primary transition-colors duration-300"
+            className="font-normal text-base hover:text-primary transition-colors duration-300"
           >
             Về chúng tôi
           </NavLink>
