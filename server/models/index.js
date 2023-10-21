@@ -9,7 +9,8 @@ const Tables = require("./tableModel");
 const Reviews = require("./reviewsModel");
 const OrderDetail = require("./orderDetailModel");
 const ImageProduct = require("./imageModel");
-const TableByOrder = require("./tableByOrder")
+const TableByOrder = require("./tableByOrder");
+const { sequelize } = require("../config/connectDatabase");
 
 
 
