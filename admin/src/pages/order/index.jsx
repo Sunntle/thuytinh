@@ -96,7 +96,6 @@ const OrderPage = () => {
   useEffect(() => {
     if (notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)) {
       fetchData(query)
-      console.log("fetched");
     }
   }, [notifications, location, fetchData, query])
   const columns = [
@@ -187,7 +186,7 @@ const OrderPage = () => {
   };
 
   return (
-    <div className=" px-5">
+    <div className="my-7 px-5">
       {contextHolder}
       <Row justify="space-between" align="center" className="mb-4">
         <Col xs={6}>
