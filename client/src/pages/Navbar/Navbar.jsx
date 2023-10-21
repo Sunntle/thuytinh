@@ -128,7 +128,7 @@ const Navbar = () => {
               </div>
             </div>
             {isMenuHovered && (
-              <ul className="z-10 absolute space-y-2 bg-white border border-gray-200 py-2 px-3 transition-all duration-300">
+              <ul className="z-10 absolute space-y-2 bg-white border rounded border-gray-200 py-2 px-3 transition-all duration-300">
                 <li>
                   <NavLink
                     to="/menu/category1"
