@@ -19,11 +19,11 @@ const App = () => {
       dispatch(fetchAccount());
     }
   }, [dispatch]);
-  useEffect(()=>{
-    if(user.isAuthenticated){
+  useEffect(() => {
+    if (user.isAuthenticated) {
       socket.emit("user connect", user.user)
     }
-  },[user])
+  }, [user])
   if (user && user.isLoading) {
     return <Spinner />;
   }
@@ -46,18 +46,17 @@ const App = () => {
             colorText: "#7e808c",
           },
 
-          Menu:{
+          Menu: {
             itemSelectedColor: "#FFFFFF",
             itemSelectedBg: "#FC8019",
             darkItemSelectedBg: "#FC8019",
-            darkSubMenuItemBg:"#001529"
+            darkSubMenuItemBg: "#001529"
           },
-          Layout:{
+          Layout: {
             lightSiderBg: "#FC8019",
             triggerBg: "#000000",
             siderBg: "#FC8019",
           },
-
           Tabs:{
             inkBarColor:"#FC8019",
             itemSelectedColor:"#FC8019",
@@ -65,7 +64,7 @@ const App = () => {
           },
         },
 
-}
+      }
 
       }
     >

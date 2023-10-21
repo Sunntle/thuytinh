@@ -101,7 +101,7 @@ const CategoryPage = () => {
             title: "Ảnh chính",
             dataIndex: "thumbnail",
             key: "thumbnail",
-            render: (_, record) => <img src={record.thumbnail} width={100} />,
+            render: (_, record) => <img className="w-full" src={record.thumbnail} style={{ maxWidth: "120px" }} />,
           },
           {
             title: "Ẩn / Hiện",

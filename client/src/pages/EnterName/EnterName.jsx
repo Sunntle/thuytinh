@@ -1,32 +1,35 @@
-import React, { useEffect, useState } from "react";
+import {  useCallback, useState } from "react";
+import PropTypes from 'prop-types';
 import serviceImg from "../../assets/images/Service 24_7-pana.png";
 import { useDispatch, useSelector } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
-import { useLocation, useNavigate } from "react-router-dom";
-
-const EnterName = () => {
+import useHttp from "../../hooks/useHttp.js";
+const EnterName = (props) => {
   const [customerName, setCustomerName] = useState("");
-  const userName = useSelector((state) => state.customerName);
+  const { sendRequest } = useHttp();
+  const customerNameState = useSelector(state => state.customerName)
+  const idTable = location.pathname.split("/")[1].split("-")[1]
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const idTable = location.pathname.split("/")[1].split("-")[1];
-
-  useEffect(() => {
-    if (userName) {
-      navigate(`/ban-${idTable}/service`);
-    }
-  }, []);
-
-  const handleChangeName = (e) => {
+  const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
-  };
+  },[]);
+  const storeToken = useCallback((data)=>{
+    localStorage.setItem("tableToken",data)
+  },[])
 
-  const handleSubmitName = () => {
-    dispatch(getCustomerName(customerName));
-    navigate(`/ban-${idTable}/menu`);
-  };
+  const handleSubmitName = useCallback(async() => {
+    const data = {tables: [idTable], name: customerName, timestamp: new Date().valueOf()}
+    await sendRequest({
+      method: 'put',
+      url: '/table/token',
+      ...data
+    }, storeToken)
+    dispatch(getCustomerName(data))
+    // navigate(`/ban-${customerNameState.tables[0]}/menu`);
+  },[customerName, dispatch, idTable, sendRequest, storeToken]);
 
+  if(customerNameState.isLoading) return "Loading...."
+  if(customerNameState.name.length > 0) return props.children
   return (
     <div className="h-screen w-screen flex items-center">
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">
@@ -55,5 +58,7 @@ const EnterName = () => {
     </div>
   );
 };
-
+EnterName.propTypes = {
+  children: PropTypes.any
+};
 export default EnterName;

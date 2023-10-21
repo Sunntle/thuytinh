@@ -20,8 +20,7 @@ import {
 } from "../../services/api";
 import { formatNgay, roleRext } from "../../utils/format";
 import { socket } from "../../socket";
-import { fetchAccount } from "../../redux/account/accountSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { UploadOutlined } from "@ant-design/icons";
 import ButtonComponents from "../../components/button";
 const { Title } = Typography;
@@ -30,27 +29,42 @@ function UserPage() {
   const [user, setUser] = useState(null);
   const [openModalProfile, setOpenModalProfile] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-  const userStore = useSelector(state=> state.account)
+  const userStore = useSelector(state => state.account)
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
-  const dispatch = useDispatch();
-  const fetchData = useCallback(async () => {
-    try{
-      const dataAdmin = await getAllUser({ _like: "role_R1_not" });
-      const dataUser = await getAllUser({ _like: "role_R1" });
-      dataAdmin.success && setAdmin(dataAdmin);
-      dataUser.success && setUser(dataUser);
-    }catch(err){
+  const fetchData = useCallback(async (role) => {
+    try {
+      switch (role) {
+        case "admin": {
+          const dataAdmin = await getAllUser({ _like: "role_R1_not" });
+          dataAdmin.success && setAdmin(dataAdmin);
+          break;
+        }
+        case "user": {
+          const dataUser = await getAllUser({ _like: "role_R1" });
+          dataUser.success && setUser(dataUser);
+          break;
+        }
+        default:{
+          const dataAdmin = await getAllUser({ _like: "role_R1_not" });
+          dataAdmin.success && setAdmin(dataAdmin);
+          const dataUser = await getAllUser({ _like: "role_R1" });
+          dataUser.success && setUser(dataUser);
+        }
+      }
+      
+      
+    } catch (err) {
       console.log(err);
     }
-  },[])
+  }, [])
   useEffect(() => {
     fetchData();
   }, [fetchData]);
   const handleEdit = async (idUser) => {
     setOpenModalProfile(true);
     const user = await getDetailUser(idUser);
-    const { id, name, email, phone, avatar, role } = user.user;
+    const { id, name, email, phone, avatar, role } = user.data;
     let data = {
       id,
       name,
@@ -69,15 +83,15 @@ function UserPage() {
     form.setFieldsValue(data);
   };
   const handleDelete = async (id) => {
-    if(id === userStore.user.id) {
+    if (id === userStore.user.id) {
       message.error("Không thể xóa chính bản thân mình !!")
-      return 
+      return
     }
-    try{
+    try {
       await removeUser(id)
       await fetchData()
       message.success("Xóa thành công")
-    }catch(err){
+    } catch (err) {
       console.log(err);
       message.error("Xảy ra lỗi, xóa thất bại")
     }
@@ -116,13 +130,13 @@ function UserPage() {
       formData.append(item[0], item[1]);
     }
     const res = await callUpdateAccount(formData);
-    dispatch(fetchAccount());
     messageApi.open({
       type: "success",
       content: res.message,
     });
+    if(val.role !== "R1") fetchData("admin")
+    else fetchData("user")
     setOpenModalProfile(false);
-    form.resetFields();
   };
   const submitResetPass = async (values) => {
     let res = await callUpdatePassword(values);
@@ -374,7 +388,7 @@ function UserPage() {
         <img
           key={record.id}
           className="w-full"
-          style={{ maxWidth: "150px" }}
+          style={{ maxWidth: "120px" }}
           src={record?.avatar}
           alt=""
         />
@@ -465,6 +479,7 @@ function UserPage() {
         columns={columnsAdmin}
         dataSource={admin?.data}
         onChange={onChange}
+        rowKey={"id"}
       />
     );
   };
@@ -474,6 +489,7 @@ function UserPage() {
         columns={columnsUser}
         dataSource={user?.data}
         onChange={onChange}
+        rowKey={"id"}
       />
     );
   };

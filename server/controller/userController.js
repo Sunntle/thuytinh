@@ -90,7 +90,7 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     };
     if (_sort) query.order = [[_sort, _order]];
     if(_like){
-      const [a,b,c] = _like.split("_")
+      const [a,b,c] = _like.split("_")//_like=role_R1_not
       query.where = query.where || {};
       query.where[Op.or] = query.where[Op.or] || [];
       let symbol = Op.substring

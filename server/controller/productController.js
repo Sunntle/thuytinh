@@ -5,14 +5,11 @@ const {
   Category,
   Materials,
 } = require("../models");
-const { Op, Sequelize, where } = require("sequelize");
-const { getAllUserOnline } = require("../utils/socketHanlers");
+const { Op } = require("sequelize");
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
-    const subquery = `(SELECT GROUP_CONCAT(url SEPARATOR ';') FROM ImageProducts AS ip WHERE ip.id_product = Product.id)`;
     const query = {
-      raw: true,
       attributes: [
         "id",
         "name_product",
@@ -22,14 +19,16 @@ exports.list = async (req, res) => {
         "sold",
         "id_category",
         "discount",
-        [Sequelize.literal(subquery), "imageUrls"],
-        [Sequelize.literal("`Category`.`name_category`"), "categoryName"],
       ],
       include: [
         {
           model: Category,
-          attributes: [],
+          attributes: ['name_category'],
         },
+        {
+          model: ImageProduct,
+          attributes: ["url"],
+        }
       ],
     };
     if (_limit) query.limit = +_limit;

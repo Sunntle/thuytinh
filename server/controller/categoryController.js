@@ -4,7 +4,8 @@ const { apiQueryRest } = require('../utils/const')
 exports.list = async (req, res) => {
   try {
     let query = {
-      ...apiQueryRest({...req.query, title: "name_category"}), nest: true
+      include: { model: Product },
+      ...apiQueryRest({ ...req.query, title: 'name_category' })
     };
     const response = await Category.findAll(query);
     res.status(200).json(response);
@@ -51,9 +52,9 @@ exports.removeCate = async (req, res) => {
     const id = req.params.id;
     await Category.destroy({
       where: { id },
-      include: [{ model: Product }],
+      include: { model: Product },
       individualHooks: true,
-    });
+    }).catch(console.log)
     res.status(200).json("Xóa danh mục thành công");
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });

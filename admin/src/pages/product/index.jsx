@@ -32,7 +32,7 @@ function ProductPage() {
     const resProduct = await getAllProduct();
     setProducts({
       ...resProduct,
-      data: resProduct.data.map((el) => ({ ...el, key: el.id })),
+      data: resProduct.data.map((el) => ({ ...el, key: el.id })) || [],
     });
     setCategories(resCate);
     setMaterials(resMate);
@@ -63,12 +63,12 @@ function ProductPage() {
   const columns = [
     {
       title: "Hình ảnh",
-      dataIndex: "imageUrls",
+      dataIndex: "ImageProducts",
       render: (_, record) => (
         <img
           className="w-full"
-          style={{ maxWidth: "150px" }}
-          src={record?.imageUrls?.split(";")[0]}
+          style={{ maxWidth: "120px" }}
+          src={record.ImageProducts[0]?.url}
           alt=""
         />
       ),
@@ -102,7 +102,7 @@ function ProductPage() {
     },
     {
       title: "Loại",
-      dataIndex: "categoryName",
+      dataIndex: "Category.name_category",
       filters: categories?.map((el) => {
         return {
           text: el.name_category,

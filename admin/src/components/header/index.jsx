@@ -1,4 +1,4 @@
-import Icon,{
+import Icon, {
   CloseOutlined,
   DownOutlined,
   FileSearchOutlined,
@@ -63,7 +63,7 @@ function HeaderComponent() {
   const noti = useSelector((state) => state.notifications);
   const customize = useSelector((state) => state.customize);
   const dispatch = useDispatch();
-  const items = useMemo(()=>([
+  const items = useMemo(() => ([
     {
       label: <span className="font-semibold">{user?.user.name}</span>,
       key: "3",
@@ -78,11 +78,11 @@ function HeaderComponent() {
       key: "2",
       icon: <LogoutOutlined />,
     },
-  ]),[user?.user.name]);
+  ]), [user?.user.name]);
   useEffect(() => {
     dispatch(fetchNotification());
   }, [dispatch]);
-  const handleMenuClick = useCallback(()=>{
+  const handleMenuClick = useCallback(
     async (e) => {
       if (e.key == 2) {
         dispatch(doLogoutAction());
@@ -107,8 +107,8 @@ function HeaderComponent() {
         };
         form.setFieldsValue(data);
       }
-    }
-  },[dispatch, form, user.user]);
+
+    }, [dispatch, form, user.user]);
   const handleRemoveKeyWord = (index) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord"));
     searchArr.splice(index, 1);
@@ -121,7 +121,7 @@ function HeaderComponent() {
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
     navigate(`/employee/search?keyword=${searchArr[0]}`);
-  },[navigate]);
+  }, [navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -155,7 +155,7 @@ function HeaderComponent() {
     });
     setOpenModalProfile(false);
     form.resetFields();
-  },[dispatch, form, messageApi]);
+  }, [dispatch, form, messageApi]);
   const submitResetPass = useCallback(async (values) => {
     let res = await callUpdatePassword(values);
     messageApi.open({
@@ -166,7 +166,7 @@ function HeaderComponent() {
       setOpenModalProfile(false);
       form.resetFields();
     }
-  },[form, messageApi]);
+  }, [form, messageApi]);
   const customContent = () => {
     return (
       <div className="bg-white rounded-lg px-5 py-3 shadow-md">
@@ -183,12 +183,12 @@ function HeaderComponent() {
                 <SwiperSlide key={index}>
                   <div className="inline-flex items-center">
                     <div className="w-[50px]">
-                    <Link
-                      to={`/employee/search?keyword=${el}`}
-                      className="p-1 text-main hover:text-gray-500 whitespace-nowrap"
-                    >
-                      {truncateString(el, 6)}
-                    </Link>
+                      <Link
+                        to={`/employee/search?keyword=${el}`}
+                        className="p-1 text-main hover:text-gray-500 whitespace-nowrap"
+                      >
+                        {truncateString(el, 6)}
+                      </Link>
                     </div>
                     <Tooltip title="remove">
                       <Button
@@ -258,10 +258,10 @@ function HeaderComponent() {
     );
   };
 
-  const menuProps = useMemo(()=>({
+  const menuProps = useMemo(() => ({
     items,
     onClick: handleMenuClick,
-  }),[handleMenuClick, items])
+  }), [handleMenuClick, items])
   return (
     <>
       {contextHolder}
@@ -284,11 +284,11 @@ function HeaderComponent() {
         <div className="flex items-center justify-center gap-x-4">
           <Switch
             checked={customize.darkMode}
-            onClick={() => 
+            onClick={() =>
               dispatch(ChangeMode({ darkMode: !customize.darkMode }))
             }
-            checkedChildren={<DarkIcon/>}
-            unCheckedChildren={<LightIcon/>}
+            checkedChildren={<DarkIcon />}
+            unCheckedChildren={<LightIcon />}
           />
           <NotificationsComponent
             notifications={noti.content}

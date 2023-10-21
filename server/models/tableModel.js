@@ -18,6 +18,9 @@ const Tables = db.sequelize.define(
             type: DataTypes.INTEGER,
             defaultValue: 0
         },
+        token: {
+            type: DataTypes.STRING,
+        },
         position: {
             // in: trong nhà , out : ngoài nhà
             type: DataTypes.ENUM('in', 'out')
@@ -41,5 +44,5 @@ Tables.prototype.checkStatus = async (arr, status_table) => {
     });
     return list.length === 0 ? true : false
 }
-// Tables.sync()
+Tables.sync()
 module.exports = Tables;

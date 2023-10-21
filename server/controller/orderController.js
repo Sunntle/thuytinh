@@ -90,8 +90,6 @@ exports.delOrder = asyncHandler(async (req, res) => {
 });
 exports.updateOrder = asyncHandler(async (req, res) => {
 const { id, updatedQuantities, updateTotal } = req.body;
-  console.log(id)
-  console.log(updatedQuantities)
   await Order.update({ total: updateTotal }, { where: { id: id } });
   await Promise.all(updatedQuantities.map(async (item) => {
     await OrderDetail.update({ quantity: item.quantity }, {

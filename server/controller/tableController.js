@@ -12,6 +12,7 @@ const { where } = require("sequelize");
 
 const { apiQueryRest } = require('../utils/const');
 const { Op } = require('sequelize');
+const { generateTable } = require("../middlewares/jwt");
 
 exports.getAll = asyncHandler(async (req, res) => {
   let query = { ...apiQueryRest(req.query), raw: true };
@@ -87,23 +88,16 @@ exports.update = asyncHandler(async (req, res) => {
   res.status(200).json("Cập thành công");
 });
 
-exports.updateStatus = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const updatedTable = await Tables.update(
-      {
-        id_order: null,
-        status_table: 0,
-      },
-      { where: { id: id } },
-    );
-
-    if (updatedTable)
-      return res.status(200).json({ message: "Cập nhật thành công" });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
+exports.updateStatusAndToken = asyncHandler(async (req, res) => {
+  const { tables } = req.body;
+  let token = generateTable(req.body);
+  await Tables.update({
+    status_table: 1,
+    token: token
+  },
+    { where: { id: { [Op.in]: tables } } },
+  );
+  res.status(200).json(token);
 });
 
 exports.del = asyncHandler(async (req, res) => {
