@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const TablePage = () => {
+    const [listTable, setListTable] = useState([]);
     return (
-        <div>TablePage</div>
+        <div>
+
+        </div>
     )
 }
 

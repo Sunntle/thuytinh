@@ -23,7 +23,7 @@ exports.list = async (req, res) => {
       include: [
         {
           model: Category,
-          attributes: ["name_category"],
+          attributes: ['name_category'],
         },
         {
           model: ImageProduct,

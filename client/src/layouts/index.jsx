@@ -1,19 +1,12 @@
 import Navbar from "../pages/Navbar/Navbar.jsx";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import {  useEffect } from "react";
-import SelectTable from "../pages/SelectTable/index.jsx";
 import {  getPreciseDistance } from 'geolib';
-import { useDispatch, useSelector } from "react-redux";
-import { initTable } from "../redux/CustomerName/customerNameSlice.js";
+
 const Layout = () => {
-    const location = useLocation();
-    const dispatch = useDispatch();
-    const customerName = useSelector(state => state.customerName)
-    useEffect(()=>{
-        dispatch(initTable({tables: [location.pathname.split("/")[1].split("-")[1]], name: "", timestamp: new Date().valueOf()}))
-    },[])
+    
     //test
     useEffect(()=>{
         const position1 = {
@@ -34,7 +27,7 @@ const Layout = () => {
         <>
             <Header/>
             <div className="main-layout">
-            {customerName.isLoading == false ? <Outlet/> : <SelectTable/>}
+            <Outlet/>
             </div>
             <Navbar />
             <Footer />

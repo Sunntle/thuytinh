@@ -1,20 +1,17 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-// import jwt from 'jsonwebtoken';
-
+import * as jose from 'jose';
 const initialState={
     name: "",
-    tables: [0],
+    tables: null,
     timestamp: null,
-    isLoading: true,
-    error: null
+    isLoading: true
 }
 export const initTable = createAsyncThunk('customer-name/initTable', async (defaultValue) => {
-    // const token = localStorage.getItem("tableToken")
-    // const decodeData = jwt.decode(token)
-    const decodeData = undefined
+    const token = localStorage.getItem("tableToken")
+    const decodeData = await jose.decodeJwt(token,"table")
     const data = decodeData !== undefined ? decodeData : defaultValue
     if(data) return data
-    return initialState
+    return 
 })
 const customerNameSlice = createSlice({
     name: 'customer-name',
@@ -34,7 +31,6 @@ const customerNameSlice = createSlice({
             })
             .addCase(initTable.rejected, (state) => {
                 state.isLoading = false;
-                state.error = "Something wrong"
             })
             .addCase(initTable.fulfilled, (state,action) => {
                 state.isLoading = false;

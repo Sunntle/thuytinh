@@ -10,14 +10,13 @@ const Header = () => {
   //       <span className="flex justify-center items-center">Không lấy được dữ liệu</span>
   //     </>
   //   );
-  console.log(customerName);
   return (
     <div
       className={`w-full h-20 z-40 relative lg:hidden bg-primary rounded-b-3xl drop-shadow-md px-6 text-white flex items-center ${
         customerName ? "justify-between" : "justify-center"
       }`}
     >
-      {customerName ? (
+      {customerName.tables && customerName.name.length > 0 ? (
         <>
           <div className="flex flex-col">
             <span className="text-white text-lg">

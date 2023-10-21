@@ -1,10 +1,10 @@
-const { getAll, create, update, del, getId, updateStatus} = require('../controller/tableController');
+const { getAll, create, update, del, getId, updateStatusAndToken } = require('../controller/tableController');
 const express = require("express");
 const router = express.Router();
 router.get("/", getAll);
 router.get("/:id", getId);
 router.post("/", create);
 router.put("/", update);
-router.put("/:id", updateStatus);
+router.put("/token", updateStatusAndToken);
 router.delete("/:id", del);
 module.exports = router;
