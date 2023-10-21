@@ -18,6 +18,7 @@ import "swiper/css/scrollbar";
 import image1 from "../../assets/images/image1.png";
 import image4 from "../../assets/images/image4.png";
 import image2 from "../../assets/images/image2.png";
+
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
@@ -31,7 +32,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="pb-24 lg:pb-0 lg:pt-24">
+    <div className="pb-24 pt-12 lg:pb-0 lg:pt-24">
       <Banner />
       <div className="flex items-center justify-between mt-12 px-6 lg:mx-16">
         <span className="w-full h-0.5 bg-black"></span>
@@ -42,7 +43,7 @@ const Home = () => {
       </div>
       <Swiper
         // install Swiper modules
-        className="mt-6 lg:mx-16 px-6 w-auto"
+        className="mt-6 lg:mx-16 lg:px-0 px-6 w-auto"
         modules={[A11y]}
         spaceBetween={10}
         slidesPerView={2}
@@ -53,15 +54,15 @@ const Home = () => {
           },
           768: {
             slidesPerView: 3,
-            spaceBetween: 30,
+            spaceBetween: 35,
           },
           1024: {
             slidesPerView: 4,
-            spaceBetween: 30,
+            spaceBetween: 35,
           },
           1440: {
             slidesPerView: 5,
-            spaceBetween: 30,
+            spaceBetween: 35,
           },
         }}
         autoplay={true}
@@ -70,22 +71,22 @@ const Home = () => {
         {slideProduct &&
           slideProduct?.data?.map((product) => (
             <SwiperSlide key={product.id}>
-              <div className="w-auto h-auto border rounded-lg hover:shadow-lg cursor-pointer transition-all">
-                <Badge.Ribbon
-                  text="Hippies"
-                  className="bg-primary"
-                ></Badge.Ribbon>
-                <div className="w-full h-[160px]">
+              <div className="relative w-auto h-auto border rounded-lg hover:shadow-lg cursor-pointer transition-all overflow-hidden">
+                <div className="absolute top-0 right-0 max-w-sm w-5/12 md:w-5/12 h-8 rounded-tr-lg bg-[#C51605] text-white flex justify-center items-center text-xs md:text-sm truncate">
+                  Best Seller
+                </div>
+                <div className="w-full h-[160px] rounded-t-lg">
                   <img
-                    className="w-full h-full rounded-t-lg"
-                    src={product.imageUrls}
+                    className="w-full h-full object-cover rounded-t-lg outline-none"
+                    src={product?.imageUrls}
                     alt=""
                   />
                 </div>
                 <div className="flex justify-between items-center p-2 text-slate-500">
                   <div>
-                    <span className="text-sm font-medium overflow-hidden block w-full whitespace-nowrap">
-                      {truncateString(product.name_product, 10)}
+                    <span className="text-sm font-medium overflow-hidden block w-full whitespace-nowrap truncate">
+                        {product.name_product}
+                      {/*{truncateString(product.name_product, 10)}*/}
                     </span>
                     <span className="text-xs">
                       {formatCurrency(product.price)}
@@ -99,31 +100,31 @@ const Home = () => {
             </SwiperSlide>
           ))}
       </Swiper>
-      <section className="mt-20 px-16 flex items-center justify-between ">
-        <div className="w-1/3 group relative">
+      <section className="relative my-12 px-6 lg:px-16 flex flex-col lg:flex-row items-center justify-between">
+        <div className="hidden lg:flex z-30 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-between text-white">
+          <span className="w-24 h-px bg-white"></span>
+          <span className="cursor-pointer font-light text-sm whitespace-nowrap px-4 py-2 border rounded-sm border-white hover:bg-white hover:text-slate-800 transition-colors duration-200">
+            Xem thêm
+          </span>
+          <span className="w-24 h-px bg-white"></span>
+        </div>
+        <div className="w-full lg:w-1/3 group overflow-hidden rounded-t-lg lg:rounded-none lg:rounded-l-lg h-44 lg:h-60">
           <img
             src={image1}
-            className="h-72 w-full group-hover:opacity-90 object-cover"
+            className="h-full w-full group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all object-cover"
           />
         </div>
-        <div className="w-1/3 group relative">
-          <div className="hidden lg:flex z-30 absolute left-16 top-1/2 items-center justify-between text-white">
-            <span className="w-24 h-px bg-white"></span>
-            <span className="cursor-pointer font-light text-sm whitespace-nowrap px-4 py-2 border border-white">
-              Xem thêm
-            </span>
-            <span className="w-24 h-px bg-white"></span>
-          </div>
+        <div className="w-full lg:w-1/3 group relative overflow-hidden h-44 lg:h-60">
           <div className="absolute w-full z-10 h-72 bg-black bg-opacity-40"></div>
           <img
             src={image4}
-            className="h-72 w-full group-hover:opacity-80 object-cover"
+            className="h-full w-full group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all object-cover"
           />
         </div>
-        <div className="w-1/3 group relative">
+        <div className="w-full lg:w-1/3 group overflow-hidden rounded-b lg:rounded-none lg:rounded-r-lg h-44 lg:h-60">
           <img
             src={image2}
-            className="h-72 w-full group-hover:opacity-90 object-cover"
+            className="h-full w-full group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all object-cover"
           />
         </div>
       </section>
