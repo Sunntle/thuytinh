@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const ResPayment = () => {
-    const {id} = useParams()
+    const { id } = useParams()
     const [orderDetails, setOrderDetails] = useState(null);
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
@@ -70,7 +70,7 @@ const ResPayment = () => {
                 carts: carts,
                 id_table: tablelist.id,
                 total: totalVAT
-                
+
             };
             console.log(body)
             res = await updateOrder(body);
@@ -170,19 +170,19 @@ const ResPayment = () => {
                         <span className='font-medium text-lg'>Tổng tiền:</span>
                         <span className='float-right text-lg text-main'>{totalVAT} VNĐ</span>
                     </div>
-                    <div className='grid grid-cols-4 mt-12'>
-                        <div className='flex justify-center font-semibold col-span-2 m-1'>
+                    <div className='grid grid-cols-2 mt-12'>
+                        <div className='flex justify-center font-semibold col-span-1 m-1'>
                             <button className='bg-red-500 text-white' onClick={() => dispatch(RemoveAllCart())}>Hủy</button>
                         </div>
-                        <div className='flex justify-center font-semibold col-span-2 m-1'>
+                        <div className='flex justify-center font-semibold col-span-1 m-1'>
                             <button className='bg-blue-500 text-white' onClick={submitOrderList}>Đặt món</button>
                         </div>
-                        <div className='flex justify-center font-semibold col-span-2 m-1'>
+                        {tablelist.status_table > 0 ? (<div className='flex justify-center font-semibold col-span-1 m-1'>
 
                             <button className='bg-indigo-500 text-white' onClick={sumitUpdateOrder}>Cập nhật</button>
 
-                        </div>
-                        <div className='flex justify-center col-span-2 m-1'>
+                        </div>) : null}
+                        <div className={`flex justify-center col-span-${tablelist.status_table > 0 ? "1" : "2"} m-1`}>
                             <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
                                 Thanh Toán
                             </Button>

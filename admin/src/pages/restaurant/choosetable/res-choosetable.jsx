@@ -31,8 +31,8 @@ const ResChooseTable = () => {
   const handleTableClick = (index) => {
     // const updatedData = [...tableData];
     // updatedData[index].status_table = 1;
-    // dispatch(AddTable(updatedData[index]));
-    navigate('/employee/menu/' + index);
+    dispatch(AddTableList(index));
+    navigate('/employee/menu/');
   };
 
   const handleDetailTable = (index) => {
@@ -74,7 +74,7 @@ const ResChooseTable = () => {
                 {table.status_table === 0 && (
                   <button
                     className="bg-main text-white font-semibold h-10 w-20 rounded mt-3"
-                    onClick={() => handleTableClick(table.id)}
+                    onClick={() => handleTableClick(table)}
                   >
                     Sử dụng
                   </button>
