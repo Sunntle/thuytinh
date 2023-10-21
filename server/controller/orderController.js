@@ -23,6 +23,7 @@ function currentYear(pa = "startOf") {
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table } = req.body;
   const arrTable = table || [1, 2];
+
   if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
 
   const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
@@ -88,7 +89,9 @@ exports.delOrder = asyncHandler(async (req, res) => {
   res.status(200).json("Xóa đơn hàng thành công");
 });
 exports.updateOrder = asyncHandler(async (req, res) => {
-  const { id, updatedQuantities, updateTotal } = req.body;
+const { id, updatedQuantities, updateTotal } = req.body;
+  console.log(id)
+  console.log(updatedQuantities)
   await Order.update({ total: updateTotal }, { where: { id: id } });
   await Promise.all(updatedQuantities.map(async (item) => {
     await OrderDetail.update({ quantity: item.quantity }, {
@@ -179,7 +182,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     (acc, item) => {
       acc.labels.push(`${info}${item[type]}`);
       acc.values.push(item["totalOrder"]);
-      return acc;
+return acc;
     },
     { labels: [], values: [] },
   );

@@ -70,4 +70,3 @@ Recipes.sync();
 TableByOrder.sync();
 
 module.exports = { TableByOrder, Notification, Tables, User, Order, Category, Product, ImageProduct, Recipes, Materials, OrderDetail, Reviews };
-
