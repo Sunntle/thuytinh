@@ -29,8 +29,10 @@ const ResChooseTable = () => {
   }, [dispatch]);
 
   const handleTableClick = (index) => {
+    // console.log(index)
     // const updatedData = [...tableData];
-    // updatedData[index].status_table = 1;
+    // updatedData[index] = { ...updatedData[index], status_table: 1 };
+    // console.log(updatedData[index]);
     dispatch(AddTableList(index));
     navigate('/employee/menu/');
   };
@@ -93,11 +95,12 @@ const ResChooseTable = () => {
                       </button>
                       <Modal
                             footer={null}
+                            closable={false}
                             open={isModalOpen}
                             onOk={handleOk}
-                            onCancel={handleCancel}
+                            // onCancel={handleCancel}
                           >
-                            <ResOrder />
+                            <ResOrder handleCancel={handleCancel}/>
                           </Modal>
                     </div>
                   </div>

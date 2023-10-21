@@ -10,15 +10,17 @@ import { addOrder, getTableId, updateOrder } from '../../../services/api'
 import { RemoveTable } from '../../../redux/table/tableSystem'
 import { AddTableList } from '../../../redux/table/listTableSystem'
 import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const ResPayment = () => {
-    const { id } = useParams()
     const [orderDetails, setOrderDetails] = useState(null);
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
     const idTble = useSelector(state => state.table)
     const tablelist = useSelector((state) => state.tablelist);
+    const navigate = useNavigate();
+    console.log(tablelist)
 
     // const statustble = useSelector(state => state.table.status_table)
     const dispatch = useDispatch();
@@ -34,7 +36,7 @@ const ResPayment = () => {
                 orders: carts,
                 total: totalVAT,
                 customerName: "Admin",
-                table: [id,]
+                table: [tablelist.id]
                 // idTable: {id: id, status_table: idTble.status_table},
 
             };
@@ -76,6 +78,11 @@ const ResPayment = () => {
             res = await updateOrder(body);
             dispatch(RemoveAllCart());
             console.log(res)
+            message.open({
+                type: "success",
+                content: "Cập nhật món mới thành công thành công!",
+            });
+            navigate('/employee/menu/' + index);
         } catch (err) {
             console.log(err);
         }
@@ -141,7 +148,7 @@ const ResPayment = () => {
                         </div>
                         <div className='flex item-center my-3'>
                             <div className='flex-none h-16 w-15 mr-4 hover:bg-hoverColor'>
-                                <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item.imageUrls} />
+                                {/* <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item.ImageProduct[0].url} /> */}
                             </div>
                             <div className='flex-grow'>
                                 <div className='flex items-end justify-between'>
@@ -174,15 +181,15 @@ const ResPayment = () => {
                         <div className='flex justify-center font-semibold col-span-1 m-1'>
                             <button className='bg-red-500 text-white' onClick={() => dispatch(RemoveAllCart())}>Hủy</button>
                         </div>
-                        <div className='flex justify-center font-semibold col-span-1 m-1'>
-                            <button className='bg-blue-500 text-white' onClick={submitOrderList}>Đặt món</button>
-                        </div>
+
                         {tablelist.status_table > 0 ? (<div className='flex justify-center font-semibold col-span-1 m-1'>
 
                             <button className='bg-indigo-500 text-white' onClick={sumitUpdateOrder}>Cập nhật</button>
 
-                        </div>) : null}
-                        <div className={`flex justify-center col-span-${tablelist.status_table > 0 ? "1" : "2"} m-1`}>
+                        </div>) : ( <div className='flex justify-center font-semibold col-span-1 m-1'>
+                            <button className='bg-blue-500 text-white' onClick={submitOrderList}>Đặt món</button>
+                        </div>)}
+                        {/* <div className={`flex justify-center col-span-${tablelist.status_table > 0 ? "1" : "2"} m-1`}>
                             <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
                                 Thanh Toán
                             </Button>
@@ -220,7 +227,7 @@ const ResPayment = () => {
                                     </Button>
                                 </div>
                             </Modal>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

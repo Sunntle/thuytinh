@@ -23,7 +23,7 @@ function currentYear(pa = "startOf") {
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table } = req.body;
   const arrTable = table || [1, 2];
-
+  console.log(req.body)
   if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
 
   const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);

@@ -58,7 +58,7 @@ User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee" });
 // Category.sync();
 // Product.sync();
 // Notification.sync();
-// Tables.sync();
+// Tables.sync({alter: true});
 // User.sync();
 // Order.sync();
 // OrderDetail.sync();
