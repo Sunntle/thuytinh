@@ -62,24 +62,20 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
     include: [
       {
         model: OrderDetail,
-        as: "orderToOrderDetail",
-        include: [
+        include:
+        {
+          model: Product,
+          include:
           {
-            model: Product,
-            as: "product",
-            include: [
-              {
-                model: ImageProduct,
-                attributes: ["url"],
-              },
-            ],
-          },
-        ],
+            model: ImageProduct,
+            attributes: ["url"],
+          }
+        },
+
       },
       {
         model: User,
         attributes: ["name"],
-        as: "employee",
       },
     ],
   });

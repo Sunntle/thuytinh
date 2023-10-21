@@ -14,6 +14,7 @@ const LayoutMain = () => {
   const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
   const customize = useSelector(state => state.customize)
+  const notifications = useSelector(state => state.notifications)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const openNotification = useCallback((arg) => {
@@ -31,30 +32,30 @@ const LayoutMain = () => {
       btn,
       key,
       placement: 'bottomRight',
-  //     onClose: () => {
-  //   console.log(
-  //     'Notification was closed. Either the close button was clicked or duration time elapsed.',
-  //   );
-  // },
+      //     onClose: () => {
+      //   console.log(
+      //     'Notification was closed. Either the close button was clicked or duration time elapsed.',
+      //   );
+      // },
     });
-  },[api]);
-  useEffect(()=>{
-    socket.on("new message", (arg) =>{
+  }, [api, notifications]);
+  useEffect(() => {
+    socket.on("new message", (arg) => {
       dispatch(addNewMessage(arg))
       openNotification(arg)
     })
-    return ()=>{
+    return () => {
       socket.off("new message")
     }
-  },[openNotification,dispatch])
+  }, [openNotification, dispatch])
   const onClick = (e) => {
     navigate(e.key);
   };
   return (
     <div className={`bg-main relative ${customize.darkMode ? 'dark' : ''}`}>
-         <div>
-         {contextHolder}
-         </div>
+      <div>
+        {contextHolder}
+      </div>
       <header className="sticky top-0 w-full z-10 shadow-lg">
         <HeaderComponent />
 
@@ -69,7 +70,7 @@ const LayoutMain = () => {
             collapsible={!screen}
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
-            onBreakpoint={(screen)=>setScreen(screen)}
+            onBreakpoint={(screen) => setScreen(screen)}
           >
             <Menu
               style={{ border: "none" }}
@@ -81,7 +82,7 @@ const LayoutMain = () => {
             />
           </Sider>
           <Layout className="bg-white dark:bg-darkModeBg dark:text-white">
-            <Content className="w-full" style={{minHeight: "100vh"}}>
+            <Content className="w-full" style={{ minHeight: "100vh" }}>
               <Outlet />
             </Content>
           </Layout>
