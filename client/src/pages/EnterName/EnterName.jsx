@@ -1,9 +1,8 @@
-/* eslint-disable react/prop-types */
-import {  useCallback, useEffect, useState } from "react";
+import {  useCallback, useState } from "react";
+import PropTypes from 'prop-types';
 import serviceImg from "../../assets/images/Service 24_7-pana.png";
 import { useDispatch, useSelector } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
-import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp.js";
 const EnterName = (props) => {
   const [customerName, setCustomerName] = useState("");
@@ -11,13 +10,6 @@ const EnterName = (props) => {
   const customerNameState = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  // useEffect(() => {
-  //   if(customerNameState.isLoading == false && customerNameState.name.length > 0){
-  //     navigate(`/ban-${customerNameState.tables[0]}/menu`);
-  //   }
-  // }, [navigate,customerNameState]);
-
   const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
   },[]);
@@ -35,7 +27,7 @@ const EnterName = (props) => {
     dispatch(getCustomerName(data))
     // navigate(`/ban-${customerNameState.tables[0]}/menu`);
   },[customerName, dispatch, idTable, sendRequest, storeToken]);
-  console.log(props.children);
+
   if(customerNameState.isLoading) return "Loading...."
   if(customerNameState.name.length > 0) return props.children
   return (
@@ -66,5 +58,7 @@ const EnterName = (props) => {
     </div>
   );
 };
-
+EnterName.propTypes = {
+  children: PropTypes.any
+};
 export default EnterName;

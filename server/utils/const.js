@@ -23,7 +23,6 @@ const apiQueryRest = (params) => {
         }
         query.where = { ...query.where, ...whereConditions };
     }
-
     return query;
 };
 
