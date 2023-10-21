@@ -216,7 +216,7 @@ exports.currentAccount = asyncHandler(async (req, res) => {
   const id = req.user.id;
   const ru = await User.findByPk(id);
   const { createdAt, updatedAt, refreshToken, password, ...userAcc } =
-    ru.toJSON();
+    ru?.toJSON();
   if (ru) return res.status(200).json(userAcc);
   res.status(404).json({ success: false });
 });
