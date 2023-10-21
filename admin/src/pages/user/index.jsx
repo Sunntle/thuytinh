@@ -43,7 +43,7 @@ function UserPage() {
     }catch(err){
       console.log(err);
     }
-  },[])
+  }, [])
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -69,15 +69,15 @@ function UserPage() {
     form.setFieldsValue(data);
   };
   const handleDelete = async (id) => {
-    if(id === userStore.user.id) {
+    if (id === userStore.user.id) {
       message.error("Không thể xóa chính bản thân mình !!")
-      return 
+      return
     }
-    try{
+    try {
       await removeUser(id)
       await fetchData()
       message.success("Xóa thành công")
-    }catch(err){
+    } catch (err) {
       console.log(err);
       message.error("Xảy ra lỗi, xóa thất bại")
     }

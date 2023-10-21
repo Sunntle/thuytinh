@@ -32,7 +32,7 @@ function ProductPage() {
     const resProduct = await getAllProduct();
     setProducts({
       ...resProduct,
-      data: resProduct.data.map((el) => ({ ...el, key: el.id })),
+      data: resProduct.data.map((el) => ({ ...el, key: el.id })) || [],
     });
     setCategories(resCate);
     setMaterials(resMate);

@@ -24,11 +24,11 @@ function NotificationsComponent({
     const navigateTo = `/admin/${content.type}`;
     dispatch(maskAsRead(content));
     content.type != "call-staff" && navigate(navigateTo);
-  },[dispatch, navigate, notifications])
+  }, [dispatch, navigate, notifications])
 
-  const handleDelete = async(id)=>{
+  const handleDelete = async (id) => {
     dispatch(deleteNotification(id));
-    message.open({type: "success", content: "Xóa thông báo thành công"})
+    message.open({ type: "success", content: "Xóa thông báo thành công" })
   }
   const getCountNoti = useMemo(() => {
     return notifications && notifications.length > 0
@@ -46,7 +46,7 @@ function NotificationsComponent({
               key={index}
               className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 hover:text-main gap-x-2"
             >
-              <div  onClick={() => handleToContent(index)} className="flex items-center gap-x-2 ">
+              <div onClick={() => handleToContent(index)} className="flex items-center gap-x-2 ">
                 <div className="max-w-[50px]">
                   <img
                     className="w-full  rounded-md "
@@ -65,7 +65,7 @@ function NotificationsComponent({
                 {el.status == 0 ? (
                   <Badge status="processing" color="#fc8e32" />
                 ) : (
-                  <div onClick={()=>handleDelete(el.id)}><DeleteOutlined /></div>
+                  <div onClick={() => handleDelete(el.id)}><DeleteOutlined /></div>
                 )}
               </div>
             </div>
@@ -80,10 +80,10 @@ function NotificationsComponent({
       title={
         <div className="flex items-center justify-between">
           <Typography.Title
-        level={4}
-        style={{
-          margin: 0,
-        }} className="m-0">Thông báo</Typography.Title>
+            level={4}
+            style={{
+              margin: 0,
+            }} className="m-0">Thông báo</Typography.Title>
           <Tooltip title="Đánh dấu tất cả đã đọc" placement="bottom">
             <Button
               className="border-0"

@@ -16,6 +16,7 @@ import RecipePage from "../pages/recipes";
 import RegisterPage from "../pages/register";
 import SearchPage from "../pages/search";
 import UserPage from "../pages/user";
+import TablePage from "../pages/table";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: "user",
         element: <UserPage />,
+      },
+      {
+        path: "table",
+        element: <TablePage />,
       },
     ],
   },
