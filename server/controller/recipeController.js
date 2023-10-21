@@ -9,7 +9,6 @@ exports.list = async (req, res) => {
   };
 
   const response = await Recipes.findAll(query);
-  console.log(response);
   const result = response.reduce((con, cur) => {
     const existingProduct = con.find((item) => item.product.id === cur.Product.id);
     const ma = { quantity: cur.quantity, id_recipe: cur.id, ...cur.Material, descriptionRecipe: cur.descriptionRecipe }

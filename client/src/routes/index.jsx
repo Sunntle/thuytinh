@@ -13,30 +13,46 @@ import Contact from "../pages/Contact/Contact.jsx";
 import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
-
+import LayoutContainer from "../layouts/LayoutContainer";
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <LayoutContainer />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "home",
+        element: <Home />,
+      },
+      {
+        path: "about",
+        element: <AboutUs />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+      {
+        path: "thankyou",
+        element: <ThanksPage />,
+      },
+    ],
+   
+  },
+  {
     path: "/:alias",
+    element: <Layout />,
     children: [
       {
         index: true,
         element: <EnterName />,
       },
       {
-        path: "home",
-        element: (
-          <Layout>
-            <Home />
-          </Layout>
-        ),
-      },
-      {
         path: "service",
-        element: (
-          <Layout>
-            <Service />
-          </Layout>
-        ),
+        element: <Service />,
       },
       {
         path: "login",
@@ -44,48 +60,16 @@ const router = createBrowserRouter([
       },
       {
         path: "order",
-        element: (
-          <Layout>
-            <Order />
-          </Layout>
-        ),
+        element: <Order />,
       },
       {
         path: "menu",
-        element: (
-          <Layout>
-            <Menu />
-          </Layout>
-        ),
+        element: <Menu />,
       },
       {
         path: "rating",
-        element: (
-          <Layout>
-            <Rate />
-          </Layout>
-        ),
+        element: <Rate />,
       },
-      {
-        path: "about",
-        element: (
-          <Layout>
-            <AboutUs />
-          </Layout>
-        ),
-      },
-      {
-        path: "contact",
-        element: (
-          <Layout>
-            <Contact />
-          </Layout>
-        ),
-      },
-      {
-        path: "thankyou",
-        element: (<ThanksPage />)
-      }
     ],
   },
   { path: "/url-return", element: <PaymentSuccess /> },
