@@ -85,6 +85,7 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
 
 exports.delOrder = asyncHandler(async (req, res) => {
   const id = req.params.id;
+  console.log(id);
   await Order.destroy({ where: { id } });
   res.status(200).json("Xóa đơn hàng thành công");
 });
