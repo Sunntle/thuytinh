@@ -68,6 +68,7 @@ const RecipePage = () => {
     setOpenModalUpdate(init);
   };
   const showModalUpdate = (record) => {
+    console.log(record);
     let materials = record.materials.map((item) => ({
       id_material: item.id,
       id: item.id_recipe,
@@ -145,7 +146,7 @@ const RecipePage = () => {
             title: "Ảnh sản phẩm",
             key: "thumbnail",
             render: (_, record) => (
-              <img src={record.product.ImageProducts.url} width={100} />
+              <img src={record.product.ImageProducts[0].url} width={100} />
             ),
           },
           {
