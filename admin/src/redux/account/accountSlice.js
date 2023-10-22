@@ -16,6 +16,7 @@ const initialState = {
 };
 export const fetchAccount = createAsyncThunk('account/fetchAccount', async (_, { rejectWithValue }) => {
     const response = await callFetchAccount();
+    console.log(response);
     if (response.success == false) {
         return rejectWithValue(response);
     }
