@@ -23,7 +23,7 @@ export const maskAllRead = createAsyncThunk('notification/maskAllRead', async (_
 })
 export const maskAsRead = createAsyncThunk('notification/maskAsRead', async (notification, thunkApi) => {
     const listNoti = thunkApi.getState().notifications.content
-    if (notification.status === 0 || notification.status === false){
+    if (notification.status === 0 || notification.status === false) {
         const updatedNotifications = listNoti.map((item) => {
             if (item.id === notification.id) {
                 return { ...item, status: 1 };

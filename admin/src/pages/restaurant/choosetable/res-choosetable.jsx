@@ -67,8 +67,8 @@ const ResChooseTable = () => {
             <div key={table.id}>
               <span
                 className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
-                    ? 'bg-main text-white border-yellow-400 border-3px border-solid'
-                    : 'bg-[#D1D5DB] text-white'
+                  ? 'bg-main text-white border-yellow-400 border-3px border-solid'
+                  : 'bg-[#D1D5DB] text-white'
                   } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
               >
                 <FiUsers className="w-6 h-6 mb-2" />
@@ -94,14 +94,14 @@ const ResChooseTable = () => {
                         Chi tiết
                       </button>
                       <Modal
-                            footer={null}
-                            closable={false}
-                            open={isModalOpen}
-                            onOk={handleOk}
-                            // onCancel={handleCancel}
-                          >
-                            <ResOrder handleCancel={handleCancel}/>
-                          </Modal>
+                        footer={null}
+                        closable={false}
+                        open={isModalOpen}
+                        onOk={handleOk}
+                      // onCancel={handleCancel}
+                      >
+                        <ResOrder handleCancel={handleCancel} />
+                      </Modal>
                     </div>
                   </div>
                 )}
@@ -122,8 +122,8 @@ const ResChooseTable = () => {
                 <div key={table.id}>
                   <span
                     className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
-                        ? 'bg-main text-white border-yellow-400 border-3px border-solid'
-                        : 'bg-[#D1D5DB] text-white'
+                      ? 'bg-main text-white border-yellow-400 border-3px border-solid'
+                      : 'bg-[#D1D5DB] text-white'
                       } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
                   >
                     <FiUsers className="w-6 h-6 mb-2" />
@@ -179,8 +179,8 @@ const ResChooseTable = () => {
                 <div key={table.id}>
                   <span
                     className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
-                        ? 'bg-main text-white border-yellow-400 border-3px border-solid'
-                        : 'bg-[#D1D5DB] text-white'
+                      ? 'bg-main text-white border-yellow-400 border-3px border-solid'
+                      : 'bg-[#D1D5DB] text-white'
                       } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
                   >
                     <FiUsers className="w-6 h-6 mb-2" />

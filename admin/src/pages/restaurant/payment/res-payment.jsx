@@ -44,7 +44,7 @@ const ResPayment = () => {
             res = await addOrder(body);
             console.log(res);
             // dispatch(AddTableList({idOrder: res.data.tableByOrder, detail: res.data.detail}))
-            dispatch(RemoveAllCart());
+            // dispatch(RemoveAllCart());
 
             // dispatch(RemoveTable());
 
@@ -74,9 +74,9 @@ const ResPayment = () => {
                 total: totalVAT
 
             };
-            console.log(body)
+            // console.log(body)
             res = await updateOrder(body);
-            dispatch(RemoveAllCart());
+            // dispatch(RemoveAllCart());
             console.log(res)
             message.open({
                 type: "success",
@@ -186,7 +186,7 @@ const ResPayment = () => {
 
                             <button className='bg-indigo-500 text-white' onClick={sumitUpdateOrder}>Cập nhật</button>
 
-                        </div>) : ( <div className='flex justify-center font-semibold col-span-1 m-1'>
+                        </div>) : (<div className='flex justify-center font-semibold col-span-1 m-1'>
                             <button className='bg-blue-500 text-white' onClick={submitOrderList}>Đặt món</button>
                         </div>)}
                         {/* <div className={`flex justify-center col-span-${tablelist.status_table > 0 ? "1" : "2"} m-1`}>

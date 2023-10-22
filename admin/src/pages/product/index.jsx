@@ -67,8 +67,8 @@ function ProductPage() {
       render: (_, record) => (
         <img
           className="w-full"
-          style={{ maxWidth: "120px" }}
-          src={record.ImageProducts[0]?.url}
+          style={{ maxWidth: "150px" }}
+          src={record?.ImageProducts?.[0]?.url}
           alt=""
         />
       ),
