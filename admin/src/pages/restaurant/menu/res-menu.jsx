@@ -39,19 +39,19 @@ const ResMenu = () => {
                             modules={[Navigation]}
                             navigation
                             pagination={{ clickable: true }}
-                            spaceBetween={50}
+                            // spaceBetween={50}
                             slidesPerView={3}
                             onSlideChange={() => console.log('slide change')}
                             onSwiper={(swiper) => console.log(swiper)}
                         >
                             {categories?.map((category, index) => (
                                 <SwiperSlide key={index}>
-                                    <div className="mx-10 w-3/5">
+                                    <div className="mx-10 w4/5">
                                         <button onClick={() => setSelectedCategory(category)}>
                                             <div className='border-2 border-gray-300 px-4 py-2 rounded-lg flex flex-col items-center'>
-                                                <img className='ml-10' src={category.thumbnail} />
+                                                <img src={category.thumbnail} />
                                                 <div className='mt-2'>
-                                                    <p className='ml-10 font-medium text-main text-lg'>{category.name_category}</p>
+                                                    <p className='font-medium text-main text-lg'>{category.name_category}</p>
                                                 </div>
                                             </div>
                                         </button>

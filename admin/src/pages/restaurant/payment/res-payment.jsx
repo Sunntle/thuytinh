@@ -1,28 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect} from 'react'
 import "./res-payment.css"
-import { Col, Row, Tabs, Button, Divider, Card, Modal, Spin, message, FloatButton } from "antd"
-import { AiOutlineCheckCircle } from "react-icons/ai"
+import { Button, Divider, message,} from "antd"
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { CloseOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
-import { addOrder, getTableId, updateOrder } from '../../../services/api'
-import { RemoveTable } from '../../../redux/table/tableSystem'
-import { AddTableList } from '../../../redux/table/listTableSystem'
-import { useParams } from 'react-router-dom'
+import { addOrder, updateOrder } from '../../../services/api'
 import { useNavigate } from 'react-router-dom';
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const ResPayment = () => {
-    const [orderDetails, setOrderDetails] = useState(null);
+
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
-    const idTble = useSelector(state => state.table)
     const tablelist = useSelector((state) => state.tablelist);
     const navigate = useNavigate();
-    console.log(tablelist)
 
-    // const statustble = useSelector(state => state.table.status_table)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getTotal());
@@ -37,13 +30,10 @@ const ResPayment = () => {
                 total: totalVAT,
                 customerName: "Admin",
                 table: [tablelist.id]
-                // idTable: {id: id, status_table: idTble.status_table},
-
             };
             console.log(body)
             res = await addOrder(body);
             console.log(res);
-            // dispatch(AddTableList({idOrder: res.data.tableByOrder, detail: res.data.detail}))
             dispatch(RemoveAllCart());
 
             // dispatch(RemoveTable());
@@ -62,7 +52,6 @@ const ResPayment = () => {
     console.log(order_details)
     const totalOld = tablelist?.total;
 
-
     const sumitUpdateOrder = async (value) => {
         try {
             let res;
@@ -74,10 +63,8 @@ const ResPayment = () => {
                 total: totalVAT
 
             };
-            console.log(body)
             res = await updateOrder(body);
             dispatch(RemoveAllCart());
-            console.log(res)
             message.open({
                 type: "success",
                 content: "Cập nhật món mới thành công thành công!",
@@ -89,50 +76,50 @@ const ResPayment = () => {
     }
 
     // modal phuong thuc thanh toan
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-    // modal cho thanh toan
-    const [isModalOpen2, setIsModalOpen2] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [confirmLoading, setConfirmLoading] = useState(false);
-    const [messageApi, contextHolder] = message.useMessage();
-    const handle = () => {
-        setIsModalOpen2(false);
-    };
-    const handlePay = () => {
-        setLoading(true);
-        setIsModalOpen2(true);
+    // const [isModalOpen, setIsModalOpen] = useState(false);
+    // const showModal = () => {
+    //     setIsModalOpen(true);
+    // };
+    // const handleOk = () => {
+    //     setIsModalOpen(false);
+    // };
+    // const handleCancel = () => {
+    //     setIsModalOpen(false);
+    // };
+    // // modal cho thanh toan
+    // const [isModalOpen2, setIsModalOpen2] = useState(false);
+    // const [loading, setLoading] = useState(true);
+    // const [confirmLoading, setConfirmLoading] = useState(false);
+    // const [messageApi, contextHolder] = message.useMessage();
+    // const handle = () => {
+    //     setIsModalOpen2(false);
+    // };
+    // const handlePay = () => {
+    //     setLoading(true);
+    //     setIsModalOpen2(true);
 
-    };
-    const handleAccept = () => {
-        handleTime()
-        setConfirmLoading(true);
-        setTimeout(() => {
-            setIsModalOpen2(false);
-            messageApi.open({
-                type: 'success',
-                content: 'Thanh toán thành công!!!',
-                className: 'custom-class',
-                duration: 5,
-            });
-        }, 5000);
-        setTimeout(() => {
-            setIsModalOpen(false);
-        }, 5100);
-    };
-    const handleTime = () => {
-        setTimeout(() => {
-            setLoading(false)
-        }, 2000)
-    }
+    // };
+    // const handleAccept = () => {
+    //     handleTime()
+    //     setConfirmLoading(true);
+    //     setTimeout(() => {
+    //         setIsModalOpen2(false);
+    //         messageApi.open({
+    //             type: 'success',
+    //             content: 'Thanh toán thành công!!!',
+    //             className: 'custom-class',
+    //             duration: 5,
+    //         });
+    //     }, 5000);
+    //     setTimeout(() => {
+    //         setIsModalOpen(false);
+    //     }, 5100);
+    // };
+    // const handleTime = () => {
+    //     setTimeout(() => {
+    //         setLoading(false)
+    //     }, 2000)
+    // }
     return (
         <>
             <div className="border-solid border-2 border-main bg-orange-50 shadow-md flex flex-col gap-y-4 p-4 rounded-lg">
@@ -173,7 +160,7 @@ const ResPayment = () => {
                         <span>Thuế VAT:</span>
                         <span className='float-right'>10%</span>
                     </div>
-                    <div className='total m-3'>
+                    <div className='total mt-3'>
                         <span className='font-medium text-lg'>Tổng tiền:</span>
                         <span className='float-right text-lg text-main'>{totalVAT} VNĐ</span>
                     </div>
