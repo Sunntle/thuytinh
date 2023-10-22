@@ -77,25 +77,42 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
               message: "Bạn phải điền tên món ăn",
             },
           ]}
+          labelCol={{
+            span: 24,
+          }}
         >
           <Input placeholder="Ví dụ: Cua rang me..." />
         </Form.Item>
-        <Form.Item label="Giá">
-          <Form.Item name="price" noStyle>
-            <InputNumber min={0} />
+        <div className="grid grid-cols-2 gap-4">
+          <Form.Item label="Giá">
+            <Form.Item name="price" noStyle>
+              <InputNumber min={0} />
+            </Form.Item>
+            <span
+              className="ant-form-text"
+              style={{
+                marginLeft: 8,
+              }}
+            >
+              vnđ
+            </span>
           </Form.Item>
-          <span
-            className="ant-form-text"
-            style={{
-              marginLeft: 8,
-            }}
-          >
-            vnđ
-          </span>
-        </Form.Item>
+          <Form.Item name="status" label="Trạng thái">
+            <Select placeholder="Chọn trạng thái món ăn">
+              {optionsStatus.map((el, index) => (
+                <Option key={index} value={el.value}>
+                  {el.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </div>
         <Form.Item
           name="id_category"
           label="Loại món ăn"
+          labelCol={{
+            span: 24,
+          }}
           rules={[
             {
               required: true,
@@ -111,16 +128,14 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name="status" label="Trạng thái">
-          <Select placeholder="Chọn trạng thái món ăn">
-            {optionsStatus.map((el, index) => (
-              <Option key={index} value={el.value}>
-                {el.label}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item name="description" label="Mô tả">
+
+        <Form.Item
+          name="description"
+          label="Mô tả"
+          labelCol={{
+            span: 24,
+          }}
+        >
           <Input.TextArea />
         </Form.Item>
         <h3 className="font-semibold mb-8 mt-7 text-main text-lg">
