@@ -28,7 +28,12 @@ exports.list = async (req, res) => {
         {
           model: ImageProduct,
           attributes: ["url"],
-        }
+        },
+        {
+          model: Recipes,
+          attributes: ["quantity"],
+          include: [{ model: Materials, attributes: ["amount", "name_material"]}]
+        },
       ],
     };
     if (_limit) query.limit = +_limit;
@@ -48,6 +53,18 @@ exports.list = async (req, res) => {
       query.where = { ...query.where, ...whereConditions };
     }
     const { count, rows } = await Product.findAndCountAll(query);
+     rows.length > 0 && rows.forEach(product=>{
+      const {Recipes} = product
+      if(Recipes.length == 0) return product
+      const arrCount = []
+      for(const recipe of Recipes){
+        const {Material} = recipe
+        const countProduct = Math.floor(Material.amount/recipe.quantity) 
+        if(countProduct < 1) return
+        arrCount.push(countProduct)
+      }
+      product.dataValues.amount = Math.min(...arrCount)
+    })
     res.status(200).json({ total: count, data: rows });
   } catch (err) {
     console.log(err);

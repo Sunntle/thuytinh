@@ -111,7 +111,8 @@ function ProductPage() {
       }),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.categoryName.startsWith(value),
+      onFilter: (value, record) => record.Category?.name_category.startsWith(value),
+      render:(_, record) =><p>{record.Category?.name_category}</p>
     },
     {
       title: "Giá",
