@@ -12,53 +12,62 @@ const ImageProduct = require("./imageModel");
 const TableByOrder = require("./tableByOrder");
 const { sequelize } = require("../config/connectDatabase");
 
-
-
 Recipes.belongsTo(Product, { foreignKey: "id_product" });
 Recipes.belongsTo(Materials, { foreignKey: "id_material" });
 Order.belongsTo(User, { foreignKey: "id_employee" });
-Reviews.belongsTo(Order, { foreignKey: "id_order" })
-OrderDetail.belongsTo(Order, { foreignKey: "id_order" });
-OrderDetail.belongsTo(Product, { foreignKey: "id_product" });
+Reviews.belongsTo(Order, { foreignKey: "id_order" });
+OrderDetail.belongsTo(Order, { foreignKey: "id_order", onDelete: "CASCADE", onUpdate: "CASCADE", });
+OrderDetail.belongsTo(Product, { foreignKey: "id_product", onDelete: "CASCADE", onUpdate: "CASCADE", });
 Product.belongsTo(Category, {
-    foreignKey: "id_category",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
+  foreignKey: "id_category",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
 });
-
 
 ImageProduct.belongsTo(Product, { foreignKey: "id_product" });
 
+Order.hasMany(TableByOrder, {
+  foreignKey: "orderId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+TableByOrder.belongsTo(Order, { foreignKey: "orderId" });
 
-Order.hasMany(TableByOrder, { foreignKey: 'orderId' });
-TableByOrder.belongsTo(Order, { foreignKey: 'orderId' });
+Tables.hasMany(TableByOrder, { foreignKey: "tableId" });
+TableByOrder.belongsTo(Tables, { foreignKey: "tableId" });
 
-Tables.hasMany(TableByOrder, { foreignKey: 'tableId' });
-TableByOrder.belongsTo(Tables, { foreignKey: 'tableId' })
-
-
-Order.hasMany(OrderDetail, { sourceKey: "id", foreignKey: "id_order" });
+Order.hasMany(OrderDetail, {
+  sourceKey: "id",
+  foreignKey: "id_order",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Product.hasMany(ImageProduct, { foreignKey: "id_product", sourceKey: "id" });
 Category.hasMany(Product, {
-    foreignKey: "id_category",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
+  foreignKey: "id_category",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
 });
 Product.hasMany(OrderDetail, {
-    foreignKey: "id_product",
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
+  foreignKey: "id_product",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
 });
 
 Product.hasMany(Recipes, { foreignKey: "id_product", sourceKey: "id" });
 Materials.hasMany(Recipes, { foreignKey: "id_material", sourceKey: "id" });
-Order.hasOne(Reviews, { sourceKey: "id", foreignKey: "id_order", onDelete: "CASCADE", onUpdate: "CASCADE" })
+Order.hasOne(Reviews, {
+  sourceKey: "id",
+  foreignKey: "id_order",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee" });
 
 // Category.sync();
 // Product.sync();
 // Notification.sync();
-// Tables.sync();
+// Tables.sync({alter: true});
 // User.sync();
 // Order.sync();
 // OrderDetail.sync();
@@ -68,13 +77,26 @@ User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee" });
 // Recipes.sync();
 // TableByOrder.sync();
 async function synchronizeModels() {
-    try {
-        await sequelize.sync();
-        console.log('Models synchronized successfully.');
-    } catch (error) {
-        console.error('Error synchronizing models:', error);
-    }
+  try {
+    await sequelize.sync();
+    console.log("Models synchronized successfully.");
+  } catch (error) {
+    console.error("Error synchronizing models:", error);
+  }
 }
 
 synchronizeModels();
-module.exports = { TableByOrder, Notification, Tables, User, Order, Category, Product, ImageProduct, Recipes, Materials, OrderDetail, Reviews };
+module.exports = {
+  TableByOrder,
+  Notification,
+  Tables,
+  User,
+  Order,
+  Category,
+  Product,
+  ImageProduct,
+  Recipes,
+  Materials,
+  OrderDetail,
+  Reviews,
+};

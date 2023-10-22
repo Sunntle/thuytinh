@@ -46,7 +46,6 @@ function MaterialPage() {
   }, [notifications, location, fetchData])
   const handleDeleteMaterial = async (id_material) => {
     const res = await deleteMaterial(id_material);
-    console.log(res);
     if (res) {
       fetchData();
       message.open({ type: "success", content: res });
@@ -68,7 +67,7 @@ function MaterialPage() {
 
         <img
           className="w-full"
-          style={{ maxWidth: "200px" }}
+          style={{ maxWidth: "120px" }}
           src={record.image}
           alt=""
         />

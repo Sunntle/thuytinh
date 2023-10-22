@@ -23,9 +23,7 @@ function currentYear(pa = "startOf") {
 
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table } = req.body;
-
-  // const arrTable = table.length > 0 ? table : [3];
-  const arrTable = [3];
+  const arrTable = table;
 
   if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
 
@@ -88,6 +86,7 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
 
 exports.delOrder = asyncHandler(async (req, res) => {
   const id = req.params.id;
+  console.log(id);
   await Order.destroy({ where: { id } });
   res.status(200).json("Xóa đơn hàng thành công");
 });

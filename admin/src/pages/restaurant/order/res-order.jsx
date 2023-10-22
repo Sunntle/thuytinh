@@ -12,7 +12,7 @@ import { RemoveTable } from '../../../redux/table/tableSystem'
 import { AddTableList } from '../../../redux/table/listTableSystem'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
-const ResOrder = () => {
+const ResOrder = ({handleCancel}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [data, setData] = useState([]);
@@ -43,9 +43,9 @@ const ResOrder = () => {
     const handleOk = () => {
         setIsModalOpen(false);
     };
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
+    // const handleCancel = () => {
+    //     setIsModalOpen(false);
+    // };
     // modal cho thanh toan
     const handle = () => {
         setIsModalOpen2(false);
@@ -81,7 +81,7 @@ const ResOrder = () => {
             <div className="border-solid border-2 border-main bg-orange-50 shadow-md flex flex-col gap-y-4 p-4 rounded-lg">
                 <div>
                     <span className='font-medium text-lg'>Bàn số: </span>
-                    <span className='font-medium text-main text-lg'>{data.id}</span>
+                    <span className='font-medium text-main text-lg'>{tablelist.id}</span>
                 </div>
                 <Divider className='bg-main m-0' />
                 {order_details && order_details.map((item, index) =>
@@ -122,7 +122,7 @@ const ResOrder = () => {
                     </div>
                     <div className='grid grid-cols-4 mt-12'>
                         <div className='flex justify-center font-semibold col-span-2 m-1'>
-                            <button className='bg-red-500 text-white' onClick={() => dispatch(RemoveAllCart())}>Hủy</button>
+                            <button className='bg-red-500 text-white' onClick={handleCancel}>Hủy</button>
                         </div>
 
                         <div className='flex justify-center font-semibold col-span-2 m-1'>

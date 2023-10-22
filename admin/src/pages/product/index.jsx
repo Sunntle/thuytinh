@@ -63,9 +63,8 @@ function ProductPage() {
   const columns = [
     {
       title: "Hình ảnh",
-      dataIndex: "ImageProduct",
+      dataIndex: "ImageProducts",
       render: (_, record) => (
-        // console.log(record)
         <img
           className="w-full"
           style={{ maxWidth: "150px" }}
@@ -103,7 +102,7 @@ function ProductPage() {
     },
     {
       title: "Loại",
-      dataIndex: "categoryName",
+      dataIndex: "Category.name_category",
       filters: categories?.map((el) => {
         return {
           text: el.name_category,

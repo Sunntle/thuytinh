@@ -45,7 +45,9 @@ body {
 .main_area {
   // overflow: hidden;
   // background: white !important;
- 
+  .ant-pagination .ant-pagination-item-active{
+    border-color: transparent;
+  }
   .ant-menu-submenu-title {
     color: #fc8019 !important;
   }

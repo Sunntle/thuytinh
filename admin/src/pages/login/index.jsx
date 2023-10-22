@@ -22,6 +22,7 @@ const LoginPage = () => {
     }, [acc])
     const onFinish = async (values) => {
         const res = await callLogin(values);
+        console.log(res)
         if (res.account) {
             messageApi.open({
                 type: 'success',
