@@ -110,12 +110,14 @@ function HeaderComponent() {
       }
 
     }, [dispatch, form, user.user]);
+
   const handleRemoveKeyWord = (index) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord"));
     searchArr.splice(index, 1);
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
   };
+
   const handleSearch = useCallback((keyword) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
     searchArr.unshift(keyword);
@@ -157,6 +159,7 @@ function HeaderComponent() {
     setOpenModalProfile(false);
     form.resetFields();
   }, [dispatch, form, messageApi]);
+
   const submitResetPass = useCallback(async (values) => {
     let res = await callUpdatePassword(values);
     messageApi.open({
@@ -168,6 +171,7 @@ function HeaderComponent() {
       form.resetFields();
     }
   }, [form, messageApi]);
+
   const customContent = () => {
     return (
       <div className={` ${customize.darkMode ? 'bg-darkModeBg border-gray-600' : 'bg-white border-gray-300'} rounded-lg px-5 py-3 shadow-md border border-solid  border-t-0`}>
@@ -295,6 +299,7 @@ function HeaderComponent() {
             notifications={noti.content}
             openPopover={openPopover}
             setOpenPopover={setOpenPopover}
+            isLoading={noti.isLoading}
           />
           <Dropdown menu={menuProps} trigger={["click"]}>
             <ButtonComponents

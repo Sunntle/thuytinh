@@ -32,11 +32,11 @@ function ReviewsPage() {
     }
     return numbersArray;
   },[dayInMonth])
-  const fetchReviews = async (params) => {
+  const fetchReviews = useMemo(async (params) => {
     const response = await getAllReviews(params);
     setReviewsCurrent(response);
     return response;
-  };
+  },[])
   const fetchData = useCallback(
     async (params = { _offset: 0, _limit: limit, _time: currentMonth }) => {
       setLoading(true);
@@ -72,33 +72,34 @@ function ReviewsPage() {
         setLoading(false);
       }
     },
-    [currentMonth, dayInMonth]
+    [currentMonth, dayInMonth, fetchReviews]
   );
-  const handleChangePage = (e) => {
+  const handleChangePage = useCallback((e) => {
     setPage(e);
     fetchData({ _offset: limit * (e - 1), _limit: limit });
-  };
-  const handleChangeSelectMonth = (e) => {
+  },[fetchData])
+  const handleChangeSelectMonth = useCallback((e) => {
     fetchData({ _offset: 0, _limit: limit, _time: e });
     setMonth(e);
-  };
-  const handleSearch = (kw) => {
+  },[fetchData])
+
+  const handleSearch = useCallback((kw) => {
     fetchReviews({ _offset: 0, _limit: limit, q: kw });
-  };
-  const handleDeleteReview = async (id) => {
+  },[fetchReviews]);
+  const handleDeleteReview = useCallback(async (id) => {
     const res = await deleteReview(id);
     if (res) {
       message.open({ type: "success", content: res });
       fetchData(filter);
     }
-  };
+  },[fetchData, filter]);
   const handleClear = useCallback(() => {
     fetchReviews({ _offset: 0, _limit: limit, _time: currentMonth });
-  },[currentMonth])
+  },[currentMonth, fetchReviews])
   
-  const handleCancelConfirm = () => {
+  const handleCancelConfirm = useCallback(() => {
     message.error("Xóa thất bại");
-  };
+  },[])
 
   useEffect(() => {
     fetchData();

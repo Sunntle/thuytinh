@@ -10,21 +10,21 @@ import {
 } from "antd";
 import ButtonComponents from "../../../components/button";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 const { Option } = Select;
-
+const optionsStatus = [
+  { value: 0, label: "Còn hàng" },
+  { value: 1, label: "Hết hàng" },
+];
+const initialValues = {
+  price: 0,
+  status: 0,
+};
 function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
   const [haveData, setHaveData] = useState(false);
   const [form] = Form.useForm();
-  const optionsStatus = [
-    { value: 0, label: "Còn hàng" },
-    { value: 1, label: "Hết hàng" },
-  ];
-  const initialValues = {
-    price: 0,
-    status: 0,
-  };
-  const handleSubmit = async () => {
+ 
+  const handleSubmit = useCallback(async () => {
     try {
       await form.validateFields();
       const formData = await form.getFieldsValue();
@@ -34,7 +34,7 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
     } catch (error) {
       console.error("Form validation error:", error);
     }
-  };
+  },[form, handleCancel, handleFinish]);
   return (
     <Modal
       open={open}
@@ -97,7 +97,23 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
               vnđ
             </span>
           </Form.Item>
-          <Form.Item name="status" label="Trạng thái">
+          <Form.Item label="Giảm giá">
+          <Form.Item name="discount" noStyle>
+              <InputNumber min={0} />
+            </Form.Item>
+            <span
+              className="ant-form-text"
+              style={{
+                marginLeft: 8,
+              }}
+            >
+              %
+            </span>
+          </Form.Item>
+        </div>
+        <Form.Item name="status" label="Trạng thái"  labelCol={{
+            span: 24,
+          }}>
             <Select placeholder="Chọn trạng thái món ăn">
               {optionsStatus.map((el, index) => (
                 <Option key={index} value={el.value}>
@@ -106,7 +122,6 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
               ))}
             </Select>
           </Form.Item>
-        </div>
         <Form.Item
           name="id_category"
           label="Loại món ăn"
