@@ -10,7 +10,7 @@ let notificationSent = false
 exports.list = async (req, res) => {
 
   let query = {
-    ...apiQueryRest({...req.query, title: "name_material"}), nest: true
+    ...apiQueryRest({ ...req.query, title: "name_material" }), nest: true
   };
   const { count, rows } = await Materials.findAndCountAll(query);
 
@@ -39,23 +39,26 @@ exports.list = async (req, res) => {
       group: ['id_product'],
       raw: true
     })
-    await Product.update({ status: 3 }, {
-      where: {
-        id: {
-          [Op.in]: findIdProduct.map(item => item.id_product),
-        },
-        status: {
-          [Op.lt]: 3
+    if (findIdProduct.length > 0) {
+      await Product.update({ status: 3 }, {
+        where: {
+          id: {
+            [Op.in]: findIdProduct.map(item => item.id_product),
+          }, status: {
+            [Op.lt]: 3
+          }
         }
-      }
-    });
-    let createdProduct = await Notification.create({
-      type: "product",
-      description: `Có ${findIdProduct.length} sản phẩm gần hết hàng`
-    }, { raw: true }
-    );
+      });
+      let createdProduct = await Notification.create({
+        type: "product",
+        description: `Có ${findIdProduct.length} sản phẩm gần hết hàng`
+      }, { raw: true }
+      );
+      _io.of("/admin").emit("new message", createdProduct);
+    }
+
     _io.of("/admin").emit("new message", created);
-    _io.of("/admin").emit("new message", createdProduct);
+
     notificationSent = true
   }
 
@@ -89,10 +92,10 @@ exports.updateMaterial = async (req, res) => {
   try {
     const image = req.file?.path.replace("/upload/", "/upload/w_400,h_300/");
     await Materials.update(
-      { ...req.body, image,updatedAt: new Date().toISOString() },
+      { ...req.body, image, updatedAt: new Date().toISOString() },
       {
         where: { id: +req.body.id },
-      individualHooks: true,
+        individualHooks: true,
       }
     );
     res.status(200).json("Cập nhật công thức thành công !");

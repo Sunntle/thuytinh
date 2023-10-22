@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
+const Materials = require("./materialsModel");
 const Recipes = db.sequelize.define(
   "Recipes",
   {
@@ -24,5 +25,5 @@ const Recipes = db.sequelize.define(
   },
   { timestamps: true }
 );
-// Recipes.sync();
+
 module.exports = Recipes;

@@ -1,5 +1,5 @@
 const moment = require("moment");
-const { apiQueryRest } = require('../utils/const')
+const { apiQueryRest, checkQtyMaterials, getQtyMaterialByProduct } = require('../utils/const')
 const asyncHandler = require("express-async-handler");
 const {
   Order,
@@ -12,6 +12,7 @@ const {
   Materials,
   Notification,
   TableByOrder,
+  Recipes,
 } = require("../models");
 const { Op, Sequelize } = require("sequelize");
 
@@ -22,15 +23,15 @@ function currentYear(pa = "startOf") {
 
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table } = req.body;
-  const arrTable = table || [1, 2];
-  console.log(req.body)
+  const arrTable = table;
+
   if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
 
   const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
   if (approve.length === 0) return res.status(200).json({ success: false, data: "Sản phẩm hết nguyên liệu" });
   const order_result = await Order.create({ total, name: customerName });
   let dataTable = await TableByOrder.bulkCreate(arrTable.map(item => ({ tableId: item, orderId: order_result.id })));
-  await Tables.prototype.updateStatusTable(arrTable, 1)
+  await Tables.prototype.updateStatusTable(arrTable, 1);
   let tableData = await TableByOrder.findAll({ include: { model: Tables }, where: { id: { [Op.in]: dataTable.map(i => i.id) } } })
 
   let val = approve.map((item) => ({
@@ -90,13 +91,46 @@ exports.delOrder = asyncHandler(async (req, res) => {
   res.status(200).json("Xóa đơn hàng thành công");
 });
 exports.updateOrder = asyncHandler(async (req, res) => {
-const { id, updatedQuantities, updateTotal } = req.body;
-  await Order.update({ total: updateTotal }, { where: { id: id } });
-  await Promise.all(updatedQuantities.map(async (item) => {
-    await OrderDetail.update({ quantity: item.quantity }, {
-      where: { id_order: id, id_product: item.id_product },
-    });
-  }));
+  const { id_order, carts, id_table, total } = req.body;
+  const over = [];
+  let current = await OrderDetail.findAll({
+    where: {
+      [Op.or]: carts.map(item => ({ id_product: item.id, id_order }))
+    }, raw: true
+  })
+  for (const cart of carts) {
+    let orderDatabase = current.find(ele => ele.id_product === cart.id);
+    let val = await getQtyMaterialByProduct(cart);
+    let result = await checkQtyMaterials(val, Materials);
+    if (orderDatabase) {
+      cart.quantity -= orderDatabase.quantity;
+      if (cart.quantity > 0) {
+        if (result) {
+          await Promise.all(val.map(async (item) => (
+            await Materials.decrement("amount", { by: item.total, where: { id: item.id_material } })
+          )))
+          await OrderDetail.increment("quantity", { by: cart.quantity, where: { id: orderDatabase.id } })
+        } else {
+          over.push(cart)
+          await Product.update({ status: 4 }, { where: { id: cart.id } });
+        }
+      }
+    } else {
+      if (result) {
+        await Promise.all(val.map(async (item) => (
+          await Materials.decrement("amount", { by: item.total, where: { id: item.id_material } })
+        )))
+        await OrderDetail.create({
+          id_product: cart.id,
+          quantity: cart.quantity,
+          id_order: id_order
+        })
+      } else {
+        over.push(cart)
+        await Product.update({ status: 4 }, { where: { id: cart.id } });
+      }
+    }
+  }
   res.status(200).json("Update thành công");
 });
 
@@ -181,7 +215,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     (acc, item) => {
       acc.labels.push(`${info}${item[type]}`);
       acc.values.push(item["totalOrder"]);
-return acc;
+      return acc;
     },
     { labels: [], values: [] },
   );

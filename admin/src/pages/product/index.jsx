@@ -67,8 +67,8 @@ function ProductPage() {
       render: (_, record) => (
         <img
           className="w-full"
-          style={{ maxWidth: "120px" }}
-          src={record.ImageProducts[0]?.url}
+          style={{ maxWidth: "150px" }}
+          src={record?.ImageProducts?.[0]?.url}
           alt=""
         />
       ),
@@ -111,7 +111,8 @@ function ProductPage() {
       }),
       filterMode: "tree",
       filterSearch: true,
-      onFilter: (value, record) => record.categoryName.startsWith(value),
+      onFilter: (value, record) => record.Category?.name_category.startsWith(value),
+      render:(_, record) =><p>{record.Category?.name_category}</p>
     },
     {
       title: "Giá",

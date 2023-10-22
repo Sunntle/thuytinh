@@ -28,7 +28,12 @@ exports.list = async (req, res) => {
         {
           model: ImageProduct,
           attributes: ["url"],
-        }
+        },
+        {
+          model: Recipes,
+          attributes: ["quantity"],
+          include: [{ model: Materials, attributes: ["amount"]}]
+        },
       ],
     };
     if (_limit) query.limit = +_limit;
@@ -48,6 +53,18 @@ exports.list = async (req, res) => {
       query.where = { ...query.where, ...whereConditions };
     }
     const { count, rows } = await Product.findAndCountAll(query);
+    rows.length > 0 && rows.forEach(product=>{
+      const {Recipes} = product
+      if(Recipes.length == 0) return product
+      const arrCount = []
+      for(const recipe of Recipes){
+        const {Material} = recipe
+        const countProduct = Math.floor(Material.amount/recipe.quantity) 
+        if(countProduct < 1) return
+        arrCount.push(countProduct)
+      }
+      product.dataValues.amount = Math.min(...arrCount)
+  })
     res.status(200).json({ total: count, data: rows });
   } catch (err) {
     console.log(err);
@@ -67,7 +84,7 @@ exports.getDetail = async (req, res) => {
           include: [
             {
               model: Materials,
-              attributes: ["id"],
+              attributes: ["id", "amount"],
             },
           ],
         },
@@ -79,6 +96,17 @@ exports.getDetail = async (req, res) => {
     });
     if (!response) {
       return res.status(404).json({ error: "Product not found" });
+    }
+    const {Recipes: recipes} = response
+    if(recipes.length !== 0){
+      const arrCount = []
+      for(const recipe of recipes){
+        const {Material} = recipe
+        const countProduct = Math.floor(Material.amount/recipe.quantity) 
+        if(countProduct < 1) return
+        arrCount.push(countProduct)
+      }
+      response.dataValues.amount = Math.min(...arrCount)
     }
     res.status(200).json(response);
   } catch (err) {

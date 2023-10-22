@@ -64,6 +64,7 @@ function MaterialPage() {
       dataIndex: "image",
       fixed: "left",
       render: (_, record) => (
+
         <img
           className="w-full"
           style={{ maxWidth: "120px" }}
