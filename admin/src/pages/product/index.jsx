@@ -63,12 +63,13 @@ function ProductPage() {
   const columns = [
     {
       title: "Hình ảnh",
-      dataIndex: "imageUrls",
+      dataIndex: "ImageProduct",
       render: (_, record) => (
+        // console.log(record)
         <img
           className="w-full"
           style={{ maxWidth: "150px" }}
-          src={record?.imageUrls?.split(";")[0]}
+          src={record?.ImageProducts?.[0]?.url}
           alt=""
         />
       ),

@@ -8,7 +8,6 @@ const {
   TableByOrder,
 } = require("../models");
 
-const { where } = require("sequelize");
 
 const { apiQueryRest } = require('../utils/const');
 const { Op } = require('sequelize');

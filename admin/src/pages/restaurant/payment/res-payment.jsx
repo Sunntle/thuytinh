@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const ResPayment = () => {
-    const {id} = useParams()
+    const { id } = useParams()
     const [orderDetails, setOrderDetails] = useState(null);
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
@@ -42,7 +42,7 @@ const ResPayment = () => {
             res = await addOrder(body);
             console.log(res);
             // dispatch(AddTableList({idOrder: res.data.tableByOrder, detail: res.data.detail}))
-            dispatch(RemoveAllCart());
+            // dispatch(RemoveAllCart());
 
             // dispatch(RemoveTable());
 
@@ -70,11 +70,11 @@ const ResPayment = () => {
                 carts: carts,
                 id_table: tablelist.id,
                 total: totalVAT
-                
+
             };
-            console.log(body)
+            // console.log(body)
             res = await updateOrder(body);
-            dispatch(RemoveAllCart());
+            // dispatch(RemoveAllCart());
             console.log(res)
         } catch (err) {
             console.log(err);
