@@ -34,6 +34,9 @@ const Tables = db.sequelize.define(
 );
 Tables.prototype.updateStatusTable = async (arr, status_table) => {
     await Tables.update({ status_table }, { where: { id: { [Op.in]: arr } } })
+    if (+status_table === 1) {
+        await Tables.increment("status_table", { by: 1, where: { id: { [Op.in]: arr } } });
+    }
 }
 Tables.prototype.checkStatus = async (arr, status_table) => {
     const list = await Tables.findAll({
@@ -44,5 +47,5 @@ Tables.prototype.checkStatus = async (arr, status_table) => {
     });
     return list.length === 0 ? true : false
 }
-Tables.sync()
+
 module.exports = Tables;

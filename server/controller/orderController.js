@@ -98,6 +98,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
       [Op.or]: carts.map(item => ({ id_product: item.id, id_order }))
     }, raw: true
   })
+  await Order.update({ total }, { where: { id: id_order } })
   for (const cart of carts) {
     let orderDatabase = current.find(ele => ele.id_product === cart.id);
     let val = await getQtyMaterialByProduct(cart);

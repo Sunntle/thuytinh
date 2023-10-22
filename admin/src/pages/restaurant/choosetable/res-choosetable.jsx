@@ -83,7 +83,7 @@ const ResChooseTable = () => {
                 )}
                 {table.status_table === 1 && (
                   <div>
-                    <span className="mt-2 text-white block grid justify-items-center">
+                    <span className="mt-2 text-white  grid justify-items-center">
                       Đang sử dụng
                     </span>
                     <div className="mt-3">
@@ -138,7 +138,7 @@ const ResChooseTable = () => {
                     )}
                     {table.status_table === 1 && (
                       <div>
-                        <span className="mt-2 text-white block grid justify-items-center">
+                        <span className="mt-2 text-white  grid justify-items-center">
                           Đang sử dụng
                         </span>
                         <div className="mt-3">
@@ -195,7 +195,7 @@ const ResChooseTable = () => {
                     )}
                     {table.status_table === 1 && (
                       <div>
-                        <span className="mt-2 text-white block grid justify-items-center">
+                        <span className="mt-2 text-white  grid justify-items-center">
                           Đang sử dụng
                         </span>
                         <div className="mt-3">
