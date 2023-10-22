@@ -18,6 +18,7 @@ import {
   Switch,
   Tabs,
   Tooltip,
+  Typography,
   Upload,
   message,
 } from "antd";
@@ -169,8 +170,8 @@ function HeaderComponent() {
   }, [form, messageApi]);
   const customContent = () => {
     return (
-      <div className="bg-white rounded-lg px-5 py-3 shadow-md">
-        <h4 className="text-gray-500 mb-3">Tìm kiếm gần đây</h4>
+      <div className={` ${customize.darkMode ? 'bg-darkModeBg border-gray-600' : 'bg-white border-gray-300'} rounded-lg px-5 py-3 shadow-md border border-solid  border-t-0`}>
+        <Typography.Title level={5}>Tìm kiếm gần đây</Typography.Title>
         <Swiper
           speed={1000}
           slidesPerView={7}
@@ -206,11 +207,11 @@ function HeaderComponent() {
             <p className="text-gray-500">Không có tìm kiếm nào!</p>
           )}
         </Swiper>
-        <h4 className="text-gray-500 mb-3">Danh mục</h4>
+        <Typography.Title level={5}>Danh mục</Typography.Title>
         <div className="my-5">
           <Swiper
             speed={1000}
-            slidesPerView={8}
+            slidesPerView={5}
             spaceBetween={20}
             className="mySwiper"
           >
@@ -220,13 +221,13 @@ function HeaderComponent() {
                   to={`/employee/menu?category=${el.id}`}
                   className="border rounded-full border-gray-300 border-solid py-2 px-3 transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
                 >
-                  {el.name_category}
+                  {truncateString(el.name_category, 12)}
                 </Link>
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
-        <h4 className="text-gray-500 my-3">Món ăn phổ biến</h4>
+        <Typography.Title level={5}>Món ăn phổ biến</Typography.Title>
         <div>
           <Swiper
             speed={1000}

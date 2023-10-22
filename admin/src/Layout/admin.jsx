@@ -14,7 +14,6 @@ const LayoutMain = () => {
   const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
   const customize = useSelector(state => state.customize)
-  const notifications = useSelector(state => state.notifications)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const openNotification = useCallback((arg) => {
@@ -38,7 +37,7 @@ const LayoutMain = () => {
       //   );
       // },
     });
-  }, [api, notifications]);
+  }, [api]);
   useEffect(() => {
     socket.on("new message", (arg) => {
       dispatch(addNewMessage(arg))
@@ -58,7 +57,6 @@ const LayoutMain = () => {
       </div>
       <header className="sticky top-0 w-full z-10 shadow-lg">
         <HeaderComponent />
-
       </header>
       <main className="main_area rounded-t-3xl">
         <Layout className="layout_area ">

@@ -135,7 +135,7 @@ const ResPayment = () => {
     }
     return (
         <>
-            <div className="border-solid border-2 border-main bg-orange-50 shadow-md flex flex-col gap-y-4 p-4 rounded-lg">
+            <div className="border-solid border-2 border-main bg-orange-100 dark:bg-darkModeBgBox shadow-md flex flex-col gap-y-4 p-4 rounded-lg">
                 <div>
                     <span className='font-medium text-lg'>Bàn số: </span>
                     <span className='font-medium text-main text-lg'>{tablelist.id}</span>

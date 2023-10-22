@@ -12,7 +12,7 @@ exports.handleCallStaff = (
   socket.on("call staff", async (idTable) => {
     callStaff.push({ socketId: socket.id, idTable: idTable });
     const res = await Notification.create({
-      type: "call-staff", description: "Gọi nhân viên !!!",
+      type: "call-staff", description: `Gọi nhân viên - Bàn ${idTable} !!!`,
     }, { raw: true })
     _io.of('/admin').emit("new message", res);
   });
