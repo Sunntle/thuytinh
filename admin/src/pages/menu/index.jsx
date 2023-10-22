@@ -6,31 +6,41 @@ import { useEffect, useState } from "react";
 import { getAllCate, getAllProduct } from "../../services/api";
 import { Autoplay } from "swiper/modules";
 import { formatGia } from "../../utils/format";
+import Spinner from "../../components/spinner";
 function MenuPage() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState(null);
   const [discount, setDiscount] = useState(null);
+  const [loading, setLoading] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
-      const resCate = await getAllCate();
-      const resProducts = await getAllProduct({
-        _sort: "sold",
-        _order: "DESC",
-        _sold: "gt_0", // >0
-        _limit: 10,
-      });
-      const resProductsDiscount = await getAllProduct({
-        _sort: "discount",
-        _order: "DESC",
-        _discount: "gt_0",
-        _limit: 10,
-      });
-      setDiscount(resProductsDiscount);
-      setProducts(resProducts);
-      setCategories(resCate);
+      setLoading(true);
+      try {
+        const resCate = await getAllCate();
+        const resProducts = await getAllProduct({
+          _sort: "sold",
+          _order: "DESC",
+          _sold: "gt_0", // >0
+          _limit: 10,
+        });
+        const resProductsDiscount = await getAllProduct({
+          _sort: "discount",
+          _order: "DESC",
+          _discount: "gt_0",
+          _limit: 10,
+        });
+        setDiscount(resProductsDiscount);
+        setProducts(resProducts);
+        setCategories(resCate);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
+  if(loading) return <Spinner/>
   return (
     <div className="my-7 px-5">
       <Row justify="space-between" align="center" className="mb-4"></Row>

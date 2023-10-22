@@ -8,4 +8,4 @@ socket.connect((error) => {
     } else {
       console.log('Connected to the server');
     }
-  });
+});
