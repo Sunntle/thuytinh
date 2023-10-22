@@ -159,7 +159,7 @@ const ResPayment = () => {
                                     <span>x{item.quantity}</span>
                                     <div className="flex justify-between items-center">
                                         <button className='border-solid border text-main' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="w-3 h-4 sm:w-4 sm:h-4 " /></button>
-                                        <span className="font-medium text-slate-500 text-lg mx-3 text-sm">{item.quantity}</span>
+                                        <span className="font-medium text-slate-500 text-lg mx-3 ">{item.quantity}</span>
                                         <button className='border-solid border text-main' onClick={() => dispatch(AddCart(item))}><HiPlus className="w-3 h-3 sm:w-4 sm:h-4  " /></button>
                                     </div>
                                 </div>

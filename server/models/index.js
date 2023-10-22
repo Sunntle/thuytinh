@@ -64,18 +64,7 @@ Order.hasOne(Reviews, {
 });
 User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee" });
 
-// Category.sync();
-// Product.sync();
-// Notification.sync();
-// Tables.sync({alter: true});
-// User.sync();
-// Order.sync();
-// OrderDetail.sync();
-// ImageProduct.sync();
-// Materials.sync();
-// Reviews.sync();
-// Recipes.sync();
-// TableByOrder.sync();
+
 async function synchronizeModels() {
   try {
     await sequelize.sync();

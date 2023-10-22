@@ -1,6 +1,7 @@
 import { Col, Row, Typography, message } from "antd";
 import ButtonComponents from "../../components/button";
 import { useCallback, useEffect, useState } from "react";
+import { IoMdNotificationsOutline } from "react-icons/io"
 import { Table } from "antd";
 import ConfirmComponent from "../../components/confirm";
 import AddNewMaterial from "./add";
@@ -207,13 +208,16 @@ function MaterialPage() {
     <div className="my-7 px-5">
       {dataChart.length > 0 && (
         <Row justify={"space-between"}>
-          <Col xs={24} lg={6}>
-            <h3 className="text-lg text-black font-medium">
-              Thông báo sắp{" "}
-              <b className="text-xl text-[#EF4444]"> {dataChart.length} </b>{" "}
+          <Col xs={24} lg={6} className="flex flex-col mt-4 items-center " >
+            <Text>
+              <IoMdNotificationsOutline size={50} />
+            </Text>
+            <Text className="text-lg font-medium text-center">
+              <b className="text-xl ">
+                {dataChart.length} </b>{" "}
               nguyên liệu gần hết hàng
-            </h3>
-            <Text className="">
+            </Text>
+            <Text className="text-lg ">
               Gồm :{" "}
               {dataChart
                 .map((item) => item.name_material.toUpperCase())
