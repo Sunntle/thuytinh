@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, Modal } from "antd";
 import "./main.css";
 import { BiSolidTrash } from "react-icons/bi";

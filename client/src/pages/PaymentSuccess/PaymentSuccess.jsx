@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
 import {fetchOrderById, fetchTableById} from "../../services/api.js";
-import {ConfigProvider, Spin, Table} from "antd";
+import { Spin, Table} from "antd";
 import logo2 from "../../assets/images/logo2.png";
 import moment from "moment";
-import {formatCurrency, truncateString} from "../../utils/format.js";
 
 const columns = [
   {

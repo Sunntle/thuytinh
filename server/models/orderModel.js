@@ -1,7 +1,5 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
-const User = require("./userModel");
-const Tables = require("./tableModel");
 
 require("dotenv").config();
 

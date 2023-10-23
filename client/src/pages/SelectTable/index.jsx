@@ -6,7 +6,7 @@ import useHttp from "../../hooks/useHttp";
 function SelectTable() {
   const navigate = useNavigate();
   const [table, setTable] = useState(null);
-  const { sendRequest, isLoading } = useHttp();
+  const { sendRequest } = useHttp();
   //test
   useEffect(() => {
     const position1 = {
