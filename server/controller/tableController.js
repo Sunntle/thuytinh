@@ -35,8 +35,8 @@ exports.getAll = asyncHandler(async (req, res) => {
     ],
     where: { status: { [Op.lt]: 3 } },
   });
-
-  tables.forEach(table => {
+  
+  tables && tables.forEach(table => {
     tableByOrder.forEach(element => {
       const { TableByOrders: tables, ...data } = element.toJSON();
       if (tables.findIndex(item => +item.tableId === +table.id) > -1) {
@@ -44,6 +44,7 @@ exports.getAll = asyncHandler(async (req, res) => {
       }
     });
   });
+
   res.status(200).json(tables);
 });
 

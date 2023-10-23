@@ -53,9 +53,11 @@ function SearchPage() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-  const handlePageChange = (page, pagesize = 5) => {
+
+  const handlePageChange = useCallback((page, pagesize = 5) => {
     fetchData(pagesize, pagesize * (page - 1));
-  };
+  },[fetchData]);
+
   const renderCategory = () => {
     if (category?.length < 1)
       return <h4 className="text-gray-600 pb-3">Không có danh mục phù hợp</h4>;

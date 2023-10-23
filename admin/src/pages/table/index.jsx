@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { delTables, getAllTable } from '../../services/api';
 import ButtonComponents from "../../components/button";
-import { Col, Row, Table, message, Typography, QRCode, Form } from 'antd'
+import { Col, Row, Table, message, Typography, QRCode } from 'antd'
 import ConfirmComponent from '../../components/confirm';
 import CreateTable from './create';
 import UpdateTable from './update';
@@ -18,21 +18,30 @@ const TablePage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpenUpdate, setIsModalOpenUpdate] = useState(false);
     const [dataUpdate, setDataUpdate] = useState(null)
-    const handleDeleteTable = useCallback(async ({ id, name }) => {
+
+    const fetchData = useCallback(async () => {
+        let res = await getAllTable();
+        console.log(res);
+        setListTable(res)
+        setLoading(false)
+    },[])
+
+    const handleDeleteTable = useCallback(async ({ id }) => {
         const res = await delTables(id);
         if (res) messageApi.open({
             type: 'success',
             content: res
         });
         fetchData()
-    }, [])
+    }, [messageApi, fetchData])
 
 
-    const handleEditTable = async (data) => {
+    const handleEditTable = useCallback(async (data) => {
         setIsModalOpenUpdate(true);
         setDataUpdate(data);
-    }
-    const columns = [
+    },[])
+
+    const columns = useMemo(()=>[
         {
             title: "Tên Bàn",
             dataIndex: "name_table",
@@ -116,16 +125,11 @@ const TablePage = () => {
                 </div>
             ),
         }
-    ];
+    ],[handleDeleteTable, handleEditTable]);
 
     useEffect(() => {
         fetchData()
-    }, [])
-    const fetchData = async () => {
-        let res = await getAllTable();
-        setListTable(res);
-        setLoading(false)
-    }
+    }, [fetchData])
     return (
         <div className='my-7 px-5'>
 
