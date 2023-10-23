@@ -18,7 +18,7 @@ exports.addCate = async (req, res) => {
     const thumbnail = req.file.path.replace("/upload/", "/upload/w_400,h_300/");
     const data = { thumbnail, ...req.body };
     const response = await Category.create(data);
-    res.status(201).json(response);
+    res.status(200).json(response);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }

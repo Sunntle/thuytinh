@@ -23,10 +23,12 @@ import { socket } from "../../socket";
 import { useSelector } from "react-redux";
 import { UploadOutlined } from "@ant-design/icons";
 import ButtonComponents from "../../components/button";
+import Spinner from "../../components/spinner";
 const { Title } = Typography;
 function UserPage() {
   const [admin, setAdmin] = useState(null);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [openModalProfile, setOpenModalProfile] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const userStore = useSelector(state => state.account)
@@ -45,15 +47,15 @@ function UserPage() {
           dataUser.success && setUser(dataUser);
           break;
         }
-        default:{
+        default: {
           const dataAdmin = await getAllUser({ _like: "role_R1_not" });
           dataAdmin.success && setAdmin(dataAdmin);
           const dataUser = await getAllUser({ _like: "role_R1" });
           dataUser.success && setUser(dataUser);
         }
       }
-      
-      
+
+      setLoading(false)
     } catch (err) {
       console.log(err);
     }
@@ -134,7 +136,7 @@ function UserPage() {
       type: "success",
       content: res.message,
     });
-    if(val.role !== "R1") fetchData("admin")
+    if (val.role !== "R1") fetchData("admin")
     else fetchData("user")
     setOpenModalProfile(false);
   };
@@ -510,9 +512,13 @@ function UserPage() {
   return (
     <div className="my-7 px-5">
       {contextHolder}
-      <Tabs defaultActiveKey="1" items={items} />
-      {renderUpdateModal()}
-    </div>
+      {loading ? (
+        <Spinner />
+      ) : (<>
+        <Tabs defaultActiveKey="1" items={items} />
+        {renderUpdateModal()}
+      </>)
+      }</div>
   );
 }
 
