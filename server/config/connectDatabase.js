@@ -5,7 +5,8 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
   dialect: "mysql",
   logging: false,
   timezone: "+07:00",
-  port: process.env.DB_PORT || 3309
+  port: process.env.DB_PORT || 3309,
+  sql_mode: '',
 });
 const connectDatabase = async () => {
   try {
