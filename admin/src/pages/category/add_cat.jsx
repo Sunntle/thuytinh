@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Modal, Row, Select, Upload } from "antd";
+import { Button, Col, Form, Input, Modal, Row, Select, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import ButtonComponents from '../../components/button';
 import { addCate } from "../../services/api";
@@ -10,14 +10,24 @@ const optionsStatus = [
 const CreateCategory = ({ openModal, handleCancel, fetchData }) => {
     const [form] = Form.useForm();
     const onFinish = async (values) => {
+        message.open({
+            type: "loading",
+            content: "Đang xử lí...",
+            duration: 0
+        });
+        handleCancel();
         const formData = new FormData();
         const { thumbnail, ...rest } = values;
         const val = { ...rest, thumbnail: thumbnail[0].originFileObj };
         for (const item of Object.entries(val)) {
             formData.append(item[0], item[1])
         }
-        const res = await addCate(formData);
-        handleCancel();
+        await addCate(formData);
+        message.destroy();
+        message.open({
+            type: "success",
+            content: "Thêm món ăn mới thành công!",
+        });
         fetchData();
         form.resetFields()
     };

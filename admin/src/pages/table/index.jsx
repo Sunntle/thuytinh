@@ -5,13 +5,14 @@ import { Col, Row, Table, message, Typography, QRCode } from 'antd'
 import ConfirmComponent from '../../components/confirm';
 import CreateTable from './create';
 import UpdateTable from './update';
+import Spinner from '../../components/spinner';
 const { Title } = Typography;
 const options = [
     { value: 'out', label: 'Bên ngoài' },
     { value: 'in', label: 'Bên trong' }
 ];
 const TablePage = () => {
-
+    const [loading, setLoading] = useState(true);
     const [listTable, setListTable] = useState([]);
     const [messageApi, contextHolder] = message.useMessage();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,6 +23,7 @@ const TablePage = () => {
         let res = await getAllTable();
         console.log(res);
         setListTable(res)
+        setLoading(false)
     },[])
 
     const handleDeleteTable = useCallback(async ({ id }) => {
@@ -128,25 +130,30 @@ const TablePage = () => {
     useEffect(() => {
         fetchData()
     }, [fetchData])
-
     return (
         <div className='my-7 px-5'>
+
             {contextHolder}
-            <Row justify="space-between" align="center" className="mb-4">
-                <Col xs={6}>
-                    <Title level={3}>Danh sách món ăn</Title>
-                </Col>
-                <Col xs={6} style={{ textAlign: "-webkit-right" }}>
-                    <ButtonComponents
-                        className="border-borderSecondaryColor text-main"
-                        content={"Thêm mới"}
-                        onClick={() => setIsModalOpen(true)}
-                    />
-                </Col>
-            </Row>
-            <Table dataSource={listTable} columns={columns} rowKey={"id"} />
-            <CreateTable options={options} fetchData={fetchData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} messageApi={messageApi} />
-            <UpdateTable setDataUpdate={setDataUpdate} options={options} dataUpdate={dataUpdate} fetchData={fetchData} isModalOpenUpdate={isModalOpenUpdate} setIsModalOpenUpdate={setIsModalOpenUpdate} messageApi={messageApi} />
+            {loading ? (
+                <Spinner />
+            ) : (<>
+                <Row justify="space-between" align="center" className="mb-4">
+                    <Col xs={6}>
+                        <Title level={3}>Danh sách món ăn</Title>
+                    </Col>
+                    <Col xs={6} style={{ textAlign: "-webkit-right" }}>
+                        <ButtonComponents
+                            className="border-borderSecondaryColor text-main"
+                            content={"Thêm mới"}
+                            onClick={() => setIsModalOpen(true)}
+                        />
+                    </Col>
+                </Row>
+                <Table dataSource={listTable} columns={columns} rowKey={"id"} />
+                <CreateTable options={options} fetchData={fetchData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} messageApi={messageApi} />
+                <UpdateTable setDataUpdate={setDataUpdate} options={options} dataUpdate={dataUpdate} fetchData={fetchData} isModalOpenUpdate={isModalOpenUpdate} setIsModalOpenUpdate={setIsModalOpenUpdate} messageApi={messageApi} />
+            </>)
+            }
         </div>
     )
 }

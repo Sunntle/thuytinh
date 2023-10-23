@@ -16,6 +16,7 @@ import EditMaterial from "./edit";
 import ColumnChart from "../../components/chart/column-chart";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import Spinner from "../../components/spinner";
 import { formatNgay } from "../../utils/format";
 const { Title, Text } = Typography;
 function MaterialPage() {
@@ -26,7 +27,7 @@ function MaterialPage() {
   const [dataChart, setDataChart] = useState([]);
   const notifications = useSelector(state => state.notifications)
   const location = useLocation();
-
+  const [loading, setLoading] = useState(true);
   const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
     setMaterials({
@@ -35,6 +36,7 @@ function MaterialPage() {
     });
 
     setDataChart(res.dataChart);
+    setLoading(false)
   }, []);
 
   useEffect(() => {
@@ -213,17 +215,17 @@ function MaterialPage() {
 
   return (
     <div className="my-7 px-5">
-      {dataChart.length > 0 && (
+      {loading ? (
+        <Spinner />
+      ) : (<> {dataChart.length > 0 && (
         <Row justify="space-between">
           <Col xs={24} lg={6} className="flex flex-col mt-4">
             <p className="text-gray-500 mb-3">
               {formatNgay(new Date(), "HH:mm DD-MM-YYYY")}
             </p>
             <Title level={4}>
-              Có <span className="text-red-600">{dataChart.length}</span> nguyên
-              liệu gần hết hàng
+              Có <span className="text-red-600">{dataChart.length}</span> nguyên liệu gần hết hàng
             </Title>
-
             <Text className="text-lg ">
               Gồm :{" "}
               {dataChart
@@ -248,36 +250,38 @@ function MaterialPage() {
         </Row>
       )}
 
-      <Row justify="space-between" align="center" className="mb-4">
-        <Col xs={6}>
-          <Title level={4}>Danh sách nguyên liệu</Title>
-        </Col>
-        <Col xs={6} style={{ textAlign: "-webkit-right" }}>
-          <ButtonComponents
-            className="border-borderSecondaryColor text-main"
-            content={"Thêm mới"}
-            onClick={() => setOpen(true)}
-          />
-        </Col>
-      </Row>
-      <Table
-        columns={columns}
-        dataSource={materials.data}
-        onChange={onChange}
-      />
-      <AddNewMaterial
-        open={open}
-        handleCancel={handleCancel}
-        handleFinish={handleDataForm}
-        unitMasterial={unitMasterial}
-      />
-      <EditMaterial
-        open={openModelEdit}
-        handleCancel={() => setOpenModelEdit(false)}
-        handleFinish={handleDataForm}
-        data={data}
-        unitMasterial={unitMasterial}
-      />
+        <Row justify="space-between" align="center" className="mb-4">
+          <Col xs={6}>
+            <Title level={4}>Danh sách nguyên liệu</Title>
+          </Col>
+          <Col xs={6} style={{ textAlign: "-webkit-right" }}>
+            <ButtonComponents
+              className="border-borderSecondaryColor text-main"
+              content={"Thêm mới"}
+              onClick={() => setOpen(true)}
+            />
+          </Col>
+        </Row>
+        <Table
+          columns={columns}
+          dataSource={materials.data}
+          onChange={onChange}
+        />
+        <AddNewMaterial
+          open={open}
+          handleCancel={handleCancel}
+          handleFinish={handleDataForm}
+          unitMasterial={unitMasterial}
+        />
+        <EditMaterial
+          open={openModelEdit}
+          handleCancel={() => setOpenModelEdit(false)}
+          handleFinish={handleDataForm}
+          data={data}
+          unitMasterial={unitMasterial}
+        />
+
+      </>)}
     </div>
   );
 }

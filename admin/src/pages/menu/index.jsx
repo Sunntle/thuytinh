@@ -40,9 +40,10 @@ function MenuPage() {
     };
     fetchData();
   }, []);
-  if(loading) return <Spinner/>
+  if (loading) return <Spinner />
   return (
     <div className="my-7 px-5">
+
       <Row justify="space-between" align="center" className="mb-4"></Row>
       <div className="mb-6">
         <div className="flex justify-between items-center">
@@ -239,6 +240,7 @@ function MenuPage() {
           })}
         </Swiper>
       </div>
+
     </div>
   );
 }

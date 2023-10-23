@@ -31,5 +31,5 @@ Category.beforeUpdate(async (cat) => {
 Category.beforeDestroy(async (cat) => {
   await destroyImg(cat.thumbnail);
 })
-// Category.sync();
+
 module.exports = Category;

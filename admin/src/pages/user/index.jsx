@@ -49,7 +49,7 @@ function UserPage() {
           dataUser.success && setUser(dataUser);
           break;
         }
-        default:{
+        default: {
           const dataAdmin = await getAllUser({ _like: "role_R1_not" });
           dataAdmin.success && setAdmin(dataAdmin);
           const dataUser = await getAllUser({ _like: "role_R1" });
@@ -58,7 +58,7 @@ function UserPage() {
       }
     } catch (err) {
       console.log(err);
-    } finally{
+    } finally {
       setLoading(false)
     }
   }, [])
@@ -85,7 +85,7 @@ function UserPage() {
       ],
     };
     form.setFieldsValue(data);
-  },[form]);
+  }, [form]);
   const handleDelete = useCallback(async (id) => {
     if (id === userStore.user.id) {
       message.error("Không thể xóa chính bản thân mình !!")
@@ -99,11 +99,11 @@ function UserPage() {
       console.log(err);
       message.error("Xảy ra lỗi, xóa thất bại")
     }
-  },[fetchData, userStore.user.id]);
+  }, [fetchData, userStore.user.id]);
 
   const onChange = useCallback((pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
-  },[]);
+  }, []);
   useEffect(() => {
     socket.on("update-admin-online", (data) => {
       if (admin && admin.data) {
@@ -138,10 +138,10 @@ function UserPage() {
       type: "success",
       content: res.message,
     });
-    if(val.role !== "R1") fetchData("admin")
+    if (val.role !== "R1") fetchData("admin")
     else fetchData("user")
     setOpenModalProfile(false);
-  },[fetchData, messageApi]);
+  }, [fetchData, messageApi]);
 
   const submitResetPass = useCallback(async (values) => {
     let res = await callUpdatePassword(values);
@@ -153,7 +153,7 @@ function UserPage() {
       setOpenModalProfile(false);
       form.resetFields();
     }
-  },[form, messageApi]);
+  }, [form, messageApi]);
 
   const renderUpdateModal = () => {
     return (
@@ -386,8 +386,8 @@ function UserPage() {
       </Modal>
     );
   };
-  
-  const columnsUser = useMemo(()=>[
+
+  const columnsUser = useMemo(() => [
     {
       title: "Ảnh đại diện",
       dataIndex: "avatar",
@@ -461,9 +461,9 @@ function UserPage() {
         </div>
       ),
     },
-  ],[handleDelete, handleEdit]);
+  ], [handleDelete, handleEdit]);
 
-  const columnsAdmin = useMemo(()=>[
+  const columnsAdmin = useMemo(() => [
     ...columnsUser,
     {
       title: "Trạng thái",
@@ -480,8 +480,8 @@ function UserPage() {
           </span>
         ),
     },
-  ],[columnsUser]);
-  
+  ], [columnsUser]);
+
   const renderTableAdmin = () => {
     return (
       <Table
@@ -507,18 +507,19 @@ function UserPage() {
     {
       label: <Title level={4}>Khách hàng</Title>,
       key: "1",
-      children: loading ? <Spinner/>: renderTableUser(),
+      children: loading ? <Spinner /> : renderTableUser(),
     },
     {
       label: <Title level={4}>Quản trị viên</Title>,
       key: "2",
-      children: loading ? <Spinner/>: renderTableAdmin(),
+      children: loading ? <Spinner /> : renderTableAdmin(),
     },
   ];
 
   return (
     <div className="my-7 px-5">
       {contextHolder}
+
       <Tabs defaultActiveKey="1" items={items} />
       {renderUpdateModal()}
     </div>
