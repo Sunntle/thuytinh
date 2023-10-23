@@ -70,15 +70,27 @@ const notificationSystem = createSlice({
                 state.lastNotification = action.payload.lastNotification
                 state.isLoading = false
             })
+            .addCase(maskAllRead.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(maskAsRead.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteNotification.pending, (state) => {
+                state.isLoading = true;
+            })
             .addCase(maskAllRead.fulfilled, (state, action) => {
                 state.content = action.payload
                 state.lastNotification = null
+                state.isLoading = false;
             })
             .addCase(maskAsRead.fulfilled, (state, action) => {
                 state.content = action.payload
+                state.isLoading = false;
             })
             .addCase(deleteNotification.fulfilled, (state, action) => {
                 state.content = action.payload
+                state.isLoading = false;
             })
     }
 })

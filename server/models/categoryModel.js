@@ -23,13 +23,13 @@ const Category = db.sequelize.define(
   { timestamps: true }
 );
 
-// Category.beforeUpdate(async (cat) => {
-//   if (cat.changed("thumbnail")) {
-//     await destroyImg(cat._previousDataValues.thumbnail);
-//   }
-// });
-// Category.beforeDestroy(async (cat) => {
-//   await destroyImg(cat.thumbnail);
-// })
-// Category.sync();
+Category.beforeUpdate(async (cat) => {
+  if (cat.changed("thumbnail")) {
+    await destroyImg(cat._previousDataValues.thumbnail);
+  }
+});
+Category.beforeDestroy(async (cat) => {
+  await destroyImg(cat.thumbnail);
+})
+
 module.exports = Category;

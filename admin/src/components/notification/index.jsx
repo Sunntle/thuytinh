@@ -1,6 +1,6 @@
-import { Badge, Button, Popover, Tooltip, Typography, message } from "antd";
+import { Badge, Button, Popover, Tooltip, Typography } from "antd";
 import { formatNgay } from "../../utils/format";
-import { BellOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons";
+import { BellOutlined, CheckOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
@@ -9,16 +9,19 @@ import {
   maskAllRead,
   maskAsRead,
 } from "../../redux/notification/notificationSystem";
+
 function NotificationsComponent({
   notifications,
   openPopover,
   setOpenPopover,
+  isLoading
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleCheckedAll = useCallback(() => {
     dispatch(maskAllRead());
   }, [dispatch]);
+
   const handleToContent = useCallback((index) => {
     const content = notifications[index];
     const navigateTo = `/admin/${content.type}`;
@@ -26,18 +29,19 @@ function NotificationsComponent({
     content.type != "call-staff" && navigate(navigateTo);
   }, [dispatch, navigate, notifications])
 
-  const handleDelete = async (id) => {
+  const handleDelete = useCallback(async (id) => {
     dispatch(deleteNotification(id));
-    message.open({ type: "success", content: "Xóa thông báo thành công" })
-  }
+  },[dispatch])
+
   const getCountNoti = useMemo(() => {
     return notifications && notifications.length > 0
       ? notifications.filter((el) => el.status == 0).length
       : 0;
   }, [notifications]);
+
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)
-      return <p className="text-gray-500 px-3">Không có thông báo nào</p>;
+      return <p className="text-gray-500">Không có thông báo nào</p>;
     return (
       <div className="max-h-[400px] overflow-y-scroll">
         {notifications.map((el, index) => {
@@ -54,7 +58,6 @@ function NotificationsComponent({
                   />
                 </div>
                 <div className={el.status == 1 ? "text-gray-500" : " pe-2"}>
-                  {/* <span className="font-semibold">#{el.id}</span>{" "} */}
                   {el.description}
                   <p className="text-main text-sm">
                     {formatNgay(el.createdAt, "HH:mm DD-MM-YYYY")}
@@ -88,7 +91,7 @@ function NotificationsComponent({
             <Button
               className="border-0"
               shape="circle"
-              icon={<CheckOutlined />}
+              icon={isLoading ? <LoadingOutlined/>:<CheckOutlined />}
               onClick={handleCheckedAll}
             />
           </Tooltip>

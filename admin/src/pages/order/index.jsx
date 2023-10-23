@@ -20,6 +20,7 @@ import ConfirmComponent from "../../components/confirm";
 import moment from "moment";
 import { useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
+import Spinner from "../../components/spinner";
 const options = [];
 for (let i = 1; i < 10; i++) {
   options.push({
@@ -62,6 +63,7 @@ const OrderPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [dataOrder, setDataOrder] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [openModalUpdate, setOpenModalUpdate] = useState(initData);
   const [openOrderDetail, setOpenOrderDetail] = useState(initData);
   const [query, setQuery] = useState({
@@ -89,6 +91,7 @@ const OrderPage = () => {
       return data;
     });
     setDataOrder(avl);
+    setLoading(false)
   }, []);
   useEffect(() => {
     fetchData(query);
@@ -180,7 +183,6 @@ const OrderPage = () => {
 
   const onFinish = async (values) => {
     let res = await updateOrder(values);
-    console.log(res);
     fetchData(query);
     onClose();
   };
@@ -188,188 +190,191 @@ const OrderPage = () => {
   return (
     <div className="my-7 px-5">
       {contextHolder}
-      <Row justify="space-between" align="center" className="mb-4">
-        <Col xs={6}>
-          <Title level={3}>Công thức sản phẩm</Title>
-        </Col>
-        <Col xs={6} style={{ textAlign: "-webkit-right" }}></Col>
-      </Row>
-      <Table columns={columns} dataSource={dataOrder} rowKey={"id"} />
-      <Drawer
-        title="Chi tiết đơn hàng"
-        placement="right"
-        size="large"
-        onClose={onClose}
-        open={openOrderDetail?.show}
-      >
-        {openOrderDetail?.data?.order_details?.map((item) => (
-          <div className="p-2 border-2" key={item.id}>
-            <div className="flex justify-around">
-              <div className="w-1/6">
-                <img src={iii} className="w-full" />
-              </div>
-              <div className="w-3/6">
-                <div className="w-full h-full flex flex-col justify-evenly">
-                  <div>{item.product.name_product}</div>
-                  <div>{item.product.price}</div>
+      {loading ? (
+        <Spinner />
+      ) : (<>
+        <Row justify="space-between" align="center" className="mb-4">
+          <Col xs={6}>
+            <Title level={3}>Quản lí đơn hàng</Title>
+          </Col>
+          <Col xs={6} style={{ textAlign: "-webkit-right" }}></Col>
+        </Row>
+        <Table columns={columns} dataSource={dataOrder} rowKey={"id"} />
+        <Drawer
+          title="Chi tiết đơn hàng"
+          placement="right"
+          size="large"
+          onClose={onClose}
+          open={openOrderDetail?.show}
+        >
+          {openOrderDetail?.data?.order_details?.map((item) => (
+            <div className="p-2 border-2" key={item.id}>
+              <div className="flex justify-around">
+                <div className="w-1/6">
+                  <img src={iii} className="w-full" />
                 </div>
-              </div>
-              <div className="w-1/6">
-                <div className="w-full h-full flex flex-col justify-evenly">
-                  <div>{item.quantity}</div>
-                  <div>{item.status_food}</div>
+                <div className="w-3/6">
+                  <div className="w-full h-full flex flex-col justify-evenly">
+                    <div>{item.product.name_product}</div>
+                    <div>{item.product.price}</div>
+                  </div>
+                </div>
+                <div className="w-1/6">
+                  <div className="w-full h-full flex flex-col justify-evenly">
+                    <div>{item.quantity}</div>
+                    <div>{item.status_food}</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </Drawer>
+          ))}
+        </Drawer>
 
-      <Modal
-        title="Cập nhật đơn hàng"
-        footer={null}
-        centered
-        open={openModalUpdate.show}
-        width={500}
-        onCancel={onClose}
-      >
-        <Tabs
-          defaultActiveKey="1"
-          items={[
-            {
-              key: "1",
-              label: `Thông tin`,
-              children: (
-                <Form
-                  form={form}
-                  name="basic"
-                  labelCol={{
-                    span: 24,
-                  }}
-                  wrapperCol={{
-                    span: 24,
-                  }}
-                  onFinish={onFinish}
-                  autoComplete="off"
-                >
-                  <Form.Item name="id" hidden>
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    label="Tên người dùng"
-                    name="name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng nhập tên khách hàng!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    label="Số điện thoại"
-                    name="phone"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng nhập số điện thoại !",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Row gutter={12}>
-                    <Col xs={12}>
-                      <Form.Item
-                        label="Tổng tiền"
-                        name="total"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Vui lòng nhập tổng tiền !",
-                          },
-                        ]}
-                      >
-                        <Input />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={12}>
-                      <Form.Item
-                        label="Người phục vụ"
-                        name="id_employee"
-                        rules={[{ required: true }]}
-                      >
-                        <Select
-                          placeholder="Nhân viên"
-                          allowClear
-                          options={nv}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row gutter={12}>
-                    <Col xs={12}>
-                      <Form.Item
-                        name="date_order"
-                        label="Ngày đặt *(giờ/phút)"
-                        {...config}
-                      >
-                        <DatePicker
-                          showTime
-                          format="DD-MM-YYYY HH:mm"
-                          placeholder="Ngày giờ đặt"
-                          className="w-full"
-                        />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={12}>
-                      <Form.Item
-                        label="Bàn phục vụ"
-                        name="id_table"
-                        rules={[
-                          { required: true, message: "Vui lòng chọn bàn !" },
-                        ]}
-                      >
-                        <Select placeholder="Bàn ăn" options={options}></Select>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Form.Item
-                    wrapperCol={{
-                      offset: 20,
-                      span: 16,
+        <Modal
+          title="Cập nhật đơn hàng"
+          footer={null}
+          centered
+          open={openModalUpdate.show}
+          width={500}
+          onCancel={onClose}
+        >
+          <Tabs
+            defaultActiveKey="1"
+            items={[
+              {
+                key: "1",
+                label: `Thông tin`,
+                children: (
+                  <Form
+                    form={form}
+                    name="basic"
+                    labelCol={{
+                      span: 24,
                     }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    onFinish={onFinish}
+                    autoComplete="off"
                   >
-                    <Button type="primary" htmlType="submit">
-                      Submit
-                    </Button>
-                  </Form.Item>
-                </Form>
-              ),
-            },
-            {
-              key: "2",
-              label: `Chi tiết`,
-              children: (
-                <div className="h-40">
-                  <Row>
-                    <Col xs={5}>
-                      <img src={iii} />{" "}
-                    </Col>
-                    <Col xs={10}></Col>
-                    <Col xs={5}></Col>
-                  </Row>
-                </div>
-              ),
-            },
-          ]}
-          onChange={onChange}
-        />
-      </Modal>
+                    <Form.Item name="id" hidden>
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Tên người dùng"
+                      name="name"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập tên khách hàng!",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      label="Số điện thoại"
+                      name="phone"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập số điện thoại !",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Row gutter={12}>
+                      <Col xs={12}>
+                        <Form.Item
+                          label="Tổng tiền"
+                          name="total"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập tổng tiền !",
+                            },
+                          ]}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={12}>
+                        <Form.Item
+                          label="Người phục vụ"
+                          name="id_employee"
+                          rules={[{ required: true }]}
+                        >
+                          <Select
+                            placeholder="Nhân viên"
+                            allowClear
+                            options={nv}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+
+                    <Row gutter={12}>
+                      <Col xs={12}>
+                        <Form.Item
+                          name="date_order"
+                          label="Ngày đặt *(giờ/phút)"
+                          {...config}
+                        >
+                          <DatePicker
+                            showTime
+                            format="DD-MM-YYYY HH:mm"
+                            placeholder="Ngày giờ đặt"
+                            className="w-full"
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={12}>
+                        <Form.Item
+                          label="Bàn phục vụ"
+                          name="id_table"
+                          rules={[
+                            { required: true, message: "Vui lòng chọn bàn !" },
+                          ]}
+                        >
+                          <Select placeholder="Bàn ăn" options={options}></Select>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+
+                    <Form.Item
+                      wrapperCol={{
+                        offset: 20,
+                        span: 16,
+                      }}
+                    >
+                      <Button type="primary" htmlType="submit">
+                        Submit
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                ),
+              },
+              {
+                key: "2",
+                label: `Chi tiết`,
+                children: (
+                  <div className="h-40">
+                    <Row>
+                      <Col xs={5}>
+                        <img src={iii} />{" "}
+                      </Col>
+                      <Col xs={10}></Col>
+                      <Col xs={5}></Col>
+                    </Row>
+                  </div>
+                ),
+              },
+            ]}
+            onChange={onChange}
+          />
+        </Modal></>)}
     </div>
   );
 };

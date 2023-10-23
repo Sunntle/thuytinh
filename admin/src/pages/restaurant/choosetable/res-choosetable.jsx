@@ -141,15 +141,6 @@ const ResChooseTable = () => {
       <div className="w-full p-10">
         <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1" items={items} />
         <ResOrder handleCancel={handleCancel} open={open}/>
-        
-        {/* <Drawer
-        title="Basic Drawer" placement="right"
-          footer={Ren}
-          closable={false}
-          open={open}
-        >
-          <ResOrder handleCancel={handleCancel} />
-        </Drawer> */}
       </div>
     </>
   );

@@ -23,6 +23,7 @@ function currentYear(pa = "startOf") {
 
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table } = req.body;
+  if (!total || !customerName || table.length === 0 || orders.length === 0) return res.status(200).json({ success: false, data: "Validate !" });
   const arrTable = table;
 
   if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
@@ -98,6 +99,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
       [Op.or]: carts.map(item => ({ id_product: item.id, id_order }))
     }, raw: true
   })
+  await Order.update({ total }, { where: { id: id_order } })
   for (const cart of carts) {
     let orderDatabase = current.find(ele => ele.id_product === cart.id);
     let val = await getQtyMaterialByProduct(cart);

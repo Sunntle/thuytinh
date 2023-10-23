@@ -1,6 +1,6 @@
 import { Col, Row, Typography, message } from "antd";
 import ButtonComponents from "../../components/button";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table } from "antd";
 import ConfirmComponent from "../../components/confirm";
 import AddNewMaterial from "./add";
@@ -16,6 +16,8 @@ import EditMaterial from "./edit";
 import ColumnChart from "../../components/chart/column-chart";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import Spinner from "../../components/spinner";
+import { formatNgay } from "../../utils/format";
 const { Title, Text } = Typography;
 function MaterialPage() {
   const [open, setOpen] = useState(false);
@@ -25,6 +27,7 @@ function MaterialPage() {
   const [dataChart, setDataChart] = useState([]);
   const notifications = useSelector(state => state.notifications)
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
   const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
     setMaterials({
@@ -33,18 +36,21 @@ function MaterialPage() {
     });
 
     setDataChart(res.dataChart);
+    setLoading(false)
   }, []);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
   useEffect(() => {
     if (notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)) {
       fetchData()
       console.log("fetched");
     }
   }, [notifications, location, fetchData])
-  const handleDeleteMaterial = async (id_material) => {
+
+  const handleDeleteMaterial = useCallback(async (id_material) => {
     const res = await deleteMaterial(id_material);
     if (res) {
       fetchData();
@@ -52,13 +58,15 @@ function MaterialPage() {
     } else {
       message.open({ type: "danger", content: "Có gì đó sai sai!" });
     }
-  };
-  const handleClickEditMaterial = async (id) => {
+  },[fetchData]);
+
+  const handleClickEditMaterial = useCallback(async (id) => {
     const res = await getOneMaterial(id);
     setData(res);
     setOpenModelEdit(true);
-  };
-  const columns = [
+  },[]);
+
+  const columns = useMemo(()=>[
     {
       title: "Hình nguyên liệu",
       dataIndex: "image",
@@ -153,12 +161,13 @@ function MaterialPage() {
         </div>
       ),
     },
-  ];
+  ],[handleClickEditMaterial, handleDeleteMaterial]);
+
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
-  const handleDataForm = async (value) => {
+  const handleDataForm = useCallback(async (value) => {
     message.open({
       type: "loading",
       content: "Đang xử lí...",
@@ -197,23 +206,27 @@ function MaterialPage() {
     } catch (err) {
       message.open({ type: "error", content: "Có gì đó không ổn!" });
     }
-  };
+  },[fetchData]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setOpen(false);
     setData(null);
-  };
+  },[]);
+
   return (
     <div className="my-7 px-5">
-      {dataChart.length > 0 && (
-        <Row justify={"space-between"}>
-          <Col xs={24} lg={6}>
-            <h3 className="text-lg text-black font-medium">
-              Thông báo sắp{" "}
-              <b className="text-xl text-[#EF4444]"> {dataChart.length} </b>{" "}
-              nguyên liệu gần hết hàng
-            </h3>
-            <Text className="">
+      {loading ? (
+        <Spinner />
+      ) : (<> {dataChart.length > 0 && (
+        <Row justify="space-between">
+          <Col xs={24} lg={6} className="flex flex-col mt-4">
+            <p className="text-gray-500 mb-3">
+              {formatNgay(new Date(), "HH:mm DD-MM-YYYY")}
+            </p>
+            <Title level={4}>
+              Có <span className="text-red-600">{dataChart.length}</span> nguyên liệu gần hết hàng
+            </Title>
+            <Text className="text-lg ">
               Gồm :{" "}
               {dataChart
                 .map((item) => item.name_material.toUpperCase())
@@ -237,36 +250,38 @@ function MaterialPage() {
         </Row>
       )}
 
-      <Row justify="space-between" align="center" className="mb-4">
-        <Col xs={6}>
-          <Title level={4}>Danh sách nguyên liệu</Title>
-        </Col>
-        <Col xs={6} style={{ textAlign: "-webkit-right" }}>
-          <ButtonComponents
-            className="border-borderSecondaryColor text-main"
-            content={"Thêm mới"}
-            onClick={() => setOpen(true)}
-          />
-        </Col>
-      </Row>
-      <Table
-        columns={columns}
-        dataSource={materials.data}
-        onChange={onChange}
-      />
-      <AddNewMaterial
-        open={open}
-        handleCancel={handleCancel}
-        handleFinish={handleDataForm}
-        unitMasterial={unitMasterial}
-      />
-      <EditMaterial
-        open={openModelEdit}
-        handleCancel={() => setOpenModelEdit(false)}
-        handleFinish={handleDataForm}
-        data={data}
-        unitMasterial={unitMasterial}
-      />
+        <Row justify="space-between" align="center" className="mb-4">
+          <Col xs={6}>
+            <Title level={4}>Danh sách nguyên liệu</Title>
+          </Col>
+          <Col xs={6} style={{ textAlign: "-webkit-right" }}>
+            <ButtonComponents
+              className="border-borderSecondaryColor text-main"
+              content={"Thêm mới"}
+              onClick={() => setOpen(true)}
+            />
+          </Col>
+        </Row>
+        <Table
+          columns={columns}
+          dataSource={materials.data}
+          onChange={onChange}
+        />
+        <AddNewMaterial
+          open={open}
+          handleCancel={handleCancel}
+          handleFinish={handleDataForm}
+          unitMasterial={unitMasterial}
+        />
+        <EditMaterial
+          open={openModelEdit}
+          handleCancel={() => setOpenModelEdit(false)}
+          handleFinish={handleDataForm}
+          data={data}
+          unitMasterial={unitMasterial}
+        />
+
+      </>)}
     </div>
   );
 }

@@ -13,7 +13,6 @@ function ReviewsPage() {
   const [page, setPage] = useState(1);
   const [reviews, setReviews] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [percent, setPercent] = useState(0);
   const [dataChart, setDataChart] = useState([]);
   const [currentMonth, setMonth] = useState(new Date().getMonth() + 1);
   const [reviewsCurrent, setReviewsCurrent] = useState(null);
@@ -25,6 +24,7 @@ function ReviewsPage() {
   const dayInMonth = useMemo(() => {
     return getDaysInMonth(2023, currentMonth);
   }, [currentMonth]);
+  
   const handleArrCategories = useMemo(() => {
     const numbersArray = [];
     for (let i = 1; i <= dayInMonth; i++) {
@@ -32,30 +32,18 @@ function ReviewsPage() {
     }
     return numbersArray;
   },[dayInMonth])
-  const fetchReviews = async (params) => {
+
+  const fetchReviews = useCallback(async (params) => {
     const response = await getAllReviews(params);
     setReviewsCurrent(response);
-    return response;
-  };
+  },[])
+
   const fetchData = useCallback(
     async (params = { _offset: 0, _limit: limit, _time: currentMonth }) => {
       setLoading(true);
       try {
-        const reviewInMonth = await fetchReviews(params);
-        setReviews(reviewInMonth);
-        const countReviews = await getAllReviews({ _time: params._time });
-        const countPrevReviews = await getAllReviews({
-          _time: params._time - 1,
-        });
-        if (countPrevReviews?.total == 0) {
-          setPercent(countReviews?.total == 0 ? 0 : 100);
-        } else {
-          setPercent(
-            ((countReviews?.total - countPrevReviews?.total) /
-              countPrevReviews?.total) *
-              100
-          );
-        }
+        const countReviews = await getAllReviews({ _time: params._time });//10
+        setReviews(countReviews)
         const res = await getAllReviews({
           _time: currentMonth,
           _group: "createdAt",
@@ -74,35 +62,41 @@ function ReviewsPage() {
     },
     [currentMonth, dayInMonth]
   );
-  const handleChangePage = (e) => {
+
+  const handleChangePage = useCallback((e) => {
     setPage(e);
-    fetchData({ _offset: limit * (e - 1), _limit: limit });
-  };
-  const handleChangeSelectMonth = (e) => {
+    fetchReviews({ _offset: limit * (e - 1), _limit: limit, _time: currentMonth });
+  },[fetchReviews, currentMonth])
+
+  const handleChangeSelectMonth = useCallback((e) => {
     fetchData({ _offset: 0, _limit: limit, _time: e });
     setMonth(e);
-  };
-  const handleSearch = (kw) => {
+  },[fetchData])
+
+  const handleSearch = useCallback((kw) => {
     fetchReviews({ _offset: 0, _limit: limit, q: kw });
-  };
-  const handleDeleteReview = async (id) => {
+  },[fetchReviews]);
+
+  const handleDeleteReview = useCallback(async (id) => {
     const res = await deleteReview(id);
     if (res) {
       message.open({ type: "success", content: res });
       fetchData(filter);
     }
-  };
+  },[fetchData, filter]);
+
   const handleClear = useCallback(() => {
     fetchReviews({ _offset: 0, _limit: limit, _time: currentMonth });
-  },[currentMonth])
+  },[currentMonth, fetchReviews])
   
-  const handleCancelConfirm = () => {
+  const handleCancelConfirm = useCallback(() => {
     message.error("Xóa thất bại");
-  };
+  },[])
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
   if (loading) {
     return <Spinner />;
   }
@@ -131,12 +125,12 @@ function ReviewsPage() {
             </Typography.Title>
             <span className="mx-3">lượt đánh giá</span>
             <span
-              style={percent >= 0 ? { color: "#22C55E" } : { color: "#EF4444" }}
+              style={reviews.percentChange >= 0 ? { color: "#22C55E" } : { color: "#EF4444" }}
               className="font-bold text-xl inline-flex items-center gap-x-1.5 my-3"
             >
-              {percent >= 0 ? (
+              {reviews.percentChange >= 0 ? (
                 <>
-                  {percent}%
+                  {reviews.percentChange}%
                   <UpCircleFilled
                     className="text-2xl"
                     style={{ color: "#22C55E" }}
@@ -144,7 +138,7 @@ function ReviewsPage() {
                 </>
               ) : (
                 <>
-                  {percent}%
+                  {reviews.percentChange}%
                   <DownCircleFilled
                     className="text-2xl"
                     style={{ color: "#EF4444" }}

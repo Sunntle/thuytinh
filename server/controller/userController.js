@@ -215,9 +215,9 @@ exports.refreshToken = asyncHandler(async (req, res) => {
 exports.currentAccount = asyncHandler(async (req, res) => {
   const id = req.user.id;
   const ru = await User.findByPk(id);
+  if (!ru) res.status(404).json({ success: false });
   const { createdAt, updatedAt, refreshToken, password, ...userAcc } = ru?.toJSON();
-  if (ru) return res.status(200).json(userAcc);
-  res.status(404).json({ success: false });
+  return res.status(200).json(userAcc);
 });
 exports.logout = asyncHandler(async (req, res) => {
   const cookie = req.cookies;

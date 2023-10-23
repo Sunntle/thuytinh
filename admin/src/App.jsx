@@ -23,6 +23,9 @@ const App = () => {
     if (user.isAuthenticated) {
       socket.emit("user connect", user.user)
     }
+    return ()=>{
+      socket && socket.off("user connect")
+    }
   }, [user])
   if (user && user.isLoading) {
     return <Spinner />;

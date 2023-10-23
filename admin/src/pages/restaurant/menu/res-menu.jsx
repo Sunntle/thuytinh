@@ -38,13 +38,13 @@ const ResMenu = () => {
                             modules={[Navigation]}
                             navigation
                             pagination={{ clickable: true }}
-                            slidesPerView={5}
+                            slidesPerView={4}
                         >
                             {categories?.map((category, index) => (
                                 <SwiperSlide key={index}>
-                                    <div className="mx-10 w4/5">
-                                        <Button onClick={() => setSelectedCategory(category)}>
-                                            <p className='font-medium text-main text-lg'>{category.name_category}</p>
+                                    <div className="mx-10">
+                                        <Button className='border-none bg-orange-100 w-full max-w-full overflow-hidden' onClick={() => setSelectedCategory(category)}>
+                                            <p className='font-medium text-main text-lg max-w-full'>{category.name_category}</p>
                                         </Button>
                                     </div>
                                 </SwiperSlide>

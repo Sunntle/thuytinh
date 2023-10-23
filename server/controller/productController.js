@@ -6,6 +6,7 @@ const {
   Materials,
 } = require("../models");
 const { Op } = require("sequelize");
+let a = 0
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -64,7 +65,7 @@ exports.list = async (req, res) => {
         arrCount.push(countProduct)
       }
       product.dataValues.amount = Math.min(...arrCount)
-  })
+    })
     res.status(200).json({ total: count, data: rows });
   } catch (err) {
     console.log(err);

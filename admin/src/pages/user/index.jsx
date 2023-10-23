@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ConfirmComponent from "../../components/confirm";
 import {
   Button,
@@ -23,17 +23,21 @@ import { socket } from "../../socket";
 import { useSelector } from "react-redux";
 import { UploadOutlined } from "@ant-design/icons";
 import ButtonComponents from "../../components/button";
+import Spinner from "../../components/spinner";
 const { Title } = Typography;
 function UserPage() {
   const [admin, setAdmin] = useState(null);
   const [user, setUser] = useState(null);
   const [openModalProfile, setOpenModalProfile] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-  const userStore = useSelector(state => state.account)
+  const [loading, setLoading] = useState(false)
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
+  const userStore = useSelector(state => state.account)
+
   const fetchData = useCallback(async (role) => {
     try {
+      setLoading(true)
       switch (role) {
         case "admin": {
           const dataAdmin = await getAllUser({ _like: "role_R1_not" });
@@ -45,23 +49,23 @@ function UserPage() {
           dataUser.success && setUser(dataUser);
           break;
         }
-        default:{
+        default: {
           const dataAdmin = await getAllUser({ _like: "role_R1_not" });
           dataAdmin.success && setAdmin(dataAdmin);
           const dataUser = await getAllUser({ _like: "role_R1" });
           dataUser.success && setUser(dataUser);
         }
       }
-      
-      
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false)
     }
   }, [])
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-  const handleEdit = async (idUser) => {
+  const handleEdit = useCallback(async (idUser) => {
     setOpenModalProfile(true);
     const user = await getDetailUser(idUser);
     const { id, name, email, phone, avatar, role } = user.data;
@@ -81,8 +85,8 @@ function UserPage() {
       ],
     };
     form.setFieldsValue(data);
-  };
-  const handleDelete = async (id) => {
+  }, [form]);
+  const handleDelete = useCallback(async (id) => {
     if (id === userStore.user.id) {
       message.error("Không thể xóa chính bản thân mình !!")
       return
@@ -95,11 +99,11 @@ function UserPage() {
       console.log(err);
       message.error("Xảy ra lỗi, xóa thất bại")
     }
-  };
+  }, [fetchData, userStore.user.id]);
 
-  const onChange = (pagination, filters, sorter, extra) => {
+  const onChange = useCallback((pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
-  };
+  }, []);
   useEffect(() => {
     socket.on("update-admin-online", (data) => {
       if (admin && admin.data) {
@@ -119,7 +123,7 @@ function UserPage() {
       socket.off("update-admin-online");
     };
   }, [admin]);
-  const onFinish = async (values) => {
+  const onFinish = useCallback(async (values) => {
     const formData = new FormData();
     const { avatar, role, ...rest } = values;
     const val = { ...rest, role: roleRext(role) };
@@ -134,11 +138,12 @@ function UserPage() {
       type: "success",
       content: res.message,
     });
-    if(val.role !== "R1") fetchData("admin")
+    if (val.role !== "R1") fetchData("admin")
     else fetchData("user")
     setOpenModalProfile(false);
-  };
-  const submitResetPass = async (values) => {
+  }, [fetchData, messageApi]);
+
+  const submitResetPass = useCallback(async (values) => {
     let res = await callUpdatePassword(values);
     messageApi.open({
       type: res.success ? "success" : "error",
@@ -148,7 +153,8 @@ function UserPage() {
       setOpenModalProfile(false);
       form.resetFields();
     }
-  };
+  }, [form, messageApi]);
+
   const renderUpdateModal = () => {
     return (
       <Modal
@@ -380,7 +386,8 @@ function UserPage() {
       </Modal>
     );
   };
-  const columnsUser = [
+
+  const columnsUser = useMemo(() => [
     {
       title: "Ảnh đại diện",
       dataIndex: "avatar",
@@ -454,8 +461,9 @@ function UserPage() {
         </div>
       ),
     },
-  ];
-  const columnsAdmin = [
+  ], [handleDelete, handleEdit]);
+
+  const columnsAdmin = useMemo(() => [
     ...columnsUser,
     {
       title: "Trạng thái",
@@ -472,7 +480,8 @@ function UserPage() {
           </span>
         ),
     },
-  ];
+  ], [columnsUser]);
+
   const renderTableAdmin = () => {
     return (
       <Table
@@ -498,18 +507,19 @@ function UserPage() {
     {
       label: <Title level={4}>Khách hàng</Title>,
       key: "1",
-      children: renderTableUser(),
+      children: loading ? <Spinner /> : renderTableUser(),
     },
     {
       label: <Title level={4}>Quản trị viên</Title>,
       key: "2",
-      children: renderTableAdmin(),
+      children: loading ? <Spinner /> : renderTableAdmin(),
     },
   ];
 
   return (
     <div className="my-7 px-5">
       {contextHolder}
+
       <Tabs defaultActiveKey="1" items={items} />
       {renderUpdateModal()}
     </div>
