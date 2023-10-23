@@ -1,8 +1,8 @@
 import { getPreciseDistance } from "geolib";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
-import { Tabs } from "antd";
+import {Spin, Tabs} from "antd";
 import "./index.css";
 
 function SelectTable() {
@@ -47,7 +47,16 @@ function SelectTable() {
     console.log(tableByPosition);
   };
 
-  if (isLoading) return <div className="h-screen w-full f"></div>
+  if (isLoading === true) {
+    return (
+        <div className="h-screen w-full flex flex-col justify-center items-center">
+          {isLoading && <Spin size={"large"} />}
+          <span className="mt-5 text-base font-semibold">
+          Quý khách vui lòng đợi trong giây lát.
+        </span>
+        </div>
+    );
+  }
 
   return (
     <div className="pb-24 mt-4 lg:mt-0 lg:pt-24">
