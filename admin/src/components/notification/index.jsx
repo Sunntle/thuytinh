@@ -1,4 +1,4 @@
-import { Badge, Button, Popover, Tooltip, Typography, message } from "antd";
+import { Badge, Button, Popover, Tooltip, Typography } from "antd";
 import { formatNgay } from "../../utils/format";
 import { BellOutlined, CheckOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +31,6 @@ function NotificationsComponent({
 
   const handleDelete = useCallback(async (id) => {
     dispatch(deleteNotification(id));
-    message.open({ type: "success", content: "Xóa thông báo thành công" })
   },[dispatch])
 
   const getCountNoti = useMemo(() => {
@@ -42,7 +41,7 @@ function NotificationsComponent({
 
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)
-      return <p className="text-gray-500 px-3">Không có thông báo nào</p>;
+      return <p className="text-gray-500">Không có thông báo nào</p>;
     return (
       <div className="max-h-[400px] overflow-y-scroll">
         {notifications.map((el, index) => {

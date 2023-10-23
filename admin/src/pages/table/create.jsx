@@ -1,5 +1,5 @@
 import { Form, Input, Modal, QRCode, Select } from 'antd';
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import ButtonComponents from '../../components/button';
 import { createTables } from '../../services/api';
 import { url } from '../../utils/constant';
@@ -13,7 +13,8 @@ const CreateTable = ({ options, fetchData, setIsModalOpen, isModalOpen, messageA
         setIsModalOpen(false);
         form.resetFields();
         setCode(url)
-    }, [])
+    }, [form, setIsModalOpen])
+    
     const onFinish = async (values) => {
         values.qr_code = url + code;
         let { success, data } = await createTables(values);
