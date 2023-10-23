@@ -47,9 +47,9 @@ exports.login = asyncHandler(async (req, res) => {
       message: "Thiếu thông tin người dùng",
     });
   const user = await User.findOne({ where: { email } });
+
   if (user && (await user.comparePassword(password))) {
-    const { createdAt, updatedAt, refreshToken, password, ...userAcc } =
-      user.toJSON();
+    const { createdAt, updatedAt, refreshToken, password, ...userAcc } = user.toJSON();
     const accessToken = generateAccessToken(userAcc.id, userAcc.role);
     const newrefreshToken = generateRefreshToken(userAcc.id, userAcc.role);
     await User.update(

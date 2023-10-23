@@ -14,7 +14,7 @@ exports.handleCallStaff = (
     const res = await Notification.create({
       type: "call-staff", description: `Gọi nhân viên - Bàn ${idTable} !!!`,
     }, { raw: true })
-    _io.of('/admin').emit("new message", res);
+    _io.sockets.broadcast.emit("new message", res);
   });
 };
 exports.handleNewUserConnect = (

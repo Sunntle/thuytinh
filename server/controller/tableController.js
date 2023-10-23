@@ -35,7 +35,7 @@ exports.getAll = asyncHandler(async (req, res) => {
     ],
     where: { status: { [Op.lt]: 3 } },
   });
-  
+
   tables && tables.forEach(table => {
     tableByOrder.forEach(element => {
       const { TableByOrders: tables, ...data } = element.toJSON();
@@ -96,9 +96,8 @@ exports.update = asyncHandler(async (req, res) => {
     },
     raw: true
   });
-
   if (is) return res.status(404).json({ success: false, data: "Đã có tên bàn trên" });
-  await TableByOrder.update(req.body, { where: { id: id } })
+  await Tables.update(req.body, { where: { id: id } })
   res.status(200).json({ success: true, data: "Tạo bàn thành công" });
 
 });

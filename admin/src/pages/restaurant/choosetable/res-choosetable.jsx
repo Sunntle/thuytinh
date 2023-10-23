@@ -9,6 +9,7 @@ import { Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import ResOrder from '../order/res-order';
 import { AddTableList } from '../../../redux/table/listTableSystem';
+import { socket } from '../../../socket';
 
 const ResChooseTable = () => {
   const navigate = useNavigate();
@@ -27,7 +28,14 @@ const ResChooseTable = () => {
     };
     fetchData();
   }, [dispatch]);
-
+  useEffect(() => {
+    socket.on("status table", (arg) => {
+      console.log(arg)
+    })
+    return () => {
+      socket.off("status table")
+    }
+  }, [socket])
   const handleTableClick = (index) => {
     // console.log(index)
     // const updatedData = [...tableData];
