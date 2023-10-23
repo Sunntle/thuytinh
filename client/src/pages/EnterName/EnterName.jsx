@@ -7,12 +7,14 @@ import useHttp from "../../hooks/useHttp.js";
 const EnterName = (props) => {
   const [customerName, setCustomerName] = useState("");
   const { sendRequest } = useHttp();
+  const dispatch = useDispatch();
   const customerNameState = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
-  const dispatch = useDispatch();
+
   const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
   },[]);
+
   const storeToken = useCallback((data)=>{
     localStorage.setItem("tableToken",data)
   },[])
@@ -29,7 +31,7 @@ const EnterName = (props) => {
   },[customerName, dispatch, idTable, sendRequest, storeToken]);
 
   if(customerNameState.isLoading) return "Loading...."
-  if(customerNameState.name.length > 0) return props.children
+  if(customerNameState?.name?.length > 0) return props.children
   return (
     <div className="h-screen w-screen flex items-center">
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">

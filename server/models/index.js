@@ -16,8 +16,16 @@ Recipes.belongsTo(Product, { foreignKey: "id_product" });
 Recipes.belongsTo(Materials, { foreignKey: "id_material" });
 Order.belongsTo(User, { foreignKey: "id_employee" });
 Reviews.belongsTo(Order, { foreignKey: "id_order" });
-OrderDetail.belongsTo(Order, { foreignKey: "id_order" ,  onDelete: "CASCADE", onUpdate: "CASCADE", });
-OrderDetail.belongsTo(Product, { foreignKey: "id_product",   onDelete: "CASCADE", onUpdate: "CASCADE", });
+OrderDetail.belongsTo(Order, {
+  foreignKey: "id_order",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+OrderDetail.belongsTo(Product, {
+  foreignKey: "id_product",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
 Product.belongsTo(Category, {
   foreignKey: "id_category",
   onDelete: "CASCADE",
@@ -76,9 +84,10 @@ User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee" });
 // Reviews.sync();
 // Recipes.sync();
 // TableByOrder.sync();
+
 async function synchronizeModels() {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
     console.log("Models synchronized successfully.");
   } catch (error) {
     console.error("Error synchronizing models:", error);

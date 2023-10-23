@@ -1,5 +1,5 @@
 const moment = require("moment");
-const { apiQueryRest } = require('../utils/const')
+const { apiQueryRest } = require("../utils/const");
 const asyncHandler = require("express-async-handler");
 const {
   Order,
@@ -16,63 +16,80 @@ const {
 const { Op, Sequelize } = require("sequelize");
 
 function currentYear(pa = "startOf") {
-  const date = moment()[pa]('year');
-  return date.format('YYYY-MM-DD');
+  const date = moment()[pa]("year");
+  return date.format("YYYY-MM-DD");
 }
 
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table } = req.body;
   const arrTable = table || [1, 2];
-  console.log(req.body)
-  if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
+  console.log(req.body);
+  if (await Tables.prototype.checkStatus(arrTable, 0))
+    return res.status(200).json({
+      success: false,
+      data: "Bàn đã có người đặt",
+    });
 
-  const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
-  if (approve.length === 0) return res.status(200).json({ success: false, data: "Sản phẩm hết nguyên liệu" });
+  const { approve, over } =
+    await Materials.prototype.checkAmountByProduct(orders);
+  if (approve.length === 0)
+    return res
+      .status(200)
+      .json({ success: false, data: "Sản phẩm hết nguyên liệu" });
   const order_result = await Order.create({ total, name: customerName });
-  let dataTable = await TableByOrder.bulkCreate(arrTable.map(item => ({ tableId: item, orderId: order_result.id })));
-  await Tables.prototype.updateStatusTable(arrTable, 1)
-  let tableData = await TableByOrder.findAll({ include: { model: Tables }, where: { id: { [Op.in]: dataTable.map(i => i.id) } } })
+  let dataTable = await TableByOrder.bulkCreate(
+    arrTable.map((item) => ({ tableId: item, orderId: order_result.id })),
+  );
+  await Tables.prototype.updateStatusTable(arrTable, 1);
+  let tableData = await TableByOrder.findAll({
+    include: { model: Tables },
+    where: { id: { [Op.in]: dataTable.map((i) => i.id) } },
+  });
 
   let val = approve.map((item) => ({
     id_product: item.id,
     quantity: item.quantity,
-    id_order: order_result.id
+    id_order: order_result.id,
   }));
 
   const order_detail = await OrderDetail.bulkCreate(val);
   let product = await Product.findAll({
-    where: { id: { [Op.in]: order_detail.map((item) => item.id_product) } }, include: [{ model: ImageProduct, attributes: ["url", "id"] }]
+    where: { id: { [Op.in]: order_detail.map((item) => item.id_product) } },
+    include: [{ model: ImageProduct, attributes: ["url", "id"] }],
   });
-  let result = { orders: order_result, detail: order_detail, product, tableByOrder: tableData };
+  let result = {
+    orders: order_result,
+    detail: order_detail,
+    product,
+    tableByOrder: tableData,
+  };
 
   let storeNotification = await Notification.create(
-    { type: "order", description: `Có đơn hàng mới`, content: order_result.id }, { raw: true }
+    { type: "order", description: `Có đơn hàng mới`, content: order_result.id },
+    { raw: true },
   );
-  _io.of("/admin").emit("new message", storeNotification)
-  _io.of("/client").emit("status order", result)
+  _io.of("/admin").emit("new message", storeNotification);
+  _io.of("/client").emit("status order", result);
   res.status(200).json({ success: true, data: result });
-
 });
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {
   let query = {
-    ...apiQueryRest({ ...req.query, title: "name" }), nest: true
+    ...apiQueryRest({ ...req.query, title: "name" }),
+    nest: true,
   };
   const { count, rows } = await Order.findAndCountAll({
     ...query,
     include: [
       {
         model: OrderDetail,
-        include:
-        {
+        include: {
           model: Product,
-          include:
-          {
+          include: {
             model: ImageProduct,
             attributes: ["url"],
-          }
+          },
         },
-
       },
       {
         model: User,
@@ -90,14 +107,30 @@ exports.delOrder = asyncHandler(async (req, res) => {
   res.status(200).json("Xóa đơn hàng thành công");
 });
 exports.updateOrder = asyncHandler(async (req, res) => {
-const { id, updatedQuantities, updateTotal } = req.body;
+  const { id, updatedQuantities, updateTotal } = req.body;
   await Order.update({ total: updateTotal }, { where: { id: id } });
-  await Promise.all(updatedQuantities.map(async (item) => {
-    await OrderDetail.update({ quantity: item.quantity }, {
-      where: { id_order: id, id_product: item.id_product },
-    });
-  }));
+  await Promise.all(
+    updatedQuantities.map(async (item) => {
+      await OrderDetail.update(
+        { quantity: item.quantity },
+        {
+          where: { id_order: id, id_product: item.id_product },
+        },
+      );
+    }),
+  );
   res.status(200).json("Update thành công");
+});
+
+exports.getOrderById = asyncHandler(async (req, res) => {
+  const { id: idOrder } = req.params;
+
+  try {
+    const existingOrder = await Order.findOne({ where: { id: idOrder } });
+    if (existingOrder) res.status(200).json({ data: existingOrder });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 });
 
 // exports.updateOrder = asyncHandler(async (req, res) => {
@@ -181,7 +214,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     (acc, item) => {
       acc.labels.push(`${info}${item[type]}`);
       acc.values.push(item["totalOrder"]);
-return acc;
+      return acc;
     },
     { labels: [], values: [] },
   );

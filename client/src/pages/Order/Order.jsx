@@ -1,12 +1,15 @@
-import { Button, Divider, Form, Modal, Radio } from "antd";
+import { Button, Collapse, Divider, Form, Modal, Radio } from "antd";
 import { useEffect, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { formatCurrency } from "../../utils/format.js";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchTableById } from "../../services/api.js";
+import { useSelector } from "react-redux";
+import "./index.css";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { idOrder } = useSelector((state) => state.order);
   const [payment, setPayment] = useState(null);
   const { sendRequest } = useHttp();
   const [data, setData] = useState([]);
@@ -14,10 +17,12 @@ const Order = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    sendRequest(fetchTableById(idTable), setData);
+    sendRequest(fetchTableById(idTable, idOrder), setData);
   }, [idTable, sendRequest]);
 
-  const { order } = data;
+  console.log(data);
+
+  const order = data[0]?.order;
   const VAT = order?.total + order?.total * 0.1 || 0;
 
   const showModal = () => {
@@ -33,19 +38,13 @@ const Order = () => {
   };
 
   const onFinish = async (values) => {
-    values = {...values, amount: 100000}
+    values = { ...values, amount: VAT };
     const request = {
-      method: 'post',
-      url: '/payment/create_payment_url',
-      ...values
-    }
-    await sendRequest(request, setPayment)
-    // try {
-    //   const { data } = await instance.put(`/table/${idTable}`);
-    //   console.log(data)
-    // } catch (err) {
-    //   console.log(err);
-    // }
+      method: "post",
+      url: "/payment/create_payment_url",
+      ...values,
+    };
+    await sendRequest(request, setPayment);
     form.resetFields();
   };
 
@@ -72,20 +71,21 @@ const Order = () => {
                     className="grid grid-cols-12 border rounded-lg gap-2 p-1 shadow-sm"
                   >
                     <div className="col-span-5 md:col-span-4 h-28 xl:h-36">
-                      <div className="w-full h-full">
+                      <div className="w-full h-full rounded-lg">
                         <img
-                          className="w-full h-full rounded-lg"
-                          src={item?.product?.ImageProducts[0]?.url}
-                          alt=""
+                          loading={"lazy"}
+                          className="w-full h-full rounded-lg object-cover"
+                          src={item?.Product?.ImageProducts[0]?.url}
+                          alt={item?.Product?.name_product}
                         />
                       </div>
                     </div>
                     <div className="col-span-7 md:col-span-8 flex flex-col text-slate-500 mt-1 space-y-1">
                       <span className="font-bold text-base md:text-lg text-slate-800">
-                        {item?.product?.name_product}
+                        {item?.Product?.name_product}
                       </span>
                       <span className="text-sm md:text-base font-medium">
-                        Giá: {formatCurrency(item?.product?.price)}
+                        Giá: {formatCurrency(item?.Product?.price)}
                       </span>
                       <span className="text-xs md:text-base font-medium">
                         Số lượng: {item?.quantity}
@@ -138,47 +138,61 @@ const Order = () => {
           </div>
           <Modal
             title="Phương thức thanh toán"
+            centered
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}
-            footer={[
-              <button
-                key="ok"
-                onClick={handleOk}
-                className="bg-primary hover:bg-[#F0A500E5] text-white py-2 px-4 rounded"
-              >
-                OK
-              </button>,
-            ]}
+            footer={false}
           >
-            <div className="w-full flex flex-col justify-center items-center space-y-1">
-              <Form form={form} onFinish={onFinish}>
-                <Form.Item
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng chọn phương thức thanh toán",
-                    },
-                  ]}
-                  name="bankCode"
-                >
-                  <Radio.Group>
-                    <Radio value="">Cổng thanh toán VNPAYQR</Radio>
-                    <Radio value="VNPAYQR">
-                      Thanh toán qua ứng dụng hỗ trợ VNPAYQR
-                    </Radio>
-                    <Radio value="VNBANK">
-                      Thanh toán qua ATM-Tài khoản ngân hàng nội địa
-                    </Radio>
-                    <Radio value="INTCARD">Thanh toán qua thẻ quốc tế</Radio>
-                  </Radio.Group>
-                </Form.Item>
-                <Form.Item>
-                  <Button type={"primary"} htmlType={"submit"}>
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Form>
+            <div className="w-full flex flex-col justify-start items-center space-y-1">
+              <Collapse
+                ghost
+                items={[
+                  {
+                    key: "1",
+                    label: "Thanh toán bằng VNPAY",
+                    children: (
+                      <Form form={form} onFinish={onFinish}>
+                        <Form.Item name="bankCode">
+                          <Radio.Group className="radio-custom">
+                            <Radio value="">Cổng thanh toán VNPAYQR</Radio>
+                            <Radio value="VNPAYQR">
+                              Thanh toán qua ứng dụng hỗ trợ VNPAYQR
+                            </Radio>
+                            <Radio value="VNBANK">
+                              Thanh toán qua ATM-Tài khoản ngân hàng nội địa
+                            </Radio>
+                            <Radio value="INTCARD">
+                              Thanh toán qua thẻ quốc tế
+                            </Radio>
+                          </Radio.Group>
+                        </Form.Item>
+                        <Form.Item className="text-right">
+                          <Button
+                            type={"primary"}
+                            htmlType={"submit"}
+                            className="bg-primary"
+                          >
+                            Thanh toán
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    ),
+                  },
+                  {
+                    key: "2",
+                    label: "Thanh toán bằng tiền mặt",
+                    children: (
+                      <Button
+                        size={"large"}
+                        className="w-full bg-primary text-white"
+                      >
+                        Thanh toán bằng tiền mặt
+                      </Button>
+                    ),
+                  },
+                ]}
+              />
             </div>
           </Modal>
         </div>

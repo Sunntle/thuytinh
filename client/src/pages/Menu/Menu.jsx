@@ -20,7 +20,7 @@ const Menu = () => {
   const { sendRequest, isLoading, error } = useHttp();
   const [foods, setFoods] = useState(null);
   const [categories, setCategories] = useState(null);
-  const orders = useSelector((state) => state.order);
+  const { order: orders } = useSelector((state) => state.order);
   const debouncedValue = useDebounce(searchValue, 100);
 
   useEffect(() => {
@@ -109,12 +109,12 @@ const Menu = () => {
               {orders.length}
             </span>
           </div>
-          {/* <OrderListModal
+           <OrderListModal
             isModalOpen={isOrderModalOpen}
             handleOk={handleOk}
             handleCancel={handleCancel}
             setIsOrderModalOpen={setIsOrderModalOpen}
-          /> */}
+          />
         </div>
         {/*Category*/}
         <div className="relative w-full text-sm">
