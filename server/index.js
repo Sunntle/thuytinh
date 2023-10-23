@@ -34,9 +34,9 @@ const io = new Server(server, {
 global.__basedir = __dirname;
 global._io = io;
 io.of("/admin").on("connection", (socket) => {
-  // handleNewUserConnect(socket)
-  // handleCallStaff(socket)
-  // handleDisconnect(socket)
+  handleNewUserConnect(socket)
+  handleCallStaff(socket)
+  handleDisconnect(socket)
 });
 initRoutes(app);
 db.connectDatabase();

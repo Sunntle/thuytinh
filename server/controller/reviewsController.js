@@ -7,7 +7,6 @@ exports.list = async (req, res) => {
     const { _offset, _limit, _sort, _order, q, _time, _group, ...rest } =
       req.query;
     const query = {
-      raw: true,
       include: [{ model: Order, attributes: ["createdAt"] }],
       order: [["createdAt", "DESC"]],
     };

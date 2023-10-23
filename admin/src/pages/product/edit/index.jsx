@@ -11,7 +11,7 @@ import {
 } from "antd";
 import ButtonComponents from "../../../components/button";
 import { UploadOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { deleteImgById, uploadImgByIdProduct } from "../../../services/api";
 const { Option } = Select;
 const optionsStatus = [
@@ -21,18 +21,18 @@ const optionsStatus = [
 function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
   const [form] = Form.useForm();
   const [statusForm, setStatusForm] = useState("1");
-  const handleEditProduct = (dataForm) => {
+  const handleEditProduct = useCallback((dataForm) => {
     handleFinish({ ...dataForm, formName: "product", id: data?.id });
     handleCancel();
-  };
-  const fileList = data?.ImageProducts.map((el) => {
+  },[data?.id, handleCancel, handleFinish]);
+  const fileList = useMemo(()=>data?.ImageProducts.map((el) => {
     return {
       uid: el.id,
       name: el.url?.split("/").at(-1).split(".")[0],
       status: "done",
       url: el.url,
     };
-  });
+  }),[data?.ImageProducts]);
   useEffect(() => {
     if (data) {
       const setFormValue = async () => {
@@ -50,6 +50,7 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
             materials: el.Material.id,
           })),
           descriptionRecipe: data.Recipes[0]?.descriptionRecipe,
+          discount: data.discount
         });
       };
       setFormValue();
@@ -73,6 +74,7 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
           >
             <Input placeholder="Ví dụ: Cua rang me..." />
           </Form.Item>
+          <div className="grid grid-cols-2 gap-4">
           <Form.Item label="Giá">
             <Form.Item name="price" noStyle>
               <InputNumber min={0} />
@@ -86,6 +88,20 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
               vnđ
             </span>
           </Form.Item>
+          <Form.Item label="Giảm giá">
+          <Form.Item name="discount" noStyle>
+              <InputNumber min={0} />
+            </Form.Item>
+            <span
+              className="ant-form-text"
+              style={{
+                marginLeft: 8,
+              }}
+            >
+              %
+            </span>
+          </Form.Item>
+        </div>
           <Form.Item
             name="id_category"
             label="Loại món ăn"
@@ -180,5 +196,4 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
     </Modal>
   );
 }
-
-export default EditProduct;
+export default EditProduct
