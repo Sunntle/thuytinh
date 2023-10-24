@@ -29,10 +29,11 @@ const cartSystem = createSlice({
             );
             if(state.carts[itemIndex].quantity > 1){
                 state.carts[itemIndex].quantity -=1;
-            }else if(state.carts[itemIndex].quantity === 1){
-                const nextCartItems = state.carts.filter(item=>item.id!==action.payload.id);
-                state.carts = nextCartItems;
             }
+            // }else if(state.carts[itemIndex].quantity === 1){
+            //     const nextCartItems = state.carts.filter(item=>item.id!==action.payload.id);
+            //     state.carts = nextCartItems;
+            // }
         },
         getTotal:(state)=>{
             let{total, quantity} = state.carts.reduce(

@@ -170,3 +170,7 @@ export const readOne = (body) => {
 export const deleteOne = (id) => {
   return axios.delete(`/api/notification/${id}`);
 };
+// payment 
+export const createPayment = (data) => {
+  return axios.post(`/api/payment/create_payment_url`, data);
+};

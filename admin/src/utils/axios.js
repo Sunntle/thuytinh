@@ -2,7 +2,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { doLogoutAction } from "../redux/account/accountSlice";
 const instance = axios.create({
-  baseURL: "https://backend-thuytinh-production.up.railway.app/",
+  baseURL: "http://localhost:8000",
   withCredentials: true,
 });
 const handleRefreshToken = async () => {
