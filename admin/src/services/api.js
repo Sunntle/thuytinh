@@ -14,9 +14,12 @@ export const delOrder = (id) => {
 export const updateOrder = (body) => {
   return axios.put(`/api/order`, body);
 };
+export const updateOrderAdmin = (data) => {
+  return axios.put(`/api/order/admin`, data);
+}
 // table //
-export const getAllTable = () => {
-  return axios.get(`/api/table`);
+export const getAllTable = (params) => {
+  return axios.get(`/api/table`, { params });
 }
 export const getTableId = (id_order) => {
   return axios.get(`/api/table/${id_order}`);
@@ -24,6 +27,7 @@ export const getTableId = (id_order) => {
 export const updateTables = (data) => {
   return axios.put(`/api/table`, data);
 }
+
 export const delTables = (id) => {
   return axios.delete(`/api/table/` + id);
 }

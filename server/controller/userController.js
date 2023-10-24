@@ -71,7 +71,11 @@ exports.login = asyncHandler(async (req, res) => {
   }
 });
 exports.getAllUser = asyncHandler(async (req, res) => {
-  const { _offset, _limit, _sort, _order, q, _like, ...rest } = req.query;
+  const { _offset, _limit, _sort, _order, q, _like, _noQuery, ...rest } = req.query;
+
+  if (_noQuery == 1) {
+    return res.status(200).json(await User.findAll({ where: { role: 'R2' }, attributes: ["id", "name", "phone"], raw: true }));
+  }
   const query = {
     raw: true,
     include:
@@ -103,6 +107,7 @@ exports.getAllUser = asyncHandler(async (req, res) => {
       },
     });
   }
+
   const { count, rows } = await User.findAndCountAll(query);
   const adminOnline = getAllUserOnline()
   const data = rows.map(itemA => {

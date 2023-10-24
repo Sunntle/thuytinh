@@ -58,8 +58,10 @@ exports.createOrder = asyncHandler(async (req, res) => {
 });
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {
+
   let query = {
-    ...apiQueryRest({ ...req.query, title: "name" }), nest: true
+    ...apiQueryRest({ ...req.query, title: "name" }), nest: true,
+
   };
   const { count, rows } = await Order.findAndCountAll({
     ...query,
@@ -74,6 +76,7 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
       },
     ],
   });
+
   res.status(200).json({ total: count, data: rows });
 });
 
@@ -83,6 +86,8 @@ exports.delOrder = asyncHandler(async (req, res) => {
   await Order.destroy({ where: { id } });
   res.status(200).json("Xóa đơn hàng thành công");
 });
+
+
 exports.updateOrder = asyncHandler(async (req, res) => {
   const { id_order, carts, id_table, total } = req.body;
   const over = [];
@@ -128,7 +133,17 @@ exports.updateOrder = asyncHandler(async (req, res) => {
   res.status(200).json("Update thành công");
 });
 
-
+exports.updateOrderAdmin = asyncHandler(async (req, res) => {
+  const { table, id, ...rest } = req.body;
+  console.log(req.body)
+  await Order.update({ ...rest }, { where: { id } })
+  await TableByOrder.destroy({ where: { orderId: id } });
+  await TableByOrder.bulkCreate(table.map((item) => ({
+    tableId: +item,
+    orderId: id
+  })))
+  res.status(200).json("Update thành công");
+});
 
 exports.dashBoard = asyncHandler(async (req, res) => {
   let data = {};

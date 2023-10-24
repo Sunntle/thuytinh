@@ -52,7 +52,7 @@ export const accountSlide = createSlice({
             .addCase(fetchAccount.fulfilled, (state, action) => {
                 state.isAuthenticated = true;
                 state.user = action.payload;
-                state.isLoading = false
+                state.isLoading = false;
             })
     }
 });

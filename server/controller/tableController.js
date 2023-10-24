@@ -1,15 +1,31 @@
 const asyncHandler = require("express-async-handler");
+const jwt = require('jsonwebtoken');
 const {
   Tables,
   Order,
   TableByOrder,
+  User,
 } = require("../models");
 
 
 const { apiQueryRest, bien } = require('../utils/const');
 const { Op } = require('sequelize');
 const { generateTable } = require("../middlewares/jwt");
-
+const { listPermission } = require("../middlewares/verify");
+const findTables = async (tables) => {
+  const re = await Tables.findAll({
+    include: {
+      model: TableByOrder, include: {
+        model: Order, ...bien,
+        attributes: ["id", "name", "phone", "total", "status", "id_employee", "createdAt", "updatedAt"]
+        , where: { status: { [Op.lt]: 3 } }
+      }
+    },
+    where: { id: { [Op.in]: tables } },
+    nest: true
+  });
+  return re
+}
 
 exports.getAll = asyncHandler(async (req, res) => {
   let query = {
@@ -22,24 +38,37 @@ exports.getAll = asyncHandler(async (req, res) => {
       }
     }
   };
+  if (req.query._noQuery === 1) delete query.include;
   let tables = await Tables.findAll(query);
   res.status(200).json(tables);
 });
 
-exports.getId = asyncHandler(async (req, res) => {
+exports.getId = asyncHandler(async (req, res, next) => {
+  const id = req.params.id;
+  const { token, id_employee } = req.query;
 
-  const { id } = req.params;
-  const re = await Tables.findByPk(id, {
-    include: {
-      model: TableByOrder, include: {
-        model: Order, ...bien,
-        attributes: ["id", "name", "phone", "total", "status", "id_employee", "createdAt", "updatedAt"]
-        , where: { status: { [Op.lt]: 3 } }
-      }
-    },
-    nest: true
-  });
-  res.status(200).json(re);
+  if (token) {
+    jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
+      if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+      let data = await findTables(decode.tables)
+      res.status(200).json(data);
+    })
+  } else {
+    const employee = await User.findOne({
+      where: {
+        id: id_employee,
+        role: listPermission,
+      }, raw: true
+    });
+    if (employee) {
+      let data = await findTables([id]);
+      res.status(200).json(data);
+    } else {
+      res.status(404).json("Phải phải nhân viên !");
+    }
+  }
+
+
 });
 
 
@@ -80,8 +109,10 @@ exports.update = asyncHandler(async (req, res) => {
 });
 
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
-  const { tables } = req.body;
-  let token = generateTable(req.body);
+  // const { tables } = req.body;
+  let tables = [13];
+  let a = { tables, name: "con chim", timestamp: new Date().valueOf() }
+  let token = generateTable(a);
   await Tables.update({
     status_table: 1,
     token: token
