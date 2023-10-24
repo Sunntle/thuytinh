@@ -35,7 +35,7 @@ exports.getAll = asyncHandler(async (req, res) => {
     ],
     where: { status: { [Op.lt]: 3 } },
   });
-  
+
   tables && tables.forEach(table => {
     tableByOrder.forEach(element => {
       const { TableByOrders: tables, ...data } = element.toJSON();

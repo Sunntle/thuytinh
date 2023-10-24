@@ -7,8 +7,8 @@ import "./index.css";
 
 function SelectTable() {
   const navigate = useNavigate();
-  const [tables, setTables] = useState(null);
-  const [tableByPosition, setTableByPosition] = useState(null);
+  const [tables, setTables] = useState([]);
+  const [tableByPosition, setTableByPosition] = useState([]);
   const { sendRequest, isLoading } = useHttp();
   //test
   useEffect(() => {
@@ -36,13 +36,13 @@ function SelectTable() {
 
   useEffect(() => {
     if (tables !== null) {
-      const filteredValue = tables.filter((table) => table.position === "in");
+      const filteredValue = tables?.filter((table) => table.position === "in");
       setTableByPosition(filteredValue);
     }
   }, [tables]);
 
   const onHandleTabChange = (key) => {
-    const filteredValue = tables.filter((table) => table.position === key);
+    const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
     console.log(tableByPosition);
   };
