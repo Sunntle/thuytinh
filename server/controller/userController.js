@@ -19,7 +19,7 @@ exports.register = asyncHandler(async (req, res) => {
       message: "Thiếu thông tin người dùng",
     });
   const [user, created] = await User.findOrCreate({
-    where: { email: email },
+    where: { [Op.or]: { email: email, name: name } },
     defaults: { ...req.body },
   });
   if (created) {
@@ -34,7 +34,7 @@ exports.register = asyncHandler(async (req, res) => {
     _io.of("/admin").emit("new message", storeNotification)
     res.status(200).json({ success: true, data: user });
   } else {
-    res.status(200).json({ success: false, mes: "Email đã tồn tại rồi nha" });
+    res.status(200).json({ success: false, mes: "Thông tin đã tồn tại rồi nha" });
   }
 });
 

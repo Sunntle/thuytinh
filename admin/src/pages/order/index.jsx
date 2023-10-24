@@ -75,14 +75,15 @@ const OrderPage = () => {
   const fetchData = useCallback(async (query) => {
     const { data, total } = await getAllOrder(query);
     const avl = total > 0 && data.map((item) => {
+      console.log(item?.User)
       let data = {
         id: item.id,
         name: item.name,
         phone: item.phone,
-        employee: item.employee?.name,
+        user: item.name,
         total: item.total,
-        id_table: item.id_table,
-        id_employee: item.id_employee,
+        table: item?.TableByOrders?.map(i => i.tableId).join(", "),
+        employee: item?.User?.name,
         payment: item.payment,
         date_order: formatNgay(item.date_order),
         quantity: item?.order_details.reduce((a, b) => a + b?.quantity, 0),
@@ -119,19 +120,22 @@ const OrderPage = () => {
     },
     {
       title: 'Người phụ trách',
-      dataIndex: 'employee',
+      dataIndex: 'user',
     },
     {
       title: 'Số lượng',
       dataIndex: 'quantity',
+      align: "center "
     },
     {
       title: 'Bàn',
-      dataIndex: 'id_table',
+      dataIndex: 'table',
+      align: "center "
     },
     {
       title: 'Thanh toán',
       dataIndex: 'payment',
+      align: "center "
     },
     {
       title: 'Ngày đặt',
@@ -161,12 +165,12 @@ const OrderPage = () => {
   const showModalUpdate = (record) => {
     let data = { ...record };
     data.date_order = moment(data.meta.date_order);
-    setOpenModalUpdate({ data, show: true })
+    console.log(data.meta)
+    setOpenModalUpdate({ data: data.meta, show: true })
     form.setFieldsValue(data);
   }
   const handDeleteOrder = async (id) => {
     const res = await delOrder(id);
-    console.log(res);
     fetchData(query)
     messageApi.open({
       type: 'success',
@@ -215,8 +219,8 @@ const OrderPage = () => {
                 </div>
                 <div className="w-3/6">
                   <div className="w-full h-full flex flex-col justify-evenly">
-                    <div>{item.product.name_product}</div>
-                    <div>{item.product.price}</div>
+                    <div>{item.Product.name_product}</div>
+                    <div>{item.Product.price}</div>
                   </div>
                 </div>
                 <div className="w-1/6">
@@ -361,13 +365,27 @@ const OrderPage = () => {
                 label: `Chi tiết`,
                 children: (
                   <div className="h-40">
-                    <Row>
-                      <Col xs={5}>
-                        <img src={iii} />{" "}
-                      </Col>
-                      <Col xs={10}></Col>
-                      <Col xs={5}></Col>
-                    </Row>
+                    {openModalUpdate?.data?.order_details?.map((item) => (
+                      <div className="p-2 border-2" key={item.id}>
+                        <div className="flex justify-around">
+                          <div className="w-1/6">
+                            <img src={iii} className="w-full" />
+                          </div>
+                          <div className="w-3/6">
+                            <div className="w-full h-full flex flex-col justify-evenly">
+                              <div>{item.Product.name_product}</div>
+                              <div>{item.Product.price}</div>
+                            </div>
+                          </div>
+                          <div className="w-1/6">
+                            <div className="w-full h-full flex flex-col justify-evenly">
+                              <div>{item.quantity}</div>
+                              <div>{item.status_food}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 ),
               },

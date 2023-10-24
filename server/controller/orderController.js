@@ -1,5 +1,5 @@
 const moment = require("moment");
-const { apiQueryRest, checkQtyMaterials, getQtyMaterialByProduct } = require('../utils/const')
+const { apiQueryRest, checkQtyMaterials, getQtyMaterialByProduct, bien } = require('../utils/const')
 const asyncHandler = require("express-async-handler");
 const {
   Order,
@@ -22,7 +22,7 @@ function currentYear(pa = "startOf") {
 }
 
 exports.createOrder = asyncHandler(async (req, res) => {
-  const { orders, customerName, total, table } = req.body;
+  const { orders, customerName, total, table, id_employee } = req.body;
   if (!total || !customerName || table.length === 0 || orders.length === 0) return res.status(200).json({ success: false, data: "Validate !" });
   const arrTable = table;
 
@@ -30,7 +30,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
   const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
   if (approve.length === 0) return res.status(200).json({ success: false, data: "Sản phẩm hết nguyên liệu" });
-  const order_result = await Order.create({ total, name: customerName });
+  const order_result = await Order.create({ total, name: customerName, id_employee });
   let dataTable = await TableByOrder.bulkCreate(arrTable.map(item => ({ tableId: item, orderId: order_result.id })));
   await Tables.prototype.updateStatusTable(arrTable, 1);
   let tableData = await TableByOrder.findAll({ include: { model: Tables }, where: { id: { [Op.in]: dataTable.map(i => i.id) } } })
@@ -65,18 +65,9 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
     ...query,
     include: [
       {
-        model: OrderDetail,
-        include:
-        {
-          model: Product,
-          include:
-          {
-            model: ImageProduct,
-            attributes: ["url"],
-          }
-        },
-
+        ...bien.include
       },
+      { model: TableByOrder, attributes: ["tableId"] },
       {
         model: User,
         attributes: ["name"],
@@ -137,28 +128,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
   res.status(200).json("Update thành công");
 });
 
-// exports.updateOrder = asyncHandler(async (req, res) => {
-//   const { id, ...rest } = req.body;
 
-//   const order = rest
-//   console.log(order);
-
-//   const existingOrder = await OrderDetail.findOne({ where: { id_order: id } });
-//   // console.log(existingOrder)
-//   // if(existingOrder) {
-//   //   await existingOrder.update({
-//   //     quantity: existingOrder.quantity + rest?.quantity
-//   //   })
-//   // }
-
-//   // if (existingOrder) {
-//   //   await existingOrder.update(rest);
-//   //   res.status(200).json("Cập nhật thành công");
-//   // } else {
-//   //   await Order.create({ id, ...rest });
-//   //   res.status(201).json("Tạo mới thành công");
-//   // }
-// });
 
 exports.dashBoard = asyncHandler(async (req, res) => {
   let data = {};
