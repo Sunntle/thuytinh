@@ -1,4 +1,4 @@
-import { Col, Row, Divider, FloatButton } from 'antd';
+import { Col, Row, Divider, FloatButton, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useRef, useState } from 'react';
@@ -25,7 +25,6 @@ const ResMenu = () => {
         }
         fetchData();
     }, []);
-
     const filteredProducts = selectedCategory
         ? product.data.filter((product) => product.id_category === selectedCategory.id)
         : product.data;
@@ -39,26 +38,17 @@ const ResMenu = () => {
                             modules={[Navigation]}
                             navigation
                             pagination={{ clickable: true }}
-                            spaceBetween={50}
-                            slidesPerView={3}
-                            onSlideChange={() => console.log('slide change')}
-                            onSwiper={(swiper) => console.log(swiper)}
+                            slidesPerView={4}
                         >
                             {categories?.map((category, index) => (
                                 <SwiperSlide key={index}>
-                                    <div className="mx-10 w-3/5">
-                                        <button onClick={() => setSelectedCategory(category)}>
-                                            <div className='border-2 border-gray-300 px-4 py-2 rounded-lg flex flex-col items-center'>
-                                                <img className='ml-10' src={category.thumbnail} />
-                                                <div className='mt-2'>
-                                                    <p className='ml-10 font-medium text-main text-lg'>{category.name_category}</p>
-                                                </div>
-                                            </div>
-                                        </button>
+                                    <div className="mx-10">
+                                        <Button className='border-none bg-orange-100 w-full max-w-full overflow-hidden' onClick={() => setSelectedCategory(category)}>
+                                            <p className='font-medium text-main text-lg max-w-full'>{category.name_category}</p>
+                                        </Button>
                                     </div>
                                 </SwiperSlide>
                             ))}
-
                         </Swiper>
                     </div>
                     <div className='recent_order w-full   mt-4'>
@@ -72,7 +62,7 @@ const ResMenu = () => {
                                 <Col md={8} xs={24} className='w-1/3 p-2 rounded-lg' key={index}>
                                     <div className="w-full pe-5">
                                         <div className='shadow-xl border-solid border-2 border-gray-300 px-4 py-2 rounded-lg' >
-                                            <img className='h-44 w-60 rounded' src={product.imageUrls} />
+                                            <img className='h-44 w-60 rounded' src={product?.ImageProducts[0]?.url} />
                                             <div className='mt-3 font-medium'>{product.name_product}</div>
                                             <div className='flex justify-between items-center  '>
                                                 <p className=' font-medium text-main text-lg'> {product.price} VNĐ</p>

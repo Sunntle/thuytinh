@@ -1,0 +1,19 @@
+.ant-tabs-nav-wrap {
+    width: 100%;
+
+    .ant-tabs-nav-list {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        .ant-tabs-tab {
+            @apply text-slate-500;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+
+    }
+}
