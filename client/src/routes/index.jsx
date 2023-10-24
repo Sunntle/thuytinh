@@ -9,11 +9,12 @@ import Service from "../pages/Service/Service.jsx";
 import EnterName from "../pages/EnterName/EnterName.jsx";
 import AboutUs from "../pages/AboutUs/AboutUs.jsx";
 import Contact from "../pages/Contact/Contact.jsx";
-import CheckTable from "../guard/CheckTable"
+import CheckTable from "../guard/CheckTable";
 import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
 import LayoutContainer from "../layouts/LayoutContainer";
+import DeliveryNotSupported from "../pages/DeliveryNotSupported/index.jsx";
 
 const router = createBrowserRouter([
   {
@@ -58,7 +59,7 @@ const router = createBrowserRouter([
       },
       {
         path: "menu",
-        element: <Navigate to=".." />
+        element: <Navigate to=".." />,
       },
       { index: "home", element: <Home /> },
 
@@ -82,6 +83,7 @@ const router = createBrowserRouter([
     ],
   },
   { path: "/url-return", element: <PaymentSuccess /> },
+  { path: "/delivery-not-supported", element: <DeliveryNotSupported /> },
   {
     path: "*",
     element: <PageNotFound />,
