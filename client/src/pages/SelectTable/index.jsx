@@ -1,4 +1,4 @@
-import { getPreciseDistance } from "geolib";\
+import { getPreciseDistance } from "geolib";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
@@ -66,10 +66,10 @@ function SelectTable() {
           onChange={onHandleTabChange}
           defaultActiveKey={"in"}
           centered
-          items={["in", "out"].map((position, index) => {
+          items={["in", "out"].map((position,index) => {
             return {
               label: position === "in" ? "Ngoài trời" : "Trong nhà",
-              key: position,
+              key: index,
               children: (
                 <div className="w-full h-screen max-w-full">
                   <div className="grid grid-cols-2 gap-4">

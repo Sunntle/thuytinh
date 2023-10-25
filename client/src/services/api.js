@@ -53,9 +53,9 @@ export const fetchOrderById = (id) => {
 }
 
 //Table
-export const fetchTableById = (idTable, idOrder) => {
+export const fetchTableById = (idTable, tableToken) => {
     return {
         method: 'get',
-        url: `/table/${idTable}?id_order=${idOrder}`
+        url: `/table/${idTable}?token=${tableToken}`
     }
 }
