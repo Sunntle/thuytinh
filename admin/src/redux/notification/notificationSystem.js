@@ -23,7 +23,7 @@ export const maskAllRead = createAsyncThunk('notification/maskAllRead', async (_
 })
 export const maskAsRead = createAsyncThunk('notification/maskAsRead', async (notification, thunkApi) => {
     const listNoti = thunkApi.getState().notifications.content
-    if (notification.status === 0 || notification.status === false){
+    if (notification.status === 0 || notification.status === false) {
         const updatedNotifications = listNoti.map((item) => {
             if (item.id === notification.id) {
                 return { ...item, status: 1 };
@@ -70,15 +70,27 @@ const notificationSystem = createSlice({
                 state.lastNotification = action.payload.lastNotification
                 state.isLoading = false
             })
+            .addCase(maskAllRead.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(maskAsRead.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteNotification.pending, (state) => {
+                state.isLoading = true;
+            })
             .addCase(maskAllRead.fulfilled, (state, action) => {
                 state.content = action.payload
                 state.lastNotification = null
+                state.isLoading = false;
             })
             .addCase(maskAsRead.fulfilled, (state, action) => {
                 state.content = action.payload
+                state.isLoading = false;
             })
             .addCase(deleteNotification.fulfilled, (state, action) => {
                 state.content = action.payload
+                state.isLoading = false;
             })
     }
 })

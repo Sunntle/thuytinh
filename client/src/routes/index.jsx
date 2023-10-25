@@ -15,6 +15,7 @@ import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
 import LayoutContainer from "../layouts/LayoutContainer";
 import PaymentLoading from "../pages/PaymentLoading/index.jsx";
+import DeliveryNotSupported from "../pages/DeliveryNotSupported/index.jsx";
 
 const router = createBrowserRouter([
   {
@@ -55,13 +56,12 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        path: "menu",
         element: <Menu />,
       },
-      // {
-      //   path: "menu",
-      //   element: <Navigate to=".." />,
-      // },
+      {
+         path: "menu",
+         element: <Navigate to=".." />,
+       },
       { index: "home", element: <Home /> },
 
       {
@@ -85,6 +85,8 @@ const router = createBrowserRouter([
   },
   { path: "/payment-loading", element: <PaymentLoading /> },
   { path: "/payment-success", element: <PaymentSuccess /> },
+  { path: "/url-return", element: <PaymentSuccess /> },
+  { path: "/delivery-not-supported", element: <DeliveryNotSupported /> },
   {
     path: "*",
     element: <PageNotFound />,

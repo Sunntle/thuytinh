@@ -16,7 +16,6 @@ const initialState = {
 };
 export const fetchAccount = createAsyncThunk('account/fetchAccount', async (_, { rejectWithValue }) => {
     const response = await callFetchAccount();
-    console.log(response);
     if (response.success == false) {
         return rejectWithValue(response);
     }
@@ -53,7 +52,7 @@ export const accountSlide = createSlice({
             .addCase(fetchAccount.fulfilled, (state, action) => {
                 state.isAuthenticated = true;
                 state.user = action.payload;
-                state.isLoading = false
+                state.isLoading = false;
             })
     }
 });

@@ -7,7 +7,6 @@ exports.list = async (req, res) => {
     const { _offset, _limit, _sort, _order, q, _time, _group, ...rest } =
       req.query;
     const query = {
-      raw: true,
       include: [{ model: Order, attributes: ["createdAt"] }],
       order: [["createdAt", "DESC"]],
     };
@@ -24,31 +23,45 @@ exports.list = async (req, res) => {
     if (_group) {
       query.group = [_group];
     }
+    const year = moment().year();
     if (_time) {
-      const currentDateString = `${moment().year()}-${_time}-01`;
-      const currentDate = moment(currentDateString, "YYYY-MM-DD HH:mm:ss");
-      const forrmatedCurrentDate = currentDate.format("YYYY-MM-DD HH:mm:ss");
-      const nextMonthDate = currentDate.add(1, "months");
-      const formattedNextMonthDate = nextMonthDate.format(
-        "YYYY-MM-DD HH:mm:ss"
-      );
+      const currentTime = new Date(year, Number(_time) - 1, 1)
+      const nextTime = new Date(year, Number(_time), 1)
       if (q) {
         query.where[Op.or].push({
           createdAt: {
-            [Op.between]: [formattedCurrentDate, formattedNextMonthDate],
+            [Op.between]: [currentTime, nextTime],
           },
         });
       } else {
         query.where = {
           ...query.where,
           createdAt: {
-            [Op.between]: [forrmatedCurrentDate, formattedNextMonthDate],
+            [Op.between]: [currentTime, nextTime],
           },
         };
       }
     }
     const { count, rows } = await Reviews.findAndCountAll(query);
-    res.status(200).json({ total: count, data: rows });
+    const previousMonthReviews = await Reviews.findAndCountAll({
+      include: [{ model: Order, attributes: ["createdAt"] }],
+      order: [["createdAt", "DESC"]],
+      where: {
+        createdAt: {
+          [Op.between]: [
+            new Date(year, Number(_time) - 2, 1),
+            new Date(year, Number(_time) - 1, 1),
+          ],
+        },
+      },
+    });
+    let percentChange = 0;
+    if (previousMonthReviews.count > 0) {
+      percentChange = Math.round(((count - previousMonthReviews.count) / previousMonthReviews.count) * 100);
+    }else if(previousMonthReviews.count == 0){
+      percentChange = Math.round(count == 0 ? 0 : 100)
+    }
+    res.status(200).json({ total: count, data: rows, percentChange });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal server error" });

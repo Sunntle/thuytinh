@@ -14,16 +14,27 @@ export const delOrder = (id) => {
 export const updateOrder = (body) => {
   return axios.put(`/api/order`, body);
 };
+export const updateOrderAdmin = (data) => {
+  return axios.put(`/api/order/admin`, data);
+}
 // table //
-export const getAllTable = () => {
-  return axios.get(`/api/table`);
+export const getAllTable = (params) => {
+  return axios.get(`/api/table`, { params });
 }
 export const getTableId = (id_order) => {
-  return axios.get(`/api/table/${id_order}`); 
+  return axios.get(`/api/table/${id_order}`);
 }
 export const updateTables = (data) => {
-  return axios.put(`/api/table`, { data });
+  return axios.put(`/api/table`, data);
 }
+
+export const delTables = (id) => {
+  return axios.delete(`/api/table/` + id);
+}
+export const createTables = (body) => {
+  return axios.post(`/api/table/`, body);
+}
+
 // product //
 export const getAllProduct = (params) => {
   return axios.get(`/api/product`, { params });
@@ -95,7 +106,7 @@ export const addNewMaterial = (data) => {
 
 //account
 export const getAllUser = (params) => {
-  return axios.get(`/api/user/get-all`,{ params });
+  return axios.get(`/api/user/get-all`, { params });
 };
 export const getDetailUser = (id) => {
   return axios.get(`/api/user/detail/${id}`);
@@ -118,7 +129,7 @@ export const callUpdateAccount = (body) => {
 export const callUpdatePassword = (body) => {
   return axios.post(`/api/user/set-password`, body);
 }
-export const removeUser = (id)=>{
+export const removeUser = (id) => {
   return axios.delete(`/api/user/${id}`)
 }
 
@@ -162,4 +173,8 @@ export const readOne = (body) => {
 };
 export const deleteOne = (id) => {
   return axios.delete(`/api/notification/${id}`);
+};
+// payment 
+export const createPayment = (data) => {
+  return axios.post(`/api/payment/create_payment_url`, data);
 };

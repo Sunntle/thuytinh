@@ -22,7 +22,7 @@ const OrderDetail = db.sequelize.define("order_detail", {
   },
   status_food: {
     type: DataTypes.INTEGER,
-  },
+  }
 });
 
 OrderDetail.beforeBulkCreate(async (item) => {
@@ -35,6 +35,5 @@ OrderDetail.beforeUpdate(async (item) => {
   console.log(item);
 });
 
-// OrderDetail.sync()
 
 module.exports = OrderDetail;

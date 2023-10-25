@@ -25,7 +25,7 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
         },
       ];
       const setFormValue = async () => {
-        await form.setFieldsValue({
+        form.setFieldsValue({
           name_material: data.name_material,
           price: data.price,
           amount: data.amount,

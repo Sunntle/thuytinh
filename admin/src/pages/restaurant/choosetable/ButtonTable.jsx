@@ -37,21 +37,16 @@ export const ButtonTable = () => {
     setTableData(updatedData);
   };
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+
+  const closeDrawer = (param) => {
+    setIsModalOpen(param);
   };
   return (
     <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
       {tableData.map((table, index) => (
-        <div key={index}>
+        <div key={table.id}>
           <span
             className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
               ? 'bg-main text-white border-yellow-400 border-3px border-solid'
@@ -74,15 +69,15 @@ export const ButtonTable = () => {
                   Đang sử dụng
                 </span>
                 <div className=" mt-3">
-                  <button className="mt-2 col-span-2 h-10 w-20 text-white block bg-green-500 rounded" onClick={showModal}>
+                  <button className="mt-2 col-span-2 h-10 w-20 text-white block bg-green-500 rounded" onClick={() => closeDrawer(true)}>
                     Chi tiết
                   </button>
                   <Modal
                     footer={null}
                     title={`Chi tiết bàn ${selectedTable?.id}`}
                     open={isModalOpen}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
+                    onOk={() => closeDrawer(false)}
+                    onCancel={() => closeDrawer(false)}
                   >
                     <ResOrder />
                   </Modal>

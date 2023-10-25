@@ -27,6 +27,12 @@ const Order = db.sequelize.define("orders", {
   transaction_date: {
     type: DataTypes.STRING
   },
+  transaction_id: {
+    type: DataTypes.STRING
+  },
+  transaction_date: {
+    type: DataTypes.STRING
+  },
   total: {
     type: DataTypes.INTEGER,
   },

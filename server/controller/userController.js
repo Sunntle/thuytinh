@@ -19,7 +19,7 @@ exports.register = asyncHandler(async (req, res) => {
       message: "Thiếu thông tin người dùng",
     });
   const [user, created] = await User.findOrCreate({
-    where: { email: email },
+    where: { [Op.or]: { email: email, name: name } },
     defaults: { ...req.body },
   });
   if (created) {
@@ -31,10 +31,10 @@ exports.register = asyncHandler(async (req, res) => {
       },
       { raw: true }
     );
-    _io.of("/admin").emit("new message",storeNotification)
+    _io.of("/admin").emit("new message", storeNotification)
     res.status(200).json({ success: true, data: user });
   } else {
-    res.status(200).json({ success: false, mes: "Email đã tồn tại rồi nha" });
+    res.status(200).json({ success: false, mes: "Thông tin đã tồn tại rồi nha" });
   }
 });
 
@@ -47,9 +47,9 @@ exports.login = asyncHandler(async (req, res) => {
       message: "Thiếu thông tin người dùng",
     });
   const user = await User.findOne({ where: { email } });
+
   if (user && (await user.comparePassword(password))) {
-    const { createdAt, updatedAt, refreshToken, password, ...userAcc } =
-      user.toJSON();
+    const { createdAt, updatedAt, refreshToken, password, ...userAcc } = user.toJSON();
     const accessToken = generateAccessToken(userAcc.id, userAcc.role);
     const newrefreshToken = generateRefreshToken(userAcc.id, userAcc.role);
     await User.update(
@@ -71,39 +71,44 @@ exports.login = asyncHandler(async (req, res) => {
   }
 });
 exports.getAllUser = asyncHandler(async (req, res) => {
-  const { _offset, _limit, _sort, _order, q,_like, ...rest } = req.query;
+  const { _offset, _limit, _sort, _order, q, _like, _noQuery, ...rest } = req.query;
+
+  if (_noQuery == 1) {
+    return res.status(200).json(await User.findAll({ where: { role: 'R2' }, attributes: ["id", "name", "phone"], raw: true }));
+  }
   const query = {
     raw: true,
-    include: 
-      {
-        model: Order,
-      },
+    include:
+    {
+      model: Order,
+    },
   };
-    if (_limit) query.limit = +_limit;
-    if (_offset) query.offset = +_offset;
-    if (q) 
+  if (_limit) query.limit = +_limit;
+  if (_offset) query.offset = +_offset;
+  if (q)
     query.where = {
       [Op.or]: [
         { name: { [Op.substring]: q } },
         { email: { [Op.substring]: q } },
       ],
     };
-    if (_sort) query.order = [[_sort, _order]];
-    if(_like){
-      const [a,b,c] = _like.split("_")//_like=role_R1_not
-      query.where = query.where || {};
-      query.where[Op.or] = query.where[Op.or] || [];
-      let symbol = Op.substring
-      if(c=="not"){
-        symbol = Op.notLike
-      }
-      query.where[Op.or].push({
-        [a]: {
-          [symbol]: b,
-        },
-      });
+  if (_sort) query.order = [[_sort, _order]];
+  if (_like) {
+    const [a, b, c] = _like.split("_")
+    query.where = query.where || {};
+    query.where[Op.or] = query.where[Op.or] || [];
+    let symbol = Op.substring
+    if (c == "not") {
+      symbol = Op.notLike
     }
-  const {count, rows} = await User.findAndCountAll(query);
+    query.where[Op.or].push({
+      [a]: {
+        [symbol]: b,
+      },
+    });
+  }
+
+  const { count, rows } = await User.findAndCountAll(query);
   const adminOnline = getAllUserOnline()
   const data = rows.map(itemA => {
     const matchingItemB = adminOnline.find((itemB) => itemB.id === itemA.id);
@@ -119,10 +124,10 @@ exports.getAllUser = asyncHandler(async (req, res) => {
   });
 });
 exports.getDetailUser = asyncHandler(async (req, res) => {
-  const _id=  req.params.id
+  const _id = req.params.id
   const user = await User.findOne({
     raw: true,
-    where:{id: _id},
+    where: { id: _id },
     include: Order
   });
   return res.status(200).json({
@@ -215,10 +220,9 @@ exports.refreshToken = asyncHandler(async (req, res) => {
 exports.currentAccount = asyncHandler(async (req, res) => {
   const id = req.user.id;
   const ru = await User.findByPk(id);
-  const { createdAt, updatedAt, refreshToken, password, ...userAcc } =
-    ru?.toJSON();
-  if (ru) return res.status(200).json(userAcc);
-  res.status(404).json({ success: false });
+  if (!ru) res.status(404).json({ success: false });
+  const { createdAt, updatedAt, refreshToken, password, ...userAcc } = ru?.toJSON();
+  return res.status(200).json(userAcc);
 });
 exports.logout = asyncHandler(async (req, res) => {
   const cookie = req.cookies;

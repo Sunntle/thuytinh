@@ -18,6 +18,7 @@ import {
   Switch,
   Tabs,
   Tooltip,
+  Typography,
   Upload,
   message,
 } from "antd";
@@ -109,12 +110,14 @@ function HeaderComponent() {
       }
 
     }, [dispatch, form, user.user]);
+
   const handleRemoveKeyWord = (index) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord"));
     searchArr.splice(index, 1);
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
   };
+
   const handleSearch = useCallback((keyword) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
     searchArr.unshift(keyword);
@@ -156,6 +159,7 @@ function HeaderComponent() {
     setOpenModalProfile(false);
     form.resetFields();
   }, [dispatch, form, messageApi]);
+
   const submitResetPass = useCallback(async (values) => {
     let res = await callUpdatePassword(values);
     messageApi.open({
@@ -167,11 +171,18 @@ function HeaderComponent() {
       form.resetFields();
     }
   }, [form, messageApi]);
+
   const customContent = () => {
     return (
-      <div className="bg-white rounded-lg px-5 py-3 shadow-md">
-        <h4 className="text-gray-500 mb-3">Tìm kiếm gần đây</h4>
-        <Swiper
+      <div
+        className={` ${
+          customize.darkMode
+            ? "bg-darkModeBg border-gray-600"
+            : "bg-white border-gray-300"
+        } rounded-lg px-5 py-3 shadow-md border border-solid  border-t-0`}
+      >
+        <Typography.Title level={5}>Tìm kiếm gần đây</Typography.Title>
+       <Swiper
           speed={1000}
           slidesPerView={7}
           spaceBetween={15}
@@ -206,54 +217,63 @@ function HeaderComponent() {
             <p className="text-gray-500">Không có tìm kiếm nào!</p>
           )}
         </Swiper>
-        <h4 className="text-gray-500 mb-3">Danh mục</h4>
-        <div className="my-5">
-          <Swiper
-            speed={1000}
-            slidesPerView={8}
-            spaceBetween={20}
-            className="mySwiper"
-          >
-            {categories?.map((el) => (
-              <SwiperSlide key={el.id} className="my-5">
-                <Link
-                  to={`/employee/menu?category=${el.id}`}
-                  className="border rounded-full border-gray-300 border-solid py-2 px-3 transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
-                >
-                  {el.name_category}
-                </Link>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-        <h4 className="text-gray-500 my-3">Món ăn phổ biến</h4>
-        <div>
-          <Swiper
-            speed={1000}
-            slidesPerView={4}
-            spaceBetween={20}
-            className="mySwiper"
-          >
-            {data.data?.map((product, index) => {
-              return (
-                <SwiperSlide key={index}>
-                  <Link to={`/employee/menu?product=${product.id}`}>
-                    <div className="p-2 border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
-                      <img
-                        className="w-full mb-3"
-                        src={product.imageUrls?.split(";")[0]}
-                        alt=""
-                      />
-                      <h6 className="font-semibold text-gray-500">
-                        {product.name_product}
-                      </h6>
-                    </div>
-                  </Link>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </div>
+        
+        {categories.length > 0 && (
+          <>
+            <Typography.Title level={5}>Danh mục</Typography.Title>
+            <div className="my-5">
+              <Swiper
+                speed={1000}
+                slidesPerView={5}
+                spaceBetween={20}
+                className="mySwiper"
+              >
+                {categories?.map((el) => (
+                  <SwiperSlide key={el.id} className="my-5">
+                    <Link
+                      to={`/employee/menu?category=${el.id}`}
+                      className="border rounded-full border-gray-300 border-solid py-2 px-3 transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
+                    >
+                      {truncateString(el.name_category, 12)}
+                    </Link>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          </>
+        )}
+        {data.data.length > 0 && (
+          <>
+            <Typography.Title level={5}>Món ăn phổ biến</Typography.Title>
+            <div>
+              <Swiper
+                speed={1000}
+                slidesPerView={4}
+                spaceBetween={20}
+                className="mySwiper"
+              >
+                {data.data?.map((product, index) => {
+                  return (
+                    <SwiperSlide key={index}>
+                      <Link to={`/employee/menu?product=${product.id}`}>
+                        <div className="p-2 border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
+                          <img
+                            className="w-full mb-3"
+                            src={product.imageUrls?.split(";")[0]}
+                            alt=""
+                          />
+                          <h6 className="font-semibold text-gray-500">
+                            {product.name_product}
+                          </h6>
+                        </div>
+                      </Link>
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
+            </div>
+          </>
+        )}
       </div>
     );
   };
@@ -294,6 +314,7 @@ function HeaderComponent() {
             notifications={noti.content}
             openPopover={openPopover}
             setOpenPopover={setOpenPopover}
+            isLoading={noti.isLoading}
           />
           <Dropdown menu={menuProps} trigger={["click"]}>
             <ButtonComponents

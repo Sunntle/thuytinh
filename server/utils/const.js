@@ -2,10 +2,15 @@
 const { Op } = require("sequelize");
 const Recipes = require("../models/recipeModel");
 const Materials = require("../models/materialsModel");
+const TableByOrder = require("../models/tableByOrder");
+const OrderDetail = require("../models/orderDetailModel");
+const Product = require("../models/productModel");
+const ImageProduct = require("../models/imageModel");
 const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
 const apiQueryRest = (params) => {
-    const { _offset, _limit, _sort, _order, q, title, ...rest } = params;
+    const { _offset, _limit, _sort, _order, q, title, _noQuery, ...rest } = params;
     let query = {};
+    if (_noQuery === 1) return query.raw = true;
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
     if (q) query.where = { [title]: { [Op.substring]: q } };
@@ -29,28 +34,53 @@ const apiQueryRest = (params) => {
 
 const handleTotalQty = async (pr) => {
     let recipes = await Recipes.findAll({ where: { id_product: { [Op.in]: pr.map(i => i.id) } }, raw: true });
-    const totalQuantity = pr.map(order => {
-        const totalQuantities = recipes
-            .filter(recipe => recipe.id_product === order.id)
+    const totalQuantity = pr.map(sp => {
+        const totalmaterial = recipes
+            .filter(recipe => recipe.id_product === sp.id)
             .map(recipe => ({
                 id_material: recipe.id_material,
-                total: recipe.quantity * order.quantity,
-                id_product: order.id
+                total: recipe.quantity * sp.quantity,
+                id_product: sp.id
             }));
-        return { [order.id]: totalQuantities };
+        return totalmaterial;
     });
     return totalQuantity
 }
+
+const getQtyMaterialByProduct = async (product) => {
+    let data = await Recipes.findAll({ attributes: ["id_material", "quantity", "id_product"], where: { id_product: product.id }, raw: true });
+    const result = data.map(recipe => ({
+        id_material: recipe.id_material,
+        total: recipe.quantity * product.quantity,
+        id_product: product.id
+    }))
+    return result
+}
+
+
 const checkQtyMaterials = async (data, model) => {
-    let checkOver = await model.findAll({
-        attributes: ["id", "amount"], where: {
+    const checkOver = await model.findAll({
+        where: {
             [Op.or]: data.map((item) => ({
                 id: item.id_material,
-                amount: { [Op.lt]: parseFloat(item.total) }
+                amount: {
+                    [Op.gt]: item.total,
+                    [Op.gt]: 0
+                }
             }))
         }, raw: true
     });
-    return checkOver.length > 0;
+    return checkOver.length === data.length;
 }
 
-module.exports = { unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials };
+const bien = {
+    include: {
+        model: OrderDetail, attributes: ["id", "quantity", "id_order", "id_product"],
+        include: {
+            model: Product, attributes: ["id", "name_product", "price", "status"],
+            include: { model: ImageProduct, attributes: ["url"], }
+        }
+    }
+}
+
+module.exports = { bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };

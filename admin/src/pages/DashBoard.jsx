@@ -8,48 +8,58 @@ import { useEffect, useState } from "react";
 import { getAllProduct, getDataDashboard } from "../services/api";
 import { formatGia } from "../utils/format";
 import { useCallback } from "react";
-
+import Spinner from "../components/spinner"
 const img =
   "https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000";
 const DashBoard = () => {
-
   const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false)
   const [timeChart, setTimeChart] = useState("MONTH");
-  const [dataProduct, setDataProduct] = useState();
+  const [dataProduct, setDataProduct] = useState(null);
+
   const fetchData = useCallback(async () => {
-    const res = await getDataDashboard(timeChart);
-    const { data: dataPr } = await getAllProduct({
-      _sort: "sold",
-      _order: "DESC",
-      _sold: "gte_0",
-      _limit: 10,
-    });
-    setData(res)
-    setDataProduct(dataPr)
-  },[timeChart])
+    setLoading(true)
+    try {
+      const res = await getDataDashboard(timeChart);
+      const { data: dataPr } = await getAllProduct({
+        _sort: "sold",
+        _order: "DESC",
+        _sold: "gte_0",
+        _limit: 10,
+      });
+      setData(res);
+      setDataProduct(dataPr);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [timeChart]);
+
   useEffect(() => {
     fetchData();
   }, [fetchData])
   
+  if(loading) return <Spinner/>
   return (
     <div className="w-full my-7 px-5">
       <Row gutter={[32, 16]}>
         <Col xs={24} lg={16}>
-          <div className="rounded-lg border-orange-400 border-2 bg-orange-50 flex-row flex items-center h-24">
+          <div className="rounded-lg border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2">
-              <span className="text-black font-medium text-sm text-center ">Tổng thu nhập</span>
+              <span className="font-medium text-sm text-center ">Tổng thu nhập</span>
               <p className="text-orange-400 text-lg font-medium text-center">54000000</p>
             </div>
             <div className="w-1/3  p-4 h-full flex flex-col justify-center items gap-1">
-              <span className="text-black font-medium text-sm text-center">Thu nhập</span>
+              <span className="font-medium text-sm text-center">Thu nhập</span>
               <p className="text-lg font-medium text-green-500 text-center">54000000</p>
             </div>
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1">
-              <span className="text-black font-medium text-sm text-center">Chi phí</span>
+              <span className="font-medium text-sm text-center">Chi phí</span>
               <p className="text-lg font-medium text-red-500 text-center">54000000</p>
             </div>
           </div>
-          <div className="chart-line_area mt-4 rounded-lg">
+          <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2">
             <LineChart timeChart={timeChart} setTimeChart={setTimeChart} data={data} />
           </div>
 
@@ -81,6 +91,7 @@ const DashBoard = () => {
               </Swiper>
             </div>
           </div>
+
           <div className="recent_order w-full  mt-4">
             <div className="flex justify-between py-3">
               <span>Recent Order</span>
