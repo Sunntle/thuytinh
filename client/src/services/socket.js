@@ -2,7 +2,7 @@ import { Manager } from "socket.io-client";
 const URL_SERVER =
   import.meta.env.NODE_ENV === "production"
     ? undefined
-    : "http://localhost:8000";
+    : import.meta.env.VITE_APP_API_URL;
 const manager = new Manager(URL_SERVER);
 export const socket = manager.socket("/client");
 export const socketAdmin = manager.socket("/admin");

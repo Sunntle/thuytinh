@@ -10,20 +10,19 @@ const EnterName = (props) => {
   const dispatch = useDispatch();
   const customerNameState = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
-
   const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
   },[]);
 
   const storeToken = useCallback((data)=>{
-    localStorage.setItem("tableToken",data)
+    localStorage.setItem("tableToken", data)
   },[])
 
   const handleSubmitName = useCallback(async() => {
     const data = {tables: [idTable], name: customerName, timestamp: new Date().valueOf()}
     await sendRequest({
       method: 'put',
-      url: '/table/token',
+      url: 'table/token',
       ...data
     }, storeToken)
     dispatch(getCustomerName(data))

@@ -1,16 +1,29 @@
 import { getPreciseDistance } from "geolib";
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
 import {Spin, Tabs} from "antd";
 import "./index.css";
+import {  useSelector } from "react-redux";
 
 function SelectTable() {
+  //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
   const { sendRequest, isLoading } = useHttp();
-  //test
+  const customerName = useSelector(state => state.customerName)
+
+  const handleSelectTable = useCallback(async (id) => {
+    navigate(`/ban-${id}`);
+  },[navigate]);
+
+  useEffect(()=>{
+    if(customerName.name.length > 0 && customerName.tables.length > 0 ){
+      handleSelectTable(customerName.tables[0])
+    }
+  }, [customerName.name.length, customerName.tables, handleSelectTable])
+
   useEffect(() => {
     const position1 = {
       latitude: 10.779984,
@@ -28,15 +41,12 @@ function SelectTable() {
         setTables,
       );
     });
+   
   }, [sendRequest]);
 
-  const handleSelectTable = async (id) => {
-    navigate(`/ban-${id}`);
-  };
-
   useEffect(() => {
-    if (tables !== null) {
-      const filteredValue = tables?.filter((table) => table.position === "in");
+    if (tables && tables.length > 0) {
+      const filteredValue = tables.filter((table) => table.position === "in");
       setTableByPosition(filteredValue);
     }
   }, [tables]);
@@ -44,7 +54,6 @@ function SelectTable() {
   const onHandleTabChange = (key) => {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
-    console.log(tableByPosition);
   };
 
   if (isLoading === true) {
@@ -57,7 +66,6 @@ function SelectTable() {
         </div>
     );
   }
-
   return (
     <div className="pb-24 mt-4 lg:mt-0 lg:pt-24">
       <div className="bg-white px-6 xl:px-12">
@@ -66,13 +74,14 @@ function SelectTable() {
           onChange={onHandleTabChange}
           defaultActiveKey={"in"}
           centered
-          items={["in", "out"].map((position,index) => {
+          items={["in", "out"].map((position) => {
             return {
               label: position === "in" ? "Ngoài trời" : "Trong nhà",
-              key: index,
+              key: position,
               children: (
                 <div className="w-full h-screen max-w-full">
                   <div className="grid grid-cols-2 gap-4">
+                 
                     {tableByPosition?.map((table) => (
                       <div key={table.id} onClick={() => handleSelectTable(table.id)} className="w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center">
                         {table.name_table}

@@ -1,20 +1,27 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import * as jose from "jose";
+import useHttp from "../../hooks/useHttp";
 
 const initialState = {
   name: "",
-  tables: null,
+  tables: [],
   timestamp: null,
-  isLoading: true,
+  isLoading: false,
 };
 export const initTable = createAsyncThunk(
   "customer-name/initTable",
-  async (defaultValue) => {
+  async () => {
     const token = localStorage.getItem("tableToken");
-    const decodeData = await jose.decodeJwt(token, "table");
-    const data = decodeData !== undefined ? decodeData : defaultValue;
-    if (data) return data;
-    return;
+    if(token){
+      const {sendRequest} = useHttp()
+      let response;
+      await sendRequest({
+        url: `table/current-table?token=${token}`,
+        method: "get",
+      }, response)
+      console.log(response);
+      return response
+    }
+    return initialState;
   },
 );
 const customerNameSlice = createSlice({

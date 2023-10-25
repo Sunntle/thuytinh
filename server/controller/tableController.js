@@ -68,10 +68,21 @@ exports.getId = asyncHandler(async (req, res, next) => {
       res.status(404).json("Phải phải nhân viên !");
     }
   }
-
-
 });
-
+  exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
+    const { token, id_employee } = req.query;
+    console.log(token);
+    if (token) {
+      console.log(token);
+      jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
+        if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+        let data = await findOne({model: Tables, where: {token:{[Op.in]: decode.tables} }})
+        if(data) res.status(200).json(data);
+      })
+      res.status(404).json({message: "Không tìm thấy bàn!"})
+    }
+      res.status(404).json("......")
+  });
 
 exports.create = asyncHandler(async (req, res) => {
   const { name_table, qr_code } = req.body;
@@ -111,7 +122,7 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
    const { tables } = req.body;
-  let token = generateTable(tables);
+  let token = generateTable(JSON.stringify(tables));
   await Tables.update({
     status_table: 1,
     token: token
