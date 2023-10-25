@@ -12,6 +12,7 @@ const { apiQueryRest, bien } = require('../utils/const');
 const { Op } = require('sequelize');
 const { generateTable } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
+
 const findTables = async (tables) => {
   const re = await Tables.findAll({
     include: {
@@ -109,10 +110,8 @@ exports.update = asyncHandler(async (req, res) => {
 });
 
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
-  // const { tables } = req.body;
-  let tables = [13];
-  let a = { tables, name: "con chim", timestamp: new Date().valueOf() }
-  let token = generateTable(a);
+   const { tables } = req.body;
+  let token = generateTable(tables);
   await Tables.update({
     status_table: 1,
     token: token
