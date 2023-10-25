@@ -9,20 +9,18 @@ import "./index.css";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { idOrder } = useSelector((state) => state.order);
   const [payment, setPayment] = useState(null);
   const { sendRequest } = useHttp();
   const [data, setData] = useState([]);
   const idTable = location.pathname.split("/")[1].split("-")[1];
   const [form] = Form.useForm();
+  const tableToken = localStorage.getItem("tableToken")
 
   useEffect(() => {
-    sendRequest(fetchTableById(idTable, idOrder), setData);
-  }, [idTable, sendRequest]);
+    sendRequest(fetchTableById(idTable, tableToken), setData);
+  }, [idTable, sendRequest, tableToken]);
 
-  console.log(data);
-
-  const order = data[0]?.order;
+  const order = data[0]?.TableByOrders[0]?.order;
   const VAT = order?.total + order?.total * 0.1 || 0;
 
   const showModal = () => {

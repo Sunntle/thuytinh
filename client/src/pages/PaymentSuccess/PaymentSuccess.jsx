@@ -16,10 +16,11 @@ const PaymentSuccess = () => {
   const [paymentData, setPaymentData] = useState(null);
   const { sendRequest, isLoading } = useHttp();
   const idTable = location.pathname.split("/")[1].split("-")[1];
+  const tableToken = localStorage.getItem("tableToken")
 
   useEffect(() => {
     sendRequest(fetchOrderById(idOrder), setOrderData);
-    sendRequest(fetchTableById(idTable, idOrder), setListOrder);
+    sendRequest(fetchTableById(idTable, tableToken), setListOrder);
   }, [sendRequest]);
 
   useEffect(() => {
@@ -92,6 +93,7 @@ const PaymentSuccess = () => {
       </div>
     );
   }
+  console.log(listOrder)
 
   return (
     <div className="lg:bg-slate-100 lg:py-2 min-h-screen max-w-full">
@@ -165,7 +167,7 @@ const PaymentSuccess = () => {
           <Table
             columns={columns}
             pagination={false}
-            dataSource={listOrder[0]?.order?.order_details}
+            dataSource={listOrder[0]?.TableByOrders[0]?.order?.order_details}
           />
         </div>
         {/*  */}
@@ -174,7 +176,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center w-full space-x-5">
               <span className="whitespace-nowrap">Tạm tính:</span>
               <span className="block font-semibold text-primary">
-                {formatCurrency(listOrder[0]?.order?.total)}
+                {formatCurrency(listOrder[0]?.TableByOrders[0]?.order?.total)}
               </span>
             </div>
             <div className="flex justify-between items-center w-full space-x-5">
@@ -188,7 +190,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center w-full space-x-5 py-1 px-3">
               <span className="whitespace-nowrap">Tổng cộng:</span>
               <span className="block font-semibold">
-                {formatCurrency(listOrder[0]?.order?.total)}
+                {formatCurrency(listOrder[0]?.TableByOrders[0]?.order?.total)}
               </span>
             </div>
           </div>
