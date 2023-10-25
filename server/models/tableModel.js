@@ -33,10 +33,8 @@ const Tables = db.sequelize.define(
     { timestamps: true }
 );
 Tables.prototype.updateStatusTable = async (arr, status_table) => {
-    await Tables.update({ status_table }, { where: { id: { [Op.in]: arr } } })
-    if (+status_table === 1) {
-        await Tables.increment("status_table", { by: 1, where: { id: { [Op.in]: arr } } });
-    }
+    await Tables.update({ status_table }, { where: { id: { [Op.in]: arr } } });
+    _io.of("/admin").emit("status table", ({ tables: arr, status_table }))
 }
 Tables.prototype.checkStatus = async (arr, status_table) => {
     const list = await Tables.findAll({

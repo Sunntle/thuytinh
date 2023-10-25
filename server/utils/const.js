@@ -2,10 +2,15 @@
 const { Op } = require("sequelize");
 const Recipes = require("../models/recipeModel");
 const Materials = require("../models/materialsModel");
+const TableByOrder = require("../models/tableByOrder");
+const OrderDetail = require("../models/orderDetailModel");
+const Product = require("../models/productModel");
+const ImageProduct = require("../models/imageModel");
 const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
 const apiQueryRest = (params) => {
-    const { _offset, _limit, _sort, _order, q, title, ...rest } = params;
+    const { _offset, _limit, _sort, _order, q, title, _noQuery, ...rest } = params;
     let query = {};
+    if (_noQuery === 1) return query.raw = true;
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
     if (q) query.where = { [title]: { [Op.substring]: q } };
@@ -68,4 +73,14 @@ const checkQtyMaterials = async (data, model) => {
     return checkOver.length === data.length;
 }
 
-module.exports = { unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };
+const bien = {
+    include: {
+        model: OrderDetail, attributes: ["id", "quantity", "id_order", "id_product"],
+        include: {
+            model: Product, attributes: ["id", "name_product", "price", "status"],
+            include: { model: ImageProduct, attributes: ["url"], }
+        }
+    }
+}
+
+module.exports = { bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };

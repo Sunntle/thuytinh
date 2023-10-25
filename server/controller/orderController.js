@@ -1,5 +1,5 @@
 const moment = require("moment");
-const { apiQueryRest, checkQtyMaterials, getQtyMaterialByProduct } = require('../utils/const')
+const { apiQueryRest, checkQtyMaterials, getQtyMaterialByProduct, bien } = require('../utils/const')
 const asyncHandler = require("express-async-handler");
 const {
   Order,
@@ -22,7 +22,7 @@ function currentYear(pa = "startOf") {
 }
 
 exports.createOrder = asyncHandler(async (req, res) => {
-  const { orders, customerName, total, table } = req.body;
+  const { orders, customerName, total, table, id_employee } = req.body;
   if (!total || !customerName || table.length === 0 || orders.length === 0) return res.status(200).json({ success: false, data: "Validate !" });
   const arrTable = table;
 
@@ -30,7 +30,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
   const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
   if (approve.length === 0) return res.status(200).json({ success: false, data: "Sản phẩm hết nguyên liệu" });
-  const order_result = await Order.create({ total, name: customerName });
+  const order_result = await Order.create({ total, name: customerName, id_employee });
   let dataTable = await TableByOrder.bulkCreate(arrTable.map(item => ({ tableId: item, orderId: order_result.id })));
   await Tables.prototype.updateStatusTable(arrTable, 1);
   let tableData = await TableByOrder.findAll({ include: { model: Tables }, where: { id: { [Op.in]: dataTable.map(i => i.id) } } })
@@ -50,6 +50,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
   let storeNotification = await Notification.create(
     { type: "order", description: `Có đơn hàng mới`, content: order_result.id }, { raw: true }
   );
+
   _io.of("/admin").emit("new message", storeNotification)
   _io.of("/client").emit("status order", result)
   res.status(200).json({ success: true, data: result });
@@ -57,31 +58,25 @@ exports.createOrder = asyncHandler(async (req, res) => {
 });
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {
+
   let query = {
-    ...apiQueryRest({ ...req.query, title: "name" }), nest: true
+    ...apiQueryRest({ ...req.query, title: "name" }), nest: true,
+
   };
   const { count, rows } = await Order.findAndCountAll({
     ...query,
     include: [
       {
-        model: OrderDetail,
-        include:
-        {
-          model: Product,
-          include:
-          {
-            model: ImageProduct,
-            attributes: ["url"],
-          }
-        },
-
+        ...bien.include
       },
+      { model: TableByOrder, attributes: ["tableId"] },
       {
         model: User,
         attributes: ["name"],
       },
     ],
   });
+
   res.status(200).json({ total: count, data: rows });
 });
 
@@ -91,6 +86,8 @@ exports.delOrder = asyncHandler(async (req, res) => {
   await Order.destroy({ where: { id } });
   res.status(200).json("Xóa đơn hàng thành công");
 });
+
+
 exports.updateOrder = asyncHandler(async (req, res) => {
   const { id_order, carts, id_table, total } = req.body;
   const over = [];
@@ -136,28 +133,17 @@ exports.updateOrder = asyncHandler(async (req, res) => {
   res.status(200).json("Update thành công");
 });
 
-// exports.updateOrder = asyncHandler(async (req, res) => {
-//   const { id, ...rest } = req.body;
-
-//   const order = rest
-//   console.log(order);
-
-//   const existingOrder = await OrderDetail.findOne({ where: { id_order: id } });
-//   // console.log(existingOrder)
-//   // if(existingOrder) {
-//   //   await existingOrder.update({
-//   //     quantity: existingOrder.quantity + rest?.quantity
-//   //   })
-//   // }
-
-//   // if (existingOrder) {
-//   //   await existingOrder.update(rest);
-//   //   res.status(200).json("Cập nhật thành công");
-//   // } else {
-//   //   await Order.create({ id, ...rest });
-//   //   res.status(201).json("Tạo mới thành công");
-//   // }
-// });
+exports.updateOrderAdmin = asyncHandler(async (req, res) => {
+  const { table, id, ...rest } = req.body;
+  console.log(req.body)
+  await Order.update({ ...rest }, { where: { id } })
+  await TableByOrder.destroy({ where: { orderId: id } });
+  await TableByOrder.bulkCreate(table.map((item) => ({
+    tableId: +item,
+    orderId: id
+  })))
+  res.status(200).json("Update thành công");
+});
 
 exports.dashBoard = asyncHandler(async (req, res) => {
   let data = {};

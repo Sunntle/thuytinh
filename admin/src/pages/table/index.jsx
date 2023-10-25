@@ -6,6 +6,7 @@ import ConfirmComponent from '../../components/confirm';
 import CreateTable from './create';
 import UpdateTable from './update';
 import Spinner from '../../components/spinner';
+import { socket } from '../../socket';
 const { Title } = Typography;
 const options = [
     { value: 'out', label: 'Bên ngoài' },
@@ -21,10 +22,10 @@ const TablePage = () => {
 
     const fetchData = useCallback(async () => {
         let res = await getAllTable();
-        console.log(res);
         setListTable(res)
         setLoading(false)
-    },[])
+    }, [])
+
 
     const handleDeleteTable = useCallback(async ({ id }) => {
         const res = await delTables(id);
@@ -35,13 +36,20 @@ const TablePage = () => {
         fetchData()
     }, [messageApi, fetchData])
 
-
+    useEffect(() => {
+        socket.on("status table", (arg) => {
+            console.log(arg)
+        })
+        return () => {
+            socket.off("status table")
+        }
+    }, [socket])
     const handleEditTable = useCallback(async (data) => {
         setIsModalOpenUpdate(true);
         setDataUpdate(data);
-    },[])
+    }, [])
 
-    const columns = useMemo(()=>[
+    const columns = useMemo(() => [
         {
             title: "Tên Bàn",
             dataIndex: "name_table",
@@ -125,7 +133,7 @@ const TablePage = () => {
                 </div>
             ),
         }
-    ],[handleDeleteTable, handleEditTable]);
+    ], [handleDeleteTable, handleEditTable]);
 
     useEffect(() => {
         fetchData()

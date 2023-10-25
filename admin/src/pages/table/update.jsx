@@ -23,6 +23,7 @@ const UpdateTable = ({ options, setDataUpdate, fetchData, dataUpdate, isModalOpe
     const onFinish = async (values) => {
         values.qr_code = url + values.qr_code;
         let { success, data } = await updateTables(values);
+        console.log(success, data)
         if (success) {
             fetchData();
             handleCancel();

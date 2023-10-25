@@ -9,14 +9,14 @@ import { Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import ResOrder from '../order/res-order';
 import { AddTableList } from '../../../redux/table/listTableSystem';
+import { socket } from '../../../socket';
 const ButtonTable = ({ table, handleTableClick, handleDetailModal }) => (
   <div key={table.id}>
     <span
-      className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${
-        table.status_table
+      className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
           ? 'bg-main text-white border-yellow-400 border-3px border-solid'
           : 'bg-[#D1D5DB] text-white'
-      } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
+        } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
     >
       <FiUsers className="w-6 h-6 mb-2" />
       Bàn {table.id}
@@ -30,7 +30,7 @@ const ButtonTable = ({ table, handleTableClick, handleDetailModal }) => (
       )}
       {table.status_table === 1 && (
         <div>
-          <span className="mt-2 text-white block grid justify-items-center">
+          <span className="mt-2 text-white  grid justify-items-center">
             Đang sử dụng
           </span>
           <div className="mt-3">
@@ -61,7 +61,14 @@ const ResChooseTable = () => {
     };
     fetchData();
   }, [dispatch]);
-
+  useEffect(() => {
+    socket.on("status table", (arg) => {
+      console.log(arg)
+    })
+    return () => {
+      socket.off("status table")
+    }
+  }, [socket])
   const handleTableClick = (index) => {
     dispatch(AddTableList(index));
     navigate('/employee/menu/');
@@ -82,12 +89,12 @@ const ResChooseTable = () => {
       children: (
         <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
           {tableData && tableData.map((table, index) => (
-                <ButtonTable
-                key={table.id}
-                table={table}
-                handleTableClick={handleTableClick}
-                handleDetailModal={handleDetailModal}
-              />
+            <ButtonTable
+              key={table.id}
+              table={table}
+              handleTableClick={handleTableClick}
+              handleDetailModal={handleDetailModal}
+            />
           ))}
         </div>
       ),
@@ -101,11 +108,11 @@ const ResChooseTable = () => {
             if (table.position === 'out') {
               return (
                 <ButtonTable
-                key={table.id}
-                table={table}
-                handleTableClick={handleTableClick}
-                handleDetailModal={handleDetailModal}
-              />
+                  key={table.id}
+                  table={table}
+                  handleTableClick={handleTableClick}
+                  handleDetailModal={handleDetailModal}
+                />
               );
             }
             return null;
@@ -122,11 +129,11 @@ const ResChooseTable = () => {
             if (table.position === 'in') {
               return (
                 <ButtonTable
-                key={table.id}
-                table={table}
-                handleTableClick={handleTableClick}
-                handleDetailModal={handleDetailModal}
-              />
+                  key={table.id}
+                  table={table}
+                  handleTableClick={handleTableClick}
+                  handleDetailModal={handleDetailModal}
+                />
               );
             }
             return null;
@@ -140,7 +147,7 @@ const ResChooseTable = () => {
     <>
       <div className="w-full p-10">
         <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1" items={items} />
-        <ResOrder handleCancel={handleCancel} open={open}/>
+        <ResOrder handleCancel={handleCancel} open={open} />
       </div>
     </>
   );

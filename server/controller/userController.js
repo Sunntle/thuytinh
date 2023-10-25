@@ -19,7 +19,7 @@ exports.register = asyncHandler(async (req, res) => {
       message: "Thiếu thông tin người dùng",
     });
   const [user, created] = await User.findOrCreate({
-    where: { email: email },
+    where: { [Op.or]: { email: email, name: name } },
     defaults: { ...req.body },
   });
   if (created) {
@@ -34,7 +34,7 @@ exports.register = asyncHandler(async (req, res) => {
     _io.of("/admin").emit("new message", storeNotification)
     res.status(200).json({ success: true, data: user });
   } else {
-    res.status(200).json({ success: false, mes: "Email đã tồn tại rồi nha" });
+    res.status(200).json({ success: false, mes: "Thông tin đã tồn tại rồi nha" });
   }
 });
 
@@ -47,9 +47,9 @@ exports.login = asyncHandler(async (req, res) => {
       message: "Thiếu thông tin người dùng",
     });
   const user = await User.findOne({ where: { email } });
+
   if (user && (await user.comparePassword(password))) {
-    const { createdAt, updatedAt, refreshToken, password, ...userAcc } =
-      user.toJSON();
+    const { createdAt, updatedAt, refreshToken, password, ...userAcc } = user.toJSON();
     const accessToken = generateAccessToken(userAcc.id, userAcc.role);
     const newrefreshToken = generateRefreshToken(userAcc.id, userAcc.role);
     await User.update(
@@ -71,7 +71,11 @@ exports.login = asyncHandler(async (req, res) => {
   }
 });
 exports.getAllUser = asyncHandler(async (req, res) => {
-  const { _offset, _limit, _sort, _order, q, _like, ...rest } = req.query;
+  const { _offset, _limit, _sort, _order, q, _like, _noQuery, ...rest } = req.query;
+
+  if (_noQuery == 1) {
+    return res.status(200).json(await User.findAll({ where: { role: 'R2' }, attributes: ["id", "name", "phone"], raw: true }));
+  }
   const query = {
     raw: true,
     include:
@@ -103,6 +107,7 @@ exports.getAllUser = asyncHandler(async (req, res) => {
       },
     });
   }
+
   const { count, rows } = await User.findAndCountAll(query);
   const adminOnline = getAllUserOnline()
   const data = rows.map(itemA => {
