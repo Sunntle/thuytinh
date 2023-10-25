@@ -17,8 +17,8 @@ const {
 const { Op, Sequelize } = require("sequelize");
 
 function currentYear(pa = "startOf") {
-  const date = moment()[pa]('year');
-  return date.format('YYYY-MM-DD');
+  const date = moment()[pa]("year");
+  return date.format("YYYY-MM-DD");
 }
 
 exports.createOrder = asyncHandler(async (req, res) => {
@@ -38,23 +38,30 @@ exports.createOrder = asyncHandler(async (req, res) => {
   let val = approve.map((item) => ({
     id_product: item.id,
     quantity: item.quantity,
-    id_order: order_result.id
+    id_order: order_result.id,
   }));
 
   const order_detail = await OrderDetail.bulkCreate(val);
   let product = await Product.findAll({
-    where: { id: { [Op.in]: order_detail.map((item) => item.id_product) } }, include: [{ model: ImageProduct, attributes: ["url", "id"] }]
+    where: { id: { [Op.in]: order_detail.map((item) => item.id_product) } },
+    include: [{ model: ImageProduct, attributes: ["url", "id"] }],
   });
-  let result = { orders: order_result, detail: order_detail, product, tableByOrder: tableData };
+  let result = {
+    orders: order_result,
+    detail: order_detail,
+    product,
+    tableByOrder: tableData,
+  };
 
   let storeNotification = await Notification.create(
-    { type: "order", description: `Có đơn hàng mới`, content: order_result.id }, { raw: true }
+    { type: "order", description: `Có đơn hàng mới`, content: order_result.id },
+    { raw: true },
   );
 
   _io.of("/admin").emit("new message", storeNotification)
   _io.of("/client").emit("status order", result)
-  res.status(200).json({ success: true, data: result });
 
+  res.status(200).json({ success: true, data: result });
 });
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {

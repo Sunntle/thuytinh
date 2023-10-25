@@ -1,0 +1,30 @@
+.ant-collapse {
+    width: 100%;
+}
+
+.radio-custom {
+    .ant-radio-wrapper {
+        @apply border rounded w-full px-2 py-3 my-1 shadow-sm font-medium;
+    }
+}
+
+.radio-custom {
+    .ant-radio-wrapper-checked {
+        @apply border-primary text-primary;
+    }
+}
+
+.radio-custom {
+    .ant-radio {
+        position: absolute;
+        left: -9999px;
+        overflow: hidden;
+    }
+}
+
+.radio-custom .ant-radio + * {
+    display: block;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 8px;
+}

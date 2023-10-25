@@ -1,3 +1,4 @@
+// Categories
 export const fetchCategories = () => {
     return {
         method: 'get',
@@ -6,7 +7,6 @@ export const fetchCategories = () => {
 }
 
 // Product
-
 export const fetchProduct = () => {
     return {
         method: 'get',
@@ -45,10 +45,17 @@ export const addOrder = (body) => {
     }
 }
 
-//Table
-export const fetchTableById = (id) => {
+export const fetchOrderById = (id) => {
     return {
         method: 'get',
-        url: `/table/${id}`
+        url: `/order/${id}`
+    }
+}
+
+//Table
+export const fetchTableById = (idTable, idOrder) => {
+    return {
+        method: 'get',
+        url: `/table/${idTable}?id_order=${idOrder}`
     }
 }

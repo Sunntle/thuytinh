@@ -20,7 +20,7 @@ const Menu = () => {
   const { sendRequest, isLoading, error } = useHttp();
   const [foods, setFoods] = useState(null);
   const [categories, setCategories] = useState(null);
-  const orders = useSelector((state) => state.order);
+  const { order: orders } = useSelector((state) => state.order);
   const debouncedValue = useDebounce(searchValue, 100);
 
   useEffect(() => {
@@ -106,15 +106,15 @@ const Menu = () => {
           >
             <BiFoodMenu className="w-6 h-6" />
             <span className="absolute -right-1 px-2 py-0.5 rounded-full -top-1 text-xs bg-primary text-white">
-              {orders.length}
+              {orders?.length || 0}
             </span>
           </div>
-          {/* <OrderListModal
+           <OrderListModal
             isModalOpen={isOrderModalOpen}
             handleOk={handleOk}
             handleCancel={handleCancel}
             setIsOrderModalOpen={setIsOrderModalOpen}
-          /> */}
+          />
         </div>
         {/*Category*/}
         <div className="relative w-full text-sm">

@@ -1,11 +1,12 @@
-import {memo, useEffect, useMemo, useState} from "react";
-import { Button, Modal } from "antd";
+import { useEffect, useState } from "react";
+import { Alert, Button, Modal } from "antd";
 import "./main.css";
 import { BiSolidTrash } from "react-icons/bi";
 import { AiFillWarning } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { formatCurrency } from "../../utils/format.js";
 import {
+  addIdOrder,
   decreaseQuantity,
   emptyOrder,
   increaseQuantity,
@@ -23,16 +24,17 @@ const OrderListModal = ({
   setIsOrderModalOpen,
 }) => {
   const [data, setData] = useState(null);
-  const orders = useSelector((state) => state.order);
+  const { order: orders} = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const idTable = location.pathname.split("/")[1].split("-")[1];
   const { sendRequest, isLoading } = useHttp();
   const dispatch = useDispatch();
   // Calculate Total Bill
-  const total = useMemo(() => orders.reduce((acc, cur) => {
+  const total = orders?.reduce((acc, cur) => {
     acc += cur.quantity * cur.price;
     return acc;
-  }, 0),[])
+  }, 0);
+
   const showDeleteConfirm = (id) => {
     confirm({
       title: "Bạn muốn xóa món ăn này ?",
@@ -69,18 +71,25 @@ const OrderListModal = ({
     const body = {
       orders: orders,
       total: total,
-      customerName: customerName,
-      idTable: idTable,
+      customerName: customerName.name,
+      table: [idTable],
     };
     try {
       await sendRequest(addOrder(body), setData);
       dispatch(emptyOrder());
-      console.log("Đặt món thành công");
     } catch (err) {
       console.log(err);
     }
     setIsOrderModalOpen(false);
   };
+
+  useEffect(() => {
+    if (data?.success === false) {
+      alert(data?.data);
+    } else if (data?.success === true ) {
+      dispatch(addIdOrder(data?.data?.orders?.id))
+    }
+  }, [data]);
 
   return (
     <Modal
@@ -93,7 +102,7 @@ const OrderListModal = ({
       centered
       footer={[
         <Button
-          disabled={orders.length === 0}
+          disabled={orders?.length === 0}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
           key="submit"
           size="middle"
@@ -104,8 +113,8 @@ const OrderListModal = ({
       ]}
     >
       <div className="max-h-96 overflow-y-auto space-y-3 custom-scrollbar">
-        {orders.length > 0 ? (
-          orders.map((item) => (
+        {orders?.length > 0 ? (
+          orders?.map((item) => (
             <div
               key={item.id}
               className="border h-auto w-auto rounded-lg grid grid-cols-12 gap-4 text-slate-500 overflow-hidden shadow-sm"

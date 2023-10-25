@@ -1,6 +1,9 @@
 const moment = require("moment");
 const queryString = require("qs");
 const crypto = require("crypto");
+const request = require("request");
+const asyncHandler = require("express-async-handler");
+const { Order } = require("../models");
 
 const sortObj = (obj) => {
   let sorted = {};
@@ -18,7 +21,7 @@ const sortObj = (obj) => {
   return sorted;
 };
 
-exports.createPaymentUrl = async (req, res) => {
+exports.createPaymentUrl = asyncHandler(async (req, res) => {
   process.env.TZ = "Asia/Ho_Chi_Minh";
 
   let date = new Date();
@@ -59,14 +62,14 @@ exports.createPaymentUrl = async (req, res) => {
   vnp_Params = sortObj(vnp_Params);
   let signData = queryString.stringify(vnp_Params, { encode: false });
   let hmac = crypto.createHmac("sha512", secretKey);
-  let signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
+  let signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
   vnp_Params["vnp_SecureHash"] = signed;
   vnpUrl += "?" + queryString.stringify(vnp_Params, { encode: false });
 
   res.json(vnpUrl);
-};
+});
 
-exports.VnpIPN = async (req, res) => {
+exports.VnpIPN = asyncHandler(async (req, res) => {
   let vnp_Params = req.query;
   let secureHash = vnp_Params["vnp_SecureHash"];
 
@@ -80,7 +83,7 @@ exports.VnpIPN = async (req, res) => {
   let secretKey = process.env.VNP_HASHSECRET;
   let signData = queryString.stringify(vnp_Params, { encode: false });
   let hmac = crypto.createHmac("sha512", secretKey);
-  let signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
+  let signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
   let paymentStatus = "0";
 
   let checkOrderId = true;
@@ -117,11 +120,10 @@ exports.VnpIPN = async (req, res) => {
   } else {
     res.status(200).json({ RspCode: "97", Message: "Checksum failed" });
   }
-};
+});
 
-exports.ReturnURL = async (req, res, next) => {
+exports.ReturnURL = asyncHandler(async (req, res) => {
   let vnp_Params = req.query;
-  console.log(req.query);
 
   let secureHash = vnp_Params["vnp_SecureHash"];
 
@@ -135,7 +137,7 @@ exports.ReturnURL = async (req, res, next) => {
 
   let signData = queryString.stringify(vnp_Params, { encode: false });
   let hmac = crypto.createHmac("sha512", secretKey);
-  let signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
+  let signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
 
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
@@ -143,4 +145,114 @@ exports.ReturnURL = async (req, res, next) => {
   } else {
     res.json({ code: "97" });
   }
-};
+});
+
+exports.queryDr = asyncHandler(async (req, res) => {
+  process.env.TZ = "Asia/Ho_Chi_Minh";
+  let date = new Date();
+
+  let vnp_TmnCode = process.env.VNP_TMNCODE;
+  let secretKey = process.env.VNP_HASHSECRET;
+  let vnp_Api = process.env.VNP_API;
+
+  let vnp_TxnRef = req.body.orderId;
+  let vnp_TransactionDate = req.body.transDate;
+
+  let vnp_RequestId = moment(date).format("HHmmss");
+  let vnp_Version = "2.1.0";
+  let vnp_Command = "querydr";
+  let vnp_OrderInfo = "Truy van GD ma:" + vnp_TxnRef;
+
+  let vnp_IpAddr =
+    req.headers["x-forwarded-for"] ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress;
+
+  let currCode = "VND";
+  let vnp_CreateDate = moment(date).format("YYYYMMDDHHmmss");
+
+  let data =
+    vnp_RequestId +
+    "|" +
+    vnp_Version +
+    "|" +
+    vnp_Command +
+    "|" +
+    vnp_TmnCode +
+    "|" +
+    vnp_TxnRef +
+    "|" +
+    vnp_TransactionDate +
+    "|" +
+    vnp_CreateDate +
+    "|" +
+    vnp_IpAddr +
+    "|" +
+    vnp_OrderInfo;
+
+  let hmac = crypto.createHmac("sha512", secretKey);
+  let vnp_SecureHash = hmac.update(new Buffer(data, "utf-8")).digest("hex");
+
+  let dataObj = {
+    vnp_RequestId: vnp_RequestId,
+    vnp_Version: vnp_Version,
+    vnp_Command: vnp_Command,
+    vnp_TmnCode: vnp_TmnCode,
+    vnp_TxnRef: vnp_TxnRef,
+    vnp_OrderInfo: vnp_OrderInfo,
+    vnp_TransactionDate: vnp_TransactionDate,
+    vnp_CreateDate: vnp_CreateDate,
+    vnp_IpAddr: vnp_IpAddr,
+    vnp_SecureHash: vnp_SecureHash,
+  };
+  // /merchant_webapi/api/transaction
+  request(
+    {
+      url: vnp_Api,
+      method: "POST",
+      json: true,
+      body: dataObj,
+    },
+    (error, response, body) => {
+      res.status(200).json(body);
+    },
+  );
+});
+
+exports.updateTransactionOrder = asyncHandler(async (req, res) => {
+  const { transaction_id, transaction_date, idOrder, payment_gateway } =
+    req.body;
+
+  const existingTransactionId = await Order.findOne({
+    where: { transaction_id: transaction_id },
+  });
+
+  if (existingTransactionId === null) {
+    try {
+      const orderUpdated = await Order.update(
+        {
+          transaction_id: transaction_id,
+          transaction_date: transaction_date,
+          payment_gateway: payment_gateway,
+        },
+        {
+          where: { id: idOrder },
+        },
+      );
+
+      if (orderUpdated) {
+        res
+          .status(200)
+          .json({
+            data: orderUpdated,
+            message: "Cập nhật mã giao dịch thành công",
+          });
+      } else {
+        res.status(500).json({ message: "Cập nhật mã giao dịch thất bại" });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+});

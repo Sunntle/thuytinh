@@ -93,10 +93,9 @@ Order.hasOne(Reviews, {
 });
 User.hasMany(Order, { sourceKey: "id", foreignKey: "id_employee" });
 
-
 async function synchronizeModels() {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
     console.log("Models synchronized successfully.");
   } catch (error) {
     console.error("Error synchronizing models:", error);
