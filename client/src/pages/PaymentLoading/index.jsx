@@ -17,6 +17,7 @@ const PaymentLoading = () => {
     idOrder: idOrder,
     transaction_id: dataResponse.vnp_TxnRef,
     transaction_date: dataResponse.vnp_PayDate,
+    payment_gateway: dataResponse.vnp_BankCode
   };
 
   useEffect(() => {

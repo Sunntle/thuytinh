@@ -214,14 +214,15 @@ exports.queryDr = asyncHandler(async (req, res) => {
       json: true,
       body: dataObj,
     },
-    (error, response) => {
-      res.status(200).json(response);
+    (error, response, body) => {
+      res.status(200).json(body);
     },
   );
 });
 
 exports.updateTransactionOrder = asyncHandler(async (req, res) => {
-  const { transaction_id, transaction_date, idOrder } = req.body;
+  const { transaction_id, transaction_date, idOrder, payment_gateway } =
+    req.body;
 
   const existingTransactionId = await Order.findOne({
     where: { transaction_id: transaction_id },
@@ -230,18 +231,26 @@ exports.updateTransactionOrder = asyncHandler(async (req, res) => {
   if (existingTransactionId === null) {
     try {
       const orderUpdated = await Order.update(
-        { transaction_id: transaction_id, transaction_date: transaction_date },
+        {
+          transaction_id: transaction_id,
+          transaction_date: transaction_date,
+          payment_gateway: payment_gateway,
+        },
         {
           where: { id: idOrder },
         },
       );
 
       if (orderUpdated) {
-        res.status(200).json({ data: orderUpdated,message: "Cập nhật mã giao dịch thành công" });
+        res
+          .status(200)
+          .json({
+            data: orderUpdated,
+            message: "Cập nhật mã giao dịch thành công",
+          });
       } else {
         res.status(500).json({ message: "Cập nhật mã giao dịch thất bại" });
       }
-
     } catch (err) {
       console.log(err);
     }

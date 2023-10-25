@@ -30,7 +30,7 @@ const OrderListModal = ({
   const { sendRequest, isLoading } = useHttp();
   const dispatch = useDispatch();
   // Calculate Total Bill
-  const total = orders.reduce((acc, cur) => {
+  const total = orders?.reduce((acc, cur) => {
     acc += cur.quantity * cur.price;
     return acc;
   }, 0);
@@ -102,7 +102,7 @@ const OrderListModal = ({
       centered
       footer={[
         <Button
-          disabled={orders.length === 0}
+          disabled={orders?.length === 0}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
           key="submit"
           size="middle"
@@ -113,8 +113,8 @@ const OrderListModal = ({
       ]}
     >
       <div className="max-h-96 overflow-y-auto space-y-3 custom-scrollbar">
-        {orders.length > 0 ? (
-          orders.map((item) => (
+        {orders?.length > 0 ? (
+          orders?.map((item) => (
             <div
               key={item.id}
               className="border h-auto w-auto rounded-lg grid grid-cols-12 gap-4 text-slate-500 overflow-hidden shadow-sm"
