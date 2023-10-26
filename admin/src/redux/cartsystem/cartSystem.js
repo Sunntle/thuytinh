@@ -16,6 +16,10 @@ const cartSystem = createSlice({
                 state.carts.push(tempvar)
             }
         },
+        AddCartUpdate:(state, action) => {
+            const tempvar = { ...action.payload, quantity: action.payload.quantity };
+            state.carts.push(tempvar);
+        },
         RemoveCart:(state,action) =>{
             const nextCartItems = state.carts.filter(item=>item.id!==action.payload.id);
             state.carts = nextCartItems;
@@ -58,5 +62,5 @@ const cartSystem = createSlice({
     }
 })
 
-export const {AddCart, RemoveCart,RemoveAllCart,DecreaseCart, getTotal} = cartSystem.actions;
+export const {AddCart,AddCartUpdate, RemoveCart,RemoveAllCart,DecreaseCart, getTotal} = cartSystem.actions;
 export default cartSystem.reducer;

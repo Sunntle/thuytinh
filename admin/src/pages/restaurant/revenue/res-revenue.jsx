@@ -34,14 +34,6 @@ const ResRevenue = () => {
         setDataProduct(dataPr)
     }
 
-    // const [totalOrder, setOrder] = useState([])
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const resOrder = await getAllOrder();
-    //         setOrder(resOrder);
-    //     }
-    //     fetchData();
-    // }, []);
     const columns = [
         {
             title: 'Mã đơn hàng',
@@ -92,7 +84,6 @@ const ResRevenue = () => {
         fetchData();
     }, []);
 
-
     return (
         <>
             <div className='w-full p-10'>
@@ -128,15 +119,13 @@ const ResRevenue = () => {
                                     autoplay={true}
                                     spaceBetween={50}
                                     slidesPerView={3}
-                                // onSlideChange={() => console.log('slide change')}
-                                // onSwiper={(swiper) => console.log(swiper)}
                                 >
                                     {dataProduct?.map((item, index) => (
-                                        <SwiperSlide>
+                                        <SwiperSlide key={index}>
                                             <div className="w-full pe-5">
                                                 <Badge.Ribbon text="Hot" color="red">
                                                     <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
-                                                        <img src={item.imageUrls} />
+                                                        <img src={item.ImageProducts[0]?.url} />
                                                         <div className=' font-medium'>{item.name_product}</div>
                                                         <div className='flex justify-between items-center  '>
                                                             <p className=' font-medium text-main text-lg'>{formatGia(item.price)}</p>
@@ -156,7 +145,7 @@ const ResRevenue = () => {
                                     <span className='text-black font-medium text-sm text-center '>
                                         Số đơn
                                     </span>
-                                    <p className='text-orange-400 text-2xl font-medium text-center'>56</p>
+                                    <p className='text-orange-400 text-2xl font-medium text-center'>{data?.order}</p>
                                 </div>
                                 <div className='w-1/2  p-4 h-full flex flex-col justify-center items gap-1'>
                                     <span className='text-black font-medium text-sm text-center'>
