@@ -302,14 +302,17 @@ function HeaderComponent() {
           />
         </div>
         <div className="flex items-center justify-center gap-x-4">
-          <Switch
-            checked={customize.darkMode}
-            onClick={() =>
-              dispatch(ChangeMode({ darkMode: !customize.darkMode }))
-            }
-            checkedChildren={<DarkIcon />}
-            unCheckedChildren={<LightIcon />}
-          />
+          <Tooltip title="Theme">
+            <Button
+              size="large"
+              type="text"
+              onClick={() =>
+                dispatch(ChangeMode({ darkMode: !customize.darkMode }))
+              }
+              shape="circle"
+              icon={customize.darkMode ? <LightIcon /> : <DarkIcon />}
+            />
+          </Tooltip>
           <NotificationsComponent
             notifications={noti.content}
             openPopover={openPopover}

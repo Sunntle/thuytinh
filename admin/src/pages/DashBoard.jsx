@@ -37,7 +37,7 @@ const DashBoard = () => {
   }, [timeChart]);
 
   useEffect(() => {
-    fetchData();
+    // fetchData();
   }, [fetchData])
   
   if(loading) return <Spinner/>
