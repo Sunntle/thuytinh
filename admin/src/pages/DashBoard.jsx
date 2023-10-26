@@ -7,12 +7,10 @@ import { useEffect, useState, useCallback } from "react";
 import { formatGia } from "../utils/format";
 import { Autoplay } from "swiper/modules";
 import { getAllProduct, getDataDashboard } from "../services/api";
-import { formatGia } from "../utils/format";
-import { useCallback } from "react";
 import Spinner from "../components/spinner";
 import { Link } from "react-router-dom";
-const img =
-  "https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000";
+import { UpCircleFilled } from "@ant-design/icons";
+
 const DashBoard = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -27,14 +25,14 @@ const DashBoard = () => {
         _order: "DESC",
         _sold: "gte_0",
         _limit: 10,
-      }, getAllProduct({
+      }), getAllProduct({
         _sort: "discount",
         _order: "DESC",
         _discount: "gt_0",
         _limit: 10,
-      });
+      })]);
       setDiscount(resProductsDiscount);
-       setData(res1);
+      setData(res1);
       setDataProduct(res2.data);
     } catch (err) {
       console.log(err);
@@ -45,7 +43,7 @@ const DashBoard = () => {
 
   useEffect(() => {
     fetchData()
-  }, [timeChart])
+  }, [timeChart, fetchData])
   if (loading) return <Spinner />
   return (
     <div className="w-full my-7 px-5">
@@ -53,11 +51,11 @@ const DashBoard = () => {
         <Col xs={24} lg={16}>
           <div className="rounded-lg border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2">
-              <span className="font-medium text-sm text-center ">Tổng thu nhập của năm {new Date().getFullYear()}</span>
+              <span className="font-medium text-sm text-center ">Tổng thu nhập - Năm {new Date().getFullYear()}</span>
               <p className="text-orange-400 text-lg font-medium text-center">{formatGia(data?.totalOrderYear || 0)}</p>
             </div>
             <div className="w-1/3  p-4 h-full flex flex-col justify-center items gap-1">
-              <span className="font-medium text-sm text-center">Thu nhập của tháng {new Date().getMonth() + 1}</span>
+              <span className="font-medium text-sm text-center">Thu nhập - Tháng {new Date().getMonth() + 1}</span>
               <p className="text-lg font-medium text-green-500 text-center">{formatGia(data.montdPreAndCur?.[1]?.total || 0)}</p>
             </div>
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1">
