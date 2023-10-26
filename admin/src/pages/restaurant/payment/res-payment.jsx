@@ -15,6 +15,7 @@ const ResPayment = () => {
     const total = useSelector(state => state.cart)
     const tablelist = useSelector((state) => state.tablelist);
     const navigate = useNavigate();
+    console.log(tablelist)
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -46,15 +47,15 @@ const ResPayment = () => {
     };
 
     // Xu ly update order
-    const order_details = tablelist?.order?.order_details;
-    const totalOld = tablelist?.total;
+    // const order_details = tablelist?.TableByOrders[0]?.order?.order_details;
+    // const totalOld = tablelist?.total;
 
     const sumitUpdateOrder = async (value) => {
         try {
             let res;
 
             const body = {
-                id_order: tablelist.order.id,
+                id_order: tablelist.TableByOrders[0].order.id,
                 carts: carts,
                 id_table: tablelist.id,
                 total: totalVAT
@@ -68,7 +69,7 @@ const ResPayment = () => {
                 type: "success",
                 content: "Cập nhật món mới thành công thành công!",
             });
-            navigate('/employee/menu/' + index);
+            navigate('/employee/choosetable/');
         } catch (err) {
             console.log(err);
         }

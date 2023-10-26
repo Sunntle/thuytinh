@@ -3,13 +3,13 @@ import "../payment/res-payment.css"
 import { Button, Divider, Modal, message, Form, Radio, Drawer } from "antd"
 import { AiOutlineCheckCircle } from "react-icons/ai"
 import { useDispatch, useSelector } from 'react-redux'
-import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
-import { CloseOutlined } from '@ant-design/icons'
+import { AddCart, AddCartUpdate, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
+import { CloseOutlined } from '@ant-design/icons';
 import { HiMinus, HiPlus } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
 import { addOrder, createPayment, getTableId } from '../../../services/api'
-import { RemoveTable } from '../../../redux/table/tableSystem'
 import { AddTableList } from '../../../redux/table/listTableSystem'
+import { formatGia } from '../../../utils/format'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const RenderFooter = ({
@@ -29,7 +29,7 @@ const RenderFooter = ({
     </div>
     <div className='total'>
         <span className='font-medium text-lg'>Tổng tiền:</span>
-        <span className='float-right text-lg text-main'>{tablelist?.order?.total} VNĐ</span>
+        <span className='float-right text-lg text-main'>{ formatGia(tablelist?.TableByOrders[0]?.order?.total) }</span>
     </div>
     <div className='grid grid-cols-4 mt-12'>
         <div className='flex justify-center font-semibold col-span-2 m-1'>
@@ -87,12 +87,18 @@ const ResOrder = ({ handleCancel, open }) => {
     const [payment, setPayment] = useState(null);
     const [form] = Form.useForm();
     const tablelist = useSelector((state) => state.tablelist);
-    const order_details = tablelist?.order?.order_details;
+    const tablebyorders = tablelist?.TableByOrders[0]
+    const order = tablebyorders?.order;
+    const order_details = order?.order_details;
+    console.log(tablelist)
+    
 
     //them mon moi
     const handleUpdate = (index) => {
-        index.order.order_details.forEach(item => {
-            dispatch(AddCart({ quantity: item.quantity, ...item.Product }))
+        dispatch(RemoveAllCart())
+        index.TableByOrders[0].order.order_details.forEach(item => {
+            console.log(item.quantity)
+            dispatch(AddCartUpdate({ quantity: item.quantity, ...item.Product }))
         });
         dispatch(AddTableList(index))
         navigate('/employee/menu/');
@@ -133,9 +139,9 @@ const ResOrder = ({ handleCancel, open }) => {
            <div className=" dark:bg-darkModeBgBox flex flex-col rounded-lg">
                 {order_details && order_details.map((item, index) =>
                     <div key={index}>
-                        <div className='product-remove'>
+                        {/* <div className='product-remove'>
                             <button className='float-right text-red-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
-                        </div>
+                        </div> */}
                         <div className='flex item-center my-3'>
                             <div className='flex-none h-16 w-15 mr-4 hover:bg-hoverColor'>
                                 {/* <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item.product.ImageProducts.url} /> */}
@@ -143,7 +149,7 @@ const ResOrder = ({ handleCancel, open }) => {
                             <div className='flex-grow'>
                                 <div className='flex items-end justify-between'>
                                     <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.Product.name_product}</span>
-                                    <span className='text-main mb-3'>{item.Product.price} VNĐ</span>
+                                    <span className='text-main mb-3'>{formatGia(item.Product.price) }</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
                                     <span className='font-medium text-slate-500 text-lg text-sm'>Số lượng:</span>
