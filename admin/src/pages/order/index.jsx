@@ -63,7 +63,7 @@ const OrderPage = () => {
   };
   const notifications = useSelector(state => state.notifications)
   const location = useLocation();
-  const fetchData = async (query) => {
+  const fetchData = useCallback(async (query) => {
     const { data, total } = await getAllOrder(query);
     const avl = total > 0 && data.map((item) => {
       let data = {
@@ -84,7 +84,7 @@ const OrderPage = () => {
     });
     setDataOrder(avl);
     setLoading(false)
-  }
+  }, [])
 
   const fetchDataEmployeeAndTable = async () => {
     let [nv, ban] = await Promise.all([getAllUser({ _noQuery: 1 }), getAllTable({ _noQuery: 1 })]);
