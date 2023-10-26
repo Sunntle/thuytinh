@@ -12,9 +12,6 @@ const Materials = db.sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    price: {
-      type: DataTypes.INTEGER,
-    },
     amount: {
       type: DataTypes.INTEGER,
     },
@@ -26,10 +23,13 @@ const Materials = db.sequelize.define(
     },
     image: {
       type: DataTypes.STRING(1000),
-    },
+    }
   },
   { timestamps: true }
 );
+
+
+
 Materials.beforeDestroy(async (material, options) => {
   const { image } = material.dataValues;
   const public_id = image.split("/").at(-1).split(".")[0];

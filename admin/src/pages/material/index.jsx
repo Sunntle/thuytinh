@@ -1,4 +1,4 @@
-import { Col, Row, Typography, message } from "antd";
+import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, notification } from "antd";
 import ButtonComponents from "../../components/button";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table } from "antd";
@@ -11,6 +11,7 @@ import {
   editMaterial,
   getAllMaterial,
   getOneMaterial,
+  importMaterial,
 } from "../../services/api";
 import EditMaterial from "./edit";
 import ColumnChart from "../../components/chart/column-chart";
@@ -21,18 +22,28 @@ import { formatNgay } from "../../utils/format";
 const { Title, Text } = Typography;
 function MaterialPage() {
   const [open, setOpen] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
   const [openModelEdit, setOpenModelEdit] = useState(false);
   const [materials, setMaterials] = useState([]);
   const [data, setData] = useState(null);
   const [dataChart, setDataChart] = useState([]);
-  const notifications = useSelector(state => state.notifications)
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const notifications = useSelector(state => state.notifications);
+
   const location = useLocation();
   const [loading, setLoading] = useState(true);
+  const [form] = Form.useForm()
+  
+  const handleImport = useCallback(async (record) => {
+    setOpenDrawer(true);
+    const { name_material, id, image } = record;
+    form.setFieldsValue({ name_material, materialId: id, image });
+  },[form])
   const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
     setMaterials({
       ...res,
-      data: res.data.map((el) => ({ ...el, key: el.id })),
+      data: res.data.map((el) => ({ ...el, key: el.id, price: el.Warehouses?.[0]?.price_import || 0 })),
     });
 
     setDataChart(res.dataChart);
@@ -58,21 +69,28 @@ function MaterialPage() {
     } else {
       message.open({ type: "danger", content: "Có gì đó sai sai!" });
     }
-  },[fetchData]);
+  }, [fetchData]);
 
   const handleClickEditMaterial = useCallback(async (id) => {
     const res = await getOneMaterial(id);
     setData(res);
     setOpenModelEdit(true);
-  },[]);
+  }, []);
 
-  const columns = useMemo(()=>[
+  const columns = useMemo(() => [
+    {
+      title: "Nhập hàng",
+      dataIndex: "ma",
+      fixed: "left",
+      render: (_, record) => (
+        <span className="cursor-pointer" onClick={() => handleImport(record)}>Nhập hàng</span>
+      )
+    },
     {
       title: "Hình nguyên liệu",
       dataIndex: "image",
-      fixed: "left",
-      render: (_, record) => (
 
+      render: (_, record) => (
         <img
           className="w-full"
           style={{ maxWidth: "120px" }}
@@ -138,7 +156,6 @@ function MaterialPage() {
       title: "Số lượng",
       dataIndex: "amount",
     },
-
     {
       title: "Action",
       key: "action",
@@ -161,7 +178,7 @@ function MaterialPage() {
         </div>
       ),
     },
-  ],[handleClickEditMaterial, handleDeleteMaterial]);
+  ], [handleClickEditMaterial, handleDeleteMaterial, handleImport]);
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
@@ -206,15 +223,27 @@ function MaterialPage() {
     } catch (err) {
       message.open({ type: "error", content: "Có gì đó không ổn!" });
     }
-  },[fetchData]);
+  }, [fetchData]);
 
   const handleCancel = useCallback(() => {
     setOpen(false);
     setData(null);
-  },[]);
+  }, []);
 
+  const closeDrawer = () => {
+    form.resetFields();
+    setOpenDrawer(!openDrawer);
+  }
+  
+  const handleFinish = async (values) => {
+    const res = await importMaterial(values);
+    notification.success({ message: "Thông báo", description: res });
+    fetchData()
+    closeDrawer()
+  }
   return (
     <div className="my-7 px-5">
+      {contextHolder}
       {loading ? (
         <Spinner />
       ) : (<> {dataChart.length > 0 && (
@@ -262,6 +291,62 @@ function MaterialPage() {
             />
           </Col>
         </Row>
+        <Drawer title="Nhập nguyên liệu" placement="left" onClose={closeDrawer} open={openDrawer}>
+          <Form form={form} onFinish={handleFinish} initialValues={{ price: 0 }}
+            labelAlign="left"
+            labelCol={{
+              span: 24
+            }}
+            wrapperCol={{
+              span: 24
+            }}>
+            {openDrawer && <img className="p-2" src={form.getFieldValue("image")} />}
+            <Form.Item name="name_material" >
+              <Input disabled />
+            </Form.Item>
+            <Form.Item
+              hidden name="materialId"
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item label="Giá (vnđ) :" name="price" rules={[
+              {
+                required: true,
+                message: "Bạn phải điền tên nguyên liệu",
+              },
+              {
+                type: "number",
+                min: 1001,
+                message: "Giá phải lớn hơn 1000",
+              },
+            ]}>
+              <InputNumber min={0} className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value.replace(/\$\s?|(,*)/g, '')} />
+            </Form.Item>
+            <Form.Item
+              name="amount_import"
+              label="Số lượng nguyên liệu"
+              rules={[
+                {
+                  required: true,
+                  min: 1,
+                  message: "Bạn phải nhập số lượng nguyên liệu",
+                },
+              ]}
+
+            >
+              <Input />
+            </Form.Item>
+            <ButtonComponents
+              content={"Nhập nguyên liệu"}
+              key="submit"
+              htmlType="submit"
+              className="border-borderSecondaryColor bg-secondaryColor"
+            />
+
+
+          </Form>
+        </Drawer>
         <Table
           columns={columns}
           dataSource={materials.data}

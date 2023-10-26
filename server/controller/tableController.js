@@ -50,8 +50,11 @@ exports.getId = asyncHandler(async (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-      let data = await findTables(decode.tables)
-      res.status(200).json(data);
+      let data = await findTables(decode.tables);
+      const isToken = data.every(item => item.token == token);
+      if (isToken) return res.status(200).json(data);
+      return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+
     })
   } else {
     const employee = await User.findOne({
@@ -78,9 +81,9 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
       }
       if (decode) {
         const data = await Tables.findAll({
-          where: { token: {[Op.substring]: token} },
+          where: { token: { [Op.substring]: token } },
         })
-        if(data && data.length > 0) {
+        if (data && data.length > 0) {
           res.status(200).json(decode);
         }
         else res.status(404).json({ message: "Không tìm thấy bàn!" });
@@ -130,7 +133,7 @@ exports.update = asyncHandler(async (req, res) => {
 });
 
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
-   const { tables } = req.body;
+  const { tables } = req.body;
   let token = generateTable(JSON.stringify(req.body));
   await Tables.update({
     status_table: 1,
