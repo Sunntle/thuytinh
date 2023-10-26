@@ -102,7 +102,7 @@ function NotificationsComponent({
       onOpenChange={() => setOpenPopover(!openPopover)}
       placement="topRight"
     >
-      <Badge count={getCountNoti}>
+      <Badge count={getCountNoti} style={{borderColor: 'rgb(255, 77, 79)'}}>
         <Button
           type="primary"
           className="border-borderSecondaryColor bg-secondaryColor"
