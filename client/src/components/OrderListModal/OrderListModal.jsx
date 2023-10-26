@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Modal } from "antd";
+import { Button, Modal } from "antd";
 import "./main.css";
 import { BiSolidTrash } from "react-icons/bi";
 import { AiFillWarning } from "react-icons/ai";
@@ -14,9 +14,8 @@ import {
 } from "../../redux/Order/orderSlice.js";
 import useHttp from "../../hooks/useHttp.js";
 import { addOrder } from "../../services/api.js";
-import { addSelectedItems } from "../../redux/SelectedItem/selectedItemsSlice.js";
-
 const { confirm } = Modal;
+
 const OrderListModal = ({
   isModalOpen,
   handleOk,
@@ -27,12 +26,13 @@ const OrderListModal = ({
   const { order: orders} = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const idTable = location.pathname.split("/")[1].split("-")[1];
-  const { sendRequest, isLoading } = useHttp();
+  const { sendRequest } = useHttp();
   const dispatch = useDispatch();
+
   // Calculate Total Bill
   const total = orders?.reduce((acc, cur) => {
     acc += cur.quantity * cur.price;
-    return acc;
+    return acc + (acc * 0.1);
   }, 0);
 
   const showDeleteConfirm = (id) => {

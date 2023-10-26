@@ -1,14 +1,14 @@
 import { useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { initTable } from "../redux/CustomerName/customerNameSlice.js";
-import { useEffect } from "react";
 import SelectTable from "../pages/SelectTable/index.jsx";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { initTable } from "../redux/CustomerName/customerNameSlice.js";
 function CheckTable(props) {
   const location = useLocation();
-  const dispatch = useDispatch();
-  const idTable = location.pathname.split("/")[1].split("-")[1]
+  let idTable = location.pathname.split("/")[1].split("-")[1] // exist  = quet QR // undefined
+  const dispatch = useDispatch()
   useEffect(()=>{
-      if(idTable) dispatch(initTable({tables: [idTable], name: "", timestamp: new Date().valueOf()}))
+    dispatch(initTable())
   },[])
   // eslint-disable-next-line react/prop-types
   return idTable ? (props.children) : (<SelectTable/>)

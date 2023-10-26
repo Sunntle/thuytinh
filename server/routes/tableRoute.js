@@ -1,7 +1,8 @@
-const { getAll, create, update, del, getId, updateStatusAndToken } = require('../controller/tableController');
+const { getAll, create, update, del, getId, updateStatusAndToken, checkCurrentTable } = require('../controller/tableController');
 const express = require("express");
 const router = express.Router();
 router.get("/", getAll);
+router.get("/current-table", checkCurrentTable);
 router.get("/:id", getId);
 router.post("/", create);
 router.put("/", update);
