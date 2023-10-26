@@ -10,6 +10,7 @@ const EnterName = (props) => {
   const dispatch = useDispatch();
   const customerNameState = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
+
   const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
   },[]);
@@ -22,13 +23,13 @@ const EnterName = (props) => {
     const data = {tables: [idTable], name: customerName, timestamp: new Date().valueOf()}
     await sendRequest({
       method: 'put',
-      url: 'table/token',
+      url: '/table/token',
       ...data
     }, storeToken)
     dispatch(getCustomerName(data))
     // navigate(`/ban-${customerNameState.tables[0]}/menu`);
   },[customerName, dispatch, idTable, sendRequest, storeToken]);
-
+  console.log(customerNameState);
   if(customerNameState.isLoading) return "Loading...."
   if(customerNameState?.name?.length > 0) return props.children
   return (

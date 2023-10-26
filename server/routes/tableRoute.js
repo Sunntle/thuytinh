@@ -2,8 +2,8 @@ const { getAll, create, update, del, getId, updateStatusAndToken, checkCurrentTa
 const express = require("express");
 const router = express.Router();
 router.get("/", getAll);
-router.get("/:id", getId);
 router.get("/current-table", checkCurrentTable);
+router.get("/:id", getId);
 router.post("/", create);
 router.put("/", update);
 router.put("/token", updateStatusAndToken);

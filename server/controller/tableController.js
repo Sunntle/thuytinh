@@ -47,7 +47,6 @@ exports.getAll = asyncHandler(async (req, res) => {
 exports.getId = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const { token, id_employee } = req.query;
-
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
@@ -69,20 +68,30 @@ exports.getId = asyncHandler(async (req, res, next) => {
     }
   }
 });
-  exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
-    const { token, id_employee } = req.query;
-    console.log(token);
-    if (token) {
-      console.log(token);
-      jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
-        if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-        let data = await findOne({model: Tables, where: {token:{[Op.in]: decode.tables} }})
-        if(data) res.status(200).json(data);
-      })
-      res.status(404).json({message: "Không tìm thấy bàn!"})
-    }
-      res.status(404).json("......")
-  });
+
+exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
+  const { token, id_employee } = req.query;
+  if (token) {
+    jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
+      if (err) {
+        return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+      }
+      if (decode) {
+        const data = await Tables.findAll({
+          where: { token: {[Op.substring]: token} },
+        })
+        if(data && data.length > 0) {
+          res.status(200).json(decode);
+        }
+        else res.status(404).json({ message: "Không tìm thấy bàn!" });
+      } else {
+        return res.status(404).json({ message: "Không tìm thấy bàn!" });
+      }
+    });
+  } else {
+    res.status(404).json("......");
+  }
+});
 
 exports.create = asyncHandler(async (req, res) => {
   const { name_table, qr_code } = req.body;
@@ -122,7 +131,7 @@ exports.update = asyncHandler(async (req, res) => {
 
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
    const { tables } = req.body;
-  let token = generateTable(JSON.stringify(tables));
+  let token = generateTable(JSON.stringify(req.body));
   await Tables.update({
     status_table: 1,
     token: token

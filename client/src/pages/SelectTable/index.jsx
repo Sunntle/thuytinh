@@ -5,12 +5,14 @@ import useHttp from "../../hooks/useHttp";
 import {Spin, Tabs} from "antd";
 import "./index.css";
 import {  useSelector } from "react-redux";
+import DeliveryNotSupported from "../DeliveryNotSupported";
 
 function SelectTable() {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
+  const [distanceState, setDistanceState] = useState(0)
   const { sendRequest, isLoading } = useHttp();
   const customerName = useSelector(state => state.customerName)
 
@@ -26,8 +28,8 @@ function SelectTable() {
 
   useEffect(() => {
     const position1 = {
-      latitude: 10.779984,
-      longitude: 106.675157,
+    latitude: 10.8524972,
+    longitude: 106.6259193
     };
     navigator.geolocation.getCurrentPosition(async (position) => {
       const position2 = {
@@ -35,7 +37,7 @@ function SelectTable() {
         longitude: position.coords.longitude,
       };
       const distance = getPreciseDistance(position1, position2);
-      console.log(distance);
+      setDistanceState(distance)
       await sendRequest(
         { method: "get", url: "/table?_status_table=eq_0" },
         setTables,
@@ -55,7 +57,7 @@ function SelectTable() {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-
+  // if(distanceState > 100 ) return <DeliveryNotSupported/>
   if (isLoading === true) {
     return (
         <div className="h-screen w-full flex flex-col justify-center items-center">

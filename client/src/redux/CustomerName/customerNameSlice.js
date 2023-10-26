@@ -1,24 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import useHttp from "../../hooks/useHttp";
+import axios from "../../utils/axiosConfig";
 
 const initialState = {
   name: "",
   tables: [],
   timestamp: null,
   isLoading: false,
+  message: ""
 };
 export const initTable = createAsyncThunk(
   "customer-name/initTable",
-  async () => {
+  async (_,{rejectWithValue}) => {
     const token = localStorage.getItem("tableToken");
     if(token){
-      const {sendRequest} = useHttp()
-      let response;
-      await sendRequest({
-        url: `table/current-table?token=${token}`,
-        method: "get",
-      }, response)
-      console.log(response);
+      const response = await axios.get(`/table/current-table?token=${token}`)
+      if(response.message) return rejectWithValue(response.message)
       return response
     }
     return initialState;
@@ -40,8 +36,9 @@ const customerNameSlice = createSlice({
       .addCase(initTable.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(initTable.rejected, (state) => {
+      .addCase(initTable.rejected, (state,action) => {
         state.isLoading = false;
+        state.message = action.payload
       })
       .addCase(initTable.fulfilled, (state, action) => {
         state.isLoading = false;
