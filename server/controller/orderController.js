@@ -1,5 +1,10 @@
 const moment = require("moment");
-const { apiQueryRest, checkQtyMaterials, getQtyMaterialByProduct, bien } = require('../utils/const')
+const {
+  apiQueryRest,
+  checkQtyMaterials,
+  getQtyMaterialByProduct,
+  bien,
+} = require("../utils/const");
 const asyncHandler = require("express-async-handler");
 const {
   Order,
@@ -23,17 +28,38 @@ function currentYear(pa = "startOf") {
 
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table, id_employee } = req.body;
-  if (!total || !customerName || table.length === 0 || orders.length === 0) return res.status(200).json({ success: false, data: "Validate !" });
+  if (!total || !customerName || table.length === 0 || orders.length === 0)
+    return res.status(200).json({
+      success: false,
+      data: "Validate !",
+    });
   const arrTable = table;
 
-  if (await Tables.prototype.checkStatus(arrTable, 0)) return res.status(200).json({ success: false, data: "Bàn đã có người đặt" })
+  if (await Tables.prototype.checkStatus(arrTable, 0))
+    return res.status(200).json({
+      success: false,
+      data: "Bàn đã có người đặt",
+    });
 
-  const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
-  if (approve.length === 0) return res.status(200).json({ success: false, data: "Sản phẩm hết nguyên liệu" });
-  const order_result = await Order.create({ total, name: customerName, id_employee });
-  let dataTable = await TableByOrder.bulkCreate(arrTable.map(item => ({ tableId: item, orderId: order_result.id })));
+  const { approve, over } =
+    await Materials.prototype.checkAmountByProduct(orders);
+  if (approve.length === 0)
+    return res
+      .status(200)
+      .json({ success: false, data: "Sản phẩm hết nguyên liệu" });
+  const order_result = await Order.create({
+    total,
+    name: customerName,
+    id_employee,
+  });
+  let dataTable = await TableByOrder.bulkCreate(
+    arrTable.map((item) => ({ tableId: item, orderId: order_result.id })),
+  );
   await Tables.prototype.updateStatusTable(arrTable, 1);
-  let tableData = await TableByOrder.findAll({ include: { model: Tables }, where: { id: { [Op.in]: dataTable.map(i => i.id) } } })
+  let tableData = await TableByOrder.findAll({
+    include: { model: Tables },
+    where: { id: { [Op.in]: dataTable.map((i) => i.id) } },
+  });
 
   let val = approve.map((item) => ({
     id_product: item.id,
@@ -58,22 +84,22 @@ exports.createOrder = asyncHandler(async (req, res) => {
     { raw: true },
   );
 
-  _io.of("/admin").emit("new message", storeNotification)
-  _io.of("/client").emit("status order", result)
+  _io.of("/admin").emit("new message", storeNotification);
+  _io.of("/client").emit("status order", result);
 
   res.status(200).json({ success: true, data: result });
 });
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {
-
   let query = {
-    ...apiQueryRest({ ...req.query, title: "name" }), nest: true,
+    ...apiQueryRest({ ...req.query, title: "name" }),
+    nest: true,
   };
   const { count, rows } = await Order.findAndCountAll({
     ...query,
     include: [
       {
-        ...bien.include
+        ...bien.include,
       },
       { model: TableByOrder, attributes: ["tableId"] },
       {
@@ -92,54 +118,61 @@ exports.delOrder = asyncHandler(async (req, res) => {
   await Order.destroy({ where: { id } });
   res.status(200).json("Xóa đơn hàng thành công");
 });
-exports.getOrderById = asyncHandler(async (req, res) => {
-  const { id: idOrder } = req.params;
-  try {
-    const existingOrder = await Order.findOne({ where: { id: idOrder } });
-    if (existingOrder) res.status(200).json({ data: existingOrder });
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-});
 
 exports.updateOrder = asyncHandler(async (req, res) => {
   const { id_order, carts, id_table, total } = req.body;
   const over = [];
   let current = await OrderDetail.findAll({
     where: {
-      [Op.or]: carts.map(item => ({ id_product: item.id, id_order }))
-    }, raw: true
-  })
-  await Order.update({ total }, { where: { id: id_order } })
+      [Op.or]: carts.map((item) => ({ id_product: item.id, id_order })),
+    },
+    raw: true,
+  });
+  await Order.update({ total }, { where: { id: id_order } });
   for (const cart of carts) {
-    let orderDatabase = current.find(ele => ele.id_product === cart.id);
+    let orderDatabase = current.find((ele) => ele.id_product === cart.id);
     let val = await getQtyMaterialByProduct(cart);
     let result = await checkQtyMaterials(val, Materials);
     if (orderDatabase) {
       cart.quantity -= orderDatabase.quantity;
       if (cart.quantity > 0) {
         if (result) {
-          await Promise.all(val.map(async (item) => (
-            await Materials.decrement("amount", { by: item.total, where: { id: item.id_material } })
-          )))
-          await OrderDetail.increment("quantity", { by: cart.quantity, where: { id: orderDatabase.id } })
+          await Promise.all(
+            val.map(
+              async (item) =>
+                await Materials.decrement("amount", {
+                  by: item.total,
+                  where: { id: item.id_material },
+                }),
+            ),
+          );
+          await OrderDetail.increment("quantity", {
+            by: cart.quantity,
+            where: { id: orderDatabase.id },
+          });
         } else {
-          over.push(cart)
+          over.push(cart);
           await Product.update({ status: 4 }, { where: { id: cart.id } });
         }
       }
     } else {
       if (result) {
-        await Promise.all(val.map(async (item) => (
-          await Materials.decrement("amount", { by: item.total, where: { id: item.id_material } })
-        )))
+        await Promise.all(
+          val.map(
+            async (item) =>
+              await Materials.decrement("amount", {
+                by: item.total,
+                where: { id: item.id_material },
+              }),
+          ),
+        );
         await OrderDetail.create({
           id_product: cart.id,
           quantity: cart.quantity,
-          id_order: id_order
-        })
+          id_order: id_order,
+        });
       } else {
-        over.push(cart)
+        over.push(cart);
         await Product.update({ status: 4 }, { where: { id: cart.id } });
       }
     }
@@ -149,13 +182,15 @@ exports.updateOrder = asyncHandler(async (req, res) => {
 
 exports.updateOrderAdmin = asyncHandler(async (req, res) => {
   const { table, id, ...rest } = req.body;
-  console.log(req.body)
-  await Order.update({ ...rest }, { where: { id } })
+  console.log(req.body);
+  await Order.update({ ...rest }, { where: { id } });
   await TableByOrder.destroy({ where: { orderId: id } });
-  await TableByOrder.bulkCreate(table.map((item) => ({
-    tableId: +item,
-    orderId: id
-  })))
+  await TableByOrder.bulkCreate(
+    table.map((item) => ({
+      tableId: +item,
+      orderId: id,
+    })),
+  );
   res.status(200).json("Update thành công");
 });
 
@@ -228,4 +263,15 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     { labels: [], values: [] },
   );
   res.status(200).json(data);
+});
+
+exports.getOrderById = asyncHandler(async (req, res) => {
+  const { id: idOrder } = req.params;
+
+  try {
+    const existingOrder = await Order.findOne({ where: { id: idOrder } });
+    if (existingOrder) res.status(200).json({ data: existingOrder });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
 });

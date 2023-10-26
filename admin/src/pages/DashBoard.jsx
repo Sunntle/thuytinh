@@ -36,10 +36,17 @@ const DashBoard = () => {
   }, [timeChart])
 
   useEffect(() => {
+<<<<<<< HEAD
     fetchData();
   }, [timeChart])
 
   if (loading) return <Spinner />
+=======
+    // fetchData();
+  }, [fetchData])
+  
+  if(loading) return <Spinner/>
+>>>>>>> 95b063cd7847e8bbd3a0cb46b0583c773455e66e
   return (
     <div className="w-full my-7 px-5">
       <Row gutter={[32, 16]}>
