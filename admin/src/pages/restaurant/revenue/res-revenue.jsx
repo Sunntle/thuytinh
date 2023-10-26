@@ -1,14 +1,10 @@
-import { Badge, Col, Rate, Row, Table } from 'antd';
+import { Badge, Col, Input, Rate, Row, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from 'swiper/modules';
-import { PlusOutlined } from '@ant-design/icons';
 import 'swiper/css/autoplay';
-import { CiViewTimeline } from 'react-icons/ci';
-import { calculateDailyRevenue, calculateWeeklyRevenue, formatGia } from '../../../utils/format';
-import { getAllOrder, getAllProduct, getDataDashboard } from '../../../services/api';
-import PieChart from '../../../components/chart/pie-chart';
+import { calculateDailyRevenue, calculateMonthlyRevenue, calculateWeeklyRevenue, formatGia, formatNgay } from '../../../utils/format';
+import { getAllMaterial, getAllOrder, getAllProduct, getDataDashboard } from '../../../services/api';
 import LineChart from '../../../components/chart/line-chart';
+import ColumnChart from '../../../components/chart/column-chart';
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 
@@ -18,10 +14,13 @@ const ResRevenue = () => {
     const [data, setData] = useState({});
     const [timeChart, setTimeChart] = useState("MONTH");
     const [dataProduct, setDataProduct] = useState();
+    const [dataOrder, setDataOrder] = useState([]);
+    const [dataChart, setDataChart] = useState([])
+    const [materials, setMaterials] = useState([]);
 
     useEffect(() => {
         fetchData();
-    }, [timeChart])
+    }, [timeChart, dataOrder])
     const fetchData = async () => {
         const res = await getDataDashboard(timeChart);
         const { data: dataPr } = await getAllProduct({
@@ -34,52 +33,158 @@ const ResRevenue = () => {
         setDataProduct(dataPr)
     }
 
+    const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+            <div
+                style={{
+                    padding: 8,
+                }}
+                onKeyDown={(e) => e.stopPropagation()}
+            >
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{
+                        marginBottom: 8,
+                        display: 'block',
+                    }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={handleReset}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            close();
+                        }}
+                    >
+                        close
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined
+                style={{
+                    color: filtered ? '#1677ff' : undefined,
+                }}
+            />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]?.toString()?.toLowerCase()?.includes(value?.toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) => text
+
+    });
+
     const columns = [
         {
             title: 'Mã đơn hàng',
             dataIndex: 'id',
-            // render: (_, record) => (
-            //     <span className='font-medium cursor-pointer' onClick={() => showDetail(record)}>TTLGH{record.id}</span>
-            // )
+            render: (_, record) => (
+                <span className='font-medium cursor-pointer' onClick={() => showDetail(record)}>TTLGH{record.id}</span>
+            )
+        },
+        {
+            title: 'Khách hàng',
+            dataIndex: 'name',
+            // ...getColumnSearchProps('name'),
+        },
+        {
+            title: 'Số điện thoại',
+            dataIndex: 'phone',
+            // ...getColumnSearchProps('phone'),
+        },
+        {
+            title: 'Người phụ trách',
+            dataIndex: 'employee',
+            // ...getColumnSearchProps('employee'),
+        },
+        {
+            title: 'Số lượng',
+            dataIndex: 'quantity',
+            align: "center ",
+            sorter: (a, b) => a.quantity - b.quantity,
         },
         {
             title: 'Bàn',
-            dataIndex: 'id_table',
+            dataIndex: 'table',
+            align: "center "
         },
         {
             title: 'Thanh toán',
             dataIndex: 'payment',
+            align: "center "
         },
         {
-            title: 'Thời gian',
-            dataIndex: 'date_order',
+            title: 'Ngày đặt',
+            dataIndex: 'createdAt',
+            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt)
         },
         {
             title: 'Tổng tiền',
             dataIndex: 'total',
-            // render: (_, record) => (
-            //     <span className='text-main font-medium text-lg'>{formatGia(record.total)}</span>
-            // )
-        },
-        {
-            title: 'Điều chỉnh',
-            key: 'action',
             render: (_, record) => (
-                <div className='h-10 flex items-center cursor-pointer'>
-                    <span className='bg-orange-500 px-4 rounded-md py-2 text-white' onClick={() => showModalUpdate(record)} >Sửa</span>
-                    <ConfirmComponent title="Xác nhận xóa đơn hàng" confirm={() => handDeleteOrder(record.id)} >Xóa</ConfirmComponent>
-                </div>
-            ),
-        },
+                <span className='text-main font-medium text-lg'>{formatGia(record.total)}</span>
+            )
+        }
+
     ];
 
     useEffect(() => {
-        const fetchData = async () => {
-            const { data } = await getAllOrder();
+        const fetchData = async (query) => {
+            const { data, total } = await getAllOrder();
             setTotalOrder(data);
             const daily = calculateDailyRevenue(data);
             const weekly = calculateWeeklyRevenue(data);
-            setRevenue({ daily, weekly });
+            const monthly = calculateMonthlyRevenue(data)
+            setRevenue({ daily, weekly ,monthly });
+            const avl = total > 0 && data?.map((item) => {
+                let data = {
+                    id: item.id,
+                    name: item.name,
+                    phone: item.phone,
+                    user: item.name,
+                    total: item.total,
+                    table: item?.TableByOrders?.map(i => i.tableId).join(", "),
+                    employee: item?.User?.name,
+                    id_employee: item.id_employee,
+                    payment: item.payment,
+                    createdAt: formatNgay(item.createdAt),
+                    quantity: item?.order_details.reduce((a, b) => a + b?.quantity, 0),
+                    meta: { ...item, table: item?.TableByOrders?.map(i => i.tableId.toString()) },
+                };
+                return data;
+            });
+            setDataOrder(avl);
+            const res = await getAllMaterial();
+            setDataChart(res.dataChart);
         }
         fetchData();
     }, []);
@@ -90,82 +195,73 @@ const ResRevenue = () => {
                 <div className='pt-5'>
                     <Row gutter={[32, 16]}>
                         <Col xs={24} lg={16}>
-                            <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-50 flex-row flex items-center h-24">
+                            <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
                                 <div className='w-1/3 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2'>
-                                    <span className='text-black font-medium text-sm text-center '>
+                                    <span className=' font-medium text-sm text-center '>
                                         Tổng tháng
                                     </span>
-                                    <p className='text-orange-400 text-2xl font-medium text-center'>54000000</p>
+                                    <p className='text-orange-400 text-2xl font-medium text-center'>{formatGia(revenue.monthly)}</p>
                                 </div>
                                 <div className='w-1/3  p-4 h-full flex flex-col justify-center items gap-1'>
-                                    <span className='text-black font-medium text-sm text-center'>
+                                    <span className=' font-medium text-sm text-center'>
                                         Tổng tiền tuần
                                     </span>
-                                    <p className='text-2xl font-medium text-green-500 text-center'>{revenue.weekly}</p>
+                                    <p className='text-2xl font-medium text-green-500 text-center'>{formatGia(revenue.weekly)}</p>
                                 </div>
                                 <div className='w-1/3 p-4 h-full flex flex-col justify-center items  gap-1'>
-                                    <span className='text-black font-medium text-sm text-center'>
+                                    <span className='font-medium text-sm text-center'>
                                         Tổng tiền ngày
                                     </span>
-                                    <p className='text-2xl font-medium text-red-500 text-center'>{revenue.daily}</p>
+                                    <p className='text-2xl font-medium text-red-500 text-center'>{formatGia(revenue.daily)}</p>
                                 </div>
                             </div>
-                            <div className="chart-line_area mt-4 rounded-lg">
+                            <div className="chart-line_area mt-4 rounded-lg border-solid border-2 border-orange-400">
                                 <LineChart timeChart={timeChart} setTimeChart={setTimeChart} data={data} />
-                            </div>                            <div className='w-full'>
-                                <div className='text-2xl text-center p-5'>Món ăn phổ biến</div>
-                                <Swiper
-                                    modules={[Autoplay]}
-                                    autoplay={true}
-                                    spaceBetween={50}
-                                    slidesPerView={3}
-                                >
-                                    {dataProduct?.map((item, index) => (
-                                        <SwiperSlide key={index}>
-                                            <div className="w-full pe-5">
-                                                <Badge.Ribbon text="Hot" color="red">
-                                                    <div className=' border-2 border-gray-300 px-4 py-2 rounded-lg'>
-                                                        <img src={item.ImageProducts[0]?.url} />
-                                                        <div className=' font-medium'>{item.name_product}</div>
-                                                        <div className='flex justify-between items-center  '>
-                                                            <p className=' font-medium text-main text-lg'>{formatGia(item.price)}</p>
-                                                        </div>
-                                                    </div>
-                                                </Badge.Ribbon>
-                                            </div>
-                                        </SwiperSlide>
-
-                                    ))}
-                                </Swiper>
                             </div>
                         </Col>
                         <Col xs={24} lg={8}>
-                            <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-50 flex-row flex items-center h-24">
+                            <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
                                 <div className='w-1/2 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2'>
-                                    <span className='text-black font-medium text-sm text-center '>
+                                    <span className=' font-medium text-sm text-center '>
                                         Số đơn
                                     </span>
-                                    <p className='text-orange-400 text-2xl font-medium text-center'>{data?.order}</p>
+                                    <p className='text-orange-400 text-2xl font-medium text-center'>{totalOrder.length || '0'}</p>
                                 </div>
                                 <div className='w-1/2  p-4 h-full flex flex-col justify-center items gap-1'>
-                                    <span className='text-black font-medium text-sm text-center'>
-                                        Số khách hàng
+                                    <span className=' font-medium text-sm text-center'>
+                                        Số nguyên liệu sắp hết
                                     </span>
-                                    <p className='text-2xl font-medium text-green-500 text-center'>150</p>
+                                    <p className='text-2xl font-medium text-green-500 text-center'>{dataChart.length || '0'}</p>
                                 </div>
                             </div>
-                            <div className='flex flex-col mt-6 border-solid border-2 rounded border-orange-400'>
+                            {/* <div className='flex flex-col mt-6 border-solid border-2 rounded border-orange-400'>
                                 <div className="border-2 rounded-lg p-4 ">
                                     <span className="font-medium text-lg">Món ăn phổ biến</span>
                                     <div className="overflow-hidden w-full p-2">
-                                        <PieChart data={data?.category || []} />
+                                        <MeterialChart dataChart={dataChart || []} />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                         </Col>
                     </Row>
-                    <Table className='mt-4' columns={columns} rowKey={'id'} />
+                    <div className='mt-6 border-solid border-2 rounded border-orange-400'>
+                    <div className="m-4 font-medium text-lg font-medium">Nguyên liệu sắp hết</div>
+                        <ColumnChart
+                        customClassName='max-w-full'
+                            series={[
+                                {
+                                    name: "Nguyên liệu gần hết",
+                                    data: dataChart.map((item) => item.amount),
+                                },
+                            ]}
+                            colors="#fc8019"
+                            categories={dataChart.map(
+                                (item) => `${item.name_material} (${item.unit})`
+                            )}
+                        />
+                    </div>
+                    <Table className='mt-4' columns={columns} dataSource={dataOrder} rowKey={"id"} />
                 </div>
 
             </div>

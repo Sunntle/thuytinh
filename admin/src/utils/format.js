@@ -74,3 +74,21 @@ export function calculateWeeklyRevenue(transactions) {
 
   return weeklyRevenue;
 }
+export function calculateMonthlyRevenue(transactions) {
+  const today = new Date();
+  const month = today.getMonth();
+  const year = today.getFullYear();
+  const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+
+  let monthlyRevenue = 0;
+
+  for (const totalOrder of transactions) {
+    const transactionDate = new Date(totalOrder.createdAt);
+    if (transactionDate >= firstDayOfMonth && transactionDate <= lastDayOfMonth) {
+      monthlyRevenue += totalOrder.total;
+    }
+  }
+
+  return monthlyRevenue;
+}
