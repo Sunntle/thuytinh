@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import Home from "../pages/Home/home.jsx";
 import Order from "../pages/Order/order.jsx";
@@ -59,9 +59,9 @@ const router = createBrowserRouter([
         element: <Menu />,
       },
       {
-         path: "menu",
-         element: <Navigate to=".." />,
-       },
+        path: "menu",
+        element: <Navigate to=".." />,
+      },
       { index: "home", element: <Home /> },
 
       {

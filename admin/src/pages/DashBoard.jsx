@@ -13,34 +13,33 @@ const img =
   "https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000";
 const DashBoard = () => {
   const [data, setData] = useState({});
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [timeChart, setTimeChart] = useState("MONTH");
   const [dataProduct, setDataProduct] = useState(null);
 
   const fetchData = useCallback(async () => {
-    setLoading(true)
     try {
-      const res = await getDataDashboard(timeChart);
-      const { data: dataPr } = await getAllProduct({
+      const [res1, res2] = await Promise.all([getDataDashboard(timeChart), getAllProduct({
         _sort: "sold",
         _order: "DESC",
         _sold: "gte_0",
         _limit: 10,
-      });
-      setData(res);
-      setDataProduct(dataPr);
+      })])
+      setData(res1);
+      setDataProduct(res2.data);
+
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
-  }, [timeChart]);
+  }, [timeChart])
 
   useEffect(() => {
     fetchData();
-  }, [fetchData])
-  
-  if(loading) return <Spinner/>
+  }, [timeChart])
+
+  if (loading) return <Spinner />
   return (
     <div className="w-full my-7 px-5">
       <Row gutter={[32, 16]}>

@@ -68,7 +68,6 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
 
   let query = {
     ...apiQueryRest({ ...req.query, title: "name" }), nest: true,
-
   };
   const { count, rows } = await Order.findAndCountAll({
     ...query,
@@ -93,7 +92,15 @@ exports.delOrder = asyncHandler(async (req, res) => {
   await Order.destroy({ where: { id } });
   res.status(200).json("Xóa đơn hàng thành công");
 });
-
+exports.getOrderById = asyncHandler(async (req, res) => {
+  const { id: idOrder } = req.params;
+  try {
+    const existingOrder = await Order.findOne({ where: { id: idOrder } });
+    if (existingOrder) res.status(200).json({ data: existingOrder });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
 
 exports.updateOrder = asyncHandler(async (req, res) => {
   const { id_order, carts, id_table, total } = req.body;
@@ -153,6 +160,7 @@ exports.updateOrderAdmin = asyncHandler(async (req, res) => {
 });
 
 exports.dashBoard = asyncHandler(async (req, res) => {
+  console.log(req.query.type)
   let data = {};
   const type = req.query.type;
   const info = type === "MONTH" ? "T/" : "Năm : ";
@@ -171,18 +179,23 @@ exports.dashBoard = asyncHandler(async (req, res) => {
         [Op.between]: [currentYear(), currentYear("endOf")],
       },
     };
-  data.totalMonth = (
+  data.montdPreAndCur = (
     await Order.findAll({
-      attributes: [[Sequelize.fn("SUM", Sequelize.col("total")), "total"]],
+      attributes: [
+        [Sequelize.fn('SUM', Sequelize.col('total')), 'total'],
+        [Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'month'],
+      ],
       where: {
         createdAt: {
           [Op.between]: [previousMonth, currentMonth],
         },
       },
-      group: [Sequelize.fn("MONTH", Sequelize.col("createdAt"))],
-      order: [[Sequelize.fn("MONTH", Sequelize.col("createdAt")), "ASC"]],
+      group: [Sequelize.fn('MONTH', Sequelize.col('createdAt'))],
+      order: [[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'ASC']],
+      raw: true,
     })
-  ).map((item) => item.total);
+  )
+  // .map((item) => item.total);
   data.category = await Category.findAll({
     attributes: [
       "name_category",

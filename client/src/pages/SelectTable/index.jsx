@@ -1,8 +1,8 @@
-import { getPreciseDistance } from "geolib";\
+import { getPreciseDistance } from "geolib";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
-import {Spin, Tabs} from "antd";
+import { Spin, Tabs } from "antd";
 import "./index.css";
 
 function SelectTable() {
@@ -21,6 +21,7 @@ function SelectTable() {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       };
+      console.log(position2)
       const distance = getPreciseDistance(position1, position2);
       console.log(distance);
       await sendRequest(
@@ -49,12 +50,12 @@ function SelectTable() {
 
   if (isLoading === true) {
     return (
-        <div className="h-screen w-full flex flex-col justify-center items-center">
-          {isLoading && <Spin size={"large"} />}
-          <span className="mt-5 text-base font-semibold">
+      <div className="h-screen w-full flex flex-col justify-center items-center">
+        {isLoading && <Spin size={"large"} />}
+        <span className="mt-5 text-base font-semibold">
           Quý khách vui lòng đợi trong giây lát.
         </span>
-        </div>
+      </div>
     );
   }
 
