@@ -38,6 +38,7 @@ function SelectTable() {
       };
       console.log(position2)
       const distance = getPreciseDistance(position1, position2);
+      console.log(distance);
       setDistanceState(distance)
       await sendRequest(
         { method: "get", url: "/table?_status_table=eq_0" },
@@ -58,7 +59,7 @@ function SelectTable() {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-  // if(distanceState > 100 ) return <DeliveryNotSupported/>
+  if(distanceState > 100 ) return <DeliveryNotSupported/>
   if (isLoading === true) {
     return (
       <div className="h-screen w-full flex flex-col justify-center items-center">
