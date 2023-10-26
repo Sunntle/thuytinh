@@ -6,6 +6,7 @@ import {
   calculateWeeklyRevenue,
   calculateMonthlyRevenue,
   formatGia,
+  formatNgay,
 } from "../../../utils/format";
 import {
   getAllOrder,
@@ -25,18 +26,17 @@ const ResRevenue = () => {
   const [admin, setAdmin] = useState(null);
   const [dataOrder, setDataOrder] = useState([]);
   const [dataChart, setDataChart] = useState([])
-  console.log(dataChart)
 
   const fetchData = useCallback(async () => {
     try{
         // const res = await getDataDashboard(timeChart);
-        const [{ data }, dataAdmin, res] = Promise.all([getAllOrder(), getAllUser({ _like: "role_R1_not" }), getAllMaterial()])
+        const [{data}, dataAdmin, res] = await Promise.all([getAllOrder(), getAllUser({ _like: "role_R1_not" }), getAllMaterial()])
         const daily = calculateDailyRevenue(data);
         const weekly = calculateWeeklyRevenue(data);
         const monthly = calculateMonthlyRevenue(data)
         dataAdmin.success && setAdmin(dataAdmin);
         setRevenue({ data, daily, weekly, monthly });
-        // setData(res);
+        setData(data);
         const avl =  data?.map((item) => {
             let data = {
                 id: item.id,
@@ -144,9 +144,9 @@ const ResRevenue = () => {
       <div className="pt-5">
         <Row gutter={[32, 16]}>
           <Col xs={24} lg={16}>
-            <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-50 flex-row flex items-center h-24">
+            <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
               <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2">
-                <span className="text-black font-medium text-sm text-center ">
+                <span className=" font-medium text-sm text-center ">
                   Tổng tháng
                 </span>
                 <p className="text-orange-400 text-2xl font-medium text-center">
@@ -154,7 +154,7 @@ const ResRevenue = () => {
                 </p>
               </div>
               <div className="w-1/3  p-4 h-full flex flex-col justify-center items gap-1">
-                <span className="text-black font-medium text-sm text-center">
+                <span className=" font-medium text-sm text-center">
                   Tổng tiền tuần
                 </span>
                 <p className="text-2xl font-medium text-green-500 text-center">
@@ -162,7 +162,7 @@ const ResRevenue = () => {
                 </p>
               </div>
               <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1">
-                <span className="text-black font-medium text-sm text-center">
+                <span className=" font-medium text-sm text-center">
                   Tổng tiền ngày
                 </span>
                 <p className="text-2xl font-medium text-red-500 text-center">
@@ -170,7 +170,7 @@ const ResRevenue = () => {
                 </p>
               </div>
             </div>
-            <div className="chart-line_area mt-4 rounded-lg">
+            <div className="chart-line_area mt-4 rounded-lg border-solid border-2 border-orange-400">
               <LineChart
                 timeChart={timeChart}
                 setTimeChart={setTimeChart}
@@ -179,17 +179,17 @@ const ResRevenue = () => {
             </div>
           </Col>
           <Col xs={24} lg={8}>
-            <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-50 flex-row flex items-center h-24">
+            <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
               <div className="w-1/2 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2">
-                <span className="text-black font-medium text-sm text-center ">
+                <span className=" font-medium text-sm text-center ">
                   Số đơn
                 </span>
                 <p className="text-orange-400 text-2xl font-medium text-center">
-                {/* {totalOrder.length || '0'} */}
+                {data.length || '0'}
                 </p>
               </div>
               <div className="w-1/2  p-4 h-full flex flex-col justify-center items gap-1">
-                <span className="text-black font-medium text-sm text-center">
+                <span className=" font-medium text-sm text-center">
                   Số nguyên liệu sắp hết
                 </span>
                 <p className="text-2xl font-medium text-green-500 text-center">
