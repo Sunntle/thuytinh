@@ -4,10 +4,9 @@ import LineChart from "../components/chart/line-chart";
 import { Col, Row, Badge } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from 'swiper/modules';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getAllProduct, getDataDashboard } from "../services/api";
 import { formatGia } from "../utils/format";
-import { useCallback } from "react";
 import Spinner from "../components/spinner"
 const img =
   "https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000";
@@ -36,33 +35,26 @@ const DashBoard = () => {
   }, [timeChart])
 
   useEffect(() => {
-<<<<<<< HEAD
-    fetchData();
+    fetchData()
   }, [timeChart])
 
   if (loading) return <Spinner />
-=======
-    // fetchData();
-  }, [fetchData])
-  
-  if(loading) return <Spinner/>
->>>>>>> 95b063cd7847e8bbd3a0cb46b0583c773455e66e
   return (
     <div className="w-full my-7 px-5">
       <Row gutter={[32, 16]}>
         <Col xs={24} lg={16}>
           <div className="rounded-lg border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2">
-              <span className="font-medium text-sm text-center ">Tổng thu nhập</span>
-              <p className="text-orange-400 text-lg font-medium text-center">54000000</p>
+              <span className="font-medium text-sm text-center ">Tổng thu nhập của năm {new Date().getFullYear()}</span>
+              <p className="text-orange-400 text-lg font-medium text-center">{formatGia(data?.totalOrderYear || 0)}</p>
             </div>
             <div className="w-1/3  p-4 h-full flex flex-col justify-center items gap-1">
-              <span className="font-medium text-sm text-center">Thu nhập</span>
-              <p className="text-lg font-medium text-green-500 text-center">54000000</p>
+              <span className="font-medium text-sm text-center">Thu nhập của tháng {new Date().getMonth() + 1}</span>
+              <p className="text-lg font-medium text-green-500 text-center">{formatGia(data.montdPreAndCur?.[1]?.total || 0)}</p>
             </div>
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1">
               <span className="font-medium text-sm text-center">Chi phí</span>
-              <p className="text-lg font-medium text-red-500 text-center">54000000</p>
+              <p className="text-lg font-medium text-red-500 text-center">{formatGia(data?.costMaterial?.total_cost || 0)}</p>
             </div>
           </div>
           <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2">
@@ -142,7 +134,7 @@ const DashBoard = () => {
               </div>
               <div className="flex flex-col justify-center items-start ms-5">
                 <span className=" font-medium">Số đơn hàng</span>
-                <span className="font-medium text-xl">{data?.order}</span>
+                <span className="font-medium text-xl">{data?.countOrder || 0}</span>
               </div>
             </div>
             <div className="flex flex-row ">
@@ -168,15 +160,15 @@ const DashBoard = () => {
                 <CiViewTimeline size={50} className="text-main" />
               </div>
               <div className="flex flex-col justify-center items-start  ms-5">
-                <span className=" font-medium">Số người dùng</span>
+                <span className=" font-medium">Số nhân viên</span>
                 <span className="font-medium text-xl">{data?.user}</span>
               </div>
             </div>
           </div>
           <div className="border-2 rounded-lg p-4 border-gray-400 border-solid">
-            <span className="font-medium text-lg">Món ăn phổ biến</span>
-            <div className="overflow-hidden w-full p-2">
-              <PieChart data={data?.category || []} />
+            <span className="font-medium text-lg">Top 5 sản phẩm được ưa chuộng</span>
+            <div className="overflow-hidden w-full ">
+              <PieChart data={data?.productBySold || []} />
             </div>
           </div>
         </Col>

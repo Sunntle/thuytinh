@@ -84,6 +84,9 @@ export const deleteMaterial = (id) => {
 export const editMaterial = (body) => {
   return axios.put(`/api/material`, body);
 };
+export const importMaterial = (body) => {
+  return axios.post(`/api/material/import`, body);
+};
 export const getOneMaterial = (id) => {
   return axios.get(`/api/material/${id}`);
 };

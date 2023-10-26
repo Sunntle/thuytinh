@@ -32,7 +32,6 @@ function ProductPage() {
       const resCate = await getAllCate();
       const resMate = await getAllMaterial();
       const resProduct = await getAllProduct();
-      console.log("done");
       setProducts({
         ...resProduct,
         data: resProduct.data.map((el) => ({ ...el, key: el.id })) || [],
