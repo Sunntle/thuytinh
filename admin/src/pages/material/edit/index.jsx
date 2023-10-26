@@ -24,16 +24,13 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
           url: data.image,
         },
       ];
-      const setFormValue = async () => {
-        form.setFieldsValue({
-          name_material: data.name_material,
-          price: data.price,
-          amount: data.amount,
-          Image: data.Image,
-          unit: data.unit,
-        });
-      };
-      setFormValue();
+      form.setFieldsValue({
+        name_material: data.name_material,
+        price: data.Warehouses?.[0]?.price_import,
+        Image: data.Image,
+        unit: data.unit,
+        id_warehouse: data.Warehouses?.[0]?.id
+      });
     }
   }, [form, data]);
   return (
@@ -82,25 +79,26 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
         >
           <Input placeholder="Ví dụ: Cua..." />
         </Form.Item>
-
+        <Form.Item
+          hidden name="id_warehouse"
+        >
+          <Input />
+        </Form.Item>
         <Form.Item label="Giá (vnđ) :" name="price" rules={[
           {
             required: true,
             message: "Bạn phải điền tên nguyên liệu",
           },
-        ]}>
-          <InputNumber min={0} className="w-full" />
-        </Form.Item>
-
-        <Form.Item name="amount" label="Số lượng" rules={[
           {
-            required: true,
-            message: "Bạn phải điền tên nguyên liệu",
+            type: "number",
+            min: 1001,
+            message: "Giá phải lớn hơn 1000",
           },
         ]}>
-          <InputNumber min={0} formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            parser={(value) => value.replace(/\$\s?|(,*)/g, '')} className="w-full" />
+          <InputNumber min={0} className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            parser={(value) => value.replace(/\$\s?|(,*)/g, '')} />
         </Form.Item>
+
         <Form.Item
           name="unit"
           label="Đơn vị"

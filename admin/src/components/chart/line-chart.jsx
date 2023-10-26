@@ -3,7 +3,7 @@ import { Select, Row, Col, Progress } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 const LineChart = ({ setTimeChart, timeChart, data }) => {
-  const { totalMonth, chart_order, order } = data;
+  const { montdPreAndCur, chart_order, order } = data;
   const handleChange = (value) => {
     setTimeChart(value);
   };
@@ -73,7 +73,7 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
             </Col>
             <Col xs={18}>
               <div className="text-xs"> Month this</div>
-              <div className="font-medium pt-1">{totalMonth?.[1] || 0}</div>
+              <div className="font-medium pt-1">{montdPreAndCur?.[1]?.total || 0}</div>
             </Col>
           </Row>
           <Row className="w-2/5">
@@ -82,7 +82,7 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
             </Col>
             <Col xs={18}>
               <div className="text-xs">Last Month </div>
-              <div className="font-medium pt-1">{totalMonth?.[0] || 0}</div>
+              <div className="font-medium pt-1">{montdPreAndCur?.[0]?.total || 0}</div>
             </Col>
           </Row>
         </Col>

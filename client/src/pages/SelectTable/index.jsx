@@ -2,9 +2,9 @@ import { getPreciseDistance } from "geolib";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
-import {Spin, Tabs} from "antd";
+import { Spin, Tabs } from "antd";
 import "./index.css";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import DeliveryNotSupported from "../DeliveryNotSupported";
 
 function SelectTable() {
@@ -18,24 +18,25 @@ function SelectTable() {
 
   const handleSelectTable = useCallback(async (id) => {
     navigate(`/ban-${id}`);
-  },[navigate]);
+  }, [navigate]);
 
-  useEffect(()=>{
-    if(customerName.name.length > 0 && customerName.tables.length > 0 ){
+  useEffect(() => {
+    if (customerName.name.length > 0 && customerName.tables.length > 0) {
       handleSelectTable(customerName.tables[0])
     }
   }, [customerName.name.length, customerName.tables, handleSelectTable])
 
   useEffect(() => {
     const position1 = {
-    latitude: 10.8524972,
-    longitude: 106.6259193
+      latitude: 10.8524972,
+      longitude: 106.6259193
     };
     navigator.geolocation.getCurrentPosition(async (position) => {
       const position2 = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       };
+      console.log(position2)
       const distance = getPreciseDistance(position1, position2);
       console.log(distance);
       setDistanceState(distance)
@@ -44,7 +45,7 @@ function SelectTable() {
         setTables,
       );
     });
-   
+
   }, [sendRequest]);
 
   useEffect(() => {
@@ -61,12 +62,12 @@ function SelectTable() {
   if(distanceState > 100 ) return <DeliveryNotSupported/>
   if (isLoading === true) {
     return (
-        <div className="h-screen w-full flex flex-col justify-center items-center">
-          {isLoading && <Spin size={"large"} />}
-          <span className="mt-5 text-base font-semibold">
+      <div className="h-screen w-full flex flex-col justify-center items-center">
+        {isLoading && <Spin size={"large"} />}
+        <span className="mt-5 text-base font-semibold">
           Quý khách vui lòng đợi trong giây lát.
         </span>
-        </div>
+      </div>
     );
   }
   return (
@@ -84,7 +85,7 @@ function SelectTable() {
               children: (
                 <div className="w-full h-screen max-w-full">
                   <div className="grid grid-cols-2 gap-4">
-                 
+
                     {tableByPosition?.map((table) => (
                       <div key={table.id} onClick={() => handleSelectTable(table.id)} className="w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center">
                         {table.name_table}
