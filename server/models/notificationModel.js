@@ -26,5 +26,8 @@ const Notification = db.sequelize.define(
     { timestamps: true }
 );
 
-// Notification.sync();
+Notification.afterCreate(async (info) => {
+    console.log(info)
+    // _io.of("/admin").emit("new message", info)
+});
 module.exports = Notification;

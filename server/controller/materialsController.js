@@ -15,8 +15,9 @@ exports.list = async (req, res) => {
     order: [[{ model: Warehouse }, 'createdAt', 'DESC']],
     subQuery: false
   };
+
   const { count, rows } = await Materials.findAndCountAll(query);
-  const listImport = await Warehouse.findAll()
+  const listImport = await Warehouse.findAll({ order: [['createdAt', 'DESC']] })
 
   const dataChart = await Materials.findAll({
     attributes: ["id", "amount", "name_material", "unit", "image"],
@@ -58,10 +59,10 @@ exports.list = async (req, res) => {
         description: `Có ${findIdProduct.length} sản phẩm gần hết hàng`
       }, { raw: true }
       );
-      _io.of("/admin").emit("new message", createdProduct);
+      // _io.of("/admin").emit("new message", createdProduct);
     }
 
-    _io.of("/admin").emit("new message", created);
+    // _io.of("/admin").emit("new message", created);
     notificationSent = true
   }
 
@@ -89,7 +90,7 @@ exports.addMaterial = async (req, res) => {
       ...req.body,
       image: img.path.replace("/upload/", "/upload/w_400,h_300/"),
     });
-    const { amount, id, price } = response.dataValues;
+    const { amount, id } = response.dataValues;
     await Warehouse.create({
       materialId: id,
       amount_import: amount,

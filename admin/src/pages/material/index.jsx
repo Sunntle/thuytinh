@@ -70,7 +70,11 @@ function MaterialPage() {
     setData(res);
     setOpenModelEdit(true);
   }, []);
-
+  const handleImport = useCallback(async (record) => {
+    setOpenDrawer(true);
+    const { name_material, id, image } = record;
+    form.setFieldsValue({ name_material, materialId: id, image });
+  }, [form])
   const columns = useMemo(() => [
     {
       title: "Nhập hàng",
@@ -172,7 +176,7 @@ function MaterialPage() {
         </div>
       ),
     },
-  ], [handleClickEditMaterial, handleDeleteMaterial, handleImport]);
+  ], [handleClickEditMaterial, handleDeleteMaterial]);
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
