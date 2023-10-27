@@ -50,7 +50,7 @@ function UserPage() {
           break;
         }
         default: {
-          const [dataAdmin, dataUser] = Promise.all([getAllUser({ _like: "role_R1_not" }), getAllUser({ _like: "role_R1" })])
+          const [dataAdmin, dataUser] = await Promise.all([getAllUser({ _like: "role_R1_not" }), getAllUser({ _like: "role_R1" })])
           dataAdmin.success && setAdmin(dataAdmin);
           dataUser.success && setUser(dataUser);
         }

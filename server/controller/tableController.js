@@ -151,3 +151,12 @@ exports.del = asyncHandler(async (req, res) => {
   });
   res.status(200).json("Xóa thành công");
 });
+exports.switchTables = asyncHandler(async (req, res) => {
+  const { newTable, currentTable, idOrder } = req.body;
+  if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json("Bàn đang được sử dụng");
+  await TableByOrder.update({ tableId: newTable }, { where: { tableId: currentTable, orderId: idOrder } });
+  let getCurrent = await Tables.findOne({ where: { id: currentTable }, raw: true });
+  await Tables.update({ token: getCurrent.token, status_table: 1 }, { where: { id: newTable } });
+  await Tables.update({ token: null, status_table: 0 }, { where: { id: currentTable } });
+  res.status(200).json("Chuyển thành bàn thành công");
+});

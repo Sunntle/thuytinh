@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "../payment/res-payment.css"
-import { Button, Divider, Modal, message, Form, Radio, Drawer,Collapse } from "antd"
+import { Button, Divider, Modal, message, Form, Radio, Drawer,Collapse,Tabs } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, AddCartUpdate, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
 import { addOrder, createPayment, getTableId } from '../../../services/api'
 import { AddTableList } from '../../../redux/table/listTableSystem'
 import { formatGia } from '../../../utils/format'
+import { ButtonTable } from '../choosetable/ButtonTable'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const RenderFooter = ({
@@ -42,11 +43,8 @@ const RenderFooter = ({
         </div>
 
         <div className='flex justify-center font-semibold col-span-2 m-1'>
-            <button className='bg-indigo-500 text-white' onClick={openSwithTable}>Chuyển bàn</button>
+            <button className='bg-indigo-500 text-white' onClick={() => openSwithTable(tablelist)}>Chuyển bàn</button>
         </div>
-        <Modal title="Chọn bàn muốn chuyển" open={switchTable} onCancel={closeSwithTable}>
-
-        </Modal>
         <div className='flex justify-center col-span-2 m-1'>
             <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
                 Thanh Toán
@@ -162,8 +160,8 @@ const ResOrder = ({ handleCancel, open }) => {
     }, [payment]);
     
     //xu ly chuyen ban
-    const openSwithTable = () => {
-        setSwitchTable(true)
+    const openSwithTable = (index) => {
+      navigate('/employee/select-table/'+tablelist.id +"/"+tablelist.TableByOrders[0].orderId);
     }
     const closeSwithTable = () => {
         setSwitchTable(false)

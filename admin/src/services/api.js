@@ -34,6 +34,9 @@ export const delTables = (id) => {
 export const createTables = (body) => {
   return axios.post(`/api/table/`, body);
 }
+export const switchTables = (body) => {
+  return axios.post(`/api/table/switch-tables`, body);
+}
 
 // product //
 export const getAllProduct = (params) => {
