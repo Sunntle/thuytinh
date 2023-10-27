@@ -12,6 +12,7 @@ const { apiQueryRest, bien } = require('../utils/const');
 const { Op } = require('sequelize');
 const { generateTable } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
+const { raw } = require("body-parser");
 
 const findTables = async (tables) => {
   const re = await Tables.findAll({
@@ -111,7 +112,6 @@ exports.create = asyncHandler(async (req, res) => {
   });
   if (!created) return res.status(404).json({ success: false, data: "Đã có tên bàn trên" });
   res.status(200).json({ success: true, data: "Tạo bàn thành công" });
-
 });
 
 
@@ -131,6 +131,7 @@ exports.update = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: "Tạo bàn thành công" });
 
 });
+
 
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
   const { tables } = req.body;
