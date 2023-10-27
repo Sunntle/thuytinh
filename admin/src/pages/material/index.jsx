@@ -1,4 +1,4 @@
-import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, Avatar, notification } from "antd";
+import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, notification } from "antd";
 import ButtonComponents from "../../components/button";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table } from "antd";
@@ -172,7 +172,7 @@ function MaterialPage() {
         </div>
       ),
     },
-  ], [handleClickEditMaterial, handleDeleteMaterial]);
+  ], [handleClickEditMaterial, handleDeleteMaterial, handleImport]);
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
@@ -228,11 +228,7 @@ function MaterialPage() {
     form.resetFields();
     setOpenDrawer(!openDrawer);
   }
-  const handleImport = async (record) => {
-    setOpenDrawer(true);
-    const { name_material, id, image } = record;
-    form.setFieldsValue({ name_material, materialId: id, image });
-  }
+
   const handleFinish = async (values) => {
     const res = await importMaterial(values);
     notification.success({ message: "Thông báo", description: res });

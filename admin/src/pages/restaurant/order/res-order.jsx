@@ -21,7 +21,11 @@ const RenderFooter = ({
     handleCancel2,
     form,
     onFinish,
-    showModal }) => (
+    showModal,
+    closeSwithTable,
+    openSwithTable,
+    switchTable
+}) => (
     <> <div className='Order-total border rounded-md'>
         <div className='tax'>
             <span>Thuế VAT:</span>
@@ -41,8 +45,11 @@ const RenderFooter = ({
             </div>
 
             <div className='flex justify-center font-semibold col-span-2 m-1'>
-                <button className='bg-indigo-500 text-white'>In bill</button>
+                <button className='bg-indigo-500 text-white' onClick={openSwithTable}>Chuyển bàn</button>
             </div>
+            <Modal title="Chọn bàn muốn chuyển" open={switchTable} onCancel={closeSwithTable}>
+
+            </Modal>
             <div className='flex justify-center col-span-2 m-1'>
                 <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
                     Thanh Toán
@@ -78,19 +85,19 @@ const RenderFooter = ({
                 </Modal>
             </div>
         </div>
-    </div></>
+    </div ></>
 )
 const ResOrder = ({ handleCancel, open }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isModalPay, setIsModalPay] = useState(false);
     const [payment, setPayment] = useState(null);
+    const [switchTable, setSwitchTable] = useState(false)
     const [form] = Form.useForm();
     const tablelist = useSelector((state) => state.tablelist);
     const tablebyorders = tablelist?.TableByOrders[0]
     const order = tablebyorders?.order;
     const order_details = order?.order_details;
-    console.log(tablelist)
 
 
     //them mon moi
@@ -127,11 +134,17 @@ const ResOrder = ({ handleCancel, open }) => {
         }
     }, [payment]);
 
-
+    //xu ly chuyen ban
+    const openSwithTable = () => {
+        setSwitchTable(true)
+    }
+    const closeSwithTable = () => {
+        setSwitchTable(false)
+    }
     return (
         <Drawer
             title={`Bàn số: ${tablelist.id}`} placement="right"
-            footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate} handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk} isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal} />}
+            footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate} handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk} isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal} switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable} />}
             closable={false}
             onClose={handleCancel}
             open={open}

@@ -51,7 +51,7 @@ function ColumnChart({ series, colors, customOptions, categories, tooltip, colum
       options={data.options}
       series={data.series}
       type="bar"
-      className="chart_month max-w-[882px]"
+      className={customClassName ? customClassName : ('chart_month max-w-[882px]')}
       height={200}
       width={"100%"}
     />
