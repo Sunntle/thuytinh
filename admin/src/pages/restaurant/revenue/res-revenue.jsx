@@ -26,6 +26,7 @@ const ResRevenue = () => {
   const [admin, setAdmin] = useState(null);
   const [dataOrder, setDataOrder] = useState([]);
   const [dataChart, setDataChart] = useState([])
+  console.log(data)
 
   const fetchData = useCallback(async () => {
     try{
@@ -171,11 +172,11 @@ const ResRevenue = () => {
               </div>
             </div>
             <div className="chart-line_area mt-4 rounded-lg border-solid border-2 border-orange-400">
-              <LineChart
-                timeChart={timeChart}
-                setTimeChart={setTimeChart}
-                data={data}
-              />
+            <LineChart
+              timeChart={timeChart}
+              setTimeChart={setTimeChart}
+              data={data}
+            />
             </div>
           </Col>
           <Col xs={24} lg={8}>

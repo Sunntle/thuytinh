@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "../payment/res-payment.css"
-import { Button, Divider, Modal, message, Form, Radio, Drawer } from "antd"
-import { AiOutlineCheckCircle } from "react-icons/ai"
+import { Button, Divider, Modal, message, Form, Radio, Drawer,Collapse } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, AddCartUpdate, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
-import { CloseOutlined } from '@ant-design/icons';
-import { HiMinus, HiPlus } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
 import { addOrder, createPayment, getTableId } from '../../../services/api'
 import { AddTableList } from '../../../redux/table/listTableSystem'
@@ -54,35 +51,65 @@ const RenderFooter = ({
             <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
                 Thanh Toán
             </Button>
-            <Modal footer={null} title="Chọn phương thức thanh toán" open={isModalPay} onOk={handleOk} onCancel={handleCancel2}>
-                <Form form={form} onFinish={onFinish}>
-                    <Form.Item
-                        rules={[
-                            {
-                                required: true,
-                                message: "Vui lòng chọn phương thức thanh toán",
-                            },
-                        ]}
-                        name="bankCode"
-                    >
-                        <Radio.Group>
+            <Modal
+            title="Phương thức thanh toán"
+            centered
+            open={isModalPay}
+            onOk={handleOk}
+            onCancel={handleCancel2}
+            footer={false}
+          >
+            <div className="w-full flex flex-col justify-start items-center space-y-1">
+              <Collapse
+                ghost
+                items={[
+                  {
+                    key: "1",
+                    label: "Thanh toán bằng VNPAY",
+                    children: (
+                      <Form form={form} onFinish={onFinish}>
+                        <Form.Item name="bankCode">
+                          <Radio.Group className="radio-custom">
                             <Radio value="">Cổng thanh toán VNPAYQR</Radio>
                             <Radio value="VNPAYQR">
-                                Thanh toán qua ứng dụng hỗ trợ VNPAYQR
+                              Thanh toán qua ứng dụng hỗ trợ VNPAYQR
                             </Radio>
                             <Radio value="VNBANK">
-                                Thanh toán qua ATM-Tài khoản ngân hàng nội địa
+                              Thanh toán qua ATM-Tài khoản ngân hàng nội địa
                             </Radio>
-                            <Radio value="INTCARD">Thanh toán qua thẻ quốc tế</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type={"primary"} htmlType={"submit"}>
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                            <Radio value="INTCARD">
+                              Thanh toán qua thẻ quốc tế
+                            </Radio>
+                          </Radio.Group>
+                        </Form.Item>
+                        <Form.Item className="text-right">
+                          <Button
+                            type={"primary"}
+                            htmlType={"submit"}
+                            className="bg-primary"
+                          >
+                            Thanh toán
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    ),
+                  },
+                  {
+                    key: "2",
+                    label: "Thanh toán bằng tiền mặt",
+                    children: (
+                      <Button
+                        size={"large"}
+                        className="w-full bg-primary text-white"
+                      >
+                        Thanh toán bằng tiền mặt
+                      </Button>
+                    ),
+                  },
+                ]}
+              />
+            </div>
+          </Modal>
         </div>
     </div>
     </div></>
@@ -161,7 +188,7 @@ const ResOrder = ({ handleCancel, open }) => {
                             </div>
                             <div className='flex-grow'>
                                 <div className='flex items-end justify-between'>
-                                    <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.Product.name_product}</span>
+                                    <span className='text-lg overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.Product.name_product}</span>
                                     <span className='text-main mb-3'>{formatGia(item.Product.price) }</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
