@@ -4,6 +4,8 @@
   box-sizing: border-box;
 }
 
+
+
 * {
   margin: 0;
   padding: 0;
@@ -43,14 +45,16 @@ body {
 //   background-color: #DC4446 !important;
 // }
 .main_area {
+
   // overflow: hidden;
   // background: white !important;
   // .ant-layout-sider-children, .ant-layout-sider-trigger{
   //   border-right: 1px solid rgb(55, 55, 55);
   // }
-  .ant-pagination .ant-pagination-item-active{
+  .ant-pagination .ant-pagination-item-active {
     border-color: transparent;
   }
+
   .ant-menu-submenu-title {
     color: #fc8019 !important;
   }
@@ -71,6 +75,15 @@ body {
   width: 18px;
   height: 18px;
 }
+
 .bd {
-  border: 2px solid red;
+  border: 2px solid rgb(167, 167, 167);
+}
+
+.border_bottom {
+  border-bottom: 1px solid rgb(239, 232, 232);
+}
+
+.border_bottom:last-child {
+  border-bottom: none;
 }

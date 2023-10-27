@@ -1,6 +1,6 @@
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 // import "./res-payment.css"
-import { Button, Divider, Modal, Spin, message,} from "antd"
+import { Button, Divider, Modal, Spin, message, } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { CloseOutlined } from '@ant-design/icons'
@@ -61,7 +61,6 @@ const ResPayment = () => {
                 carts: carts,
                 id_table: tablelist.id,
                 total: totalVAT
-
             };
             console.log(body)
             res = await updateOrder(body);
