@@ -14,9 +14,10 @@ const ResPayment = () => {
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
     const tablelist = useSelector((state) => state.tablelist);
+    const staff = useSelector((state) => state.account)
     const navigate = useNavigate();
-    console.log(tablelist)
 
+    console.log(staff.user.id)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getTotal());
@@ -29,8 +30,9 @@ const ResPayment = () => {
             const body = {
                 orders: carts,
                 total: totalVAT,
-                customerName: "Admin",
-                table: [tablelist.id]
+                customerName: "Nv_" + staff.user.name,
+                table: [tablelist.id],
+                id_employee: staff.user.id
             };
             res = await addOrder(body);
             dispatch(RemoveAllCart());
