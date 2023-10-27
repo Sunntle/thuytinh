@@ -17,6 +17,7 @@ const DashBoard = () => {
   const [timeChart, setTimeChart] = useState("MONTH");
   const [dataProduct, setDataProduct] = useState(null);
   const [discount, setDiscount] = useState(null);
+  console.log(data)
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
