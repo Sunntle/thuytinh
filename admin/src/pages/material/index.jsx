@@ -18,7 +18,7 @@ import ColumnChart from "../../components/chart/column-chart";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Spinner from "../../components/spinner";
-import { formatNgay } from "../../utils/format";
+import { formatGia, formatNgay } from "../../utils/format";
 const { Title, Text } = Typography;
 function MaterialPage() {
   const [open, setOpen] = useState(false);
@@ -29,23 +29,17 @@ function MaterialPage() {
   const [dataChart, setDataChart] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
   const notifications = useSelector(state => state.notifications);
-
+  const [listImportMaterial, setListImportMaterial] = useState([])
   const location = useLocation();
   const [loading, setLoading] = useState(true);
-  const [form] = Form.useForm()
-  
-  const handleImport = useCallback(async (record) => {
-    setOpenDrawer(true);
-    const { name_material, id, image } = record;
-    form.setFieldsValue({ name_material, materialId: id, image });
-  },[form])
+  const [form] = Form.useForm();
   const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
     setMaterials({
       ...res,
       data: res.data.map((el) => ({ ...el, key: el.id, price: el.Warehouses?.[0]?.price_import || 0 })),
     });
-
+    setListImportMaterial(res.listImport)
     setDataChart(res.dataChart);
     setLoading(false)
   }, []);
@@ -233,7 +227,7 @@ function MaterialPage() {
     form.resetFields();
     setOpenDrawer(!openDrawer);
   }
-  
+
   const handleFinish = async (values) => {
     const res = await importMaterial(values);
     notification.success({ message: "Thông báo", description: res });
@@ -245,23 +239,24 @@ function MaterialPage() {
       {contextHolder}
       {loading ? (
         <Spinner />
-      ) : (<> {dataChart.length > 0 && (
-        <Row justify="space-between">
-          <Col xs={24} lg={6} className="flex flex-col mt-4">
-            <p className="text-gray-500 mb-3">
-              {formatNgay(new Date(), "HH:mm DD-MM-YYYY")}
-            </p>
-            <Title level={4}>
+      ) : (<>
+        <Row justify="space-between" gutter={[0, 12]}>
+          <Col xs={24} lg={8} >
+            <Title level={5} className="text-center">
+              Danh sách nguyên liệu nhập gần đây
+            </Title>
+            <div className="h-[28vh] overflow-y-auto flex flex-col  no-scrollbar rounded-sm drop-shadow-sm">
+              {listImportMaterial.map((item) => (
+                <div key={item.id} className="border_bottom p-2">
+                  <Text>{`Ngày ${formatNgay(item.createdAt)} với số lượng ${item.amount_import} giá : ${formatGia(item.price_import)}`} </Text>
+                </div>
+              ))}
+            </div>
+          </Col>
+          <Col xs={24} lg={15}>
+            <Title level={5} className="text-center">
               Có <span className="text-red-600">{dataChart.length}</span> nguyên liệu gần hết hàng
             </Title>
-            <Text className="text-lg ">
-              Gồm :{" "}
-              {dataChart
-                .map((item) => item.name_material.toUpperCase())
-                .join(" ,")}
-            </Text>
-          </Col>
-          <Col xs={24} lg={18}>
             <ColumnChart
               series={[
                 {
@@ -273,10 +268,11 @@ function MaterialPage() {
               categories={dataChart.map(
                 (item) => `${item.name_material} (${item.unit})`
               )}
+              columnWidth="20px"
             />
           </Col>
         </Row>
-      )}
+
 
         <Row justify="space-between" align="center" className="mb-4">
           <Col xs={6}>
@@ -365,8 +361,9 @@ function MaterialPage() {
           unitMasterial={unitMasterial}
         />
 
-      </>)}
-    </div>
+      </>)
+      }
+    </div >
   );
 }
 

@@ -4,7 +4,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useRef, useState } from 'react';
 import ResPayment from '../payment/res-payment';
 import { getAllCate, getAllProduct } from '../../../services/api';
-
 import { useDispatch } from 'react-redux';
 import { AddCart } from '../../../redux/cartsystem/cartSystem';
 import { Navigation, Pagination } from 'swiper/modules';
@@ -15,7 +14,6 @@ const ResMenu = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const dispatch = useDispatch();
-
     useEffect(() => {
         const fetchData = async () => {
             const resCa = await getAllCate();
@@ -43,8 +41,8 @@ const ResMenu = () => {
                             {categories?.map((category, index) => (
                                 <SwiperSlide key={index}>
                                     <div className="mx-10">
-                                        <Button className='border-none bg-orange-100 w-full max-w-full overflow-hidden' onClick={() => setSelectedCategory(category)}>
-                                            <p className='font-medium text-main text-lg max-w-full'>{category.name_category}</p>
+                                        <Button className='border-none text-main bg-orange-100 w-full max-w-full overflow-hidden' onClick={() => setSelectedCategory(category)}>
+                                            {category.name_category}
                                         </Button>
                                     </div>
                                 </SwiperSlide>

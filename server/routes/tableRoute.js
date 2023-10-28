@@ -1,4 +1,4 @@
-const { getAll, create, update, del, getId, updateStatusAndToken, checkCurrentTable } = require('../controller/tableController');
+const { getAll, create, update, del, getId, updateStatusAndToken, checkCurrentTable, switchTables } = require('../controller/tableController');
 const express = require("express");
 const router = express.Router();
 router.get("/", getAll);
@@ -8,4 +8,5 @@ router.post("/", create);
 router.put("/", update);
 router.put("/token", updateStatusAndToken);
 router.delete("/:id", del);
+router.post("/switch-tables", switchTables);
 module.exports = router;

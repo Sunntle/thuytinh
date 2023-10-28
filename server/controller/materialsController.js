@@ -11,9 +11,12 @@ exports.list = async (req, res) => {
 
   let query = {
     ...apiQueryRest({ ...req.query, title: "name_material" }), nest: true,
-    include: { model: Warehouse, attributes: ["price_import"], order: [["createdAt", "DESC"]], limit: 1 },
+    include: { model: Warehouse, attributes: ["price_import"] },
+    order: [[{ model: Warehouse }, 'createdAt', 'DESC']],
+    subQuery: false
   };
   const { count, rows } = await Materials.findAndCountAll(query);
+  const listImport = await Warehouse.findAll()
 
   const dataChart = await Materials.findAll({
     attributes: ["id", "amount", "name_material", "unit", "image"],
@@ -62,15 +65,17 @@ exports.list = async (req, res) => {
     notificationSent = true
   }
 
-  res.status(200).json({ total: count, data: rows, dataChart });
+  res.status(200).json({ total: count, data: rows, dataChart, listImport });
 };
 exports.getDetail = async (req, res) => {
   try {
     const _id = req.params.id;
 
     const response = await Materials.findOne({
-      include: { model: Warehouse, order: [["createdAt", "DESC"]], limit: 1 },
-      where: { id: _id }
+      include: { model: Warehouse },
+      where: { id: _id },
+      order: [[{ model: Warehouse }, 'createdAt', 'DESC']],
+      subQuery: false
     });
     res.status(200).json(response);
   } catch (err) {

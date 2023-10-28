@@ -1,6 +1,6 @@
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 // import "./res-payment.css"
-import { Button, Divider, Modal, Spin, message,} from "antd"
+import { Button, Divider, Modal, Spin, message, } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { CloseOutlined } from '@ant-design/icons'
@@ -14,9 +14,10 @@ const ResPayment = () => {
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
     const tablelist = useSelector((state) => state.tablelist);
+    const staff = useSelector((state) => state.account)
     const navigate = useNavigate();
-    console.log(tablelist)
 
+    console.log(staff.user.id)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getTotal());
@@ -29,8 +30,9 @@ const ResPayment = () => {
             const body = {
                 orders: carts,
                 total: totalVAT,
-                customerName: "Admin",
-                table: [tablelist.id]
+                customerName: "Nv_" + staff.user.name,
+                table: [tablelist.id],
+                id_employee: staff.user.id
             };
             res = await addOrder(body);
             dispatch(RemoveAllCart());
@@ -59,7 +61,6 @@ const ResPayment = () => {
                 carts: carts,
                 id_table: tablelist.id,
                 total: totalVAT
-
             };
             console.log(body)
             res = await updateOrder(body);

@@ -12,6 +12,7 @@ const { apiQueryRest, bien } = require('../utils/const');
 const { Op } = require('sequelize');
 const { generateTable } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
+const { raw } = require("body-parser");
 
 const findTables = async (tables) => {
   const re = await Tables.findAll({
@@ -111,7 +112,6 @@ exports.create = asyncHandler(async (req, res) => {
   });
   if (!created) return res.status(404).json({ success: false, data: "Đã có tên bàn trên" });
   res.status(200).json({ success: true, data: "Tạo bàn thành công" });
-
 });
 
 
@@ -132,6 +132,7 @@ exports.update = asyncHandler(async (req, res) => {
 
 });
 
+
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
   const { tables } = req.body;
   let token = generateTable(JSON.stringify(req.body));
@@ -150,4 +151,13 @@ exports.del = asyncHandler(async (req, res) => {
     where: { id }
   });
   res.status(200).json("Xóa thành công");
+});
+exports.switchTables = asyncHandler(async (req, res) => {
+  const { newTable, currentTable, idOrder } = req.body;
+  if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json("Bàn đang được sử dụng");
+  await TableByOrder.update({ tableId: newTable }, { where: { tableId: currentTable, orderId: idOrder } });
+  let getCurrent = await Tables.findOne({ where: { id: currentTable }, raw: true });
+  await Tables.update({ token: getCurrent.token, status_table: 1 }, { where: { id: newTable } });
+  await Tables.update({ token: null, status_table: 0 }, { where: { id: currentTable } });
+  res.status(200).json("Chuyển thành bàn thành công");
 });
