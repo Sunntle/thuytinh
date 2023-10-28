@@ -4,44 +4,52 @@ const initialState = {
     idOrder: 0
 }
 const orderSlice = createSlice({
-    name: 'order',
-    initialState: initialState,
-    reducers: {
-        addToOrder: (state, action) => {
-            const food = action.payload
-            const existingItem = state.order.find(item => item.id === food.id)
-            if (existingItem) {
-                existingItem.quantity += 1
-            } else {
-                state.order.push({...food, quantity: 1})
-            }
-        },
-        addIdOrder: (state, action) => {
-            state.idOrder = action.payload
-        },
-        removeFromOrder: (state, action) => {
-            const id = action.payload
-            state.order.filter(item => item.id !== id)
-        },
-        increaseQuantity: (state, action) => {
-            const food = action.payload
-            const existingItem = state.order.find(item => item.id === food.id)
-            if (existingItem) {
-                existingItem.quantity += 1
-            }
-        },
-        decreaseQuantity: (state, action) => {
-            const food = action.payload
-            const existingItem = state.order.find(item => item.id === food.id)
-            if (existingItem) {
-                existingItem.quantity -= 1
-            }
-        },
-        emptyOrder: (state) => {
-            state.order = [];
+  name: "order",
+  initialState: initialState,
+  reducers: {
+    addToOrder: (state, action) => {
+      const food = action.payload;
+      const existingItem = state.order.find((item) => item.id === food.id);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        state.order.push({ ...food, quantity: 1 });
+      }
+    },
+    addOrderDetailUpdate: (state, action) => {
+      state.order = action.payload;
+    },
+    addIdOrder: (state, action) => {
+      state.idOrder = action.payload;
+    },
+    removeFromOrder: (state, action) => {
+      const id = action.payload;
+      state.order.filter((item) => item.id !== id);
+      return state.order
+    },
+    increaseQuantity: (state, action) => {
+      const food = action.payload;
+      const existingItem = state.order.find((item) => item.id === food.id);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      }
+    },
+    decreaseQuantity: (state, action) => {
+      const food = action.payload;
+      const existingItem = state.order.find((item) => item.id === food.id);
+      if (existingItem.quantity > 1) {
+        if (existingItem.inDb && existingItem.inDb === existingItem.quantity) {
+          existingItem.quantiy = existingItem.inDb;
+        } else {
+            existingItem.quantity -= 1;
         }
-    }
-})
+      }
+    },
+    emptyOrder: (state) => {
+      state.order = [];
+    },
+  },
+});
 
-export const {emptyOrder,addIdOrder, addToOrder,removeFromOrder, increaseQuantity, decreaseQuantity} = orderSlice.actions
+export const {emptyOrder,addOrderDetailUpdate,addIdOrder, addToOrder,removeFromOrder, increaseQuantity, decreaseQuantity} = orderSlice.actions
 export const orderReducer = orderSlice.reducer

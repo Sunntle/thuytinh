@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { formatCurrency, truncateString } from "../../utils/format.js";
+import { formatCurrency, truncateString } from "../../../utils/format.js";
 import { AiFillPlusCircle } from "react-icons/ai";
-import { addToOrder } from "../../redux/Order/orderSlice.js";
+import { addToOrder } from "../../../redux/Order/orderSlice.js";
 import { useDispatch } from "react-redux";
 import ProductDetail from "../ProductDetail/ProductDetail.jsx";
 
