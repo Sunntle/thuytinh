@@ -39,7 +39,7 @@ const ResPayment = () => {
             dispatch(RemoveAllCart());
 
             // dispatch(RemoveTable());
-
+            navigate("/employee/choosetable")
             message.open({
                 type: "success",
                 content: "Đặt món thành công thành công!",
@@ -88,7 +88,7 @@ const ResPayment = () => {
                     <div key={index}>
                         <div className='flex items-center my-3'>
                             <div className='flex items-center h-16 w-15 mr-4 hover:bg-hoverColor'>
-                            <div className='product-remove pe-2'>
+                                <div className='product-remove pe-2'>
                                     <button className='text-orange-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
                                 </div>
                                 <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain ' src={item?.ImageProducts[0]?.url} />

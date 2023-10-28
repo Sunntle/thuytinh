@@ -4,11 +4,9 @@ import "./index.css";
 import { BiSolidTrash } from "react-icons/bi";
 import { AiFillWarning } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
+import { formatCurrency } from "../../../utils/format.js";
 import {
-  formatCurrency,
-} from "../../../utils/format.js";
-import {
-  addIdOrder,
+  addIdOrder, addIdOrderTable,
   addOrderDetailUpdate,
   decreaseQuantity,
   emptyOrder,
@@ -27,7 +25,7 @@ const OrderListModal = ({
   setIsOrderModalOpen,
 }) => {
   const [newOrder, setNewOrder] = useState(null);
-  const [orderUpdated, setOrderUpdated] = useState(null)
+  const [orderUpdated, setOrderUpdated] = useState(null);
   const { order: orders, idOrder } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const idTable = location.pathname.split("/")[1].split("-")[1];
@@ -39,8 +37,6 @@ const OrderListModal = ({
     acc += cur.quantity * cur.price;
     return acc;
   }, 0);
-
-  console.log(totalOrder)
 
   const showDeleteConfirm = (id) => {
     confirm({
@@ -99,9 +95,14 @@ const OrderListModal = ({
         inDb: item.quantity,
         ...newOrder?.data?.product[i],
       }));
-      // console.table(dataPrevious)
       dispatch(addOrderDetailUpdate(dataPrevious));
-      dispatch(addIdOrder(newOrder?.data?.orders?.id));
+      dispatch(
+        addIdOrderTable({
+          idOrder: newOrder?.data?.orders?.id,
+          idTable: +customerName?.tables[0],
+        }),
+      );
+      // dispatch(addIdOrder(newOrder?.data?.orders?.id));
     }
   }, [newOrder]);
 
@@ -148,7 +149,7 @@ const OrderListModal = ({
     >
       <div className="max-h-96 overflow-y-auto space-y-3 custom-scrollbar">
         {orders?.length > 0 ? (
-          orders?.map((item,index) => (
+          orders?.map((item, index) => (
             <div
               key={index}
               className="border h-auto w-auto rounded-lg grid grid-cols-12 gap-4 text-slate-500 overflow-hidden shadow-sm"

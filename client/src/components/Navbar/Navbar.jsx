@@ -20,7 +20,7 @@ const Navbar = () => {
   const [isMenuHovered, setIsMenuHovered] = useState(false);
   const [isOrderDesktop, setIsOrderDesktop] = useState(false)
   const customerName = useSelector((state) => state.customerName);
-
+  console.log(location);
   const checkRoute = useMemo(() => {
     return location.pathname == "/" || location.pathname == "/home";
   }, [location.pathname]);
