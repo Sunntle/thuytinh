@@ -17,7 +17,6 @@ export const NAV_ITEMS = [
   getItem("Quản lí", null, <BiCategory />, [
     getItem("Dashboard", "/admin"),
     getItem("Quản lí bàn", "/admin/table"),
-    getItem("Thực đơn món ăn", "/admin/menu"),
     getItem("Món ăn", "/admin/product"),
     getItem("Nguyên liệu", "/admin/material"),
     getItem("Danh mục", "/admin/category"),
@@ -35,12 +34,64 @@ export const NAV_ITEMS = [
 export const url = 'http://localhost:3000/ban-';
 
 export const DarkSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M3.32031 11.6835C3.32031 16.6541 7.34975 20.6835 12.3203 20.6835C16.1075 20.6835 19.3483 18.3443 20.6768 15.032C19.6402 15.4486 18.5059 15.6834 17.3203 15.6834C12.3497 15.6834 8.32031 11.654 8.32031 6.68342C8.32031 5.50338 8.55165 4.36259 8.96453 3.32996C5.65605 4.66028 3.32031 7.89912 3.32031 11.6835Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  <svg
+    fill="#ffffff"
+    width="1em"
+    height="1em"
+    viewBox="0 0 35 35"
+    data-name="Layer 2"
+    id="Layer_2"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g id="SVGRepo_bgCarrier"></g>
+    <g
+      id="SVGRepo_tracerCarrier"
+    >
+      <path d="M18.44,34.68a18.22,18.22,0,0,1-2.94-.24,18.18,18.18,0,0,1-15-20.86A18.06,18.06,0,0,1,9.59.63,2.42,2.42,0,0,1,12.2.79a2.39,2.39,0,0,1,1,2.41L11.9,3.1l1.23.22A15.66,15.66,0,0,0,23.34,21h0a15.82,15.82,0,0,0,8.47.53A2.44,2.44,0,0,1,34.47,25,18.18,18.18,0,0,1,18.44,34.68ZM10.67,2.89a15.67,15.67,0,0,0-5,22.77A15.66,15.66,0,0,0,32.18,24a18.49,18.49,0,0,1-9.65-.64A18.18,18.18,0,0,1,10.67,2.89Z"></path>
+    </g>
+    <g id="SVGRepo_iconCarrier">
+      <path d="M18.44,34.68a18.22,18.22,0,0,1-2.94-.24,18.18,18.18,0,0,1-15-20.86A18.06,18.06,0,0,1,9.59.63,2.42,2.42,0,0,1,12.2.79a2.39,2.39,0,0,1,1,2.41L11.9,3.1l1.23.22A15.66,15.66,0,0,0,23.34,21h0a15.82,15.82,0,0,0,8.47.53A2.44,2.44,0,0,1,34.47,25,18.18,18.18,0,0,1,18.44,34.68ZM10.67,2.89a15.67,15.67,0,0,0-5,22.77A15.66,15.66,0,0,0,32.18,24a18.49,18.49,0,0,1-9.65-.64A18.18,18.18,0,0,1,10.67,2.89Z"></path>
+    </g>
   </svg>
 );
+
 export const LightSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 3V4M12 20V21M4 12H3M6.31412 6.31412L5.5 5.5M17.6859 6.31412L18.5 5.5M6.31412 17.69L5.5 18.5001M17.6859 17.69L18.5 18.5001M21 12H20M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  <svg
+  width="1em"
+  height="1em"
+    viewBox="0 0 24.00 24.00"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    stroke="#ffffff"
+  >
+    <g id="SVGRepo_bgCarrier" ></g>
+    <g
+      id="SVGRepo_tracerCarrier"
+
+    ></g>
+    <g id="SVGRepo_iconCarrier">
+      {" "}
+      <g
+      >
+        {" "}
+        <path
+          d="M5 12H1M23 12h-4M7.05 7.05 4.222 4.222M19.778 19.778 16.95 16.95M7.05 16.95l-2.828 2.828M19.778 4.222 16.95 7.05"
+   
+        ></path>{" "}
+        <path
+          d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
+          fill="#ffffff"
+   
+        ></path>{" "}
+        <path d="M12 19v4M12 1v4"></path>{" "}
+      </g>{" "}
+      <defs>
+        {" "}
+        <clipPath id="a">
+          {" "}
+          <path fill="#ffffff" d="M0 0h24v24H0z"></path>{" "}
+        </clipPath>{" "}
+      </defs>{" "}
+    </g>
   </svg>
 );

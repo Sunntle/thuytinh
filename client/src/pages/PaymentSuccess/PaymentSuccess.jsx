@@ -26,12 +26,12 @@ const PaymentSuccess = () => {
   useEffect(() => {
     if (orderData !== null) {
       if (
-        orderData.data.transaction_id !== null &&
-        orderData.data.transaction_date !== null
+        orderData?.data?.transaction_id !== null &&
+        orderData?.data?.transaction_date !== null
       ) {
         const body = {
-          orderId: orderData.data.transaction_id,
-          transDate: orderData.data.transaction_date,
+          orderId: orderData?.data?.transaction_id,
+          transDate: orderData?.data?.transaction_date,
         };
         try {
           const request = {

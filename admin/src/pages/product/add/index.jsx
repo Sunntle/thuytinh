@@ -41,15 +41,13 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
       onCancel={handleCancel}
       footer={[
         <ButtonComponents
-          borderColor={"border-borderSecondaryColor"}
+          className={"border-borderSecondaryColor text-main"}
           key="back"
           onClick={handleCancel}
           content={"Quay lại"}
-          colorText={"text-main"}
         />,
         <ButtonComponents
-          borderColor={"border-borderSecondaryColor"}
-          backgroundColor={"bg-secondaryColor"}
+          className={"bg-secondaryColor text-white border-borderSecondaryColor"}
           content={"Tạo mới"}
           type="submit"
           key="submit"

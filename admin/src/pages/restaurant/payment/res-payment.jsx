@@ -1,6 +1,6 @@
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 // import "./res-payment.css"
-import { Button, Divider, Modal, Spin, message,} from "antd"
+import { Button, Divider, Modal, Spin, message, } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { CloseOutlined } from '@ant-design/icons'
@@ -14,8 +14,10 @@ const ResPayment = () => {
     const { carts } = useSelector(state => state.cart)
     const total = useSelector(state => state.cart)
     const tablelist = useSelector((state) => state.tablelist);
+    const staff = useSelector((state) => state.account)
     const navigate = useNavigate();
 
+    console.log(staff.user.id)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getTotal());
@@ -28,8 +30,9 @@ const ResPayment = () => {
             const body = {
                 orders: carts,
                 total: totalVAT,
-                customerName: "Admin",
-                table: [tablelist.id]
+                customerName: "Nv_" + staff.user.name,
+                table: [tablelist.id],
+                id_employee: staff.user.id
             };
             res = await addOrder(body);
             dispatch(RemoveAllCart());
@@ -46,19 +49,18 @@ const ResPayment = () => {
     };
 
     // Xu ly update order
-    const order_details = tablelist?.order?.order_details;
-    const totalOld = tablelist?.total;
+    // const order_details = tablelist?.TableByOrders[0]?.order?.order_details;
+    // const totalOld = tablelist?.total;
 
     const sumitUpdateOrder = async (value) => {
         try {
             let res;
 
             const body = {
-                id_order: tablelist.order.id,
+                id_order: tablelist.TableByOrders[0].order.id,
                 carts: carts,
                 id_table: tablelist.id,
                 total: totalVAT
-
             };
             console.log(body)
             res = await updateOrder(body);
@@ -68,7 +70,7 @@ const ResPayment = () => {
                 type: "success",
                 content: "Cập nhật món mới thành công thành công!",
             });
-            navigate('/employee/menu/' + index);
+            navigate('/employee/choosetable/');
         } catch (err) {
             console.log(err);
         }

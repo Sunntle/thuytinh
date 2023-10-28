@@ -1,8 +1,9 @@
-import { Button, Form, Input, InputNumber, Modal, Select, Upload } from "antd";
+import { Avatar, Button, Form, Input, InputNumber, Typography, Modal, Select, Tabs, Upload } from "antd";
 import ButtonComponents from "../../../components/button";
 import { UploadOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
-
+import { formatGia, formatNgay } from "../../../utils/format";
+const { Text } = Typography
 function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial }) {
   const [form] = Form.useForm();
   const handleSubmit = async () => {
@@ -24,18 +25,18 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
           url: data.image,
         },
       ];
-      const setFormValue = async () => {
-        form.setFieldsValue({
-          name_material: data.name_material,
-          price: data.price,
-          amount: data.amount,
-          Image: data.Image,
-          unit: data.unit,
-        });
-      };
-      setFormValue();
+      form.setFieldsValue({
+        name_material: data.name_material,
+        price: data.Warehouses?.[0]?.price_import,
+        Image: data.Image,
+        unit: data.unit,
+        id_warehouse: data.Warehouses?.[0]?.id
+      });
     }
   }, [form, data]);
+  const changeTabs = (params) => {
+
+  }
   return (
     <Modal
       forceRender={true}
@@ -58,93 +59,114 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
       ]}
       centered
     >
-      <Form form={form} onFinish={handleFinish} initialValues={{ price: 0 }} className="mt-8"
-        labelAlign="left"
-        labelCol={{
-          span: 6,
-          offset: 0
-        }}
-        wrapperCol={{
-          span: 18
-        }}>
-        <h3 className="font-semibold mb-8 text-main text-lg">
-          {data ? `Sửa nguyên liệu : ${data.name_material}` : "Thêm thông tin nguyên liệu nhà hàng"}
-        </h3>
-        <Form.Item
-          name="name_material"
-          label="Tên nguyên liệu"
-          rules={[
-            {
-              required: true,
-              message: "Bạn phải điền tên nguyên liệu",
-            },
-          ]}
-        >
-          <Input placeholder="Ví dụ: Cua..." />
-        </Form.Item>
+      <Tabs defaultActiveKey="1" items={[
+        {
+          key: '1',
+          label: 'Cập nhật',
+          children: <Form form={form} onFinish={handleFinish} initialValues={{ price: 0 }} className="mt-8"
+            labelAlign="left"
+            labelCol={{
+              span: 6,
+              offset: 0
+            }}
+            wrapperCol={{
+              span: 18
+            }}>
+            <h3 className="font-semibold mb-8 text-main text-lg">
+              {data ? `Sửa nguyên liệu : ${data.name_material}` : "Thêm thông tin nguyên liệu nhà hàng"}
+            </h3>
+            <Form.Item
+              name="name_material"
+              label="Tên nguyên liệu"
+              rules={[
+                {
+                  required: true,
+                  message: "Bạn phải điền tên nguyên liệu",
+                },
+              ]}
+            >
+              <Input placeholder="Ví dụ: Cua..." />
+            </Form.Item>
+            <Form.Item
+              hidden name="id_warehouse"
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item label="Giá (vnđ) :" name="price" rules={[
+              {
+                required: true,
+                message: "Bạn phải điền tên nguyên liệu",
+              },
+              {
+                type: "number",
+                min: 1001,
+                message: "Giá phải lớn hơn 1000",
+              },
+            ]}>
+              <InputNumber min={0} className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value.replace(/\$\s?|(,*)/g, '')} />
+            </Form.Item>
 
-        <Form.Item label="Giá (vnđ) :" name="price" rules={[
-          {
-            required: true,
-            message: "Bạn phải điền tên nguyên liệu",
-          },
-        ]}>
-          <InputNumber min={0} className="w-full" />
-        </Form.Item>
+            <Form.Item
+              name="unit"
+              label="Đơn vị"
+              rules={[
+                {
+                  required: true,
+                  message: "Bạn phải điền đơn vị tính nguyên liệu",
+                },
+              ]}
+            >
+              <Select placeholder="Đơn vị của nguyên liệu " options={
+                unitMasterial.map(item => ({ value: item, label: item.toUpperCase() }))
+              } />
+            </Form.Item>
+            <Form.Item
+              name="Image"
+              rules={[
+                {
+                  required: true,
+                  message: "Phải thêm hình ảnh nguyên liệu",
+                },
+              ]}
+              valuePropName="fileList"
+              getValueFromEvent={(e) => {
+                if (Array.isArray(e)) {
+                  return e;
+                }
+                return e?.fileList;
+              }}
+            >
+              <Upload
+                beforeUpload={() => false}
+                listType="picture"
+                defaultFileList={[]}
+              >
+                <Button icon={<UploadOutlined />}>Upload</Button>
+              </Upload>
+            </Form.Item>
+            <span className="italic	">
+              {" "}
+              <span className="text-red-500">*Lưu ý: </span>Hình ảnh chỉ lấy ảnh
+              cuối cùng được upload
+            </span>
+          </Form>
+        },
+        {
+          key: '2',
+          label: 'Đơn hàng nhập gần đây',
+          children: <div className="h-[50vh] overflow-y-auto flex flex-col">
+            {data?.Warehouses.map((item) => (
+              <div key={item.id} className="border_bottom p-2">
+                <Avatar shape="square" src={data.image} className="mr-2" size={40} />
+                <Text>{`Nhập ngày ${formatNgay(item.createdAt)} với số lượng ${item.amount_import} giá mua vào : ${formatGia(item.price_import)}`} </Text>
 
-        <Form.Item name="amount" label="Số lượng" rules={[
-          {
-            required: true,
-            message: "Bạn phải điền tên nguyên liệu",
-          },
-        ]}>
-          <InputNumber min={0} formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            parser={(value) => value.replace(/\$\s?|(,*)/g, '')} className="w-full" />
-        </Form.Item>
-        <Form.Item
-          name="unit"
-          label="Đơn vị"
-          rules={[
-            {
-              required: true,
-              message: "Bạn phải điền đơn vị tính nguyên liệu",
-            },
-          ]}
-        >
-          <Select placeholder="Đơn vị của nguyên liệu " options={
-            unitMasterial.map(item => ({ value: item, label: item.toUpperCase() }))
-          } />
-        </Form.Item>
-        <Form.Item
-          name="Image"
-          rules={[
-            {
-              required: true,
-              message: "Phải thêm hình ảnh nguyên liệu",
-            },
-          ]}
-          valuePropName="fileList"
-          getValueFromEvent={(e) => {
-            if (Array.isArray(e)) {
-              return e;
-            }
-            return e?.fileList;
-          }}
-        >
-          <Upload
-            beforeUpload={() => false}
-            listType="picture"
-            defaultFileList={[]}
-          >
-            <Button icon={<UploadOutlined />}>Upload</Button>
-          </Upload>
-        </Form.Item>
-        <span className="italic	">
-          {" "}
-          <span className="text-red-500">*Lưu ý: </span>Hình ảnh chỉ lấy ảnh
-          cuối cùng được upload
-        </span>
-      </Form>
+              </div>
+            ))}
+          </div>
+        }
+      ]} onChange={changeTabs} />
+
     </Modal>
   );
 }

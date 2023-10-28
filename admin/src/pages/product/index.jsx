@@ -29,10 +29,7 @@ function ProductPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const resCate = await getAllCate();
-      const resMate = await getAllMaterial();
-      const resProduct = await getAllProduct();
-      console.log("done");
+      const [resCate, resMate, resProduct] = await Promise.all([getAllCate(), getAllMaterial(), getAllProduct() ])
       setProducts({
         ...resProduct,
         data: resProduct.data.map((el) => ({ ...el, key: el.id })) || [],

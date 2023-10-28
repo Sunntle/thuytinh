@@ -43,8 +43,10 @@ import { LightSvg, NAV_ITEMS } from "../../utils/constant";
 import { roleRext, truncateString } from "../../utils/format";
 import NotificationsComponent from "../notification";
 import { DarkSvg } from "../../utils/constant";
+import Clock from "../clock/clock";
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
+
 function HeaderComponent() {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
@@ -302,6 +304,7 @@ function HeaderComponent() {
           />
         </div>
         <div className="flex items-center justify-center gap-x-4">
+          {/* <Clock/> */}
           <Tooltip title="Theme">
             <Button
               size="large"

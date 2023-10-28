@@ -34,6 +34,9 @@ export const delTables = (id) => {
 export const createTables = (body) => {
   return axios.post(`/api/table/`, body);
 }
+export const switchTables = (body) => {
+  return axios.post(`/api/table/switch-tables`, body);
+}
 
 // product //
 export const getAllProduct = (params) => {
@@ -83,6 +86,9 @@ export const deleteMaterial = (id) => {
 };
 export const editMaterial = (body) => {
   return axios.put(`/api/material`, body);
+};
+export const importMaterial = (body) => {
+  return axios.post(`/api/material/import`, body);
 };
 export const getOneMaterial = (id) => {
   return axios.get(`/api/material/${id}`);

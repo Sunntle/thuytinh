@@ -64,6 +64,8 @@ const App = () => {
             inkBarColor:"#FC8019",
             itemSelectedColor:"#FC8019",
             itemHoverColor:"#FC8019",
+            itemActiveColor: "#7e808c",
+            titleFontSizeLG: 18
           },
         },
 

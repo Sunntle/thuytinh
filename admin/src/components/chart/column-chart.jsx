@@ -1,7 +1,7 @@
 import Chart from "react-apexcharts";
 import { useSelector } from "react-redux";
-function ColumnChart({ series, colors, customOptions, categories,tooltip }) {
-  const customize = useSelector(state=> state.customize)
+function ColumnChart({ series, colors, customOptions, categories, tooltip, columnWidth = "70%" }) {
+  const customize = useSelector(state => state.customize)
   const data = {
     series: series,
     options: {
@@ -14,7 +14,7 @@ function ColumnChart({ series, colors, customOptions, categories,tooltip }) {
           typeof categories === "function" ? categories() : categories,
         tickAmount: 15,
       },
-      tooltip:{
+      tooltip: {
         theme: customize.darkMode ? 'dark' : 'light',
         style: {
           fontSize: '12px',
@@ -37,7 +37,7 @@ function ColumnChart({ series, colors, customOptions, categories,tooltip }) {
           distributed: false,
           borderRadius: 4,
           rangeBarGroupRows: false,
-          columnWidth: "70%",
+          columnWidth: columnWidth,
           dataLabels: {
             enabled: false,
           },
@@ -51,7 +51,7 @@ function ColumnChart({ series, colors, customOptions, categories,tooltip }) {
       options={data.options}
       series={data.series}
       type="bar"
-      className="chart_month max-w-[882px]"
+      className={customClassName ? customClassName : ('chart_month max-w-[882px]')}
       height={200}
       width={"100%"}
     />

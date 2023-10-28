@@ -12,6 +12,7 @@ const { apiQueryRest, bien } = require('../utils/const');
 const { Op } = require('sequelize');
 const { generateTable } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
+const { raw } = require("body-parser");
 
 const findTables = async (tables) => {
   const re = await Tables.findAll({
@@ -50,8 +51,11 @@ exports.getId = asyncHandler(async (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-      let data = await findTables(decode.tables)
-      res.status(200).json(data);
+      let data = await findTables(decode.tables);
+      const isToken = data.every(item => item.token == token);
+      if (isToken) return res.status(200).json(data);
+      return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+
     })
   } else {
     const employee = await User.findOne({
@@ -78,9 +82,9 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
       }
       if (decode) {
         const data = await Tables.findAll({
-          where: { token: {[Op.substring]: token} },
+          where: { token: { [Op.substring]: token } },
         })
-        if(data && data.length > 0) {
+        if (data && data.length > 0) {
           res.status(200).json(decode);
         }
         else res.status(404).json({ message: "Không tìm thấy bàn!" });
@@ -108,7 +112,6 @@ exports.create = asyncHandler(async (req, res) => {
   });
   if (!created) return res.status(404).json({ success: false, data: "Đã có tên bàn trên" });
   res.status(200).json({ success: true, data: "Tạo bàn thành công" });
-
 });
 
 
@@ -129,8 +132,9 @@ exports.update = asyncHandler(async (req, res) => {
 
 });
 
+
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
-   const { tables } = req.body;
+  const { tables } = req.body;
   let token = generateTable(JSON.stringify(req.body));
   await Tables.update({
     status_table: 1,
@@ -147,4 +151,13 @@ exports.del = asyncHandler(async (req, res) => {
     where: { id }
   });
   res.status(200).json("Xóa thành công");
+});
+exports.switchTables = asyncHandler(async (req, res) => {
+  const { newTable, currentTable, idOrder } = req.body;
+  if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json("Bàn đang được sử dụng");
+  await TableByOrder.update({ tableId: newTable }, { where: { tableId: currentTable, orderId: idOrder } });
+  let getCurrent = await Tables.findOne({ where: { id: currentTable }, raw: true });
+  await Tables.update({ token: getCurrent.token, status_table: 1 }, { where: { id: newTable } });
+  await Tables.update({ token: null, status_table: 0 }, { where: { id: currentTable } });
+  res.status(200).json("Chuyển thành bàn thành công");
 });

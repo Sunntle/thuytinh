@@ -1,4 +1,4 @@
-import { Col, Row, Typography, message } from "antd";
+import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, notification } from "antd";
 import ButtonComponents from "../../components/button";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table } from "antd";
@@ -11,30 +11,35 @@ import {
   editMaterial,
   getAllMaterial,
   getOneMaterial,
+  importMaterial,
 } from "../../services/api";
 import EditMaterial from "./edit";
 import ColumnChart from "../../components/chart/column-chart";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Spinner from "../../components/spinner";
-import { formatNgay } from "../../utils/format";
+import { formatGia, formatNgay } from "../../utils/format";
 const { Title, Text } = Typography;
 function MaterialPage() {
   const [open, setOpen] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
   const [openModelEdit, setOpenModelEdit] = useState(false);
   const [materials, setMaterials] = useState([]);
   const [data, setData] = useState(null);
   const [dataChart, setDataChart] = useState([]);
-  const notifications = useSelector(state => state.notifications)
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const notifications = useSelector(state => state.notifications);
+  const [listImportMaterial, setListImportMaterial] = useState([])
   const location = useLocation();
   const [loading, setLoading] = useState(true);
+  const [form] = Form.useForm();
   const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
     setMaterials({
       ...res,
-      data: res.data.map((el) => ({ ...el, key: el.id })),
+      data: res.data.map((el) => ({ ...el, key: el.id, price: el.Warehouses?.[0]?.price_import || 0 })),
     });
-
+    setListImportMaterial(res.listImport)
     setDataChart(res.dataChart);
     setLoading(false)
   }, []);
@@ -46,7 +51,6 @@ function MaterialPage() {
   useEffect(() => {
     if (notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)) {
       fetchData()
-      console.log("fetched");
     }
   }, [notifications, location, fetchData])
 
@@ -58,21 +62,28 @@ function MaterialPage() {
     } else {
       message.open({ type: "danger", content: "Có gì đó sai sai!" });
     }
-  },[fetchData]);
+  }, [fetchData]);
 
   const handleClickEditMaterial = useCallback(async (id) => {
     const res = await getOneMaterial(id);
     setData(res);
     setOpenModelEdit(true);
-  },[]);
+  }, []);
 
-  const columns = useMemo(()=>[
+  const columns = useMemo(() => [
+    {
+      title: "Nhập hàng",
+      dataIndex: "ma",
+      fixed: "left",
+      render: (_, record) => (
+        <span className="cursor-pointer" onClick={() => handleImport(record)}>Nhập hàng</span>
+      )
+    },
     {
       title: "Hình nguyên liệu",
       dataIndex: "image",
-      fixed: "left",
-      render: (_, record) => (
 
+      render: (_, record) => (
         <img
           className="w-full"
           style={{ maxWidth: "120px" }}
@@ -138,7 +149,6 @@ function MaterialPage() {
       title: "Số lượng",
       dataIndex: "amount",
     },
-
     {
       title: "Action",
       key: "action",
@@ -161,7 +171,7 @@ function MaterialPage() {
         </div>
       ),
     },
-  ],[handleClickEditMaterial, handleDeleteMaterial]);
+  ], [handleClickEditMaterial, handleDeleteMaterial, handleImport]);
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
@@ -206,34 +216,47 @@ function MaterialPage() {
     } catch (err) {
       message.open({ type: "error", content: "Có gì đó không ổn!" });
     }
-  },[fetchData]);
+  }, [fetchData]);
 
   const handleCancel = useCallback(() => {
     setOpen(false);
     setData(null);
-  },[]);
+  }, []);
 
+  const closeDrawer = () => {
+    form.resetFields();
+    setOpenDrawer(!openDrawer);
+  }
+
+  const handleFinish = async (values) => {
+    const res = await importMaterial(values);
+    notification.success({ message: "Thông báo", description: res });
+    fetchData()
+    closeDrawer()
+  }
   return (
     <div className="my-7 px-5">
+      {contextHolder}
       {loading ? (
         <Spinner />
-      ) : (<> {dataChart.length > 0 && (
-        <Row justify="space-between">
-          <Col xs={24} lg={6} className="flex flex-col mt-4">
-            <p className="text-gray-500 mb-3">
-              {formatNgay(new Date(), "HH:mm DD-MM-YYYY")}
-            </p>
-            <Title level={4}>
+      ) : (<>
+        <Row justify="space-between" gutter={[0, 12]}>
+          <Col xs={24} lg={8} >
+            <Title level={5} className="text-center">
+              Danh sách nguyên liệu nhập gần đây
+            </Title>
+            <div className="h-[28vh] overflow-y-auto flex flex-col  no-scrollbar rounded-sm drop-shadow-sm">
+              {listImportMaterial.map((item) => (
+                <div key={item.id} className="border_bottom p-2">
+                  <Text>{`Ngày ${formatNgay(item.createdAt)} với số lượng ${item.amount_import} giá : ${formatGia(item.price_import)}`} </Text>
+                </div>
+              ))}
+            </div>
+          </Col>
+          <Col xs={24} lg={15}>
+            <Title level={5} className="text-center">
               Có <span className="text-red-600">{dataChart.length}</span> nguyên liệu gần hết hàng
             </Title>
-            <Text className="text-lg ">
-              Gồm :{" "}
-              {dataChart
-                .map((item) => item.name_material.toUpperCase())
-                .join(" ,")}
-            </Text>
-          </Col>
-          <Col xs={24} lg={18}>
             <ColumnChart
               series={[
                 {
@@ -245,14 +268,15 @@ function MaterialPage() {
               categories={dataChart.map(
                 (item) => `${item.name_material} (${item.unit})`
               )}
+              columnWidth="20px"
             />
           </Col>
         </Row>
-      )}
+
 
         <Row justify="space-between" align="center" className="mb-4">
           <Col xs={6}>
-            <Title level={4}>Danh sách nguyên liệu</Title>
+            <Title level={3}>Danh sách nguyên liệu</Title>
           </Col>
           <Col xs={6} style={{ textAlign: "-webkit-right" }}>
             <ButtonComponents
@@ -262,6 +286,62 @@ function MaterialPage() {
             />
           </Col>
         </Row>
+        <Drawer title="Nhập nguyên liệu" placement="left" onClose={closeDrawer} open={openDrawer}>
+          <Form form={form} onFinish={handleFinish} initialValues={{ price: 0 }}
+            labelAlign="left"
+            labelCol={{
+              span: 24
+            }}
+            wrapperCol={{
+              span: 24
+            }}>
+            {openDrawer && <img className="p-2" src={form.getFieldValue("image")} />}
+            <Form.Item name="name_material" >
+              <Input disabled />
+            </Form.Item>
+            <Form.Item
+              hidden name="materialId"
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item label="Giá (vnđ) :" name="price" rules={[
+              {
+                required: true,
+                message: "Bạn phải điền tên nguyên liệu",
+              },
+              {
+                type: "number",
+                min: 1001,
+                message: "Giá phải lớn hơn 1000",
+              },
+            ]}>
+              <InputNumber min={0} className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={(value) => value.replace(/\$\s?|(,*)/g, '')} />
+            </Form.Item>
+            <Form.Item
+              name="amount_import"
+              label="Số lượng nguyên liệu"
+              rules={[
+                {
+                  required: true,
+                  min: 1,
+                  message: "Bạn phải nhập số lượng nguyên liệu",
+                },
+              ]}
+
+            >
+              <Input />
+            </Form.Item>
+            <ButtonComponents
+              content={"Nhập nguyên liệu"}
+              key="submit"
+              htmlType="submit"
+              className="border-borderSecondaryColor bg-secondaryColor"
+            />
+
+
+          </Form>
+        </Drawer>
         <Table
           columns={columns}
           dataSource={materials.data}
@@ -281,8 +361,9 @@ function MaterialPage() {
           unitMasterial={unitMasterial}
         />
 
-      </>)}
-    </div>
+      </>)
+      }
+    </div >
   );
 }
 

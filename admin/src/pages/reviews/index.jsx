@@ -42,12 +42,11 @@ function ReviewsPage() {
     async (params = { _offset: 0, _limit: limit, _time: currentMonth }) => {
       setLoading(true);
       try {
-        const countReviews = await getAllReviews({ _time: params._time });//10
-        setReviews(countReviews)
-        const res = await getAllReviews({
+        const [countReviews, res] = await Promise.all([getAllReviews({ _time: params._time }), getAllReviews({
           _time: currentMonth,
           _group: "createdAt",
-        });
+        })])
+        setReviews(countReviews)
         const arr = new Array(dayInMonth).fill(0);
         res?.total?.forEach((el) => {
           arr[+formatNgay(el.createdAt).substring(0, 2) - 1] += el.count;
@@ -125,12 +124,12 @@ function ReviewsPage() {
             </Typography.Title>
             <span className="mx-3">lượt đánh giá</span>
             <span
-              style={reviews.percentChange >= 0 ? { color: "#22C55E" } : { color: "#EF4444" }}
+              style={reviews?.percentChange >= 0 ? { color: "#22C55E" } : { color: "#EF4444" }}
               className="font-bold text-xl inline-flex items-center gap-x-1.5 my-3"
             >
-              {reviews.percentChange >= 0 ? (
+              {reviews?.percentChange >= 0 ? (
                 <>
-                  {reviews.percentChange}%
+                  {reviews?.percentChange}%
                   <UpCircleFilled
                     className="text-2xl"
                     style={{ color: "#22C55E" }}
@@ -138,7 +137,7 @@ function ReviewsPage() {
                 </>
               ) : (
                 <>
-                  {reviews.percentChange}%
+                  {reviews?.percentChange}%
                   <DownCircleFilled
                     className="text-2xl"
                     style={{ color: "#EF4444" }}

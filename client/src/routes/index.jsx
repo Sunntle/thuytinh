@@ -1,4 +1,4 @@
-import {createBrowserRouter, Navigate} from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import Home from "../pages/Home/home.jsx";
 import Order from "../pages/Order/order.jsx";
@@ -59,11 +59,11 @@ const router = createBrowserRouter([
         element: <Menu />,
       },
       {
-         path: "menu",
-         element: <Navigate to=".." />,
-       },
-      { index: "home", element: <Home /> },
-
+        path: "menu",
+        element: <Navigate to=".." state={{ from: 'menu' }} replace/>,
+      },
+      { path: "home", 
+      element: <Navigate to="/home" state={{ from: 'home' }} replace/> },
       {
         path: "service",
         element: <Service />,
