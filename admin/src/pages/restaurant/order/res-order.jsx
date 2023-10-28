@@ -4,10 +4,11 @@ import { Button, Divider, Modal, message, Form, Radio, Drawer, Collapse, Tabs } 
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, AddCartUpdate, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
-import { addOrder, createPayment, getTableId } from '../../../services/api'
+import { addOrder, createPayment, getTableId, updatePayment } from '../../../services/api'
 import { AddTableList } from '../../../redux/table/listTableSystem'
 import { formatGia } from '../../../utils/format'
 import { ButtonTable } from '../choosetable/ButtonTable'
+import moment from 'moment'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const RenderFooter = ({
@@ -22,7 +23,8 @@ const RenderFooter = ({
   showModal,
   closeSwithTable,
   openSwithTable,
-  switchTable
+  switchTable,
+  submitPayment
 }) => (
   <> <div className=' dark:bg-darkModeBgBox Order-total border rounded-md'>
     <div className='tax'>
@@ -97,8 +99,9 @@ const RenderFooter = ({
                   label: "Thanh toán bằng tiền mặt",
                   children: (
                     <Button
+                    onClick={submitPayment}
                       size={"large"}
-                      className="w-full bg-primary text-white"
+                      className="w-full bg-main text-white"
                     >
                       Thanh toán bằng tiền mặt
                     </Button>
@@ -148,7 +151,7 @@ const ResOrder = ({ handleCancel, open }) => {
   };
   // xy ly thanh toan
   const onFinish = async (values) => {
-    values = { ...values, amount: 100000 }
+    values = { ...values, amount: order.total }
     const data = await createPayment(values)
     setPayment(data)
     form.resetFields();
@@ -158,6 +161,13 @@ const ResOrder = ({ handleCancel, open }) => {
       window.location.href = String(payment);
     }
   }, [payment]);
+  const submitPayment = async () =>{
+    const body = {payment_gateway: "Cash", date: moment(new Date()).format("YYYYMMDDHHmmss"), idOrder: order.id, idTable: tablelist.id}
+    const data =  await updatePayment(body)
+    if(data){
+      navigate('/employee/payment-success/')
+    }
+  }
 
   //xu ly chuyen ban
   const openSwithTable = (index) => {
@@ -169,7 +179,7 @@ const ResOrder = ({ handleCancel, open }) => {
   return (
     <Drawer
       title={`Bàn số: ${tablelist.id}`} placement="right"
-      footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate} handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk} isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal} switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable} />}
+      footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate} handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk} isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal} switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable} submitPayment={submitPayment}/>}
       closable={false}
       onClose={handleCancel}
       open={open}

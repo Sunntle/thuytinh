@@ -293,3 +293,31 @@ exports.updateStatus = asyncHandler(async (req, res) => {
     res.status(500).json({message: 'Cập nhật trạng thái của bàn và hóa đơn thất bại', err})
   }
 });
+
+exports.updateOrderBilling = asyncHandler(async (req, res) => {
+  const { payment_gateway, date, idOrder, idTable } = req.body;
+  console.log(req.body)
+  try {
+    const orderUpdated = await Order.update(
+      {
+        payment_gateway: payment_gateway,
+        transaction_date: date,
+        status: 3
+      },
+      { where: { id: +idOrder } },
+    );
+    const tableUpdated = await Tables.update(
+      {
+        status_table: 0,
+      },
+      {
+        where: {
+          id: idTable,
+        },
+      },
+  );
+    if (orderUpdated && tableUpdated) res.status(200).json({ message: "thanh cong" });
+  } catch (err) {
+    res.status(500).json({ message: err });
+  }
+});
