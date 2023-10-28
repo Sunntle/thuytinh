@@ -1,10 +1,10 @@
 import React, { memo, useEffect, useState } from "react";
 import { Drawer, Spin } from "antd";
 import "./main.css";
-import { formatCurrency } from "../../utils/format.js";
-import useHttp from "../../hooks/useHttp.js";
+import { formatCurrency } from "../../../utils/format.js";
+import useHttp from "../../../hooks/useHttp.js";
 import { HiMiniXMark } from "react-icons/hi2";
-import { fetchProductById } from "../../services/api.js";
+import { fetchProductById } from "../../../services/api.js";
 
 const ProductDetail = ({ openDrawer, onClose, id }) => {
   const [productDetail, setProductDetail] = useState({});
@@ -69,7 +69,7 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
           <img
             className="w-full h-full rounded shadow-md"
             src={
-              productDetail?.imageUrls || productDetail?.ImageProducts?.[0].url
+              productDetail?.imageUrls || productDetail?.ImageProducts?.[0]?.url
             }
             alt=""
           />

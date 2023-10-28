@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "../payment/res-payment.css"
+
 import { Button, Divider, Modal, message, Form, Radio, Drawer, Collapse, Tabs } from "antd"
+
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, AddCartUpdate, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +25,9 @@ const RenderFooter = ({
   closeSwithTable,
   openSwithTable,
   switchTable
+
 }) => (
+
   <> <div className=' dark:bg-darkModeBgBox Order-total border rounded-md'>
     <div className='tax'>
       <span>Thuế VAT:</span>
@@ -38,13 +42,17 @@ const RenderFooter = ({
         <button className='bg-red-500 text-white' onClick={handleCancel}>Hủy</button>
       </div>
 
+
       <div className='flex justify-center font-semibold col-span-2 m-1'>
         <button className='bg-blue-500 text-white' onClick={() => handleUpdate(tablelist)}>Thêm món mới</button>
       </div>
 
       <div className='flex justify-center font-semibold col-span-2 m-1'>
-        <button className='bg-indigo-500 text-white' onClick={() => openSwithTable(tablelist)}>Chuyển bàn</button>
+        <button className='bg-indigo-500 text-white' onClick={openSwithTable}>Chuyển bàn</button>
       </div>
+      <Modal title="Chọn bàn muốn chuyển" open={switchTable} onCancel={closeSwithTable}>
+
+      </Modal>
       <div className='flex justify-center col-span-2 m-1'>
         <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
           Thanh Toán
@@ -110,14 +118,14 @@ const RenderFooter = ({
         </Modal>
       </div>
     </div>
-  </div></>
-)
+  </div>
+</>)
 const ResOrder = ({ handleCancel, open }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isModalPay, setIsModalPay] = useState(false);
   const [payment, setPayment] = useState(null);
-  const [switchTable, setSwitchTable] = useState(false)
+  const [switchTable, setSwitchTable] = useState(false);
   const [form] = Form.useForm();
   const tablelist = useSelector((state) => state.tablelist);
   const tablebyorders = tablelist?.TableByOrders[0]
@@ -161,8 +169,8 @@ const ResOrder = ({ handleCancel, open }) => {
   }, [payment]);
 
   //xu ly chuyen ban
-  const openSwithTable = (index) => {
-    navigate('/employee/select-table/' + tablelist.id + "/" + tablelist.TableByOrders[0].orderId);
+  const openSwithTable = () => {
+    setSwitchTable(true)
   }
   const closeSwithTable = () => {
     setSwitchTable(false)
@@ -199,6 +207,7 @@ const ResOrder = ({ handleCancel, open }) => {
                   {/* </div> */}
                 </div>
               </div>
+
             </div>
           </div>
         )}

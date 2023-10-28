@@ -27,7 +27,7 @@ const LayoutMain = () => {
     );
     api.open({
       message: 'Thông báo mới',
-      description:arg && arg.description,
+      description: arg && arg.description,
       btn,
       key,
       placement: 'bottomRight',
@@ -51,14 +51,14 @@ const LayoutMain = () => {
     navigate(e.key);
   };
   return (
-    <div className={`bg-main relative ${customize.darkMode ? 'dark' : ''}`}>
+    <div className={`bg-main overflow-hidden relative ${customize.darkMode ? 'dark' : ''}`}>
       <div>
         {contextHolder}
       </div>
-      <header className="sticky top-0 w-full z-10 shadow-lg">
+      <header className="sticky top-0 w-full z-10 ">
         <HeaderComponent />
       </header>
-      <main className="main_area rounded-t-3xl">
+      <main className="main_area rounded-t-3xl overflow-hidden">
         <Layout className="layout_area ">
           <Sider
             theme={customize.darkMode ? 'dark' : 'light'}

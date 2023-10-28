@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer utilities {
   @variants responsive {
 
@@ -25,12 +26,15 @@
   --swiper-navigation-size: 20px
 }
 
+
 html {
   font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar {
   width: 5px;
+  height: 1px !important;
 }
 
 /* Track */
@@ -53,4 +57,20 @@ html {
   html {
     font-size: 12px;
   }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.table_order .ant-table::-webkit-scrollbar {
+  height: 1px !important;
 }

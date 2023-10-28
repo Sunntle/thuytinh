@@ -7,17 +7,17 @@ import { Spin } from "antd";
 import useDebounce from "../../hooks/useDebounce.js";
 import * as apiService from "../../services/api.js";
 import "./index.css";
-import {
-  CategoryList,
-  OrderListModal,
-  ProductList,
-} from "../../components/index.js";
+import OrderListModal from "./OrderListModal/OrderListModal.jsx";
+import CategoryList from "./CategoryList/CategoryList.jsx";
+import ProductList from "./ProductList/ProductList.jsx";
+import { useSearchParams } from "react-router-dom";
 
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryIndex = searchParams.get("category");
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const { sendRequest, isLoading, error } = useHttp();
+  const { sendRequest, isLoading } = useHttp();
   const [foods, setFoods] = useState(null);
   const [categories, setCategories] = useState(null);
   const { order: orders } = useSelector((state) => state.order);
@@ -25,26 +25,12 @@ const Menu = () => {
 
   useEffect(() => {
     sendRequest(apiService.fetchCategories(), setCategories);
-    sendRequest(apiService.fetchProduct(), setFoods);
-  }, [sendRequest]);
-
-  const handleGetAllFood = (index) => {
-    try {
-      setActiveIndex(index === activeIndex ? null : index);
+    if (categoryIndex !== null) {
+      sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods);
+    } else {
       sendRequest(apiService.fetchProduct(), setFoods);
-    } catch (err) {
-      console.log(error);
     }
-  };
-
-  const handleFilterFoodByCategory = (index) => {
-    try {
-      setActiveIndex(index === activeIndex ? null : index);
-      sendRequest(apiService.fetchProductsByCategory(index), setFoods);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  }, [sendRequest,categoryIndex]);
 
   const handleChangeSearchValue = (e) => {
     setSearchValue(e.target.value);
@@ -75,7 +61,7 @@ const Menu = () => {
 
   if (isLoading) {
     return (
-      <div className="mt-56 h-full w-screen flex justify-center items-center flex-col">
+      <div className="my-56 h-full w-screen flex justify-center items-center flex-col">
         <Spin size={"large"}></Spin>
         <span className="mt-4 font-semibold text-lg">
           Quý khách vui lòng đợi trong giây lát !
@@ -86,7 +72,7 @@ const Menu = () => {
 
   return (
     <div className="pb-24 text-slate-800 lg:px-16 px-6">
-      <div className="flex flex-col mt-8 space-y-4 lg:mt-24">
+      <div className="flex flex-col mt-8 space-y-8 lg:mt-24">
         <div className="lg:hidden grid grid-cols-12 gap-4 text-slate-500 ">
           <div className="col-span-10 w-full h-12 bg-slate-100 rounded-lg flex justify-start items-center space-x-3 px-2">
             <FiSearch className="w-5 h-5" />
@@ -109,12 +95,6 @@ const Menu = () => {
               {orders?.length || 0}
             </span>
           </div>
-           <OrderListModal
-            isModalOpen={isOrderModalOpen}
-            handleOk={handleOk}
-            handleCancel={handleCancel}
-            setIsOrderModalOpen={setIsOrderModalOpen}
-          />
         </div>
         {/*Category*/}
         <div className="relative w-full text-sm">
@@ -123,37 +103,16 @@ const Menu = () => {
           </span>
           <CategoryList
             categories={categories}
-            activeIndex={activeIndex}
-            handleGetAllFood={handleGetAllFood}
-            handleFilterFoodByCategory={handleFilterFoodByCategory}
+            activeIndex={+categoryIndex}
           />
         </div>
-        {/* Filter with material */}
-        {/*{activeIndex !== 0 && (*/}
-        {/*  <div className="relative w-full text-sm">*/}
-        {/*    <div className=" flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">*/}
-        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
-        {/*        Tôm*/}
-        {/*      </button>*/}
-        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
-        {/*        Cua*/}
-        {/*      </button>*/}
-        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
-        {/*        Cá*/}
-        {/*      </button>*/}
-        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
-        {/*        Ốc*/}
-        {/*      </button>*/}
-        {/*      <button className="px-2 py-1 border black bg-white rounded-lg active:bg-primary active:text-white transition-colors duration-300">*/}
-        {/*        Mực*/}
-        {/*      </button>*/}
-        {/*    </div>*/}
-        {/*    /!* Overlay *!/*/}
-        {/*    <div className="absolute right-0 bottom-0 w-12 h-1/2 bg-white bg-opacity-60"></div>*/}
-        {/*  </div>*/}
-        {/*)}*/}
-        {/*Food*/}
         <ProductList foods={foods} />
+        <OrderListModal
+          isModalOpen={isOrderModalOpen}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          setIsOrderModalOpen={setIsOrderModalOpen}
+        />
       </div>
     </div>
   );

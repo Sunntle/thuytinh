@@ -8,15 +8,15 @@ const overMasterial = ["2", "500", "9", "5", "50", "20", "10"];
 
 let notificationSent = false
 exports.list = async (req, res) => {
-
   let query = {
     ...apiQueryRest({ ...req.query, title: "name_material" }), nest: true,
     include: { model: Warehouse, attributes: ["price_import"] },
     order: [[{ model: Warehouse }, 'createdAt', 'DESC']],
     subQuery: false
   };
+
   const { count, rows } = await Materials.findAndCountAll(query);
-  const listImport = await Warehouse.findAll()
+  const listImport = await Warehouse.findAll({ order: [['createdAt', 'DESC']] })
 
   const dataChart = await Materials.findAll({
     attributes: ["id", "amount", "name_material", "unit", "image"],
@@ -30,7 +30,7 @@ exports.list = async (req, res) => {
   });
 
   if (dataChart.length > 0 && !notificationSent) {
-    let created = await Notification.create({
+    await Notification.create({
       type: "material",
       description: `Có ${dataChart.length} nguyên liệu sắp hết`
     }, { raw: true }
@@ -48,20 +48,14 @@ exports.list = async (req, res) => {
         where: {
           id: {
             [Op.in]: findIdProduct.map(item => item.id_product),
-          }, status: {
-            [Op.lt]: 3
-          }
+          }, status: { [Op.lt]: 3 }
         }
       });
-      let createdProduct = await Notification.create({
+      await Notification.create({
         type: "product",
         description: `Có ${findIdProduct.length} sản phẩm gần hết hàng`
-      }, { raw: true }
-      );
-      _io.of("/admin").emit("new message", createdProduct);
+      });
     }
-
-    _io.of("/admin").emit("new message", created);
     notificationSent = true
   }
 
@@ -89,11 +83,15 @@ exports.addMaterial = async (req, res) => {
       ...req.body,
       image: img.path.replace("/upload/", "/upload/w_400,h_300/"),
     });
-    const { amount, id, price } = response.dataValues;
+    const { amount, id } = response.dataValues;
     await Warehouse.create({
       materialId: id,
       amount_import: amount,
       price_import: req.body.price,
+    })
+    await Notification.create({
+      type: "material",
+      description: `Vừa thêm nguyên liệu ${req.body.name_material}`
     })
     res.status(201).json(response);
   } catch (err) {
@@ -114,6 +112,10 @@ exports.updateMaterial = async (req, res) => {
       { price_import: req.body.price },
       { where: { id: req.body.id_warehouse } }
     );
+    await Notification.create({
+      type: "material",
+      description: `Vừa cập nhật nguyên liệu ${req.body.name_material}`
+    })
     res.status(200).json("Cập nhật công thức thành công !");
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
@@ -122,10 +124,15 @@ exports.updateMaterial = async (req, res) => {
 exports.removeMaterial = async (req, res) => {
   try {
     const _id = req.params.id;
-    const response = await Materials.destroy({
+    await Notification.create({
+      type: "material",
+      description: `Vừa xóa 1 nguyên liệu`
+    })
+    await Materials.destroy({
       where: { id: _id },
       individualHooks: true,
     });
+
     res.status(200).json("Xóa công thức thành công");
   } catch (err) {
     console.log(err);
@@ -134,8 +141,12 @@ exports.removeMaterial = async (req, res) => {
 };
 
 exports.importWarehouse = asyncHandler(async (req, res) => {
-  const { amount_import, price, materialId } = req.body;
+  const { amount_import, price, materialId, name_material } = req.body;
   await Warehouse.create({ materialId, price_import: price, amount_import }).catch(err => console.log(err))
   await Materials.increment("amount", { by: amount_import, where: { id: materialId } }).catch(err => console.log(err))
+  await Notification.create({
+    type: "material",
+    description: `Vừa nhập nguyên liệu ${name_material}`
+  })
   res.status(200).json("Đã thêm vào kho thành công");
 })

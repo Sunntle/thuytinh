@@ -3,7 +3,7 @@ import { Select, Row, Col, Progress } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 const LineChart = ({ setTimeChart, timeChart, data }) => {
-  const { montdPreAndCur, chart_order, order } = data;
+  const { montdPreAndCur, chart_order, countOrder } = data;
   const handleChange = (value) => {
     setTimeChart(value);
   };
@@ -47,7 +47,7 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
                 <span className="text-gray-400 font-medium whitespace-nowrap">
                   Order total
                 </span>
-                <span className="font-medium">{order || 0}</span>
+                <span className="font-medium">{countOrder || 0}</span>
               </div>
             </Col>
             <Col xs={12} className="flex justify-center items-center">
@@ -57,7 +57,7 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
                   <span className="font-medium">100</span>
                 </div>
                 <Progress
-                  percent={order}
+                  percent={countOrder}
                   showInfo={false}
                   className="m-0"
                   strokeColor="#FC8019"

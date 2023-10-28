@@ -51,7 +51,6 @@ function MaterialPage() {
   useEffect(() => {
     if (notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)) {
       fetchData()
-      console.log("fetched");
     }
   }, [notifications, location, fetchData])
 
@@ -70,7 +69,11 @@ function MaterialPage() {
     setData(res);
     setOpenModelEdit(true);
   }, []);
-
+  const handleImport = useCallback(async (record) => {
+    setOpenDrawer(true);
+    const { name_material, id, image } = record;
+    form.setFieldsValue({ name_material, materialId: id, image });
+  }, [form])
   const columns = useMemo(() => [
     {
       title: "Nhập hàng",
@@ -172,7 +175,7 @@ function MaterialPage() {
         </div>
       ),
     },
-  ], [handleClickEditMaterial, handleDeleteMaterial, handleImport]);
+  ], [handleClickEditMaterial, handleDeleteMaterial]);
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
@@ -277,7 +280,7 @@ function MaterialPage() {
 
         <Row justify="space-between" align="center" className="mb-4">
           <Col xs={6}>
-            <Title level={4}>Danh sách nguyên liệu</Title>
+            <Title level={3}>Danh sách nguyên liệu</Title>
           </Col>
           <Col xs={6} style={{ textAlign: "-webkit-right" }}>
             <ButtonComponents

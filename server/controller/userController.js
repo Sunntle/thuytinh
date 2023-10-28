@@ -23,15 +23,6 @@ exports.register = asyncHandler(async (req, res) => {
     defaults: { ...req.body },
   });
   if (created) {
-    let storeNotification = await Notification.create(
-      {
-        type: "user",
-        description: `Người dùng mới`,
-        content: user.id
-      },
-      { raw: true }
-    );
-    _io.of("/admin").emit("new message", storeNotification)
     res.status(200).json({ success: true, data: user });
   } else {
     res.status(200).json({ success: false, mes: "Thông tin đã tồn tại rồi nha" });
@@ -72,7 +63,7 @@ exports.login = asyncHandler(async (req, res) => {
 });
 exports.getAllUser = asyncHandler(async (req, res) => {
   const { _offset, _limit, _sort, _order, q, _like, _noQuery, ...rest } = req.query;
-  
+
   if (_noQuery == 1) {
     return res.status(200).json(await User.findAll({ where: { role: 'R2' }, attributes: ["id", "name", "phone"], raw: true }));
   }
