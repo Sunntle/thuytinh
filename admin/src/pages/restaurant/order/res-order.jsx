@@ -197,7 +197,6 @@ const ResOrder = ({ handleCancel, open }) => {
               <div className='flex-grow'>
                 <div className='flex items-end justify-between'>
                   <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.Product.name_product}</span>
-                  <div className='font-medium'>{item.Product.name_product}</div>
                   <span className='text-main mb-3'>{formatGia(item.Product.price)}</span>
                 </div>
                 <div className='flex items-center justify-between'>
@@ -212,7 +211,6 @@ const ResOrder = ({ handleCancel, open }) => {
             </div>
           </div>
         )}
-        <Divider className='bg-main my-5' />
       </div>
     </Drawer>
   )

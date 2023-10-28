@@ -68,9 +68,9 @@ return (
                                 <div className='shadow-xl border-solid border border-gray-300 rounded-lg' >
                                     <img className='h-full w-full rounded-t-lg' src={product?.ImageProducts[0]?.url} />
                                     <div className='p-4'>
-                                        <div className='font-medium'>{product.name_product}</div>
+                                        <div className='font-medium h-5'>{product.name_product}</div>
                                         <div className='flex justify-between items-center  '>
-                                            <p className=' font-medium text-main text-lg'> {formatGia(product.price)}</p>
+                                            <p className=' font-medium text-main text-lg mt-2'> {formatGia(product.price)}</p>
                                             <PlusOutlined onClick={() => dispatch(AddCart(product))} size={30} className='p-3 bg-main rounded-full text-white' />
                                         </div>
                                     </div>

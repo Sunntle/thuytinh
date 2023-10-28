@@ -91,11 +91,11 @@ const ResPayment = () => {
                                 <div className='product-remove pe-2'>
                                     <button className='text-orange-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
                                 </div>
-                                <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain ' src={item?.ImageProducts[0]?.url} />
+                                <img className=' rounded-lg h-full w-full object-contain ' src={item?.ImageProducts[0]?.url} />
                             </div>
                             <div className='flex-grow'>
-                                <div className='flex items-end justify-between'>
-                                    <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.name_product}</span>
+                                <div className='flex justify-between'>
+                                    <span className='text-sm text-slade-500 overflow-hidden break-words mb-1'>{item.name_product}</span>
                                     <span className='text-main text-sm mb-3'>{formatGia(item.price)}</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
