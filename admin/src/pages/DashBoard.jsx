@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState, useCallback } from "react";
 import { formatGia } from "../utils/format";
 import { Autoplay } from "swiper/modules";
-import { getAllProduct, getDataDashboard } from "../services/api";
+import { getAllOrder, getAllProduct, getDataDashboard } from "../services/api";
 import Spinner from "../components/spinner";
 import { Link } from "react-router-dom";
 import { UpCircleFilled } from "@ant-design/icons";
@@ -31,7 +31,8 @@ const DashBoard = () => {
         _order: "DESC",
         _discount: "gte_0",
         _limit: 10,
-      })]);
+      })
+    ]);
       setDiscount(resProductsDiscount);
       setData(res1);
       setDataProduct(res2.data);
@@ -64,7 +65,7 @@ const DashBoard = () => {
               <p className="text-lg font-medium text-red-500 text-center">{formatGia(data?.costMaterial?.total_cost || 0)}</p>
             </div>
           </div>
-          <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2">
+          <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2 mb-6">
             <LineChart
               timeChart={timeChart}
               setTimeChart={setTimeChart}
@@ -149,75 +150,8 @@ const DashBoard = () => {
           </div> */}
           <div className="mb-6">
             <div className="flex justify-between items-center">
-              <h4 className="font-bold text-lg mb-2 text-slate-700">
+              <h4 className="font-bold text-lg mb-2">
                 Món giảm giá
-              </h4>
-              <Link to="/admin/product" style={{ color: "#FC8019" }}>
-                Xem tất cả
-              </Link>
-            </div>
-            <Swiper
-              speed={1500}
-              autoplay={{
-                delay: 1500,
-                disableOnInteraction: false,
-              }}
-              slidesPerView={1}
-              className="mySwiper"
-              breakpoints={{
-                686: {
-                  slidesPerView: 2,
-                },
-                1249: {
-                  slidesPerView: 3,
-                },
-              }}
-              modules={[Autoplay]}
-            >
-              {discount?.data.map((el) => {
-                return (
-                  <SwiperSlide key={el.id}>
-                    <div className="md:pe-5 pe-3">
-                      <Badge.Ribbon text={`${el.discount}% Off`} color="red">
-                        <div className="py-5 px-3 sm:px-5 md:px-3 border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 flex items-center justify-around sm:justify-around lg:justify-evenly">
-                          <div>
-                            <img
-                              className="w-full"
-                              style={{ maxWidth: "130px" }}
-                              src={el.imageUrls?.split(";")[0]}
-                              alt=""
-                            />
-                          </div>
-                          <div>
-                            <h6 className="font-semibold text-lg">
-                              {el.name_product}
-                            </h6>
-                            <div className="mb-2">
-                              <h6 className="text-main font-semibold  whitespace-nowrap text-lg">
-                                {formatGia(
-                                  el.price - (el.price * el.discount) / 100
-                                )}
-                              </h6>
-                              <p className="text-gray-400 font-semibold line-through whitespace-nowrap text-xs">
-                                {formatGia(el.price)}
-                              </p>
-                            </div>
-                            <div className="text-slate-500 text-md  ">
-                              <span>Hơn 1000+ đánh giá </span>
-                            </div>
-                          </div>
-                        </div>
-                      </Badge.Ribbon>
-                    </div>
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
-          </div>
-          <div className="mb-6">
-            <div className="flex justify-between items-center">
-              <h4 className="font-bold text-lg mb-2 text-slate-700">
-                Đặt hàng gần đây
               </h4>
               <Link to="/admin/product" style={{ color: "#FC8019" }}>
                 Xem tất cả
