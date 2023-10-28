@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { initTable } from "../redux/CustomerName/customerNameSlice.js";
 function CheckTable(props) {
   const location = useLocation();
-  let idTable = location.pathname.split("/")[1].split("-")[1] // exist  = quet QR // undefined
+  let idTable = !location.pathname.includes("undefined") ? location.pathname.split("/")[1].split("-")[1]: undefined // exist  = quet QR // undefined
   const dispatch = useDispatch()
   useEffect(()=>{
     dispatch(initTable())
