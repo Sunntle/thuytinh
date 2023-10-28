@@ -1,0 +1,10 @@
+.slide-button {
+    @apply cursor-pointer z-20 border-2 border-slate-300 rounded-full p-2 shadow-md transition-all duration-200 absolute top-1/2 -translate-y-1/2
+}
+
+.slide-button:hover {
+    @apply border-primary;
+    .icon {
+        @apply text-primary transition-all duration-200
+    }
+}
