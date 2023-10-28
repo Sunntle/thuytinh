@@ -141,7 +141,7 @@ function UserPage() {
     if (
       notifications.lastNotification &&
       notifications.lastNotification?.type ==
-        location.pathname.split("/").at(-1)
+      location.pathname.split("/").at(-1)
     ) {
       fetchData();
     }
@@ -226,7 +226,7 @@ function UserPage() {
                         },
                       ]}
                     >
-                      <Input disabled />
+                      <Input />
                     </Form.Item>
                     <Form.Item
                       label="Họ tên"
