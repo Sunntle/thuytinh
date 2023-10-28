@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { AddCart } from '../../../redux/cartsystem/cartSystem';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css/navigation';
+import { formatGia } from '../../../utils/format';
 
 const ResMenu = () => {
     const [product, setProduct] = useState([]);
@@ -55,21 +56,20 @@ const ResMenu = () => {
                                 <Divider><span className='font-medium text-main text-lg'>{selectedCategory.name_category}</span></Divider>
                             </div>
                         )}
-                        <Row className='w-full' gutter={[8, 16]}>
+                        <Row gutter={[16, 16]}>
                             {filteredProducts?.map((product, index) => (
-                                <Col md={8} xs={24} className='w-1/3 p-2 rounded-lg' key={index}>
-                                    <div className="w-full pe-5">
-                                        <div className='shadow-xl border-solid border-2 border-gray-300 px-4 py-2 rounded-lg' >
-                                            <img className='h-44 w-60 rounded' src={product?.ImageProducts[0]?.url} />
-                                            <div className='mt-3 font-medium'>{product.name_product}</div>
+                                <Col md={6} sm={8} xs={12} className='rounded-lg' key={index}>
+                                    <div className='shadow-xl border-solid border border-gray-300 rounded-lg' >
+                                        <img className='h-full w-full rounded-t-lg' src={product?.ImageProducts[0]?.url} />
+                                        <div className='p-4'>
+                                            <div className='font-medium'>{product.name_product}</div>
                                             <div className='flex justify-between items-center  '>
-                                                <p className=' font-medium text-main text-lg'> {product.price} VNĐ</p>
-                                                <div className=''>
-                                                    <PlusOutlined onClick={() => dispatch(AddCart(product))} size={30} className='p-3 bg-main rounded-lg text-white' />
-                                                </div>
+                                                <p className=' font-medium text-main text-lg'> {formatGia(product.price)}</p>
+                                                <PlusOutlined onClick={() => dispatch(AddCart(product))} size={30} className='p-3 bg-main rounded-full text-white' />
                                             </div>
                                         </div>
                                     </div>
+
                                 </Col>
                             ))}
                         </Row>

@@ -9,15 +9,14 @@ import image1 from "../../assets/images/image1.png";
 import image4 from "../../assets/images/image4.png";
 import image2 from "../../assets/images/image2.png";
 import HomeSlide from "./HomeSlide/HomeSlide.jsx";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
-
   useEffect(() => {
     sendRequest(fetchProduct(), setSlideProduct);
   }, [sendRequest]);
-
   useEffect(() => {
     socket.emit("new user", { userName: "Taile", role: "R1" });
   }, []);
@@ -25,12 +24,12 @@ const Home = () => {
   return (
     <div>
       <Banner />
-      <div className="flex items-center justify-between mt-12 px-6 lg:px-0 lg:mx-16">
-        <span className="w-full h-0.5 bg-black"></span>
-        <span className="font-medium text-2xl whitespace-nowrap px-6">
-          Bán Chạy Nhất
-        </span>
-        <span className="w-full h-0.5 bg-black"></span>
+      <div className="flex items-center justify-center mt-12 px-6 gap-x-6 lg:mx-16">
+        <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
+        <h2 className="text-3xl font-bold text-primary pb-2">
+        Món ăn bán nhiều nhất
+      </h2>
+        <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
       </div>
 
       <HomeSlide listProduct={slideProduct} />
@@ -38,9 +37,9 @@ const Home = () => {
       <section className="relative my-12 px-6 lg:px-16 flex flex-col lg:flex-row items-center justify-between">
         <div className="hidden lg:flex z-30 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-between text-white">
           <span className="w-24 h-px bg-white"></span>
-          <span className="cursor-pointer font-light text-sm whitespace-nowrap px-4 py-2 border rounded-sm border-white hover:bg-white hover:text-slate-800 transition-colors duration-200">
+          <Link to="/menu" className="cursor-pointer font-light text-sm whitespace-nowrap px-4 py-2 border rounded-sm border-white hover:bg-white hover:text-slate-800 transition-colors duration-200">
             Xem thêm
-          </span>
+          </Link>
           <span className="w-24 h-px bg-white"></span>
         </div>
         <div className="w-full lg:w-1/3 group overflow-hidden rounded-t-lg lg:rounded-none lg:rounded-l-lg h-44 lg:h-60">

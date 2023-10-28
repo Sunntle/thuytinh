@@ -56,7 +56,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
   let dataTable = await TableByOrder.bulkCreate(
     arrTable.map((item) => ({ tableId: item, orderId: order_result.id })),
   );
-  await Tables.prototype.updateStatusTable(arrTable, 1);
+  if (id_employee) await Tables.prototype.updateStatusTable(arrTable, 1);
   let tableData = await TableByOrder.findAll({
     include: { model: Tables },
     where: { id: { [Op.in]: dataTable.map((i) => i.id) } },
@@ -85,7 +85,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
     { raw: true },
   );
 
-  _io.of("/admin").emit("new message", storeNotification);
   _io.of("/client").emit("status order", result);
 
   res.status(200).json({ success: true, data: result });
@@ -183,7 +182,6 @@ exports.updateOrder = asyncHandler(async (req, res) => {
 
 exports.updateOrderAdmin = asyncHandler(async (req, res) => {
   const { table, id, ...rest } = req.body;
-  console.log(req.body);
   await Order.update({ ...rest }, { where: { id } });
   await TableByOrder.destroy({ where: { orderId: id } });
   await TableByOrder.bulkCreate(
