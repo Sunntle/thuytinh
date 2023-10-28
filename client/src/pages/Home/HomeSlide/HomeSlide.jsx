@@ -60,7 +60,7 @@ const HomeSlide = ({ listProduct }) => {
                   />
                 </div>
                 <div className="flex justify-between items-center p-2 text-slate-500">
-                  <div>
+                  <div className="flex flex-col overflow-hidden">
                     <span className="text-sm font-medium overflow-hidden block w-full whitespace-nowrap truncate">
                       {product.name_product}
                     </span>
