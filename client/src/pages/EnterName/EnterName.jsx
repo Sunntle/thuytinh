@@ -10,7 +10,7 @@ const EnterName = (props) => {
   const dispatch = useDispatch();
   const customerNameState = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
-
+  console.log(customerNameState);
   const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
   },[]);
@@ -30,7 +30,7 @@ const EnterName = (props) => {
     // navigate(`/ban-${customerNameState.tables[0]}/menu`);
   },[customerName, dispatch, idTable, sendRequest, storeToken]);
   if(customerNameState.isLoading) return "Loading...."
-  if(customerNameState?.name?.length && customerNameState?.tables?.length > 0) return props.children
+  if(customerNameState?.name?.length  > 0) return props.children
   return (
     <div className="h-screen w-screen flex items-center">
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">

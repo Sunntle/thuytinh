@@ -1,15 +1,15 @@
-import React from "react";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 const CategoryList = ({
   categories,
   activeIndex,
 }) => {
+  const customerName = useSelector(state => state.customerName)
   return (
     <>
       <div className="w-full flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">
         <Link
-            to={'/menu'}
+            to={`/ban-${customerName?.tables}/menu`}
           disabled={activeIndex === null}
           className={`h-8 px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-100 ${
             activeIndex === 0

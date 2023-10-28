@@ -52,7 +52,7 @@ exports.getId = asyncHandler(async (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-      let data = await TableByOrder.findAll({ where: { token: token } });
+      let data = await TableByOrder.findAll({ where: { id: id } });
       if (data) return res.status(200).json(data);
       return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
 

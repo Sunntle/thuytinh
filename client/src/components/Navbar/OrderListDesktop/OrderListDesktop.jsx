@@ -63,7 +63,7 @@ const OrderListDesktop = (props) => {
           </div>
         </div>
         <div className="w-full flex justify-between items-center text-lg font-semibold text-primary mt-12">
-          <span className="flex items-center font-normal">--> Quay về</span>
+          <span className="flex items-center font-normal"> Quay về</span>
           <div className="flex justify-between items-center space-x-1">
             <span className="text-sm text-slate-500">Tạm tính: </span>
             <span className="text-xl">{formatCurrency(100000)}</span>
