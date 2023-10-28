@@ -3,7 +3,7 @@ const queryString = require("qs");
 const crypto = require("crypto");
 const request = require("request");
 const asyncHandler = require("express-async-handler");
-const { Order } = require("../models");
+const { Order, Tables } = require("../models");
 
 const sortObj = (obj) => {
   let sorted = {};
@@ -40,9 +40,11 @@ exports.createPaymentUrl = asyncHandler(async (req, res) => {
   let orderId = moment(date).format("DDHHmmss");
   let amount = req.body.amount;
   let bankCode = req.body.bankCode;
+  let idTable = req.body.id_table
 
   let currCode = "VND";
   let vnp_Params = {};
+  vnp_Params["vnp_IdTable"] = idTable;
   vnp_Params["vnp_Version"] = "2.1.0";
   vnp_Params["vnp_Command"] = "pay";
   vnp_Params["vnp_TmnCode"] = tmnCode;
@@ -103,7 +105,9 @@ exports.VnpIPN = asyncHandler(async (req, res) => {
             //that bai
             //paymentStatus = '2'
             // Ở đây cập nhật trạng thái giao dịch thanh toán thất bại vào CSDL của bạn
-            res.status(200).json({ RspCode: "00", Message: "Success" });
+            res
+              .status(200)
+              .json({ RspCode: "01", Message: "Fail", data: vnp_Params });
           }
         } else {
           res.status(200).json({
@@ -221,8 +225,13 @@ exports.queryDr = asyncHandler(async (req, res) => {
 });
 
 exports.updateTransactionOrder = asyncHandler(async (req, res) => {
-  const { transaction_id, transaction_date, idOrder, payment_gateway } =
-    req.body;
+  const {
+    transaction_id,
+    transaction_date,
+    idOrder,
+    payment_gateway,
+    idTable,
+  } = req.body;
 
   const existingTransactionId = await Order.findOne({
     where: { transaction_id: transaction_id },
@@ -235,19 +244,28 @@ exports.updateTransactionOrder = asyncHandler(async (req, res) => {
           transaction_id: transaction_id,
           transaction_date: transaction_date,
           payment_gateway: payment_gateway,
+          status: 3
         },
         {
           where: { id: idOrder },
         },
       );
 
-      if (orderUpdated) {
-        res
-          .status(200)
-          .json({
-            data: orderUpdated,
-            message: "Cập nhật mã giao dịch thành công",
-          });
+      const tableUpdated = await Tables.update(
+        {
+          status_table: 0,
+        },
+        {
+          where: {
+            id: idTable,
+          },
+        },
+      );
+
+      if (orderUpdated && tableUpdated) {
+        res.status(200).json({
+          message: "Cập nhật mã giao dịch thành công",
+        });
       } else {
         res.status(500).json({ message: "Cập nhật mã giao dịch thất bại" });
       }

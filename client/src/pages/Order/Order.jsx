@@ -1,27 +1,33 @@
 import { Button, Collapse, Divider, Form, Modal, Radio } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BiPencil } from "react-icons/bi";
-import { formatCurrency } from "../../utils/format.js";
+import { calculateTotalWithVAT, formatCurrency } from "../../utils/format.js";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchTableById } from "../../services/api.js";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import "./index.css";
+import {emptyOrder} from "../../redux/Order/orderSlice.js";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [payment, setPayment] = useState(null);
   const { sendRequest } = useHttp();
   const [data, setData] = useState([]);
-  const idTable = location.pathname.split("/")[1].split("-")[1];
+  const { tables } = useSelector((state) => state.customerName);
   const [form] = Form.useForm();
-  const tableToken = localStorage.getItem("tableToken")
+  const tableToken = localStorage.getItem("tableToken");
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    sendRequest(fetchTableById(idTable, tableToken), setData);
-  }, [idTable, sendRequest, tableToken]);
+    sendRequest(fetchTableById(+tables, tableToken), setData);
+  }, [tables, sendRequest, tableToken]);
 
-  const order = data[0]?.TableByOrders[0]?.order;
-  const VAT = order?.total + order?.total * 0.1 || 0;
+  const order = data[0]?.TableByOrders[0]?.order || [];
+
+  const totalOrder = useMemo(
+    () => calculateTotalWithVAT(order?.total, 10),
+    [order?.total],
+  );
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -36,13 +42,14 @@ const Order = () => {
   };
 
   const onFinish = async (values) => {
-    values = { ...values, amount: VAT };
+    values = { ...values, amount: totalOrder, id_table: +tables };
     const request = {
       method: "post",
       url: "/payment/create_payment_url",
       ...values,
     };
     await sendRequest(request, setPayment);
+    dispatch(emptyOrder())
     form.resetFields();
   };
 
@@ -103,7 +110,7 @@ const Order = () => {
             </div>
             {/* Aside */}
             <div className="relative w-full md:col-span-5 text-slate-500 overflow-hidden">
-              <div className="sticky top-0 xl:top-24 border p-5 shadow-sm rounded-lg">
+              <div className="sticky top-0 border p-5 shadow-sm rounded-lg">
                 <div className="w-full flex justify-between items-center">
                   <span className="text-lg font-medium text-slate-800">
                     Tổng ({order?.order_details?.length || 0} món)
@@ -120,7 +127,7 @@ const Order = () => {
                 <div className="w-full flex justify-between items-center text-slate-800">
                   <span className="text-lg font-bold">Thành tiền</span>
                   <span className="font-bold text-lg">
-                    {formatCurrency(VAT)}
+                    {formatCurrency(totalOrder)}
                   </span>
                 </div>
                 <Button

@@ -93,7 +93,6 @@ const PaymentSuccess = () => {
       </div>
     );
   }
-  console.log(listOrder)
 
   return (
     <div className="lg:bg-slate-100 lg:py-2 min-h-screen max-w-full">

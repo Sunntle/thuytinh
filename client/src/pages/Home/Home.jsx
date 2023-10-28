@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Badge } from "antd";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { fetchProduct } from "../../services/api.js";
 import { Banner, Reason } from "../../components/index.js";
 import useHttp from "../../hooks/useHttp.js";
-import { formatCurrency, truncateString } from "../../utils/format.js";
+import { formatCurrency } from "../../utils/format.js";
 import { socket } from "../../services/socket";
 
 // import Swiper core and required modules
@@ -85,7 +84,7 @@ const Home = () => {
                 <div className="flex justify-between items-center p-2 text-slate-500">
                   <div>
                     <span className="text-sm font-medium overflow-hidden block w-full whitespace-nowrap truncate">
-                        {product.name_product}
+                      {product.name_product}
                       {/*{truncateString(product.name_product, 10)}*/}
                     </span>
                     <span className="text-xs">
@@ -112,6 +111,7 @@ const Home = () => {
           <img
             src={image1}
             className="h-full w-full group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all object-cover"
+            alt="anh"
           />
         </div>
         <div className="w-full lg:w-1/3 group relative overflow-hidden h-44 lg:h-60">
@@ -119,12 +119,14 @@ const Home = () => {
           <img
             src={image4}
             className="h-full w-full group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all object-cover"
+            alt="anh"
           />
         </div>
         <div className="w-full lg:w-1/3 group overflow-hidden rounded-b lg:rounded-none lg:rounded-r-lg h-44 lg:h-60">
           <img
             src={image2}
             className="h-full w-full group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all object-cover"
+            alt="anh"
           />
         </div>
       </section>

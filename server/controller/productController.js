@@ -6,7 +6,7 @@ const {
   Materials,
 } = require("../models");
 const { Op } = require("sequelize");
-let a = 0
+
 exports.list = async (req, res) => {
   try {
     const { _offset, _limit, _sort, _order, q, ...rest } = req.query;
@@ -24,7 +24,7 @@ exports.list = async (req, res) => {
       include: [
         {
           model: Category,
-          attributes: ['name_category'],
+          attributes: ["name_category"],
         },
         {
           model: ImageProduct,
@@ -33,7 +33,7 @@ exports.list = async (req, res) => {
         {
           model: Recipes,
           attributes: ["quantity"],
-          include: [{ model: Materials, attributes: ["amount"]}]
+          include: [{ model: Materials, attributes: ["amount"] }],
         },
       ],
     };
@@ -54,18 +54,19 @@ exports.list = async (req, res) => {
       query.where = { ...query.where, ...whereConditions };
     }
     const { count, rows } = await Product.findAndCountAll(query);
-    rows.length > 0 && rows.forEach(product=>{
-      const {Recipes} = product
-      if(Recipes.length == 0) return product
-      const arrCount = []
-      for(const recipe of Recipes){
-        const {Material} = recipe
-        const countProduct = Math.floor(Material.amount/recipe.quantity) 
-        if(countProduct < 1) return
-        arrCount.push(countProduct)
-      }
-      product.dataValues.amount = Math.min(...arrCount)
-    })
+    rows.length > 0 &&
+      rows.forEach((product) => {
+        const { Recipes } = product;
+        if (Recipes.length == 0) return product;
+        const arrCount = [];
+        for (const recipe of Recipes) {
+          const { Material } = recipe;
+          const countProduct = Math.floor(Material.amount / recipe.quantity);
+          if (countProduct < 1) return;
+          arrCount.push(countProduct);
+        }
+        product.dataValues.amount = Math.min(...arrCount);
+      });
     res.status(200).json({ total: count, data: rows });
   } catch (err) {
     console.log(err);
@@ -98,16 +99,16 @@ exports.getDetail = async (req, res) => {
     if (!response) {
       return res.status(404).json({ error: "Product not found" });
     }
-    const {Recipes: recipes} = response
-    if(recipes.length !== 0){
-      const arrCount = []
-      for(const recipe of recipes){
-        const {Material} = recipe
-        const countProduct = Math.floor(Material.amount/recipe.quantity) 
-        if(countProduct < 1) return
-        arrCount.push(countProduct)
+    const { Recipes: recipes } = response;
+    if (recipes.length !== 0) {
+      const arrCount = [];
+      for (const recipe of recipes) {
+        const { Material } = recipe;
+        const countProduct = Math.floor(Material.amount / recipe.quantity);
+        if (countProduct < 1) return;
+        arrCount.push(countProduct);
       }
-      response.dataValues.amount = Math.min(...arrCount)
+      response.dataValues.amount = Math.min(...arrCount);
     }
     res.status(200).json(response);
   } catch (err) {
@@ -115,9 +116,11 @@ exports.getDetail = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 exports.getByCategory = async (req, res) => {
+  const _id = req.params.id;
+
   try {
-    const _id = req.params.id;
     const response = await Product.findAll({
       where: { id_category: _id },
       include: [{ model: ImageProduct, attributes: ["url"] }],
@@ -127,6 +130,7 @@ exports.getByCategory = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 exports.addItem = async (req, res) => {
   try {
     const { recipe, descriptionRecipe, ...rest } = req.body;
