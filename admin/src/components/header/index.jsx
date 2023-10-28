@@ -304,7 +304,7 @@ function HeaderComponent() {
           />
         </div>
         <div className="flex items-center justify-center gap-x-4">
-          <Clock/>
+          {/* <Clock/> */}
           <Tooltip title="Theme">
             <Button
               size="large"
