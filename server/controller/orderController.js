@@ -236,7 +236,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
       ],
       where: {
         createdAt: {
-          [Op.and]: [
+          [Op.or]: [
             {
               [Op.between]: [previousMonth, currentMonth],
             },
@@ -245,7 +245,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
         },
       },
       group: [Sequelize.fn('MONTH', Sequelize.col('createdAt'))],
-      order: [[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'ASC']],
+      order: [[Sequelize.fn('MONTH', Sequelize.col('createdAt')), 'desc']],
       raw: true,
     })
   );

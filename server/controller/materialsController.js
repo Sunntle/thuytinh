@@ -76,6 +76,7 @@ exports.getDetail = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 exports.addMaterial = async (req, res) => {
   try {
     const img = req.file;
@@ -142,6 +143,7 @@ exports.removeMaterial = async (req, res) => {
 
 exports.importWarehouse = asyncHandler(async (req, res) => {
   const { amount_import, price, materialId, name_material } = req.body;
+  console.log(materialId)
   await Warehouse.create({ materialId, price_import: price, amount_import }).catch(err => console.log(err))
   await Materials.increment("amount", { by: amount_import, where: { id: materialId } }).catch(err => console.log(err))
   await Notification.create({

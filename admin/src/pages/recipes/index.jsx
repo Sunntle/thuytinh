@@ -41,7 +41,10 @@ const RecipePage = () => {
     const [data, productResponse, materialResponse] = await Promise.all([
       callFetchRecipe(),
       getAllProduct(),
-      getAllMaterial()
+      getAllMaterial({
+        _sort: "updatedAt",
+        _order: "DESC",
+      })
     ]);
     const con = materialResponse.data.map((item) => ({
       value: item.id,
@@ -71,7 +74,7 @@ const RecipePage = () => {
     setOpenModalUpdate(init);
   };
   const showModalUpdate = (record) => {
-
+    console.log(record.materials)
     let materials = record.materials.map((item) => ({
       id_material: item.id,
       id: item.id_recipe,
@@ -123,6 +126,7 @@ const RecipePage = () => {
     setOptionsMaterial(newMaterials);
     add();
   };
+
   return (
     <div className="my-7 px-5">
       {loading ? (
@@ -273,7 +277,7 @@ const RecipePage = () => {
                             },
                           ]}
                         >
-                          <Input.TextArea
+                          <Input
                             rows={4}
                             placeholder="Mô tả công thức của sản phẩm"
                           />

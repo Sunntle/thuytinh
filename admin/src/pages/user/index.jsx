@@ -157,7 +157,7 @@ function UserPage() {
     if (
       notifications.lastNotification &&
       notifications.lastNotification?.type ==
-        location.pathname.split("/").at(-1)
+      location.pathname.split("/").at(-1)
     ) {
       fetchData();
     }
@@ -251,6 +251,7 @@ function UserPage() {
                         },
                       ]}
                     >
+
                       <Select placeholder="Chọn 1 loại món ăn">
                       {options?.map((el, index) => (
                         <Option key={index} value={el.id}>
@@ -258,6 +259,7 @@ function UserPage() {
                         </Option>
                       ))}
                     </Select>
+
                     </Form.Item>
                     <Form.Item
                       label="Họ tên"

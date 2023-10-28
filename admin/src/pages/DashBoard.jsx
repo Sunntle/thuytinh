@@ -57,7 +57,7 @@ const DashBoard = () => {
             </div>
             <div className="w-1/3  p-4 h-full flex flex-col justify-center items gap-1">
               <span className="font-medium text-sm text-center">Thu nhập - Tháng {new Date().getMonth() + 1}</span>
-              <p className="text-lg font-medium text-green-500 text-center">{formatGia(data.montdPreAndCur?.[1]?.total || 0)}</p>
+              <p className="text-lg font-medium text-green-500 text-center">{formatGia(data.montdPreAndCur?.[0]?.total || 0)}</p>
             </div>
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1">
               <span className="font-medium text-sm text-center">Chi phí</span>
@@ -71,82 +71,7 @@ const DashBoard = () => {
               data={data}
             />
           </div>
-          {/* <div className="mb-6 mt-4">
-            <div className="flex justify-between items-center">
-              <h4 className="font-bold text-lg mb-2 text-slate-700">
-                Sản phẩm bán chạy
-              </h4>
-              <Link to="/admin/product" style={{ color: "#FC8019" }}>
-                Xem tất cả
-              </Link>
-            </div>
-            <Swiper
-              speed={1500}
-              autoplay={{
-                delay: 1800,
-                disableOnInteraction: false,
-              }}
-              modules={[Autoplay]}
-              slidesPerView={2}
-              spaceBetween={20}
-              className="mySwiper"
-              breakpoints={{
-                525: {
-                  slidesPerView: 3,
-                  spaceBetween: 15,
-                },
-                768: {
-                  slidesPerView: 4,
-                  spaceBetween: 15,
-                },
-                1024: {
-                  slidesPerView: 5,
-                  spaceBetween: 15,
-                },
-                1280: {
-                  slidesPerView: 6,
-                  spaceBetween: 15,
-                },
-              }}
-            >
-              {dataProduct?.data?.map((product) => {
-                return (
-                  <SwiperSlide key={product.id}>
-                    <div className="py-3 md:py-4 px-3 md:px-5 rounded-md border border-solid  border-gray-300 hover:border-borderSecondaryColor transition duration-300  text-center">
-                      <div className="mb-3">
-                        <img
-                          className="w-full"
-                          src={product.imageUrls?.split(";")[0]}
-                          alt=""
-                        />
-                      </div>
-                      <h6 className="font-semibold lg:text-lg">
-                        {product.name_product}
-                      </h6>
-                      <h5 className="text-main font-semibold lg:text-lg my-1">
-                        {formatGia(product.price)}
-                      </h5>
-                      <div className="text-slate-500 text-xs">
-                        <span className="after:content-['|'] after:mx-1.5">
-                          Bán: {product.sold}
-                        </span>
-                        <span
-                          style={{ color: "#52c41a" }}
-                          className="font-bold inline-flex items-center gap-x-1.5 justify-center"
-                        >
-                          +15%{" "}
-                          <UpCircleFilled
-                            className="text-lg"
-                            style={{ color: "#52c41a" }}
-                          />
-                        </span>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
-          </div> */}
+
           <div className="mb-6">
             <div className="flex justify-between items-center">
               <h4 className="font-bold text-lg mb-2 text-slate-700">

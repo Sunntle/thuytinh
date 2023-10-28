@@ -49,11 +49,11 @@ exports.getId = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const { token, id_employee } = req.query;
   if (token) {
+
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-      let data = await findTables(decode.tables);
-      const isToken = data.every(item => item.token == token);
-      if (isToken) return res.status(200).json(data);
+      let data = await TableByOrder.findAll({ where: { token: token } });
+      if (data) return res.status(200).json(data);
       return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
 
     })
@@ -85,7 +85,7 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
           where: { token: { [Op.substring]: token } },
         })
         if (data && data.length > 0) {
-          res.status(200).json(decode);
+          res.status(200).json({ ...decode, tables: data.map(i => i.id) });
         }
         else res.status(404).json({ message: "Không tìm thấy bàn!" });
       } else {
