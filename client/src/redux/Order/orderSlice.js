@@ -1,7 +1,8 @@
 import {createSlice} from "@reduxjs/toolkit";
 const initialState = {
     order: [],
-    idOrder: 0
+    idOrder: 0,
+  idTable: 0
 }
 const orderSlice = createSlice({
   name: "order",
@@ -21,6 +22,11 @@ const orderSlice = createSlice({
     },
     addIdOrder: (state, action) => {
       state.idOrder = action.payload;
+    },
+    addIdOrderTable: (state,action) => {
+      const {idTable, idOrder} = action.payload
+      state.idOrder = idOrder
+      state.idTable = idTable
     },
     removeFromOrder: (state, action) => {
       const id = action.payload;
@@ -51,5 +57,5 @@ const orderSlice = createSlice({
   },
 });
 
-export const {emptyOrder,addOrderDetailUpdate,addIdOrder, addToOrder,removeFromOrder, increaseQuantity, decreaseQuantity} = orderSlice.actions
+export const {emptyOrder,addIdOrderTable,addOrderDetailUpdate,addIdOrder, addToOrder,removeFromOrder, increaseQuantity, decreaseQuantity} = orderSlice.actions
 export const orderReducer = orderSlice.reducer

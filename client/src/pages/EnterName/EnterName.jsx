@@ -29,9 +29,8 @@ const EnterName = (props) => {
     dispatch(getCustomerName(data))
     // navigate(`/ban-${customerNameState.tables[0]}/menu`);
   },[customerName, dispatch, idTable, sendRequest, storeToken]);
-  console.log(customerNameState);
   if(customerNameState.isLoading) return "Loading...."
-  if(customerNameState?.name?.length > 0) return props.children
+  if(customerNameState?.name?.length && customerNameState?.tables?.length > 0) return props.children
   return (
     <div className="h-screen w-screen flex items-center">
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">

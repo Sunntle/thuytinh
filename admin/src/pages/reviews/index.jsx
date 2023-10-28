@@ -42,10 +42,11 @@ function ReviewsPage() {
     async (params = { _offset: 0, _limit: limit, _time: currentMonth }) => {
       setLoading(true);
       try {
-        const [countReviews, res] = await Promise.all([getAllReviews({ _time: params._time }), getAllReviews({
+        const [response, countReviews, res] = await Promise.all([getAllReviews(params), getAllReviews({ _time: params._time }), getAllReviews({
           _time: currentMonth,
           _group: "createdAt",
         })])
+        setReviewsCurrent(response)
         setReviews(countReviews)
         const arr = new Array(dayInMonth).fill(0);
         res?.total?.forEach((el) => {
@@ -94,7 +95,7 @@ function ReviewsPage() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [fetchData,fetchReviews]);
 
   if (loading) {
     return <Spinner />;
@@ -172,6 +173,7 @@ function ReviewsPage() {
           onClear={handleClear}
         />
         <Row gutter={[20, 20]} className="my-6">
+          {console.log(reviewsCurrent)}
           {reviewsCurrent?.data?.map((el, index) => {
             return (
               <Col key={index} xs={24} sm={12} lg={8}>
@@ -246,6 +248,7 @@ function ReviewsPage() {
             {reviewsCurrent?.total} kết quả
           </h6>
           <Pagination
+            defaultPageSize={limit}
             defaultCurrent={page}
             onChange={handleChangePage}
             total={reviewsCurrent?.total}
