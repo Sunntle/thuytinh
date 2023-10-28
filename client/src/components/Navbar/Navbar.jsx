@@ -10,7 +10,6 @@ import { IoRestaurantOutline } from "react-icons/io5";
 import { MdOutlineRoomService } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
-import {Drawer} from "antd";
 import OrderListDesktop from "./OrderListDesktop/OrderListDesktop.jsx";
 const Navbar = () => {
   const location = useLocation();
@@ -20,7 +19,6 @@ const Navbar = () => {
   const [isMenuHovered, setIsMenuHovered] = useState(false);
   const [isOrderDesktop, setIsOrderDesktop] = useState(false)
   const customerName = useSelector((state) => state.customerName);
-  console.log(location);
   const checkRoute = useMemo(() => {
     return location.pathname == "/" || location.pathname == "/home";
   }, [location.pathname]);
@@ -163,7 +161,7 @@ const Navbar = () => {
                 isMenuHovered ? "text-primary" : "text-current"
               }`}
             >
-              <NavLink to="/menu" className="font-normal text-base">
+              <NavLink  to={`/ban-${idTable}/menu`} className="font-normal text-base">
                 Thực đơn
               </NavLink>
               {categories?.length > 0 && <div
@@ -196,7 +194,7 @@ const Navbar = () => {
             Liên hệ
           </NavLink>
           <NavLink
-            to="/about-us"
+            to="/about"
             className="font-normal text-base hover:text-primary transition-colors duration-300"
           >
             Về chúng tôi

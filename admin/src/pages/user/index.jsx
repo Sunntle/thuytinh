@@ -191,8 +191,9 @@ function UserPage() {
         content: mes ? mes : "Đăng kí thành công",
       });
       setOpen(false);
+      fetchData()
     },
-    [messageApi]
+    [fetchData, messageApi]
   );
   const submitResetPass = useCallback(
     async (values) => {

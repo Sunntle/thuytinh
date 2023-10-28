@@ -55,7 +55,7 @@ const HomeSlide = ({ listProduct }) => {
                 <div className="w-full h-[160px] rounded-t-lg">
                   <img
                     className="w-full h-full object-cover rounded-t-lg outline-none"
-                    src={product?.imageUrls}
+                    src={product?.ImageProducts[0]?.url}
                     alt=""
                   />
                 </div>

@@ -23,7 +23,7 @@ const Header = () => {
               Xin chào, <span className="font-medium">{customerName.name}</span>
             </span>
             <span className="text-base text-[#FFE6C7]">
-               {customerName.tables[0] !== 0 ? (`Bạn đang ngồi ${customerName.tables[0]}`): "Bạn chưa chọn bàn"}
+               {customerName.tables[0] !== 0 ? (`Bạn đang ngồi ${customerName.tables}`): "Bạn chưa chọn bàn"}
             </span>
           </div>
           <div className="w-12 h-12 border-2 rounded-full border-white">
