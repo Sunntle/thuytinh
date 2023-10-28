@@ -99,7 +99,7 @@ const RenderFooter = ({
                   label: "Thanh toán bằng tiền mặt",
                   children: (
                     <Button
-                    onClick={submitPayment}
+                      onClick={submitPayment}
                       size={"large"}
                       className="w-full bg-main text-white"
                     >
@@ -123,7 +123,7 @@ const ResOrder = ({ handleCancel, open }) => {
   const [switchTable, setSwitchTable] = useState(false)
   const [form] = Form.useForm();
   const tablelist = useSelector((state) => state.tablelist);
-  const tablebyorders = tablelist?.TableByOrders[0]
+  const tablebyorders = tablelist?.TableByOrders?.[0]
   const order = tablebyorders?.order;
   const order_details = order?.order_details;
 
@@ -161,10 +161,10 @@ const ResOrder = ({ handleCancel, open }) => {
       window.location.href = String(payment);
     }
   }, [payment]);
-  const submitPayment = async () =>{
-    const body = {payment_gateway: "Cash", date: moment(new Date()).format("YYYYMMDDHHmmss"), idOrder: order.id, idTable: tablelist.id}
-    const data =  await updatePayment(body)
-    if(data){
+  const submitPayment = async () => {
+    const body = { payment_gateway: "Cash", date: moment(new Date()).format("YYYYMMDDHHmmss"), idOrder: order.id, idTable: tablelist.id }
+    const data = await updatePayment(body)
+    if (data) {
       navigate('/employee/payment-success/')
     }
   }
@@ -179,7 +179,7 @@ const ResOrder = ({ handleCancel, open }) => {
   return (
     <Drawer
       title={`Bàn số: ${tablelist.id}`} placement="right"
-      footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate} handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk} isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal} switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable} submitPayment={submitPayment}/>}
+      footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate} handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk} isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal} switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable} submitPayment={submitPayment} />}
       closable={false}
       onClose={handleCancel}
       open={open}
