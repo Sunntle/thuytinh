@@ -1,12 +1,11 @@
 import { AiOutlineShop } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { CiUser } from "react-icons/ci";
-import { GoSearch } from "react-icons/go";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import {  useEffect, useMemo, useState } from "react";
+import {   useLayoutEffect, useMemo, useRef, useState } from "react";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { MdOutlineRoomService } from "react-icons/md";
 
@@ -49,7 +48,30 @@ const Navbar = () => {
   const checkRoute = useMemo(()=>{
     return location.pathname == "/" || location.pathname == "/home"
   },[location.pathname])
+  const headerRef = useRef();
   const [isMenuHovered, setIsMenuHovered] = useState(false);
+
+  useLayoutEffect(() => {
+    const headerTop = headerRef.current;
+    const handleScroll = () => {
+      if(checkRoute){
+        const { scrollY } = window;
+        if(scrollY > 500){
+          headerTop.classList.replace( "bg-transparent", "bg-white")
+          headerTop.classList.replace("text-white", "text-black")
+        }else{
+          headerTop.classList.replace("bg-white", "bg-transparent")
+          headerTop.classList.replace("text-black", "text-white")
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [checkRoute]);
 
   const handleMenuMouseEnter = () => {
     setIsMenuHovered(true);
@@ -58,7 +80,6 @@ const Navbar = () => {
   const handleMenuMouseLeave = () => {
     setIsMenuHovered(false);
   };
-
   return (
     <div>
       <div className="fixed px-6 lg:hidden z-40 bg-white bottom-0 w-full h-16 lg:px-16 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-400 overflow-hidden">
@@ -85,7 +106,7 @@ const Navbar = () => {
           ))}
       </div>
       {/* Desktop */}
-      <div className={`hidden lg:flex lg:justify-between lg:items-center lg:fixed z-30 ${checkRoute ? 'bg-transparent text-white' : 'bg-white text-dark'} top-0 w-full h-20 px-16 py-2 drop-shadow-md`}>
+      <div ref={headerRef} className={`hidden  ease-in-out duration-200 lg:flex lg:justify-between  lg:items-center lg:fixed z-30 ${checkRoute ? 'bg-transparent text-white' : 'bg-white text-dark'} top-0 w-full h-20 px-16 py-2 drop-shadow-md`}>
         <div className="text-2xl font-bold ">LOGO</div>
         <nav className="lg:flex lg:space-x-6">
           <NavLink
@@ -173,7 +194,7 @@ const Navbar = () => {
         </nav>
         <div className="flex justify-between items-center space-x-3">
           <div className="cursor-pointer flex items-center space-x-2 relative">
-            <div className="relative">
+            {/* <div className="relative">
               <input
                 type="text"
                 placeholder="Tìm kiếm..."
@@ -182,7 +203,7 @@ const Navbar = () => {
               <div className="absolute top-0 right-0 flex items-center justify-center h-full w-10">
                 <GoSearch className="w-4 h-4 text-gray-400 hover:text-primary transition-colors duration-300" />
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="cursor-pointer flex items-center space-x-2">
             <CiUser className="w-6 h-6 hover:text-primary transition-colors duration-300 " />
