@@ -67,7 +67,7 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
       <div className="text-slate-500">
         <div className="w-auto h-48">
           <img
-            className="w-full h-full rounded shadow-md"
+            className="w-full h-full rounded shadow-md object-cover"
             src={
               productDetail?.imageUrls || productDetail?.ImageProducts?.[0]?.url
             }

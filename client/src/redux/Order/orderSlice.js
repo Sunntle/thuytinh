@@ -30,8 +30,8 @@ const orderSlice = createSlice({
     },
     removeFromOrder: (state, action) => {
       const id = action.payload;
-      state.order.filter((item) => item.id !== id);
-      return state.order
+      const index = state.order.findIndex(item=> item.id === id)
+      state.order.splice(index,1)
     },
     increaseQuantity: (state, action) => {
       const food = action.payload;

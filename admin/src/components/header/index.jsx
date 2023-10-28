@@ -226,7 +226,7 @@ function HeaderComponent() {
             <div className="my-5">
               <Swiper
                 speed={1000}
-                slidesPerView={5}
+                slidesPerView={7}
                 spaceBetween={20}
                 className="mySwiper"
               >
@@ -258,10 +258,10 @@ function HeaderComponent() {
                   return (
                     <SwiperSlide key={index}>
                       <Link to={`/employee/menu?product=${product.id}`}>
-                        <div className="p-2 border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
+                        <div className="p-2 h-[167px] border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
                           <img
-                            className="w-full mb-3"
-                            src={product.imageUrls?.split(";")[0]}
+                            className="w-full mb-3 "
+                            src={product?.ImageProducts[0]?.url}
                             alt=""
                           />
                           <h6 className="font-semibold text-gray-500">
