@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "../payment/res-payment.css"
-
 import { Button, Divider, Modal, message, Form, Radio, Drawer, Collapse, Tabs } from "antd"
-
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, AddCartUpdate, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
@@ -25,9 +23,7 @@ const RenderFooter = ({
   closeSwithTable,
   openSwithTable,
   switchTable
-
 }) => (
-
   <> <div className=' dark:bg-darkModeBgBox Order-total border rounded-md'>
     <div className='tax'>
       <span>Thuế VAT:</span>
@@ -42,17 +38,13 @@ const RenderFooter = ({
         <button className='bg-red-500 text-white' onClick={handleCancel}>Hủy</button>
       </div>
 
-
       <div className='flex justify-center font-semibold col-span-2 m-1'>
         <button className='bg-blue-500 text-white' onClick={() => handleUpdate(tablelist)}>Thêm món mới</button>
       </div>
 
       <div className='flex justify-center font-semibold col-span-2 m-1'>
-        <button className='bg-indigo-500 text-white' onClick={openSwithTable}>Chuyển bàn</button>
+        <button className='bg-indigo-500 text-white' onClick={() => openSwithTable(tablelist)}>Chuyển bàn</button>
       </div>
-      <Modal title="Chọn bàn muốn chuyển" open={switchTable} onCancel={closeSwithTable}>
-
-      </Modal>
       <div className='flex justify-center col-span-2 m-1'>
         <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
           Thanh Toán
@@ -118,20 +110,19 @@ const RenderFooter = ({
         </Modal>
       </div>
     </div>
-  </div>
-</>)
+  </div></>
+)
 const ResOrder = ({ handleCancel, open }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isModalPay, setIsModalPay] = useState(false);
   const [payment, setPayment] = useState(null);
-  const [switchTable, setSwitchTable] = useState(false);
+  const [switchTable, setSwitchTable] = useState(false)
   const [form] = Form.useForm();
   const tablelist = useSelector((state) => state.tablelist);
   const tablebyorders = tablelist?.TableByOrders[0]
   const order = tablebyorders?.order;
   const order_details = order?.order_details;
-  const customize = useSelector((state) => state.customize)
 
 
   //them mon moi
@@ -157,7 +148,7 @@ const ResOrder = ({ handleCancel, open }) => {
   };
   // xy ly thanh toan
   const onFinish = async (values) => {
-    values = { ...values, amount: order.total }
+    values = { ...values, amount: 100000 }
     const data = await createPayment(values)
     setPayment(data)
     form.resetFields();
@@ -169,8 +160,8 @@ const ResOrder = ({ handleCancel, open }) => {
   }, [payment]);
 
   //xu ly chuyen ban
-  const openSwithTable = () => {
-    setSwitchTable(true)
+  const openSwithTable = (index) => {
+    navigate('/employee/select-table/' + tablelist.id + "/" + tablelist.TableByOrders[0].orderId);
   }
   const closeSwithTable = () => {
     setSwitchTable(false)
@@ -195,7 +186,8 @@ const ResOrder = ({ handleCancel, open }) => {
               </div>
               <div className='flex-grow'>
                 <div className='flex items-end justify-between'>
-                  <span className={`text-lg ${customize.darkMode? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.Product.name_product}</span>
+                  <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.Product.name_product}</span>
+                  <div className='font-medium'>{item.Product.name_product}</div>
                   <span className='text-main mb-3'>{formatGia(item.Product.price)}</span>
                 </div>
                 <div className='flex items-center justify-between'>
@@ -207,7 +199,6 @@ const ResOrder = ({ handleCancel, open }) => {
                   {/* </div> */}
                 </div>
               </div>
-
             </div>
           </div>
         )}

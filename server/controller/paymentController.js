@@ -40,11 +40,9 @@ exports.createPaymentUrl = asyncHandler(async (req, res) => {
   let orderId = moment(date).format("DDHHmmss");
   let amount = req.body.amount;
   let bankCode = req.body.bankCode;
-  let idTable = req.body.id_table
 
   let currCode = "VND";
   let vnp_Params = {};
-  vnp_Params["vnp_IdTable"] = idTable;
   vnp_Params["vnp_Version"] = "2.1.0";
   vnp_Params["vnp_Command"] = "pay";
   vnp_Params["vnp_TmnCode"] = tmnCode;
@@ -57,6 +55,7 @@ exports.createPaymentUrl = asyncHandler(async (req, res) => {
   vnp_Params["vnp_ReturnUrl"] = returnUrl;
   vnp_Params["vnp_IpAddr"] = ipAddr;
   vnp_Params["vnp_CreateDate"] = createDate;
+
   if (bankCode !== null && bankCode !== "") {
     vnp_Params["vnp_BankCode"] = bankCode;
   }
@@ -230,7 +229,6 @@ exports.updateTransactionOrder = asyncHandler(async (req, res) => {
     transaction_date,
     idOrder,
     payment_gateway,
-    idTable,
   } = req.body;
 
   const existingTransactionId = await Order.findOne({
@@ -244,25 +242,13 @@ exports.updateTransactionOrder = asyncHandler(async (req, res) => {
           transaction_id: transaction_id,
           transaction_date: transaction_date,
           payment_gateway: payment_gateway,
-          status: 3
         },
         {
           where: { id: idOrder },
         },
       );
 
-      const tableUpdated = await Tables.update(
-        {
-          status_table: 0,
-        },
-        {
-          where: {
-            id: idTable,
-          },
-        },
-      );
-
-      if (orderUpdated && tableUpdated) {
+      if (orderUpdated) {
         res.status(200).json({
           message: "Cập nhật mã giao dịch thành công",
         });
@@ -272,5 +258,38 @@ exports.updateTransactionOrder = asyncHandler(async (req, res) => {
     } catch (err) {
       console.log(err);
     }
+  }
+});
+
+exports.updateStatus = asyncHandler(async (req, res) => {
+  const { idTable, idOrder } = req.body;
+
+  try {
+    const orderUpdated = await Order.update(
+        {
+          status: 3
+        },
+        {
+          where: { id: idOrder },
+        },
+    );
+
+    const tableUpdated = await Tables.update(
+        {
+          status_table: 0,
+        },
+        {
+          where: {
+            id: idTable,
+          },
+        },
+    );
+
+    if (orderUpdated && tableUpdated) {
+      res.status(200).json({message: 'Cập nhật trạng thái của bàn và hóa đơn thành công'})
+    }
+
+  } catch (err) {
+    res.status(500).json({message: 'Cập nhật trạng thái của bàn và hóa đơn thất bại', err})
   }
 });
