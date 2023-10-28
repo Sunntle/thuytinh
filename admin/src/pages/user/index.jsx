@@ -7,7 +7,7 @@ import {
   Modal,
   Table,
   Tabs,
-  Typography,
+  Select,
   Upload,
   message,
 } from "antd";
@@ -26,8 +26,21 @@ import { UploadOutlined } from "@ant-design/icons";
 import ButtonComponents from "../../components/button";
 import Spinner from "../../components/spinner";
 import RegisterPage from "../register";
-const { Title } = Typography;
-
+const { Option } = Select;
+const options = [
+  {
+    name: 'Admin',
+    id: 'Admin'
+  },
+  {
+    name: 'Nhân viên',
+    id: 'Nhân viên'
+  },
+  {
+    name: 'Khách hàng',
+    id: 'Khách hàng'
+  },
+]
 function UserPage() {
   const [admin, setAdmin] = useState(null);
   const [user, setUser] = useState(null);
@@ -45,6 +58,7 @@ function UserPage() {
       switch (role) {
         case "admin": {
           const dataAdmin = await getAllUser({ _like: "role_R1_not" });
+          console.log(dataAdmin);
           dataAdmin.success && setAdmin(dataAdmin);
           break;
         }
@@ -71,6 +85,7 @@ function UserPage() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
   const handleEdit = useCallback(
     async (idUser) => {
       setOpenModalProfile(true);
@@ -93,8 +108,9 @@ function UserPage() {
       };
       form.setFieldsValue(data);
     },
-    [form]
+    [ form]
   );
+  
   const handleDelete = useCallback(
     async (id) => {
       if (id === userStore.user.id) {
@@ -162,13 +178,22 @@ function UserPage() {
         type: "success",
         content: res.message,
       });
-      if (val.role !== "R1") fetchData("admin");
-      else fetchData("user");
       setOpenModalProfile(false);
+      fetchData()
     },
     [fetchData, messageApi]
   );
-
+  const handleFinish = useCallback(
+    async (values) => {
+      const { success, mes } = await callRegister(values);
+      messageApi.open({
+        type: success ? "success" : "warning",
+        content: mes ? mes : "Đăng kí thành công",
+      });
+      setOpen(false);
+    },
+    [messageApi]
+  );
   const submitResetPass = useCallback(
     async (values) => {
       let res = await callUpdatePassword(values);
@@ -226,7 +251,13 @@ function UserPage() {
                         },
                       ]}
                     >
-                      <Input disabled />
+                      <Select placeholder="Chọn 1 loại món ăn">
+                      {options?.map((el, index) => (
+                        <Option key={index} value={el.id}>
+                          {el.name}
+                        </Option>
+                      ))}
+                    </Select>
                     </Form.Item>
                     <Form.Item
                       label="Họ tên"
@@ -416,7 +447,15 @@ function UserPage() {
     ),
     [form, form1, onFinish, openModalProfile, submitResetPass]
   );
-
+  const renderRegisterModal = useMemo(()=>(<Modal
+    open={open}
+    title="Thêm tài khoản mới"
+    centered
+    onCancel={() => setOpen(false)}
+    footer={null}
+  >
+    <RegisterPage handleFinish={handleFinish} />
+  </Modal>),[handleFinish, open])
   const columnsUser = useMemo(
     () => [
       {
@@ -520,7 +559,7 @@ function UserPage() {
     ],
     [columnsUser]
   );
-
+  
   const renderTableAdmin = () => {
     return (
       <Table
@@ -554,17 +593,8 @@ function UserPage() {
       children: loading ? <Spinner /> : renderTableAdmin(),
     },
   ];
-  const handleFinish = useCallback(
-    async (values) => {
-      const { success, mes } = await callRegister(values);
-      messageApi.open({
-        type: success ? "success" : "warning",
-        content: mes ? mes : "Đăng kí thành công",
-      });
-      setOpen(false);
-    },
-    [messageApi]
-  );
+ 
+
   return (
     <div className="my-7 px-5">
       {contextHolder}
@@ -583,15 +613,7 @@ function UserPage() {
       />
       {renderUpdateModal}
 
-      <Modal
-        open={open}
-        title="Thêm tài khoản mới"
-        centered
-        onCancel={() => setOpen(false)}
-        footer={null}
-      >
-        <RegisterPage handleFinish={handleFinish} />
-      </Modal>
+      {renderRegisterModal}
     </div>
   );
 }
