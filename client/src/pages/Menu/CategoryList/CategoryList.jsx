@@ -1,39 +1,38 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const CategoryList = ({
   categories,
   activeIndex,
-  handleGetAllFood,
-  handleFilterFoodByCategory,
 }) => {
   return (
     <>
       <div className="w-full flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">
-        <button
-          disabled={activeIndex === 0}
-          onClick={() => handleGetAllFood(0)}
-          className={`h-8 px-6 border rounded-full whitespace-nowrap transition-colors duration-100 ${
+        <Link
+            to={'/menu'}
+          disabled={activeIndex === null}
+          className={`h-8 px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-100 ${
             activeIndex === 0
               ? "text-white bg-primary shadow"
               : "text-slate-800 bg-white"
           }`}
         >
           Tất cả
-        </button>
+        </Link>
         {categories &&
           categories.map((category) => (
-            <button
+            <Link
+              to={`?category=${category.id}`}
               disabled={category.id === activeIndex}
               key={category.id}
-              onClick={() => handleFilterFoodByCategory(category.id)}
-              className={`px-6 border rounded-full whitespace-nowrap transition-colors duration-100 ${
+              className={`px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-100 ${
                 category.id === activeIndex
                   ? "text-white bg-primary shadow"
                   : "text-slate-800 bg-white"
               }`}
             >
               {category.name_category}
-            </button>
+            </Link>
           ))}
       </div>
       {/* Overlay */}

@@ -1,5 +1,5 @@
 import { HiOutlineBellAlert } from "react-icons/hi2";
-import { socketAdmin } from "../services/socket";
+import { socketAdmin } from "../services/socket.js";
 
 const CallStaff = () => {
     const idTable = location.pathname.split("/")[1].split("-")[1];

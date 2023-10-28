@@ -4,16 +4,20 @@ import "./main.css";
 import { BiSolidTrash } from "react-icons/bi";
 import { AiFillWarning } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { formatCurrency } from "../../utils/format.js";
+import {
+  formatCurrency,
+} from "../../../utils/format.js";
 import {
   addIdOrder,
+  addOrderDetailUpdate,
   decreaseQuantity,
   emptyOrder,
   increaseQuantity,
   removeFromOrder,
-} from "../../redux/Order/orderSlice.js";
-import useHttp from "../../hooks/useHttp.js";
-import { addOrder } from "../../services/api.js";
+} from "../../../redux/Order/orderSlice.js";
+import useHttp from "../../../hooks/useHttp.js";
+import { addOrder } from "../../../services/api.js";
+
 const { confirm } = Modal;
 
 const OrderListModal = ({
@@ -22,18 +26,21 @@ const OrderListModal = ({
   handleCancel,
   setIsOrderModalOpen,
 }) => {
-  const [data, setData] = useState(null);
-  const { order: orders} = useSelector((state) => state.order);
+  const [newOrder, setNewOrder] = useState(null);
+  const [orderUpdated, setOrderUpdated] = useState(null)
+  const { order: orders, idOrder } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const idTable = location.pathname.split("/")[1].split("-")[1];
   const { sendRequest } = useHttp();
   const dispatch = useDispatch();
 
   // Calculate Total Bill
-  const total = orders?.reduce((acc, cur) => {
+  const totalOrder = orders?.reduce((acc, cur) => {
     acc += cur.quantity * cur.price;
-    return acc + (acc * 0.1);
+    return acc;
   }, 0);
+
+  console.log(totalOrder)
 
   const showDeleteConfirm = (id) => {
     confirm({
@@ -70,12 +77,12 @@ const OrderListModal = ({
   const submitOrderList = async () => {
     const body = {
       orders: orders,
-      total: total,
+      total: totalOrder,
       customerName: customerName.name,
       table: [idTable],
     };
     try {
-      await sendRequest(addOrder(body), setData);
+      await sendRequest(addOrder(body), setNewOrder);
       dispatch(emptyOrder());
     } catch (err) {
       console.log(err);
@@ -84,12 +91,38 @@ const OrderListModal = ({
   };
 
   useEffect(() => {
-    if (data?.success === false) {
-      alert(data?.data);
-    } else if (data?.success === true ) {
-      dispatch(addIdOrder(data?.data?.orders?.id))
+    if (newOrder?.success === false) {
+      alert(newOrder?.data);
+    } else if (newOrder?.success === true) {
+      let dataPrevious = newOrder?.data?.detail?.map((item, i) => ({
+        ...item,
+        inDb: item.quantity,
+        ...newOrder?.data?.product[i],
+      }));
+      // console.table(dataPrevious)
+      dispatch(addOrderDetailUpdate(dataPrevious));
+      dispatch(addIdOrder(newOrder?.data?.orders?.id));
     }
-  }, [data]);
+  }, [newOrder]);
+
+  const handleUpdateOrder = () => {
+    const body = {
+      total: totalOrder,
+      carts: orders,
+      id_order: idOrder,
+    };
+    try {
+      const request = {
+        method: "put",
+        url: "/order",
+        ...body,
+      };
+      sendRequest(request, setOrderUpdated);
+      setIsOrderModalOpen(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <Modal
@@ -101,6 +134,7 @@ const OrderListModal = ({
       onCancel={handleCancel}
       centered
       footer={[
+        <Button onClick={handleUpdateOrder}>Cập nhật</Button>,
         <Button
           disabled={orders?.length === 0}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
@@ -114,9 +148,9 @@ const OrderListModal = ({
     >
       <div className="max-h-96 overflow-y-auto space-y-3 custom-scrollbar">
         {orders?.length > 0 ? (
-          orders?.map((item) => (
+          orders?.map((item,index) => (
             <div
-              key={item.id}
+              key={index}
               className="border h-auto w-auto rounded-lg grid grid-cols-12 gap-4 text-slate-500 overflow-hidden shadow-sm"
             >
               {/* Image */}
