@@ -73,6 +73,7 @@ exports.list = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 exports.getDetail = async (req, res) => {
   try {
     const _id = req.params.id;
