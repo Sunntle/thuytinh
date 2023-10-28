@@ -2,6 +2,7 @@ import React from "react";
 import Product from "../Product/Product.jsx";
 
 const ProductList = ({ foods }) => {
+
   if (foods === null)
     return (
       <span className="w-full flex justify-center items-center font-medium text-base">

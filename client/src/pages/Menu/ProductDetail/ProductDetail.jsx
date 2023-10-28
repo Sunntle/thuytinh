@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import { Drawer, Spin } from "antd";
-import "./main.css";
+import "./index.css";
 import { formatCurrency } from "../../../utils/format.js";
 import useHttp from "../../../hooks/useHttp.js";
 import { HiMiniXMark } from "react-icons/hi2";

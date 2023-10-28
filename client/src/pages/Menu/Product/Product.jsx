@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import ProductDetail from "../ProductDetail/ProductDetail.jsx";
 
 const Product = (props) => {
-  const { id, name_product, price } = props.item;
+  const { id, name_product, price, amount } = props.item;
   const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [productDetail, setProductDetail] = useState(false);
@@ -58,12 +58,15 @@ const Product = (props) => {
       </div>
       <div className="flex justify-between items-center p-2 text-slate-500">
         <div>
+          {amount <= 0 && <span className="text-sm md:text-base font-medium text-red-600 overflow-hidden block">
+            Sản phẩm tạm hết hàng
+          </span>}
           <span className="text-sm md:text-base font-medium overflow-hidden block">
             {truncateString(name_product, 10)}
           </span>
           <span className="text-xs md:text-sm">{formatCurrency(price)}</span>
         </div>
-        <button onClick={() => handleAddToOrder(props.item)}>
+        <button disabled={amount <= 0} onClick={() => handleAddToOrder(props.item)}>
           <AiFillPlusCircle className="w-6 h-6 md:w-8 md:h-8 text-primary active:text-opacity-80" />
         </button>
       </div>

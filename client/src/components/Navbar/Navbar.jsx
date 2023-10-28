@@ -10,12 +10,15 @@ import { IoRestaurantOutline } from "react-icons/io5";
 import { MdOutlineRoomService } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
+import {Drawer} from "antd";
+import OrderListDesktop from "./OrderListDesktop/OrderListDesktop.jsx";
 const Navbar = () => {
   const location = useLocation();
   const headerRef = useRef();
   const { sendRequest } = useHttp();
   const [categories, setCategories] = useState(null);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
+  const [isOrderDesktop, setIsOrderDesktop] = useState(false)
   const customerName = useSelector((state) => state.customerName);
 
   const checkRoute = useMemo(() => {
@@ -205,9 +208,10 @@ const Navbar = () => {
           <div className="cursor-pointer flex items-center space-x-2">
             <CiUser className="w-6 h-6 hover:text-primary transition-colors duration-300" />
           </div>
-          <div className="cursor-pointer flex items-center space-x-2">
+          <div onClick={() => setIsOrderDesktop(true)} className="cursor-pointer flex items-center space-x-2">
             <PiShoppingCartLight className="w-6 h-6 hover:text-primary transition-colors duration-300" />
           </div>
+          <OrderListDesktop isOrderDesktop={isOrderDesktop} setIsOrderDesktop={setIsOrderDesktop} />
         </div>
       </div>
     </div>

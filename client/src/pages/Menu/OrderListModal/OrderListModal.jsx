@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Modal } from "antd";
-import "./main.css";
+import "./index.css";
 import { BiSolidTrash } from "react-icons/bi";
 import { AiFillWarning } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
