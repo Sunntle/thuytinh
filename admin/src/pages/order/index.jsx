@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Col,
   Drawer,
@@ -39,6 +39,13 @@ const initData = {
   show: false,
   data: [],
 };
+const renderTextPay = (params) => {
+  if (params === "cash" || !params) {
+    return "Thanh toán tiền mặt"
+  } else {
+    return params
+  }
+}
 
 const OrderPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -57,6 +64,12 @@ const OrderPage = () => {
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
   };
+  const statusOrder = useMemo(() => {
+    let arr = [{ value: 1, label: "Đơn hàng mới" }, { value: 2, label: "Đang sử dụng" },
+    { value: 3, label: "Đã thanh toán" }, { value: 4, label: "Hoàn tất" }]
+    return arr
+  }, [])
+
   const handleReset = () => {
     searchInput.current = null;
     window.location.href = '/admin/order';
@@ -66,6 +79,7 @@ const OrderPage = () => {
   const fetchData = useCallback(async (query) => {
     const { data, total } = await getAllOrder(query);
     const avl = total > 0 && data.map((item) => {
+      let status = statusOrder.find(i => i.value == item.status);
       let data = {
         id: item.id,
         name: item.name,
@@ -75,7 +89,8 @@ const OrderPage = () => {
         table: item?.TableByOrders?.map(i => i.tableId).join(", "),
         employee: item?.User?.name,
         id_employee: item.id_employee,
-        payment: item.payment,
+        status: status.label,
+        payment: renderTextPay(item.payment),
         createdAt: formatNgay(item.createdAt),
         quantity: item?.order_details.reduce((a, b) => a + b?.quantity, 0),
         meta: { ...item, table: item?.TableByOrders?.map(i => i.tableId.toString()) },
@@ -182,51 +197,68 @@ const OrderPage = () => {
 
   const columns = [
     {
-      title: 'Mã đơn hàng',
+      title: 'ID',
       dataIndex: 'id',
+      fixed: 'left',
+      width: 100,
       render: (_, record) => (
-        <span className='font-medium cursor-pointer' onClick={() => showDetail(record)}>TTLGH{record.id}</span>
+        <span className='font-medium cursor-pointer' onClick={() => showDetail(record)}>{record.id}</span>
       )
     },
     {
       title: 'Khách hàng',
       dataIndex: 'name',
+      width: 150,
       ...getColumnSearchProps('name'),
     },
     {
       title: 'Số điện thoại',
       dataIndex: 'phone',
+      width: 150,
       ...getColumnSearchProps('phone'),
     },
     {
-      title: 'Người phụ trách',
+      title: 'Nhân viên',
       dataIndex: 'employee',
+      width: 150,
       ...getColumnSearchProps('employee'),
     },
     {
       title: 'Số lượng',
       dataIndex: 'quantity',
-      align: "center ",
+      width: 150,
       sorter: (a, b) => a.quantity - b.quantity,
     },
     {
       title: 'Bàn',
       dataIndex: 'table',
-      align: "center "
+      width: 150,
+    },
+    {
+      title: 'Trạng thánh đơn hàng',
+      dataIndex: 'status',
+      width: 150,
     },
     {
       title: 'Thanh toán',
       dataIndex: 'payment',
-      align: "center "
+      width: 200
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      width: 150,
     },
     {
       title: 'Ngày đặt',
       dataIndex: 'createdAt',
+      width: 150,
       sorter: (a, b) => a.createdAt.localeCompare(b.createdAt)
     },
     {
       title: 'Tổng tiền',
       dataIndex: 'total',
+      width: 150,
       render: (_, record) => (
         <span className='text-main font-medium text-lg'>{formatGia(record.total)}</span>
       )
@@ -234,6 +266,8 @@ const OrderPage = () => {
     {
       title: 'Điều chỉnh',
       key: 'action',
+      fixed: 'right',
+      width: 150,
       render: (_, record) => (
         <div className='h-10 flex items-center cursor-pointer'>
           <span className='bg-orange-500 px-4 rounded-md py-2 text-white' onClick={() => showModalUpdate(record)} >Sửa</span>
@@ -285,7 +319,9 @@ const OrderPage = () => {
             <BiRefresh size={24} />
           </Col>
         </Row>
-        <Table columns={columns} dataSource={dataOrder} rowKey={"id"} />
+        <Table className="table_order" columns={columns} dataSource={dataOrder} rowKey={"id"} scroll={{
+          x: 1500
+        }} />
         <Drawer
           title="Chi tiết đơn hàng"
           placement="right"
@@ -417,16 +453,18 @@ const OrderPage = () => {
                         </Form.Item>
                       </Col>
                       <Col xs={12}>
-                        <Form.Item
-                          label="Bàn phục vụ"
 
-                          name="table"
-                          rules={[
-                            { required: true, message: "Vui lòng chọn bàn !" },
-                          ]}
+                        <Form.Item
+                          label="Trạng thái đơn hàng"
+                          name="status"
+                          rules={[{ required: true }]}
                         >
-                          <Select mode="multiple" placeholder="Bàn ăn" options={tableAndEmployee?.table}></Select>
+                          <Select
+                            allowClear
+                            options={statusOrder}
+                          />
                         </Form.Item>
+
                       </Col>
                     </Row>
 

@@ -29,7 +29,6 @@ const Materials = db.sequelize.define(
 );
 
 
-
 Materials.beforeDestroy(async (material, options) => {
   const { image } = material.dataValues;
   const public_id = image.split("/").at(-1).split(".")[0];
