@@ -7,6 +7,7 @@ import { CloseOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
 import { addOrder, updateOrder } from '../../../services/api'
 import { useNavigate } from 'react-router-dom';
+import { formatGia } from '../../../utils/format'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const ResPayment = () => {
@@ -85,24 +86,24 @@ const ResPayment = () => {
                 <Divider className='bg-main m-0' />
                 {carts && carts.map((item, index) =>
                     <div key={index}>
-                        <div className='product-remove'>
-                            <button className='float-right text-red-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
-                        </div>
-                        <div className='flex item-center my-3'>
-                            <div className='flex-none h-16 w-15 mr-4 hover:bg-hoverColor'>
-                                <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item?.ImageProducts[0]?.url} />
+                        <div className='flex items-center my-3'>
+                            <div className='flex items-center h-16 w-15 mr-4 hover:bg-hoverColor'>
+                            <div className='product-remove pe-2'>
+                                    <button className='text-orange-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
+                                </div>
+                                <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain ' src={item?.ImageProducts[0]?.url} />
                             </div>
                             <div className='flex-grow'>
                                 <div className='flex items-end justify-between'>
                                     <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.name_product}</span>
-                                    <span className='text-main mb-3'>{item.price} VNĐ</span>
+                                    <span className='text-main text-sm mb-3'>{formatGia(item.price)}</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
                                     <span>x{item.quantity}</span>
                                     <div className="flex justify-between items-center">
-                                        <button className='border-solid border text-main' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="w-3 h-4 sm:w-4 sm:h-4 " /></button>
-                                        <span className="font-medium text-slate-500 text-lg mx-3 ">{item.quantity}</span>
-                                        <button className='border-solid border text-main' onClick={() => dispatch(AddCart(item))}><HiPlus className="w-3 h-3 sm:w-4 sm:h-4  " /></button>
+                                        <button className='rounded-full bg-orange-500 p-1' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="text-white w-3 h-4 sm:w-4 sm:h-4 " /></button>
+                                        <span className="font-medium text-lg mx-3 ">{item.quantity}</span>
+                                        <button className='rounded-full bg-orange-500 p-1' onClick={() => dispatch(AddCart(item))}><HiPlus className="text-white w-3 h-3 sm:w-4 sm:h-4 " /></button>
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +118,7 @@ const ResPayment = () => {
                     </div>
                     <div className='total mt-3'>
                         <span className='font-medium text-lg'>Tổng tiền:</span>
-                        <span className='float-right text-lg text-main'>{totalVAT} VNĐ</span>
+                        <span className='float-right text-lg text-main'>{formatGia(totalVAT)}</span>
                     </div>
                     <div className='grid grid-cols-2 mt-12'>
                         <div className='flex justify-center font-semibold col-span-1 m-1'>
