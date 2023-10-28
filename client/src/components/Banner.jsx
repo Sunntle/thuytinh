@@ -2,10 +2,11 @@ import { Typography } from "antd";
 import { Link } from "react-router-dom";
 const imageUrls =
     "https://images.pexels.com/photos/13262499/pexels-photo-13262499.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+// eslint-disable-next-line react/prop-types
 const Banner = () => {
-  
+
   return (
-        <div>
+        <div >
           <div className="h-[100vh] relative">
             <div
               className="h-full w-full "

@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
-import Home from "../pages/Home/home.jsx";
 import Order from "../pages/Order/order.jsx";
 import Menu from "../pages/Menu/menu.jsx";
 import Layout from "../layouts/index.jsx";
@@ -16,6 +15,7 @@ import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
 import LayoutContainer from "../layouts/LayoutContainer";
 import PaymentLoading from "../pages/PaymentLoading/index.jsx";
 import DeliveryNotSupported from "../pages/DeliveryNotSupported/index.jsx";
+import Home from "../pages/Home/Home";
 
 const router = createBrowserRouter([
   {
