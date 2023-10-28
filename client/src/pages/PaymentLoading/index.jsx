@@ -41,28 +41,12 @@ const PaymentLoading = () => {
 
   useEffect(() => {
     if (data !== null) {
+      setIsModalOpen(false)
       navigate("/payment-success");
     } else {
       setIsModalOpen(true);
     }
   }, [data]);
-
-  // if (isModalOpen)
-  //   return (
-  //     <Modal width={600} title="Thông Báo" open={isModalOpen} footer={false} centered>
-  //       <div className="flex flex-col w-full space-y-4">
-  //         <span className="text-red-600 font-semibold">{errorMessage}</span>
-  //         <Button
-  //             className="bg-red-600 text-white"
-  //             onClick={() =>
-  //                 (window.location.href = `http://localhost:3000/home`)
-  //             }
-  //         >
-  //           Quay về trang chủ
-  //         </Button>
-  //       </div>
-  //     </Modal>
-  //   );
 
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center">

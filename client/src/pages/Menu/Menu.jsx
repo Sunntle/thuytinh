@@ -3,7 +3,6 @@ import { FiSearch } from "react-icons/fi";
 import { BiFoodMenu } from "react-icons/bi";
 import useHttp from "../../hooks/useHttp.js";
 import { useSelector } from "react-redux";
-import { Spin } from "antd";
 import useDebounce from "../../hooks/useDebounce.js";
 import * as apiService from "../../services/api.js";
 import "./index.css";
@@ -11,6 +10,7 @@ import OrderListModal from "./OrderListModal/OrderListModal.jsx";
 import CategoryList from "./CategoryList/CategoryList.jsx";
 import ProductList from "./ProductList/ProductList.jsx";
 import { useSearchParams } from "react-router-dom";
+import {Spinner} from "../../components/index.js";
 
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -60,18 +60,11 @@ const Menu = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="my-56 h-full w-screen flex justify-center items-center flex-col">
-        <Spin size={"large"}></Spin>
-        <span className="mt-4 font-semibold text-lg">
-          Quý khách vui lòng đợi trong giây lát !
-        </span>
-      </div>
-    );
+    return <Spinner className={"my-56"}/>
   }
 
   return (
-    <div className="pb-24 text-slate-800 lg:px-16 px-6">
+    <div className="pb-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
       <div className="flex flex-col mt-8 space-y-8 lg:mt-24">
         <div className="lg:hidden grid grid-cols-12 gap-4 text-slate-500 ">
           <div className="col-span-10 w-full h-12 bg-slate-100 rounded-lg flex justify-start items-center space-x-3 px-2">
