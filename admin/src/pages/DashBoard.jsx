@@ -28,7 +28,7 @@ const DashBoard = () => {
       }), getAllProduct({
         _sort: "discount",
         _order: "DESC",
-        _discount: "gt_0",
+        _discount: "gte_0",
         _limit: 10,
       })]);
       setDiscount(resProductsDiscount);
@@ -70,7 +70,7 @@ const DashBoard = () => {
               data={data}
             />
           </div>
-          <div className="mb-6 mt-4">
+          {/* <div className="mb-6 mt-4">
             <div className="flex justify-between items-center">
               <h4 className="font-bold text-lg mb-2 text-slate-700">
                 Sản phẩm bán chạy
@@ -145,7 +145,7 @@ const DashBoard = () => {
                 );
               })}
             </Swiper>
-          </div>
+          </div> */}
           <div className="mb-6">
             <div className="flex justify-between items-center">
               <h4 className="font-bold text-lg mb-2 text-slate-700">

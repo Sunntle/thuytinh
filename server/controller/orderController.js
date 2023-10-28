@@ -85,7 +85,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
     { raw: true },
   );
 
-  _io.of("/admin").emit("new message", storeNotification);
   _io.of("/client").emit("status order", result);
 
   res.status(200).json({ success: true, data: result });
