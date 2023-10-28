@@ -20,6 +20,10 @@
     }
   }
 }
+:root {
+  --swiper-navigation-color:  #fc8019;
+  --swiper-navigation-size: 20px
+}
 
 html {
   font-size: 16px;
