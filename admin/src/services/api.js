@@ -184,3 +184,6 @@ export const deleteOne = (id) => {
 export const createPayment = (data) => {
   return axios.post(`/api/payment/create_payment_url`, data);
 };
+export const updatePayment = (data) => {
+  return axios.put(`/api/payment/update_bill`, data);
+};

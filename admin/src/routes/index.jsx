@@ -18,6 +18,7 @@ import SearchPage from "../pages/search";
 import UserPage from "../pages/user";
 import TablePage from "../pages/table";
 import ResSelectTable from "../pages/restaurant/choosetable/res-selectTable";
+import PaymentSuccess from "../pages/restaurant/order/res-orderSuccess";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -105,6 +106,10 @@ const router = createBrowserRouter([
       {
         path: "renvenue",
         element: <ResRevenue />,
+      },
+      {
+        path: "payment-success",
+        element: <PaymentSuccess />,
       },
       {
         path: "search",
