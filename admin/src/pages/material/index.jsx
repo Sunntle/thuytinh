@@ -57,7 +57,6 @@ function MaterialPage() {
   useEffect(() => {
     if (notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)) {
       fetchData()
-      console.log("fetched");
     }
   }, [notifications, location, fetchData])
 
@@ -281,7 +280,7 @@ function MaterialPage() {
 
         <Row justify="space-between" align="center" className="mb-4">
           <Col xs={6}>
-            <Title level={4}>Danh sách nguyên liệu</Title>
+            <Title level={3}>Danh sách nguyên liệu</Title>
           </Col>
           <Col xs={6} style={{ textAlign: "-webkit-right" }}>
             <ButtonComponents

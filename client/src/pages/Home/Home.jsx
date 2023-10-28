@@ -32,7 +32,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="pb-24 pt-12 lg:pb-0 lg:pt-24">
+    <div>
       <Banner />
       <div className="flex items-center justify-between mt-12 px-6 lg:mx-16">
         <span className="w-full h-0.5 bg-black"></span>

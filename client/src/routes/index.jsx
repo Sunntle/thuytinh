@@ -60,10 +60,10 @@ const router = createBrowserRouter([
       },
       {
         path: "menu",
-        element: <Navigate to=".." />,
+        element: <Navigate to=".." state={{ from: 'menu' }} replace/>,
       },
-      { index: "home", element: <Home /> },
-
+      { path: "home", 
+      element: <Navigate to="/home" state={{ from: 'home' }} replace/> },
       {
         path: "service",
         element: <Service />,
