@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "../payment/res-payment.css"
-import { Button, Divider, Modal, message, Form, Radio, Drawer, Collapse } from "antd"
+
+import { Button, Divider, Modal, message, Form, Radio, Drawer, Collapse, Tabs } from "antd"
+
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCart, AddCartUpdate, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
 import { addOrder, createPayment, getTableId } from '../../../services/api'
 import { AddTableList } from '../../../redux/table/listTableSystem'
 import { formatGia } from '../../../utils/format'
+import { ButtonTable } from '../choosetable/ButtonTable'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const RenderFooter = ({
@@ -22,20 +25,24 @@ const RenderFooter = ({
   closeSwithTable,
   openSwithTable,
   switchTable
-}) => (<>
-  <div className='Order-total border rounded-md'>
-    <div className='tax'>
-      <span>Thuế VAT:</span>
-      <span className='float-right'>10%</span>
-    </div>
-    <div className='total'>
-      <span className='font-medium text-lg'>Tổng tiền:</span>
-      <span className='float-right text-lg text-main'>{formatGia(tablelist?.TableByOrders[0]?.order?.total)}</span>
-    </div>
-    <div className='grid grid-cols-4 mt-12'>
-      <div className='flex justify-center font-semibold col-span-2 m-1'>
-        <button className='bg-red-500 text-white' onClick={handleCancel}>Hủy</button>
-      </div>
+
+}) => (
+
+
+    <> <div className='Order-total border rounded-md'>
+        <div className='tax'>
+            <span>Thuế VAT:</span>
+            <span className='float-right'>10%</span>
+        </div>
+        <div className='total'>
+            <span className='font-medium text-lg'>Tổng tiền:</span>
+            <span className='float-right text-lg text-main'>{formatGia(tablelist?.TableByOrders[0]?.order?.total)}</span>
+        </div>
+        <div className='grid grid-cols-4 mt-12'>
+            <div className='flex justify-center font-semibold col-span-2 m-1'>
+                <button className='bg-red-500 text-white' onClick={handleCancel}>Hủy</button>
+            </div>
+
 
       <div className='flex justify-center font-semibold col-span-2 m-1'>
         <button className='bg-blue-500 text-white' onClick={() => handleUpdate(tablelist)}>Thêm món mới</button>
@@ -192,16 +199,21 @@ const ResOrder = ({ handleCancel, open }) => {
                   <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.Product.name_product}</span>
                   <span className='text-main mb-3'>{formatGia(item.Product.price)}</span>
 
-                </div>
-                <div className='flex items-center justify-between'>
-                  <span className='font-medium text-slate-500  text-sm'>Số lượng:</span>
-                  {/* <div className="flex flex-end justify-between items-center"> */}
-                  {/* <button className='border-solid border text-main' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="w-3 h-4 sm:w-4 sm:h-4 " /></button> */}
-                  <span className=" font-medium text-slate-500  text-sm"> x{item.quantity}</span>
-                  {/* <button className='border-solid border text-main' onClick={() => dispatch(AddCart(item))}><HiPlus className="w-3 h-3 sm:w-4 sm:h-4  " /></button> */}
-                  {/* </div> */}
-                </div>
-              </div>
+                                </div>
+                                <div className='flex items-center justify-between'>
+                                    <span className='font-medium text-slate-500  text-sm'>Số lượng:</span>
+                                    {/* <div className="flex flex-end justify-between items-center"> */}
+                                    {/* <button className='border-solid border text-main' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="w-3 h-4 sm:w-4 sm:h-4 " /></button> */}
+                                    <span className=" font-medium text-slate-500  text-sm"> x{item.quantity}</span>
+                                    {/* <button className='border-solid border text-main' onClick={() => dispatch(AddCart(item))}><HiPlus className="w-3 h-3 sm:w-4 sm:h-4  " /></button> */}
+                                    {/* </div> */}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                <Divider className='bg-main my-5' />
+
             </div>
           </div>
         )}

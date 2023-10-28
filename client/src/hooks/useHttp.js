@@ -12,7 +12,6 @@ const useHttp = () => {
       const response = await axios[method](url, {
           ...rest,
       });
-      console.log(response);
       if(typeof getData == "function") getData(response);
       else getData = response
     } catch (err) {

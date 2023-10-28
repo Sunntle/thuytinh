@@ -6,9 +6,9 @@ import { truncateString } from "../utils/format.js";
 const AboutUs = () => {
   return (
     <div className="lg:px-16 my-12 px-6">
-      <h1 className="text-4xl font-bold text-primary pb-4">
+      <h2 className="text-4xl font-bold text-primary pb-4">
         Tại sao bạn chọn chúng tôi
-      </h1>
+      </h2>
       <p className="text-gray-500 text-sm lg:w-1/2 w-full">
         Nhà hàng Thuỷ Tinh là lựa chọn tuyệt vời khi có đầy đủ các dịch vụ dành
         cho khách hàng thân yêu của chúng tôi.

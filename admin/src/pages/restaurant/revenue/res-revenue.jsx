@@ -31,13 +31,13 @@ const ResRevenue = () => {
   const fetchData = useCallback(async () => {
     try{
         // const res = await getDataDashboard(timeChart);
-        const [{data}, dataAdmin, res] = await Promise.all([getAllOrder(), getAllUser({ _like: "role_R1_not" }), getAllMaterial()])
+        const [{data}, res1,dataAdmin, res] = await Promise.all([getAllOrder(),getDataDashboard(timeChart), getAllUser({ _like: "role_R1_not" }), getAllMaterial()])
         const daily = calculateDailyRevenue(data);
         const weekly = calculateWeeklyRevenue(data);
         const monthly = calculateMonthlyRevenue(data)
         dataAdmin.success && setAdmin(dataAdmin);
         setRevenue({ data, daily, weekly, monthly });
-        setData(data);
+        setData(res1);
         const avl =  data?.map((item) => {
             let data = {
                 id: item.id,
@@ -186,7 +186,7 @@ const ResRevenue = () => {
                   Số đơn
                 </span>
                 <p className="text-orange-400 text-2xl font-medium text-center">
-                {data.length || '0'}
+                {dataOrder.length || '0'}
                 </p>
               </div>
               <div className="w-1/2  p-4 h-full flex flex-col justify-center items gap-1">

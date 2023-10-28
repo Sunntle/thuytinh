@@ -17,6 +17,7 @@ import RegisterPage from "../pages/register";
 import SearchPage from "../pages/search";
 import UserPage from "../pages/user";
 import TablePage from "../pages/table";
+import ResSelectTable from "../pages/restaurant/choosetable/res-selectTable";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -96,6 +97,10 @@ const router = createBrowserRouter([
       {
         path: "choosetable",
         element: <ResChooseTable />,
+      },
+      {
+        path: "select-table/:id/:idOrder",
+        element: <ResSelectTable />,
       },
       {
         path: "renvenue",
