@@ -99,10 +99,9 @@ const OrderListModal = ({
       dispatch(
         addIdOrderTable({
           idOrder: newOrder?.data?.orders?.id,
-          idTable: +customerName?.tables[0],
+          idTable: customerName?.tables,
         }),
       );
-      // dispatch(addIdOrder(newOrder?.data?.orders?.id));
     }
   }, [newOrder]);
 
@@ -158,7 +157,7 @@ const OrderListModal = ({
               <div className="col-span-5">
                 <img
                   className="w-full h-full rounded-tl-lg rounded-bl-lg"
-                  src={item.imageUrls}
+                  src={item.ImageProducts[0]?.url}
                   alt={item.name_product}
                 />
               </div>
