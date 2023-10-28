@@ -28,7 +28,7 @@ function currentYear(pa = "startOf") {
 }
 
 exports.createOrder = asyncHandler(async (req, res) => {
-  const { orders, customerName, total, table, id_employee } = req.body;
+  const { orders, customerName, total, table, id_employee, token } = req.body;
   if (!total || !customerName || table.length === 0 || orders.length === 0)
     return res.status(200).json({
       success: false,
@@ -36,7 +36,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
     });
   const arrTable = table;
 
-  if (await Tables.prototype.checkStatus(arrTable, 0))
+  if (await Tables.prototype.checkStatus(arrTable, 0, token))
     return res.status(200).json({
       success: false,
       data: "Bàn đã có người đặt",

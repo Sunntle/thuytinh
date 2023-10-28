@@ -15,15 +15,13 @@ function SelectTable() {
   const [distanceState, setDistanceState] = useState(0)
   const { sendRequest, isLoading } = useHttp();
   const customerName = useSelector(state => state.customerName)
-
   const handleSelectTable = useCallback(async (id) => {
-    console.log("in");
     navigate(`/ban-${id}`,{ state: { from: 'menu' }});
   },[navigate]);
 
   useEffect(()=>{
-    if(customerName.name.length > 0 && customerName.tables.length > 0 ){
-      handleSelectTable(customerName.tables[0])
+    if(customerName.name.length > 0 && customerName.tables > 0 ){
+      handleSelectTable(customerName.tables)
     }
   }, [customerName.name.length, customerName.tables, handleSelectTable])
 

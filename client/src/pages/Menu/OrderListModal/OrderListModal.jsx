@@ -76,6 +76,7 @@ const OrderListModal = ({
       total: totalOrder,
       customerName: customerName.name,
       table: [idTable],
+      token: localStorage.getItem("tableToken")
     };
     try {
       await sendRequest(addOrder(body), setNewOrder);
@@ -85,7 +86,6 @@ const OrderListModal = ({
     }
     setIsOrderModalOpen(false);
   };
-
   useEffect(() => {
     if (newOrder?.success === false) {
       alert(newOrder?.data);

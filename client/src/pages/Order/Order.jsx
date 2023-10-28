@@ -22,7 +22,7 @@ const Order = () => {
     sendRequest(fetchTableById(+tables, tableToken), setData);
   }, [tables, sendRequest, tableToken]);
 
-  const order = data[0]?.TableByOrders[0]?.order || [];
+  const order = data[0]?.TableByOrders?.[0]?.order || [];
 
   const totalOrder = useMemo(
     () => calculateTotalWithVAT(order?.total, 10),
