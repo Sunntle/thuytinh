@@ -17,7 +17,8 @@ function SelectTable() {
   const customerName = useSelector(state => state.customerName)
 
   const handleSelectTable = useCallback(async (id) => {
-    navigate(`/ban-${id}`);
+    console.log("in");
+    navigate(`/ban-${id}`,{ state: { from: 'menu' }});
   },[navigate]);
 
   useEffect(()=>{

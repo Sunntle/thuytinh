@@ -248,6 +248,7 @@ function ReviewsPage() {
             {reviewsCurrent?.total} kết quả
           </h6>
           <Pagination
+            defaultPageSize={limit}
             defaultCurrent={page}
             onChange={handleChangePage}
             total={reviewsCurrent?.total}
