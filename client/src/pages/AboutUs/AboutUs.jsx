@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import { truncateString } from "../../utils/format.js";
+import avtDefault from "../../assets/images/avtDefault.png";
 import { socket } from "../../services/socket";
 import { Rate } from "antd";
 import { Reason } from "../../components/index.js";
@@ -128,24 +129,24 @@ const AboutUs = () => {
         <Swiper
           // install Swiper modules
           modules={[A11y]}
-          spaceBetween={8}
+          spaceBetween={10}
           breakpoints={{
             375: {
               slidesPerView: 2,
-              spaceBetween: 25,
+              spaceBetween: 15,
             },
             768: {
               slidesPerView: 3,
-              spaceBetween: 30,
+              spaceBetween: 10,
             },
             1024: {
               slidesPerView: 4,
               spaceBetween: 30,
             },
-            // 1440: {
-            //   slidesPerView: 5,
-            //   spaceBetween: 30,
-            // },
+            1440: {
+              slidesPerView: 5,
+              spaceBetween: 30,
+            },
           }}
           autoplay={true}
           onSlideChange={() => console.log("slide change")}
@@ -155,20 +156,20 @@ const AboutUs = () => {
               if (rating.rate >= 3) {
                 return (
                   <SwiperSlide key={rating.id}>
-                    <div className="flex p-2 border hover:shadow-lg cursor-pointer transition-all">
-                      <div className="w-full">
+                    <div className="flex flex-col justify-center items-center md:flex-row p-2 border hover:shadow-lg cursor-pointer transition-all">
+                      <div className="w-24 h-20">
                         <img
-                          className="w-full h-full rounded-full"
-                          src="https://i.pinimg.com/564x/85/25/83/852583511c3109d7a4efa0c3a233be1e.jpg"
-                          alt={"img"}
+                          className="w-24 h-20 rounded-full"
+                          src={avtDefault}
+                          alt=""
                         />
                       </div>
-                      <div className="flex flex-col p-4 text-slate-500">
+                      <div className="flex p-2 flex-col text-slate-500">
                         <span>{rating.name}</span>
-                        <span className="whitespace-nowrap">
+                        <span className="whitespace-nowrap text-xs py-2">
                           <Rate value={rating.rate} />
                         </span>
-                        <span className="text-xs">{rating.description}</span>
+                        <span className="text-xs line-clamp-1">{rating.description}</span>
                       </div>
                     </div>
                   </SwiperSlide>

@@ -68,7 +68,8 @@ function SelectTable() {
     );
   }
   return (
-    <div className="pb-24 mt-4 lg:mt-0 lg:pt-24">
+    <div className="pb-24">
+      <div className="w-full h-12 uppercase font-semibold text-lg text-white bg-primary flex justify-center items-center">chọn bàn</div>
       <div className="bg-white px-6 xl:px-12">
         <Tabs
           type={"line"}
@@ -81,10 +82,9 @@ function SelectTable() {
               key: position,
               children: (
                 <div className="w-full h-screen max-w-full">
-                  <div className="grid grid-cols-2 gap-4">
-                 
+                  <div className="grid grid-cols-2 md:grid-col-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {tableByPosition?.map((table) => (
-                      <div key={table.id} onClick={() => handleSelectTable(table.id)} className="w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center">
+                      <div key={table.id} onClick={() => handleSelectTable(table.id)} className="cursor-pointer w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center">
                         {table.name_table}
                       </div>
                     ))}

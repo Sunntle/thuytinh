@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import { Form, Rate, Modal, Input } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
@@ -10,20 +10,23 @@ const Rating = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [value, setValue] = useState(3);
   const [form] = Form.useForm();
-  const idTable = location.pathname.split("/")[1].split("-")[1];
+  // const idTable = location.pathname.split("/")[1].split("-")[1];
   const customerName = useSelector((state) => state.customerName);
+  const { idOrder } = useSelector((state) => state.order);
+  const idTable = useMemo(() => customerName.tables, [customerName.tables]);
+  const tableToken = localStorage.getItem('tableToken')
   const { sendRequest } = useHttp();
-  const [dataTable, setDataTable] = useState();
+  const [dataTable, setDataTable] = useState(null);
 
   useEffect(() => {
-    sendRequest(fetchTableById(idTable), setDataTable);
-  }, []);
+    sendRequest(fetchTableById(idTable,tableToken), setDataTable);
+  }, [sendRequest]);
 
   const onFinish = async (values) => {
     const { rating, text } = values;
     const dataToSend = {
-      name: customerName,
-      id_order: dataTable.id_order,
+      name: customerName.name,
+      id_order: idOrder,
       description: text,
       rate: rating,
     };

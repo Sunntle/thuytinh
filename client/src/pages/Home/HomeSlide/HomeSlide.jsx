@@ -14,8 +14,18 @@ import {
   SlideNextButton,
   SlidePrevButton,
 } from "./HomeSlideButton/HomeSlideButton.jsx";
+import {addToOrder} from "../../../redux/Order/orderSlice.js";
+import { useDispatch } from "react-redux";
+
+
 
 const HomeSlide = ({ listProduct }) => {
+    const dispatch = useDispatch();
+    const handleAddToOrder = (product) => {
+        if (product) {
+            dispatch(addToOrder(product));
+        }
+    };
   return (
     <div className="relative w-auto">
       <Swiper
@@ -68,8 +78,8 @@ const HomeSlide = ({ listProduct }) => {
                       {formatCurrency(product.price)}
                     </span>
                   </div>
-                  <button>
-                    <AiFillPlusCircle className="w-6 h-6 text-primary" />
+                  <button onClick={() => handleAddToOrder(product)}>
+                    <AiFillPlusCircle className="w-6 h-6 text-primary active:text-opacity-80" />
                   </button>
                 </div>
               </div>
