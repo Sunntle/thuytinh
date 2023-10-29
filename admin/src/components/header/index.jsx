@@ -6,6 +6,8 @@ import Icon, {
   RightOutlined,
   UploadOutlined,
   UserOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -15,7 +17,6 @@ import {
   Input,
   Menu,
   Modal,
-  Switch,
   Tabs,
   Tooltip,
   Typography,
@@ -43,11 +44,10 @@ import { LightSvg, NAV_ITEMS } from "../../utils/constant";
 import { roleRext, truncateString } from "../../utils/format";
 import NotificationsComponent from "../notification";
 import { DarkSvg } from "../../utils/constant";
-import Clock from "../clock/clock";
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
 
-function HeaderComponent() {
+function HeaderComponent({collapsed, setCollapsed}) {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
@@ -294,6 +294,17 @@ function HeaderComponent() {
             Logo here
           </div>
         </div>
+        <Button
+          type="text"
+          icon={
+            collapsed ? (
+              <MenuUnfoldOutlined style={{ color: "white" }} />
+            ) : (
+              <MenuFoldOutlined style={{ color: "white" }} />
+            )
+          }
+          onClick={() => setCollapsed(!collapsed)}
+        />
         <div className="hidden sm:block flex-1 text-center mx-3">
           <SearchComponent
             className="bg-secondaryColor w-full max-w-2xl "
@@ -305,7 +316,7 @@ function HeaderComponent() {
         </div>
         <div className="flex items-center justify-center gap-x-4">
           {/* <Clock/> */}
-          <Tooltip title="Theme">
+          <Tooltip title={customize.darkMode ? 'Chế độ sáng': 'Chế độ tối'}>
             <Button
               size="large"
               type="text"

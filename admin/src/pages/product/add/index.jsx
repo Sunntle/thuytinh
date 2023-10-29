@@ -5,12 +5,11 @@ import {
   InputNumber,
   Modal,
   Select,
-  Space,
   Upload,
 } from "antd";
 import ButtonComponents from "../../../components/button";
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { useCallback, useState } from "react";
+import { UploadOutlined } from "@ant-design/icons";
+import { useCallback } from "react";
 const { Option } = Select;
 const optionsStatus = [
   { value: 0, label: "Còn hàng" },
@@ -20,8 +19,8 @@ const initialValues = {
   price: 0,
   status: 0,
 };
-function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
-  const [haveData, setHaveData] = useState(false);
+function AddNewProduct({ open, handleCancel, cate, handleFinish }) {
+  // const [haveData, setHaveData] = useState(false);
   const [form] = Form.useForm();
  
   const handleSubmit = useCallback(async () => {
@@ -142,7 +141,7 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
           </Select>
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="description"
           label="Mô tả"
           labelCol={{
@@ -226,7 +225,7 @@ function AddNewProduct({ open, handleCancel, cate, material, handleFinish }) {
               </Button>
             </>
           )}
-        </Form.List>
+        </Form.List> */}
         <h3 className="font-semibold mb-8 mt-7 text-main text-lg">
           Thêm hình ảnh món ăn
         </h3>

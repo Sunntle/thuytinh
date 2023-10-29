@@ -4,12 +4,11 @@ import LineChart from "../components/chart/line-chart";
 import { Col, Row, Badge } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState, useCallback } from "react";
-import { formatGia } from "../utils/format";
+import { formatGia, truncateString } from "../utils/format";
 import { Autoplay } from "swiper/modules";
-import { getAllOrder, getAllProduct, getDataDashboard } from "../services/api";
+import {  getAllProduct, getDataDashboard } from "../services/api";
 import Spinner from "../components/spinner";
 import { Link } from "react-router-dom";
-import { UpCircleFilled } from "@ant-design/icons";
 
 const DashBoard = () => {
   const [data, setData] = useState({});
@@ -17,7 +16,6 @@ const DashBoard = () => {
   const [timeChart, setTimeChart] = useState("MONTH");
   const [dataProduct, setDataProduct] = useState(null);
   const [discount, setDiscount] = useState(null);
-  console.log(data)
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
@@ -84,45 +82,46 @@ const DashBoard = () => {
             </div>
             <Swiper
               speed={1500}
-              autoplay={{
-                delay: 1500,
-                disableOnInteraction: false,
-              }}
+              // autoplay={{
+              //   delay: 1500,
+              //   disableOnInteraction: false,
+              // }}
               slidesPerView={1}
               className="mySwiper"
               breakpoints={{
                 686: {
                   slidesPerView: 2,
+                  spaceBetween: 10
                 },
-                1249: {
-                  slidesPerView: 3,
-                },
+                // 1249: {
+                //   slidesPerView: 3,
+                // },
               }}
-              modules={[Autoplay]}
+              // modules={[Autoplay]}
             >
               {discount?.data.map((el) => {
                 return (
                   <SwiperSlide key={el.id}>
-                    <div className="md:pe-5 pe-3">
+                    <div className="pe-2">
                       <Badge.Ribbon text={`${el.discount}% Off`} color="red">
                         <div className="py-5 px-3 sm:px-5 md:px-3 border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 flex items-center justify-around sm:justify-around lg:justify-evenly">
                           <div>
                             <img
                               className="w-full"
                               style={{ maxWidth: "130px" }}
-                              src={el.imageUrls?.split(";")[0]}
+                              src={el?.ImageProducts[0]?.url}
                               alt=""
                             />
                           </div>
                           <div>
                             <h6 className="font-semibold text-lg">
-                              {el.name_product}
+                              {truncateString(el.name_product, 12)}
                             </h6>
                             <div className="mb-2">
                               <h6 className="text-main font-semibold  whitespace-nowrap text-lg">
-                                {formatGia(
-                                  el.price - (el.price * el.discount) / 100
-                                )}
+                                {el.discount > 0 ? formatGia(
+                                  el.price - (el.price * el.discount /100)
+                                ): formatGia(el.price)}
                               </h6>
                               <p className="text-gray-400 font-semibold line-through whitespace-nowrap text-xs">
                                 {formatGia(el.price)}

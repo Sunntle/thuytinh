@@ -68,7 +68,7 @@ function ProductPage() {
     },
     [fetchData]
   );
-
+  
   const handleClickEditProduct = useCallback(async (id) => {
     const res = await getOneProduct(id);
     setData(res);
@@ -260,7 +260,6 @@ function ProductPage() {
   }, []);
   const handleCancelEdit = useCallback(() => {
     setOpenModelEdit(false);
-    setData(null);
   }, []);
   return (
     <div className="my-7 px-5">
