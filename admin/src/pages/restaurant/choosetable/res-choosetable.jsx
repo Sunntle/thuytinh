@@ -8,7 +8,7 @@ import { getAllTable, getTableId } from '../../../services/api';
 import { Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import ResOrder from '../order/res-order';
-import { AddTableList } from '../../../redux/table/listTableSystem';
+import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSystem';
 import { socket } from '../../../socket';
 const ButtonTable = ({ table, handleTableClick, handleDetailModal }) => (
   <div key={table.id}>
@@ -79,6 +79,7 @@ const ResChooseTable = () => {
     setOpen(true)
   }
   const handleCancel = () => {
+    dispatch(RemoveTableList())
     setOpen(false);
   };
 
