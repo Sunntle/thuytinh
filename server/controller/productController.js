@@ -61,8 +61,11 @@ exports.list = async (req, res) => {
         const arrCount = [];
         for (const recipe of Recipes) {
           const { Material } = recipe;
-          const countProduct = Math.floor(Material.amount / recipe.quantity);
-          if (countProduct < 1) return;
+          const countProduct = Material.amount > 0 && recipe.quantity > 0 && Math.floor(Material.amount / recipe.quantity);
+          if (countProduct < 1 || countProduct == false) {
+            arrCount.push(0)
+            break;
+          };
           arrCount.push(countProduct);
         }
         product.dataValues.amount = Math.min(...arrCount);
@@ -97,6 +100,7 @@ exports.getDetail = async (req, res) => {
         },
       ],
     });
+
     if (!response) {
       return res.status(404).json({ error: "Product not found" });
     }
@@ -105,8 +109,11 @@ exports.getDetail = async (req, res) => {
       const arrCount = [];
       for (const recipe of recipes) {
         const { Material } = recipe;
-        const countProduct = Math.floor(Material.amount / recipe.quantity);
-        if (countProduct < 1) return;
+        const countProduct = Material.amount > 0 && recipe.quantity > 0 && Math.floor(Material.amount / recipe.quantity);
+        if (countProduct < 1 || countProduct == false) {
+          arrCount.push(0)
+          break;
+        };
         arrCount.push(countProduct);
       }
       response.dataValues.amount = Math.min(...arrCount);
@@ -144,17 +151,6 @@ exports.addItem = async (req, res) => {
           id_product: response.id,
         }));
         await ImageProduct.bulkCreate(data);
-      }
-      if (response && recipe != "undefined" && recipe.length > 0) {
-        const dataRecipe = JSON.parse(recipe).map((el) => {
-          return {
-            id_material: el.materials,
-            id_product: response.id,
-            quantity: el.quantity,
-            descriptionRecipe: descriptionRecipe,
-          };
-        });
-        await Recipes.bulkCreate(dataRecipe);
       }
       res.status(201).json(response);
     } else {

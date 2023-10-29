@@ -28,7 +28,6 @@ const customerNameSlice = createSlice({
       state.name = action.payload.name;
       state.tables = action.payload.tables;
       state.timestamp = action.payload.timestamp;
-      console.log("action", action.payload);
     },
   },
   extraReducers: (builder) => {
