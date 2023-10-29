@@ -55,7 +55,7 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
           key="submit"
           htmlType="submit"
           onClick={handleSubmit}
-        />,
+        />
       ]}
       centered
     >
@@ -160,7 +160,6 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
               <div key={item.id} className="border_bottom p-2">
                 <Avatar shape="square" src={data.image} className="mr-2" size={40} />
                 <Text>{`Nhập ngày ${formatNgay(item.createdAt)} với số lượng ${item.amount_import} giá mua vào : ${formatGia(item.price_import)}`} </Text>
-
               </div>
             ))}
           </div>

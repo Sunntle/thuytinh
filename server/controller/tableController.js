@@ -12,7 +12,6 @@ const { apiQueryRest, bien } = require('../utils/const');
 const { Op } = require('sequelize');
 const { generateTable } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
-const { raw } = require("body-parser");
 
 const findTables = async (tables) => {
   const re = await Tables.findAll({
@@ -55,7 +54,6 @@ exports.getId = asyncHandler(async (req, res, next) => {
       const data = await findTables([id]);
       if (data) return res.status(200).json(data);
       return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-
     })
   } else {
     const employee = await User.findOne({
@@ -78,7 +76,7 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) {
-        return res.status(404).json({message: "Bàn bạn đã hết hạn sử dụng"});
+        return res.status(404).json({ message: "Bàn bạn đã hết hạn sử dụng" });
       }
       if (decode) {
         const data = await Tables.findAll({

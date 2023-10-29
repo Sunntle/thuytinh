@@ -3,13 +3,24 @@ import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from "@ant-design/i
 import ButtonComponents from '../../components/button';
 import { callCreateRecipe } from "../../services/api";
 
-const CreateRecipe = ({ openModal, handleCancel, fetchData, optionsProduct, optionsMaterial, changeSelect }) => {
+const CreateRecipe = ({ openModal, api, handleCancel, fetchData, optionsProduct, optionsMaterial }) => {
     const [form] = Form.useForm();
     const onFinish = async ({ id_product, materials }) => {
-        let val = materials.map(item => ({ id_product: id_product, ...item }))
+        let val = materials.map(item => ({
+            id_product: id_product,
+            descriptionRecipe: item.descriptionRecipe,
+            id_material: item.id_material,
+            quantity: item.quantity
+        }));
         const res = await callCreateRecipe(val);
-        if (res?.error) message.info(res?.error);
-        else message.success(res)
+        if (res?.error) api.info({
+            message: `Thông báo`,
+            description: res?.error
+        });
+        else api.success({
+            message: `Thông báo`,
+            description: res
+        });
         form.resetFields()
         handleCancel();
         fetchData()
@@ -64,8 +75,8 @@ const CreateRecipe = ({ openModal, handleCancel, fetchData, optionsProduct, opti
                                     <div className="h-full overflow-y-auto">
 
                                         {fields.map(({ key, name, ...restField }) => (
-                                            <div className="flex flex-col items-center p-2 border border-gray-200 border-dotted ">
-                                                <div className="flex flex-col gap-2 w-full" key={key}>
+                                            <div className="flex flex-col items-center p-2 border border-gray-200 border-dotted " key={key}>
+                                                <div className="flex flex-col gap-2 w-full" >
                                                     <Form.Item
                                                         className="w-full"
                                                         {...restField}
@@ -75,7 +86,17 @@ const CreateRecipe = ({ openModal, handleCancel, fetchData, optionsProduct, opti
                                                             {
                                                                 required: true,
                                                                 message: 'Chọn Nguyên liệu',
-                                                            },
+                                                            }, ({ getFieldValue }) => ({
+                                                                validator(_, value) {
+                                                                    const currentMaterialIndex = getFieldValue("materials").findIndex(
+                                                                        (item, index) => item.id_material === value && index !== name
+                                                                    );
+                                                                    if (currentMaterialIndex !== -1) {
+                                                                        return Promise.reject(new Error("Vui lòng nhập nguyên liệu khác"));
+                                                                    }
+                                                                    return Promise.resolve();
+                                                                }
+                                                            }),
                                                         ]}
                                                     >
                                                         <Select options={optionsMaterial} />
@@ -108,7 +129,9 @@ const CreateRecipe = ({ openModal, handleCancel, fetchData, optionsProduct, opti
 
                                         ))}
                                         <Form.Item>
-                                            <Button className="mt-2" type="dashed" onClick={() => changeSelect(add, form.getFieldsValue())} block icon={<PlusOutlined />}>
+                                            <Button className="mt-2" type="dashed"
+                                                onClick={add}
+                                                block icon={<PlusOutlined />}>
                                                 Add field
                                             </Button>
                                         </Form.Item>
@@ -123,7 +146,6 @@ const CreateRecipe = ({ openModal, handleCancel, fetchData, optionsProduct, opti
                                         onClick={handleCancel}
                                         content={"Quay lại"}
                                         colorText={"text-main"}
-
                                     />
                                 </Col>
                                 <Col>

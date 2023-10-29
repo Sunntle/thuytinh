@@ -20,6 +20,16 @@ import { useLocation } from "react-router-dom";
 import Spinner from "../../components/spinner";
 import { formatGia, formatNgay } from "../../utils/format";
 const { Title, Text } = Typography;
+const renderToString = (data) => {
+  return `
+    <div class="flex p-2 flex-col gap-2">
+      <img src="${data.image}" class="w-20 mx-auto"/>
+      <div>Tên: ${data.x}</div>
+      <div>Số lượng: ${data.y}/(${data.unit})</div>
+      ${data.detail ? `<div> Chuyển đổi: ${data.detail}</div>` : ''}
+    </div>
+  `;
+};
 function MaterialPage() {
   const [open, setOpen] = useState(false);
   const [api, contextHolder] = notification.useNotification();
@@ -41,8 +51,17 @@ function MaterialPage() {
       ...res,
       data: res.data.map((el) => ({ ...el, key: el.id, price: el.Warehouses?.[0]?.price_import || 0 })),
     });
-    setListImportMaterial(res.listImport)
-    setDataChart(res.dataChart);
+    setListImportMaterial(res.listImport);
+    const convert = res.dataChart.map(i => {
+      let q = { x: i.name_material, unit: i.unit, image: i.image }
+      if (i.unit === "gram") {
+        q = { ...q, y: i.amount / 1000, detail: `${i.unit} => kg` }
+      } else {
+        q = { ...q, y: i.amount }
+      }
+      return q
+    })
+    setDataChart(convert);
     setLoading(false)
   }, []);
 
@@ -269,14 +288,38 @@ function MaterialPage() {
               series={[
                 {
                   name: "Nguyên liệu gần hết",
-                  data: dataChart.map((item) => item.amount),
+                  data: dataChart.map((item) => item),
                 },
               ]}
               colors="#EF4444"
-              categories={dataChart.map(
-                (item) => `${item.name_material} (${item.unit})`
-              )}
+              // categories={dataChart.map(
+              //   (item) => `${item.name_material} (${item.unit})`
+              // )}
               columnWidth="20px"
+              customOptions={{
+                yaxis: {
+                  min: 0,
+                  max: (max) => {
+                    if (max == 0) return 20
+                    return max;
+                  },
+                  tickAmount: 1,
+                },
+                xaxis: {
+                  categories: dataChart.map(
+                    (item) => item.x
+                  ),
+                },
+
+                tooltip: {
+                  custom: function ({ _, seriesIndex, dataPointIndex, w }) {
+                    let data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+
+                    return renderToString(data)
+                  }
+                }
+
+              }}
             />
           </Col>
         </Row>
