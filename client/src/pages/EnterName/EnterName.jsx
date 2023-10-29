@@ -10,7 +10,6 @@ const EnterName = (props) => {
   const dispatch = useDispatch();
   const customerNameState = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
-  console.log(customerNameState);
   const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
   },[]);

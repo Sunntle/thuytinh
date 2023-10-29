@@ -57,7 +57,7 @@ exports.list = async (req, res) => {
     rows.length > 0 &&
       rows.forEach((product) => {
         const { Recipes } = product;
-        if (Recipes.length == 0) return product;
+        if (Recipes.length == 0) return product.dataValues.amount = 0
         const arrCount = [];
         for (const recipe of Recipes) {
           const { Material } = recipe;
@@ -117,6 +117,8 @@ exports.getDetail = async (req, res) => {
         arrCount.push(countProduct);
       }
       response.dataValues.amount = Math.min(...arrCount);
+    }else{ 
+      response.dataValues.amount = 0
     }
     res.status(200).json(response);
   } catch (err) {

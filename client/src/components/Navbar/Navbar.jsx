@@ -24,7 +24,7 @@ const Navbar = () => {
     return location.pathname == "/" || location.pathname == "/home";
   }, [location.pathname]);
 
-  const idTable = useMemo(() => customerName.tables, [customerName.tables]);
+  const idTable = useMemo(() => customerName.tables[0], [customerName.tables]);
 
   const navbarRoute = useMemo(() => {
     return [
