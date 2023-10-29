@@ -9,11 +9,11 @@ const listTableSystem = createSlice({
             return state
             // state.tables.push(action.payload);
         },
-        RemoveTable:(state) =>{
-            state = [];
+        RemoveTableList:(state) =>{
+            state = null;
             return state;
         },
     }
 })
-export const {AddTableList, RemoveTable} = listTableSystem.actions;
+export const {AddTableList, RemoveTableList} = listTableSystem.actions;
 export default listTableSystem.reducer;
