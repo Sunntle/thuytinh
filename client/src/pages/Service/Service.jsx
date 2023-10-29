@@ -3,12 +3,14 @@ import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { PiFishSimpleBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { CallStaff } from "../../components/index.js";
+import { ScrollToTop } from "../../utils/format";
 
 const Service = () => {
   const navigate = useNavigate();
   const idTable = location.pathname.split("/")[1].split("-")[1];
   return (
     <div className="relative text-slate-800 pb-24 lg:py-24 px-6 lg:px-16">
+      <ScrollToTop />
       {/* Header */}
       <div className="flex flex-col mt-8 space-y-6">
         <div className="w-full h-44 lg:h-[450px] rounded-lg">

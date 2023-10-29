@@ -1,12 +1,16 @@
 import { Button, Collapse, Divider, Form, Modal, Radio } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { BiPencil } from "react-icons/bi";
-import { calculateTotalWithVAT, formatCurrency } from "../../utils/format.js";
+import {
+  ScrollToTop,
+  calculateTotalWithVAT,
+  formatCurrency,
+} from "../../utils/format.js";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchTableById } from "../../services/api.js";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./index.css";
-import {emptyOrder} from "../../redux/Order/orderSlice.js";
+import { emptyOrder } from "../../redux/Order/orderSlice.js";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,7 +20,7 @@ const Order = () => {
   const { tables } = useSelector((state) => state.customerName);
   const [form] = Form.useForm();
   const tableToken = localStorage.getItem("tableToken");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     sendRequest(fetchTableById(+tables, tableToken), setData);
@@ -26,7 +30,7 @@ const Order = () => {
 
   const totalOrder = useMemo(
     () => calculateTotalWithVAT(order?.total, 10),
-    [order?.total],
+    [order?.total]
   );
 
   const showModal = () => {
@@ -49,7 +53,7 @@ const Order = () => {
       ...values,
     };
     await sendRequest(request, setPayment);
-    dispatch(emptyOrder())
+    dispatch(emptyOrder());
     form.resetFields();
   };
 
@@ -61,6 +65,7 @@ const Order = () => {
 
   return (
     <div className="pb-24 mt-4 lg:mt-0 lg:pt-24">
+      <ScrollToTop />
       <div className="bg-white px-6 xl:px-12">
         <h1 className="mb-5 text-center text-2xl font-bold text-primary">
           Món đã đặt

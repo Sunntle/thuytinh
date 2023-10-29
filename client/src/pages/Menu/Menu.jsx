@@ -1,36 +1,74 @@
-import { useEffect, useState } from "react";
+// React
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+
+// React-icons
 import { FiSearch } from "react-icons/fi";
 import { BiFoodMenu } from "react-icons/bi";
-import useHttp from "../../hooks/useHttp.js";
-import { useSelector } from "react-redux";
-import useDebounce from "../../hooks/useDebounce.js";
-import * as apiService from "../../services/api.js";
-import "./index.css";
+import { FiChevronDown } from "react-icons/fi";
+
+// Components
 import OrderListModal from "./OrderListModal/OrderListModal.jsx";
 import CategoryList from "./CategoryList/CategoryList.jsx";
 import ProductList from "./ProductList/ProductList.jsx";
-import { useSearchParams } from "react-router-dom";
-import {Spinner} from "../../components/index.js";
+import { Spinner } from "../../components/index.js";
+import { Button } from "antd";
+
+// Hooks
+import useHttp from "../../hooks/useHttp.js";
+import useDebounce from "../../hooks/useDebounce.js";
+
+// Utils
+import { ScrollToTop } from "../../utils/format.js";
+import instance from "../../utils/axiosConfig.js";
+
+// Services
+import * as apiService from "../../services/api.js";
+
+// Extenal Files
+import "./index.css";
 
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const categoryIndex = searchParams.get("category");
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [isProductLoading, setIsProductLoading] = useState(false);
   const { sendRequest, isLoading } = useHttp();
-  const [foods, setFoods] = useState(null);
+  const [foods, setFoods] = useState({ total: 0, data: [] });
   const [categories, setCategories] = useState(null);
   const { order: orders } = useSelector((state) => state.order);
   const debouncedValue = useDebounce(searchValue, 100);
+  const limit = 2;
+  const [offset, setOffset] = useState(0);
+
+  const fetchFoods = useCallback(async () => {
+    setIsProductLoading(true);
+    try {
+      const response = await instance.get(
+        `/product?_limit=${limit}&_offset=${offset}`
+      );
+      setFoods({
+        total: response.total,
+        data: [...foods.data, ...response.data],
+      });
+      setOffset(offset + limit);
+      setIsProductLoading(false);
+    } catch (err) {
+      setIsProductLoading(true);
+      console.error(err);
+    }
+  }, [offset, foods.data]);
 
   useEffect(() => {
     sendRequest(apiService.fetchCategories(), setCategories);
     if (categoryIndex !== null) {
       sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods);
     } else {
-      sendRequest(apiService.fetchProduct(), setFoods);
+      fetchFoods();
     }
-  }, [sendRequest,categoryIndex]);
+  }, [sendRequest, categoryIndex]);
 
   const handleChangeSearchValue = (e) => {
     setSearchValue(e.target.value);
@@ -60,11 +98,12 @@ const Menu = () => {
   };
 
   if (isLoading) {
-    return <Spinner className={"my-56"}/>
+    return <Spinner className={"my-56"} />;
   }
 
   return (
     <div className="pb-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
+      <ScrollToTop />
       <div className="flex flex-col mt-8 space-y-8 lg:mt-24">
         <div className="lg:hidden grid grid-cols-12 gap-4 text-slate-500 ">
           <div className="col-span-10 w-full h-12 bg-slate-100 rounded-lg flex justify-start items-center space-x-3 px-2">
@@ -94,12 +133,20 @@ const Menu = () => {
           <span className="text-base lg:text-xl font-semibold block mb-3">
             Danh mục
           </span>
-          <CategoryList
-            categories={categories}
-            activeIndex={+categoryIndex}
-          />
+          <CategoryList categories={categories} activeIndex={+categoryIndex} />
         </div>
         <ProductList foods={foods} />
+        <Button
+          loading={isProductLoading}
+          type="default"
+          className={`text-lg text-primary flex items-center justify-center ${
+            categoryIndex !== null ? "hidden" : ""
+          }`}
+          onClick={() => fetchFoods()}
+        >
+          <span>Xem thêm</span>
+          <FiChevronDown className="w-6 h-6" />
+        </Button>
         <OrderListModal
           isModalOpen={isOrderModalOpen}
           handleOk={handleOk}

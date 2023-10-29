@@ -6,7 +6,7 @@ import { AiFillWarning } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { formatCurrency } from "../../../utils/format.js";
 import {
-  addIdOrder, addIdOrderTable,
+  addIdOrderTable,
   addOrderDetailUpdate,
   decreaseQuantity,
   emptyOrder,
@@ -76,7 +76,7 @@ const OrderListModal = ({
       total: totalOrder,
       customerName: customerName.name,
       table: [idTable],
-      token: localStorage.getItem("tableToken")
+      token: localStorage.getItem("tableToken"),
     };
     try {
       await sendRequest(addOrder(body), setNewOrder);
@@ -100,10 +100,10 @@ const OrderListModal = ({
         addIdOrderTable({
           idOrder: newOrder?.data?.orders?.id,
           idTable: customerName?.tables,
-        }),
+        })
       );
     }
-  }, [newOrder]);
+  }, [newOrder, dispatch, customerName]);
 
   const handleUpdateOrder = () => {
     const body = {
@@ -134,11 +134,13 @@ const OrderListModal = ({
       onCancel={handleCancel}
       centered
       footer={[
-        <Button onClick={handleUpdateOrder}>Cập nhật</Button>,
+        <Button key={1} onClick={handleUpdateOrder}>
+          Cập nhật
+        </Button>,
         <Button
           disabled={orders?.length === 0}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
-          key="submit"
+          key={2}
           size="middle"
           onClick={submitOrderList}
         >
