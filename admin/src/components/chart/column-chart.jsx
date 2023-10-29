@@ -1,7 +1,7 @@
 import Chart from "react-apexcharts";
 import { useSelector } from "react-redux";
 
-function ColumnChart({ series, colors, customOptions, customClassName, categories, tooltip, columnWidth = "70%" }) {
+function ColumnChart({ series, colors, customOptions, customClassName, categories, tooltip, columnWidth = "70%", responsive }) {
 
   const customize = useSelector(state => state.customize)
   const data = {
@@ -47,6 +47,7 @@ function ColumnChart({ series, colors, customOptions, customClassName, categorie
           },
         },
       },
+      responsive: responsive ?? []
     },
   };
 

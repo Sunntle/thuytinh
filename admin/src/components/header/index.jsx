@@ -6,6 +6,8 @@ import Icon, {
   RightOutlined,
   UploadOutlined,
   UserOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -15,7 +17,6 @@ import {
   Input,
   Menu,
   Modal,
-  Switch,
   Tabs,
   Tooltip,
   Typography,
@@ -43,11 +44,10 @@ import { LightSvg, NAV_ITEMS } from "../../utils/constant";
 import { roleRext, truncateString } from "../../utils/format";
 import NotificationsComponent from "../notification";
 import { DarkSvg } from "../../utils/constant";
-import Clock from "../clock/clock";
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
 
-function HeaderComponent() {
+function HeaderComponent({collapsed, setCollapsed}) {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
@@ -226,7 +226,7 @@ function HeaderComponent() {
             <div className="my-5">
               <Swiper
                 speed={1000}
-                slidesPerView={5}
+                slidesPerView={7}
                 spaceBetween={20}
                 className="mySwiper"
               >
@@ -258,10 +258,10 @@ function HeaderComponent() {
                   return (
                     <SwiperSlide key={index}>
                       <Link to={`/employee/menu?product=${product.id}`}>
-                        <div className="p-2 border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
+                        <div className="p-2 h-[167px] border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
                           <img
-                            className="w-full mb-3"
-                            src={product.imageUrls?.split(";")[0]}
+                            className="w-full mb-3 "
+                            src={product?.ImageProducts[0]?.url}
                             alt=""
                           />
                           <h6 className="font-semibold text-gray-500">
@@ -294,6 +294,17 @@ function HeaderComponent() {
             Logo here
           </div>
         </div>
+        <Button
+          type="text"
+          icon={
+            collapsed ? (
+              <MenuUnfoldOutlined style={{ color: "white" }} />
+            ) : (
+              <MenuFoldOutlined style={{ color: "white" }} />
+            )
+          }
+          onClick={() => setCollapsed(!collapsed)}
+        />
         <div className="hidden sm:block flex-1 text-center mx-3">
           <SearchComponent
             className="bg-secondaryColor w-full max-w-2xl "
@@ -305,7 +316,7 @@ function HeaderComponent() {
         </div>
         <div className="flex items-center justify-center gap-x-4">
           {/* <Clock/> */}
-          <Tooltip title="Theme">
+          <Tooltip title={customize.darkMode ? 'Chế độ sáng': 'Chế độ tối'}>
             <Button
               size="large"
               type="text"

@@ -76,7 +76,10 @@ const router = createBrowserRouter([
         path: "order",
         element: <Order />,
       },
-
+      {
+        path: "about",
+        element: <AboutUs />,
+      },
       {
         path: "rating",
         element: <Rate />,

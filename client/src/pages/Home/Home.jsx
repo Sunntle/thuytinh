@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { AiFillPlusCircle } from "react-icons/ai";
 import { fetchProduct } from "../../services/api.js";
 import { Banner, Reason } from "../../components/index.js";
 import useHttp from "../../hooks/useHttp.js";
-import { formatCurrency } from "../../utils/format.js";
 import { socket } from "../../services/socket";
 import image1 from "../../assets/images/image1.png";
 import image4 from "../../assets/images/image4.png";

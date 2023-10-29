@@ -14,8 +14,18 @@ import {
   SlideNextButton,
   SlidePrevButton,
 } from "./HomeSlideButton/HomeSlideButton.jsx";
+import {addToOrder} from "../../../redux/Order/orderSlice.js";
+import { useDispatch } from "react-redux";
+
+
 
 const HomeSlide = ({ listProduct }) => {
+    const dispatch = useDispatch();
+    const handleAddToOrder = (product) => {
+        if (product) {
+            dispatch(addToOrder(product));
+        }
+    };
   return (
     <div className="relative w-auto">
       <Swiper
@@ -55,12 +65,12 @@ const HomeSlide = ({ listProduct }) => {
                 <div className="w-full h-[160px] rounded-t-lg">
                   <img
                     className="w-full h-full object-cover rounded-t-lg outline-none"
-                    src={product?.imageUrls}
+                    src={product?.ImageProducts[0]?.url}
                     alt=""
                   />
                 </div>
                 <div className="flex justify-between items-center p-2 text-slate-500">
-                  <div>
+                  <div className="flex flex-col overflow-hidden">
                     <span className="text-sm font-medium overflow-hidden block w-full whitespace-nowrap truncate">
                       {product.name_product}
                     </span>
@@ -68,8 +78,8 @@ const HomeSlide = ({ listProduct }) => {
                       {formatCurrency(product.price)}
                     </span>
                   </div>
-                  <button>
-                    <AiFillPlusCircle className="w-6 h-6 text-primary" />
+                  <button onClick={() => handleAddToOrder(product)}>
+                    <AiFillPlusCircle className="w-6 h-6 text-primary active:text-opacity-80" />
                   </button>
                 </div>
               </div>

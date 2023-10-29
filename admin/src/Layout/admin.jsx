@@ -8,6 +8,7 @@ import { NAV_ITEMS } from "../utils/constant";
 import { socket } from "../socket";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewMessage } from "../redux/notification/notificationSystem";
+
 const LayoutMain = () => {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
@@ -56,17 +57,18 @@ const LayoutMain = () => {
         {contextHolder}
       </div>
       <header className="sticky top-0 w-full z-10 ">
-        <HeaderComponent />
+        <HeaderComponent collapsed={collapsed} setCollapsed={setCollapsed}/>
       </header>
       <main className="main_area rounded-t-3xl overflow-hidden">
         <Layout className="layout_area ">
           <Sider
             theme={customize.darkMode ? 'dark' : 'light'}
             breakpoint="lg"
-            width={250}
             className="layout_area_sider"
+            trigger={null}
             collapsible={!screen}
             collapsed={collapsed}
+            collapsedWidth="60"
             onCollapse={(value) => setCollapsed(value)}
             onBreakpoint={(screen) => setScreen(screen)}
           >

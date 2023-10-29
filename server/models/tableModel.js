@@ -39,11 +39,15 @@ Tables.prototype.updateStatusTable = async (arr, status_table) => {
         await Tables.increment("total_booked", { by: 1, where: { id: { [Op.in]: arr } } })
     }
 }
-Tables.prototype.checkStatus = async (arr, status_table) => {
+Tables.prototype.checkStatus = async (arr, status_table, token) => {
     const list = await Tables.findAll({
         where: {
-            id: { [Op.in]: arr },
-            status_table
+            [Op.or]:{
+                id: { [Op.in]: arr },
+                status_table,
+                token: {[Op.substring]: token}
+            }
+            
         }, raw: true
     });
     return list.length === 0 ? true : false

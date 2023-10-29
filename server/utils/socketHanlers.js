@@ -14,7 +14,6 @@ exports.handleCallStaff = (socket) => {
         type: "call-staff",
         description: `Gọi nhân viên - Bàn ${idTable} !!!`,
       });
-      _io.of("/admin").emit("new message", res);
     } catch (err) {
       console.log(err);
     }

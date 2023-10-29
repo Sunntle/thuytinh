@@ -6,7 +6,7 @@ import { AiFillWarning } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { formatCurrency } from "../../../utils/format.js";
 import {
-  addIdOrder, addIdOrderTable,
+  addIdOrderTable,
   addOrderDetailUpdate,
   decreaseQuantity,
   emptyOrder,
@@ -76,6 +76,7 @@ const OrderListModal = ({
       total: totalOrder,
       customerName: customerName.name,
       table: [idTable],
+      token: localStorage.getItem("tableToken"),
     };
     try {
       await sendRequest(addOrder(body), setNewOrder);
@@ -85,7 +86,6 @@ const OrderListModal = ({
     }
     setIsOrderModalOpen(false);
   };
-
   useEffect(() => {
     if (newOrder?.success === false) {
       alert(newOrder?.data);
@@ -99,13 +99,11 @@ const OrderListModal = ({
       dispatch(
         addIdOrderTable({
           idOrder: newOrder?.data?.orders?.id,
-          idTable: +customerName?.tables[0],
+          idTable: customerName?.tables[0],
         }),
       );
-      // dispatch(addIdOrder(newOrder?.data?.orders?.id));
     }
-  }, [newOrder]);
-
+  }, [customerName?.tables, dispatch, newOrder]);
   const handleUpdateOrder = () => {
     const body = {
       total: totalOrder,
@@ -135,11 +133,13 @@ const OrderListModal = ({
       onCancel={handleCancel}
       centered
       footer={[
-        <Button onClick={handleUpdateOrder}>Cập nhật</Button>,
+        <Button key={1} onClick={handleUpdateOrder}>
+          Cập nhật
+        </Button>,
         <Button
           disabled={orders?.length === 0}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
-          key="submit"
+          key={2}
           size="middle"
           onClick={submitOrderList}
         >
@@ -158,7 +158,7 @@ const OrderListModal = ({
               <div className="col-span-5">
                 <img
                   className="w-full h-full rounded-tl-lg rounded-bl-lg"
-                  src={item.imageUrls}
+                  src={item.ImageProducts[0]?.url}
                   alt={item.name_product}
                 />
               </div>

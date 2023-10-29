@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { formatCurrency, truncateString } from "../../../utils/format.js";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { addToOrder } from "../../../redux/Order/orderSlice.js";
@@ -13,7 +13,7 @@ const Product = (props) => {
 
   const imageUrl = useMemo(
     () => props.item.imageUrls || props.item.ImageProducts?.[0]?.url,
-    [props.item],
+    [props.item]
   );
 
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
@@ -58,15 +58,20 @@ const Product = (props) => {
       </div>
       <div className="flex justify-between items-center p-2 text-slate-500">
         <div>
-          {amount <= 0 && <span className="text-sm md:text-base font-medium text-red-600 overflow-hidden block">
-            Sản phẩm tạm hết hàng
-          </span>}
+          {amount <= 0 && (
+            <span className="text-sm md:text-base font-medium text-red-600 overflow-hidden block">
+              Sản phẩm tạm hết hàng
+            </span>
+          )}
           <span className="text-sm md:text-base font-medium overflow-hidden block">
             {truncateString(name_product, 10)}
           </span>
           <span className="text-xs md:text-sm">{formatCurrency(price)}</span>
         </div>
-        <button disabled={amount <= 0} onClick={() => handleAddToOrder(props.item)}>
+        <button
+          disabled={amount <= 0}
+          onClick={() => handleAddToOrder(props.item)}
+        >
           <AiFillPlusCircle className="w-6 h-6 md:w-8 md:h-8 text-primary active:text-opacity-80" />
         </button>
       </div>

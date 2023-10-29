@@ -43,8 +43,10 @@ function MaterialPage() {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
+  
   const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
+    console.log("fetch");
     setMaterials({
       ...res,
       data: res.data.map((el) => ({ ...el, key: el.id, price: el.Warehouses?.[0]?.price_import || 0 })),
@@ -88,11 +90,13 @@ function MaterialPage() {
     setData(res);
     setOpenModelEdit(true);
   }, []);
+
   const handleImport = useCallback(async (record) => {
     setOpenDrawer(true);
     const { name_material, id, image } = record;
     form.setFieldsValue({ name_material, materialId: id, image });
   }, [form])
+
   const columns = useMemo(() => [
     {
       title: "Nhập hàng",
@@ -194,7 +198,7 @@ function MaterialPage() {
         </div>
       ),
     },
-  ], [handleClickEditMaterial, handleDeleteMaterial]);
+  ], [handleClickEditMaterial, handleDeleteMaterial, handleImport]);
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
