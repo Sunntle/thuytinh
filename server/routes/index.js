@@ -22,6 +22,6 @@ const initRoutes = (app) => {
   app.use("/api/review", reviewsRouter)
   app.use("/api/payment", paymentRouter)
   app.use("/api/notification", notiRouter)
-  app.use(notFound, errHandler)
+  // app.use(notFound, errHandler)
 };
 module.exports = initRoutes;

@@ -103,7 +103,7 @@ const OrderListModal = ({
         }),
       );
     }
-  }, [newOrder]);
+  }, [customerName?.tables, dispatch, newOrder]);
 
   const handleUpdateOrder = () => {
     const body = {

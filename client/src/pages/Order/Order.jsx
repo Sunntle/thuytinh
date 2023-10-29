@@ -21,7 +21,7 @@ const Order = () => {
   useEffect(() => {
     sendRequest(fetchTableById(tables[0], tableToken), setData);
   }, [tables[0], sendRequest, tableToken]);
-
+  
   const order = data[0]?.TableByOrders?.[0]?.order || [];
 
   const totalOrder = useMemo(
