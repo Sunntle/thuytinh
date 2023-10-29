@@ -25,7 +25,7 @@ const PieChart = (props) => {
                 {top5AndRest.map((item, i) => (
                     <div className='flex justify-center items-center w-full gap-x-5' key={i}>
                         <Avatar shape='square' src={item.ImageProducts?.[0]?.url || ''} className='w-1.5/12 bg-[#fde3cf] text-[#f56a00]' size={40} />
-                        <span className='w-8/12 font-medium'>{item.name_product} {((item.sold / total) * 100).toFixed(2)}% </span>
+                        <span className='w-8/12 font-medium'>{item.name_product} ({((item.sold / total || 0) * 100).toFixed(2)})% </span>
                         <span className='w-2/12 font-medium text-right'>{item.sold}</span>
                     </div>
                 ))}

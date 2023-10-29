@@ -30,7 +30,7 @@ const DashBoard = () => {
         _discount: "gte_0",
         _limit: 10,
       })
-    ]);
+      ]);
       setDiscount(resProductsDiscount);
       setData(res1);
       setDataProduct(res2.data);
@@ -72,15 +72,15 @@ const DashBoard = () => {
           </div>
 
           <div className="mb-6">
-            <div className="flex justify-between items-center">
+            {/* <div className="flex justify-between items-center">
               <h4 className="font-bold text-lg mb-2">
                 Món giảm giá
               </h4>
               <Link to="/admin/product" style={{ color: "#FC8019" }}>
                 Xem tất cả
               </Link>
-            </div>
-            <Swiper
+            </div> */}
+            {/* <Swiper
               speed={1500}
               // autoplay={{
               //   delay: 1500,
@@ -137,7 +137,7 @@ const DashBoard = () => {
                   </SwiperSlide>
                 );
               })}
-            </Swiper>
+            </Swiper> */}
           </div>
         </Col>
         <Col xs={24} lg={8} className="flex flex-col gap-y-4">

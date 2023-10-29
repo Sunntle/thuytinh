@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Spin, Table } from "antd";
 import moment from "moment";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import './index.css'
 
 const PaymentSuccess = () => {
-    const tablelist = useSelector((state) => state.tablelist)
-    
+  const tablelist = useSelector((state) => state.tablelist)
+
 
   const columns = [
     {
@@ -120,6 +120,7 @@ const PaymentSuccess = () => {
             columns={columns}
             pagination={false}
             dataSource={tablelist?.TableByOrders[0]?.order?.order_details}
+            rowKey={(data) => data.id}
           />
         </div>
         {/*  */}

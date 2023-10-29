@@ -263,7 +263,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     ]
   });
   data.countOrder = countOrder;
-  data.totalOrderYear = rowOrder[0].total;
+  data.totalOrderYear = rowOrder[0]?.total;
   data.user = await User.count({ where: { role: "R2" } });
   data.table = await Tables.sum("total_booked");
 
