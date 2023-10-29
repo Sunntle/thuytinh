@@ -4,9 +4,9 @@ import { BiPencil } from "react-icons/bi";
 import { calculateTotalWithVAT, formatCurrency } from "../../utils/format.js";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchTableById } from "../../services/api.js";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./index.css";
-import {emptyOrder} from "../../redux/Order/orderSlice.js";
+import { emptyOrder } from "../../redux/Order/orderSlice.js";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,12 +16,12 @@ const Order = () => {
   const { tables } = useSelector((state) => state.customerName);
   const [form] = Form.useForm();
   const tableToken = localStorage.getItem("tableToken");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     sendRequest(fetchTableById(tables[0], tableToken), setData);
   }, [tables[0], sendRequest, tableToken]);
-  
+
   const order = data[0]?.TableByOrders?.[0]?.order || [];
 
   const totalOrder = useMemo(
@@ -49,7 +49,7 @@ const Order = () => {
       ...values,
     };
     await sendRequest(request, setPayment);
-    dispatch(emptyOrder())
+    dispatch(emptyOrder());
     form.resetFields();
   };
 
@@ -60,7 +60,7 @@ const Order = () => {
   }, [payment]);
 
   return (
-    <div className="pb-24 mt-4 lg:mt-0 lg:pt-24">
+    <div className="pb-24 mt-24 lg:mt-0 lg:pt-12">
       <div className="bg-white px-6 xl:px-12">
         <h1 className="mb-5 text-center text-2xl font-bold text-primary">
           Món đã đặt
