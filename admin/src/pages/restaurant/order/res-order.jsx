@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "../payment/res-payment.css"
-import { Button, Divider, Modal, message, Form, Radio, Drawer, Collapse, Tabs } from "antd"
+import { Button, Modal, Form, Radio, Drawer, Collapse } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
-import { AddCart, AddCartUpdate, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
+import {  AddCartUpdate, RemoveAllCart } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
-import { addOrder, createPayment, getTableId, updatePayment } from '../../../services/api'
+import { createPayment, updatePayment } from '../../../services/api'
 import { AddTableList } from '../../../redux/table/listTableSystem'
 import { formatGia } from '../../../utils/format'
-import { ButtonTable } from '../choosetable/ButtonTable'
 import moment from 'moment'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
@@ -24,16 +23,17 @@ const RenderFooter = ({
   closeSwithTable,
   openSwithTable,
   switchTable,
-  submitPayment
+  submitPayment,
+  customize
 }) => (
   <> <div className=' dark:bg-darkModeBgBox Order-total border rounded-md'>
-    <div className='tax'>
+    <div className={`tax ${customize ? "text-white" : "text-black"}`}>
       <span>Thuế VAT:</span>
       <span className='float-right'>10%</span>
     </div>
-    <div className='total'>
-      <span className='font-medium text-lg'>Tổng tiền:</span>
-      <span className='float-right text-lg text-main'>{formatGia(tablelist?.TableByOrders[0]?.order?.total)}</span>
+    <div className='total mt-2'>
+      <span className={`font-medium text-lg ${customize ? "text-white" : "text-black"}`}>Tổng tiền:</span>
+      <span className='float-right text-lg text-main'>{formatGia(tablelist?.TableByOrders[0]?.order?.total || 0)}</span>
     </div>
     <div className='grid grid-cols-4 mt-12'>
       <div className='flex justify-center font-semibold col-span-2 m-1'>
@@ -126,6 +126,7 @@ const ResOrder = ({ handleCancel, open }) => {
   const tablebyorders = tablelist?.TableByOrders?.[0]
   const order = tablebyorders?.order;
   const order_details = order?.order_details;
+  const customize = useSelector((state) => state.customize.darkMode)
 
 
   //them mon moi
@@ -178,8 +179,8 @@ const ResOrder = ({ handleCancel, open }) => {
   }
   return (
     <Drawer
-      title={`Bàn số: ${tablelist.id}`} placement="right"
-      footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate} handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk} isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal} switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable} submitPayment={submitPayment} />}
+      title={`Bàn số: ${tablelist ? tablelist.id : 0 }`} placement="right"
+      footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate} handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk} isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal} switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable} submitPayment={submitPayment} customize={customize}/>}
       closable={false}
       onClose={handleCancel}
       open={open}
@@ -196,7 +197,7 @@ const ResOrder = ({ handleCancel, open }) => {
               </div>
               <div className='flex-grow'>
                 <div className='flex items-end justify-between'>
-                  <span className='text-lg text-slade-500 overflow-hidden text-ellipsis whitespace-nowrap mb-1'>{item.Product.name_product}</span>
+                <span className={`text-lg ${customize ? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.Product.name_product}</span>
                   <span className='text-main mb-3'>{formatGia(item.Product.price)}</span>
                 </div>
                 <div className='flex items-center justify-between'>

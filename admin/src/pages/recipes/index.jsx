@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Typography,
+  notification,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
@@ -27,6 +28,7 @@ import Spinner from "../../components/spinner";
 const init = { show: false, data: [] };
 const { Title } = Typography;
 const RecipePage = () => {
+  const [api, contextHolder] = notification.useNotification();
   const [form] = Form.useForm();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
@@ -66,7 +68,10 @@ const RecipePage = () => {
 
   const handDeleteOrder = async (id) => {
     const res = await callDelRecipe(id);
-    message.success(res);
+    api.success({
+      message: `Thông báo`,
+      description: res
+    });
     fetchData();
   };
   const handleCancel = () => {
@@ -74,7 +79,6 @@ const RecipePage = () => {
     setOpenModalUpdate(init);
   };
   const showModalUpdate = (record) => {
-    console.log(record.materials)
     let materials = record.materials.map((item) => ({
       id_material: item.id,
       id: item.id_recipe,
@@ -115,20 +119,17 @@ const RecipePage = () => {
     }
     const result = findArrayChanges(openModalUpdate.data, values.materials);
     const res = await callUpdateRecipe(result);
-    message.success(res);
+    api.success({
+      message: `Thông báo`,
+      description: res
+    });
     fetchData();
     handleCancel();
-  };
-  const changeSelect = (add, value) => {
-    const newMaterials = optionsMaterial.filter(
-      (item) => !value.materials.find((ma) => ma.id_material === item.value)
-    );
-    setOptionsMaterial(newMaterials);
-    add();
   };
 
   return (
     <div className="my-7 px-5">
+      {contextHolder}
       {loading ? (
         <Spinner />
       ) : (<>
@@ -232,6 +233,7 @@ const RecipePage = () => {
                   <div>
                     {fields.map(({ key, name, ...restField }) => (
                       <div className="flex flex-col items-center" key={key}>
+                        {console.log(key, name, restField)}
                         <Form.Item
                           {...restField}
                           name={[name, "id_product"]}
@@ -249,6 +251,17 @@ const RecipePage = () => {
                               required: true,
                               message: "Chọn Nguyên liệu",
                             },
+                            ({ getFieldValue }) => ({
+                              validator(_, value) {
+                                const currentMaterialIndex = getFieldValue("materials").findIndex(
+                                  (item, index) => item.id_material === value && index !== name
+                                );
+                                if (currentMaterialIndex !== -1) {
+                                  return Promise.reject(new Error("Vui lòng nhập nguyên liệu khác"));
+                                }
+                                return Promise.resolve();
+                              },
+                            })
                           ]}
                         >
                           <Select options={optionsMaterial} />
@@ -289,7 +302,7 @@ const RecipePage = () => {
                       <Button
                         className="mt-8"
                         type="dashed"
-                        onClick={() => changeSelect(add, form.getFieldsValue())}
+                        onClick={() => add()}
                         block
                         icon={<PlusOutlined />}
                       >
@@ -315,11 +328,11 @@ const RecipePage = () => {
         </Modal>
         <CreateRecipe
           openModal={openModal}
+          api={api}
           handleCancel={handleCancel}
           fetchData={fetchData}
           optionsMaterial={optionsMaterial}
           optionsProduct={optionsProduct}
-          changeSelect={changeSelect}
         /></>)}
     </div>
   );

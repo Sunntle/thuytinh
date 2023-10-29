@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { Spin, Table } from "antd";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { useNavigate} from 'react-router-dom';
 import './index.css'
+import { formatGia } from "../../../utils/format";
+import { Button } from 'antd';
+import { RemoveTableList } from "../../../redux/table/listTableSystem";
 
 const PaymentSuccess = () => {
   const tablelist = useSelector((state) => state.tablelist)
-
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const today = new Date()
   const columns = [
     {
       title: "Tên món ăn",
@@ -26,7 +31,7 @@ const PaymentSuccess = () => {
       dataIndex: "Product.price",
       key: "price",
       render: (_, record) => (
-        <span>{record?.Product?.price}</span>
+        <span>{formatGia(record?.Product?.price) }</span>
       ),
     },
     {
@@ -34,10 +39,14 @@ const PaymentSuccess = () => {
       dataIndex: "total",
       key: "total",
       render: (_, record) => (
-        <span>{record?.Product?.price * record?.quantity}</span>
+        <span>{formatGia(record?.Product?.price * record?.quantity)}</span>
       ),
     },
   ];
+  const backHome = () => {
+    dispatch(RemoveTableList())
+    navigate("/employee/choosetable")
+  }
 
   return (
     <div className="lg:bg-slate-100 lg:py-2 min-h-screen max-w-full">
@@ -105,11 +114,11 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Ngày:</span>
               <span className="whitespace-nowrap font-semibold text-main">
-                {/* {moment(
-                  orderData?.data?.transaction_date,
+                {moment(
+                  today,
                   "YYYYMMDDHHmmss",
-                ).format("DD-MM-YYYY")} */}
-                28-10-2023
+                ).format("DD-MM-YYYY")}
+                {/* 28-10-2023 */}
               </span>
             </div>
           </div>
@@ -125,13 +134,13 @@ const PaymentSuccess = () => {
         </div>
         {/*  */}
         <div className="w-full px-4 mt-4 flex justify-between items-start text-sm md:text-base font-semibold">
-          <Link to={'/employee/choosetable'} className="text-main text-base md:text-lg underline">Quay về trang chủ</Link>
+          <Button onClick={backHome} className="border-none shadow-none text-main text-base md:text-lg underline">Quay về trang chủ</Button>
           <div className="min-w-0 flex flex-col justify-start items-end space-y-3">
             <div className="flex justify-between items-center w-full space-x-5">
               <span className="whitespace-nowrap">Tạm tính:</span>
               <span className="block font-semibold text-main">
                 {
-                  tablelist?.TableByOrders[0]?.order?.total || 0
+                  formatGia(tablelist?.TableByOrders[0]?.order?.total || 0) 
                 }
               </span>
             </div>
@@ -147,7 +156,7 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Tổng cộng:</span>
               <span className="block font-semibold">
                 {
-                  tablelist?.TableByOrders[0]?.order?.total || 0
+                  formatGia(tablelist?.TableByOrders[0]?.order?.total || 0)
                 }
               </span>
             </div>

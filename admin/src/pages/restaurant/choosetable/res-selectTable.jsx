@@ -8,7 +8,7 @@ import { getAllTable, getTableId, switchTables } from '../../../services/api';
 import { Modal } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import ResOrder from '../order/res-order';
-import { AddTableList } from '../../../redux/table/listTableSystem';
+import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSystem';
 import { socket } from '../../../socket';
 const ButtonTable = ({ table, switchTable, handleDetailModal }) => (
   <div key={table.id}>
@@ -72,6 +72,7 @@ const ResSelectTable = () => {
   const switchTable = async (newTable) => {
     const data = {currentTable:id, newTable : newTable, idOrder};
     await switchTables(data);
+    dispatch(RemoveTableList())
     navigate('/employee/choosetable/');
   };
 

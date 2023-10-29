@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchOrderById, fetchTableById } from "../../services/api.js";
@@ -7,13 +7,11 @@ import logo2 from "../../assets/images/logo2.png";
 import moment from "moment";
 import { formatCurrency } from "../../utils/format.js";
 import "./index.css";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const PaymentSuccess = () => {
   const { idOrder, idTable } = useSelector((state) => state.order);
-  const { name: customerName } = useSelector(
-    (state) => state.customerName,
-  );
+  const { name: customerName } = useSelector((state) => state.customerName);
   const [dataUpdated, setDataUpdated] = useState(null);
   const [orderData, setOrderData] = useState(null);
   const [listOrder, setListOrder] = useState([]);
@@ -25,12 +23,12 @@ const PaymentSuccess = () => {
     const fetchData = async () => {
       await Promise.all([
         sendRequest(fetchOrderById(idOrder), setOrderData),
-        sendRequest(fetchTableById(idTable, tableToken), setListOrder)
-      ])
-    }
-    fetchData()
-  }, [sendRequest]);
-  console.log('re-render')
+        sendRequest(fetchTableById(idTable[0], tableToken), setListOrder),
+      ]);
+    };
+    fetchData();
+  }, [sendRequest, idOrder, idTable, tableToken]);
+  console.log("re-render");
 
   useEffect(() => {
     if (orderData !== null) {
@@ -54,13 +52,13 @@ const PaymentSuccess = () => {
         }
       }
     }
-  }, [orderData]);
+  }, [orderData, sendRequest]);
 
   useEffect(() => {
     if (paymentData !== null) {
       const body = {
         idOrder: idOrder,
-        idTable: idTable,
+        idTable: idTable[0],
       };
       const request = {
         method: "put",
@@ -69,7 +67,7 @@ const PaymentSuccess = () => {
       };
       sendRequest(request, setDataUpdated);
     }
-  }, [paymentData]);
+  }, [paymentData, idOrder, idTable, sendRequest]);
 
   const columns = [
     {
@@ -162,7 +160,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Số bàn:</span>
               <span className="whitespace-nowrap font-semibold text-primary">
-                {listOrder[0]?.name_table.split('-')[1]}
+                {listOrder[0]?.id}
               </span>
             </div>
           </div>
@@ -179,7 +177,7 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap font-semibold text-primary">
                 {moment(
                   orderData?.data?.transaction_date,
-                  "YYYYMMDDHHmmss",
+                  "YYYYMMDDHHmmss"
                 ).format("DD-MM-YYYY")}
               </span>
             </div>
@@ -195,13 +193,18 @@ const PaymentSuccess = () => {
         </div>
         {/*  */}
         <div className="w-full px-4 mt-4 flex justify-between items-start text-sm md:text-base font-semibold">
-          <Link to={'/home'} className="text-primary text-base md:text-lg underline">Quay về trang chủ</Link>
+          <Link
+            to={"/home"}
+            className="text-primary text-base md:text-lg underline"
+          >
+            Quay về trang chủ
+          </Link>
           <div className="min-w-0 flex flex-col justify-start items-end space-y-3">
             <div className="flex justify-between items-center w-full space-x-5">
               <span className="whitespace-nowrap">Tạm tính:</span>
               <span className="block font-semibold text-primary">
                 {formatCurrency(
-                  listOrder[0]?.TableByOrders[0]?.order?.total || 0,
+                  listOrder[0]?.TableByOrders[0]?.order?.total || 0
                 )}
               </span>
             </div>
@@ -217,7 +220,7 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Tổng cộng:</span>
               <span className="block font-semibold">
                 {formatCurrency(
-                  listOrder[0]?.TableByOrders[0]?.order?.total || 0,
+                  listOrder[0]?.TableByOrders[0]?.order?.total || 0
                 )}
               </span>
             </div>

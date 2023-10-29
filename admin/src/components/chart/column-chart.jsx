@@ -15,6 +15,7 @@ function ColumnChart({ series, colors, customOptions, customClassName, categorie
         categories:
           typeof categories === "function" ? categories() : categories,
         tickAmount: 15,
+
       },
       tooltip: {
         theme: customize.darkMode ? 'dark' : 'light',
@@ -31,6 +32,7 @@ function ColumnChart({ series, colors, customOptions, customClassName, categorie
           return max;
         },
         tickAmount: 5,
+
       },
       ...customOptions,
       colors: colors,
