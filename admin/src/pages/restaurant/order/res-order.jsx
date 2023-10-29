@@ -4,8 +4,8 @@ import { Button, Modal, Form, Radio, Drawer, Collapse } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
 import {  AddCartUpdate, RemoveAllCart } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
-import { createPayment, updatePayment } from '../../../services/api'
-import { AddTableList } from '../../../redux/table/listTableSystem'
+import { createPayment, getOrderByID, updatePayment } from '../../../services/api'
+import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSystem'
 import { formatGia } from '../../../utils/format'
 import moment from 'moment'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
@@ -128,7 +128,6 @@ const ResOrder = ({ handleCancel, open }) => {
   const order_details = order?.order_details;
   const customize = useSelector((state) => state.customize.darkMode)
 
-
   //them mon moi
   const handleUpdate = (index) => {
     dispatch(RemoveAllCart())
@@ -166,8 +165,9 @@ const ResOrder = ({ handleCancel, open }) => {
     const body = { payment_gateway: "Cash", date: moment(new Date()).format("YYYYMMDDHHmmss"), idOrder: order.id, idTable: tablelist.id }
     const data = await updatePayment(body)
     if (data) {
-      navigate('/employee/payment-success/')
+      navigate('/employee/payment-success/'+ order.id)
     }
+    dispatch(RemoveTableList())
   }
 
   //xu ly chuyen ban

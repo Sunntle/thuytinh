@@ -291,7 +291,7 @@ exports.getOrderById = asyncHandler(async (req, res) => {
   const { id: idOrder } = req.params;
 
   try {
-    const existingOrder = await Order.findOne({ where: { id: idOrder } });
+    const existingOrder = await Order.findOne({ where: { id: idOrder }, include:[{...bien.include}, {model: TableByOrder}] });
     if (existingOrder) res.status(200).json({ data: existingOrder });
   } catch (err) {
     res.status(500).json({ message: err });

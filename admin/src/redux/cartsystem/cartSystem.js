@@ -9,6 +9,9 @@ const cartSystem = createSlice({
     reducers:{
         AddCart:(state,action) => {
             const find = state.carts.findIndex(item=>item.id===action.payload.id)
+            if(action.payload.amount === 0 || action.payload.amount ===  state.carts[find].quantity){
+                return alert('Sản phẩm hết hàng!')
+            }
             if(find>=0){
                 state.carts[find].quantity +=1
             }else{

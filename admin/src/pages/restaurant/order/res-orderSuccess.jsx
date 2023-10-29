@@ -2,18 +2,30 @@ import React, { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { Spin, Table } from "antd";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useNavigate} from 'react-router-dom';
 import './index.css'
 import { formatGia } from "../../../utils/format";
 import { Button } from 'antd';
 import { RemoveTableList } from "../../../redux/table/listTableSystem";
+import { getOrderByID } from "../../../services/api";
 
 const PaymentSuccess = () => {
   const tablelist = useSelector((state) => state.tablelist)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const today = new Date()
+  const [order, setOrder] = useState([]);
+  const {id} = useParams();
+
+  const fetchData = async () => {
+    const resCa = await getOrderByID(id);
+    setOrder(resCa);
+}
+useEffect(() => {
+    fetchData();
+}, []);
+console.log(order)
   const columns = [
     {
       title: "Tên món ăn",
@@ -47,30 +59,9 @@ const PaymentSuccess = () => {
     dispatch(RemoveTableList())
     navigate("/employee/choosetable")
   }
-
   return (
-    <div className="lg:bg-slate-100 lg:py-2 min-h-screen max-w-full">
-      <div className="relative h-screen w-screen bg-white max-w-full lg:max-w-3xl mx-auto lg:shadow-2xl text-slate-800">
-        {/* Logo */}
-        <div className="flex justify-start p-4">
-          <div className="flex justify-between items-center">
-            <div className="w-12 h-12 lg:w-16 lg:h-16">
-              <img
-                className="w-full h-full object-cover rounded-full"
-                // src={logo2}
-                alt=""
-              />
-            </div>
-            <div className="flex flex-col items-start justify-center -space-y-1">
-              <span className="text-lg lg:text-xl uppercase text-main">
-                Thủy Tinh
-              </span>
-              <span className="text-slate-500 text-xs lg:text-base">
-                Chìm đắm trong hải sản tươi ngon
-              </span>
-            </div>
-          </div>
-        </div>
+    <div className="lg:p-10 min-h-screen max-w-full ">
+      <div className="relative h-screen w-screen max-w-full mx-auto">
         {/* Invoice Text*/}
         <div className="flex items-center justify-start mt-6 gap-x-3">
           <div className="relative bg-main h-6 lg:h-8 w-full"></div>
@@ -86,7 +77,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Tên khách hàng:</span>
               <span className="block font-semibold text-main">
-                {tablelist?.TableByOrders[0]?.order?.name}
+                {order?.data?.name}
               </span>
             </div>
             <div className="flex justify-between items-center space-x-1 w-full">
@@ -99,7 +90,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Số bàn:</span>
               <span className="whitespace-nowrap font-semibold text-main">
-                {tablelist?.id}
+                {order?.data?.TableByOrders?.[0]?.tableId}
               </span>
             </div>
           </div>
@@ -108,7 +99,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Hóa đơn số:</span>
               <span className="block font-semibold text-main">
-                {tablelist?.TableByOrders[0]?.order?.id}
+                {order?.data?.id}
               </span>
             </div>
             <div className="flex justify-between items-center space-x-1 w-full">
@@ -128,19 +119,19 @@ const PaymentSuccess = () => {
           <Table
             columns={columns}
             pagination={false}
-            dataSource={tablelist?.TableByOrders[0]?.order?.order_details}
+            dataSource={order?.data?.order_details}
             rowKey={(data) => data.id}
           />
         </div>
         {/*  */}
         <div className="w-full px-4 mt-4 flex justify-between items-start text-sm md:text-base font-semibold">
-          <Button onClick={backHome} className="border-none shadow-none text-main text-base md:text-lg underline">Quay về trang chủ</Button>
+          <Button onClick={backHome} className="border-none shadow-none text-main text-base md:text-lg underline p-2">Quay về trang chủ</Button>
           <div className="min-w-0 flex flex-col justify-start items-end space-y-3">
             <div className="flex justify-between items-center w-full space-x-5">
               <span className="whitespace-nowrap">Tạm tính:</span>
               <span className="block font-semibold text-main">
                 {
-                  formatGia(tablelist?.TableByOrders[0]?.order?.total || 0) 
+                  formatGia(order?.data?.total || 0) 
                 }
               </span>
             </div>
@@ -156,17 +147,11 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Tổng cộng:</span>
               <span className="block font-semibold">
                 {
-                  formatGia(tablelist?.TableByOrders[0]?.order?.total || 0)
+                  formatGia(order?.data?.total || 0)
                 }
               </span>
             </div>
           </div>
-        </div>
-        <div className="relative w-full mt-20 flex flex-col justify-center items-center">
-          <div className="w-5/12 bg-slate-800 h-1 rounded"></div>
-          <span className="mt-10 text-main text-2xl font-semibold">
-            Xin chân thành cảm ơn quý khách
-          </span>
         </div>
       </div>
     </div>
