@@ -4,14 +4,16 @@ import Footer from "../components/Footer.jsx";
 import { Outlet } from "react-router-dom";
 
 const LayoutContainer = () => {
-    return (
-        <>
-            <Header/>
-            <div className="min-h-[100vh]"><Outlet/></div>
-            <Navbar />
-            <Footer />
-        </>
-    );
+  return (
+    <>
+      <Header />
+      <div className="min-h-[100vh]">
+        <Outlet />
+      </div>
+      <Navbar />
+      <Footer />
+    </>
+  );
 };
 
 export default LayoutContainer;

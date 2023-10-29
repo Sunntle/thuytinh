@@ -3,6 +3,7 @@ import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { PiFishSimpleBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { CallStaff } from "../../components/index.js";
+import { ScrollToTop } from "../../utils/format";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
@@ -16,7 +17,8 @@ const Service = () => {
   );
 
   return (
-    <div className="relative mt-24 text-slate-800 pb-24 lg:py-24 lg:mt-0 px-6 lg:px-16">
+    <div className="relative text-slate-800 pb-24 lg:py-24 px-6 lg:px-16">
+      <ScrollToTop />
       {/* Header */}
       <div className="flex flex-col mt-8 space-y-6">
         <div className="w-full h-44 lg:h-[450px] rounded-lg">

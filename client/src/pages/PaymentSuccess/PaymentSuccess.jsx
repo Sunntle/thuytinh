@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchOrderById, fetchTableById } from "../../services/api.js";
@@ -27,7 +27,7 @@ const PaymentSuccess = () => {
       ]);
     };
     fetchData();
-  }, [sendRequest]);
+  }, [sendRequest, idOrder, idTable, tableToken]);
   console.log("re-render");
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const PaymentSuccess = () => {
         }
       }
     }
-  }, [orderData]);
+  }, [orderData, sendRequest]);
 
   useEffect(() => {
     if (paymentData !== null) {
@@ -67,7 +67,7 @@ const PaymentSuccess = () => {
       };
       sendRequest(request, setDataUpdated);
     }
-  }, [paymentData]);
+  }, [paymentData, idOrder, idTable, sendRequest]);
 
   const columns = [
     {
@@ -160,7 +160,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Số bàn:</span>
               <span className="whitespace-nowrap font-semibold text-primary">
-                {listOrder[0]?.name_table.split("-")[1]}
+                {listOrder[0]?.id}
               </span>
             </div>
           </div>
@@ -177,7 +177,7 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap font-semibold text-primary">
                 {moment(
                   orderData?.data?.transaction_date,
-                  "YYYYMMDDHHmmss",
+                  "YYYYMMDDHHmmss"
                 ).format("DD-MM-YYYY")}
               </span>
             </div>
@@ -204,7 +204,7 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Tạm tính:</span>
               <span className="block font-semibold text-primary">
                 {formatCurrency(
-                  listOrder[0]?.TableByOrders[0]?.order?.total || 0,
+                  listOrder[0]?.TableByOrders[0]?.order?.total || 0
                 )}
               </span>
             </div>
@@ -220,7 +220,7 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Tổng cộng:</span>
               <span className="block font-semibold">
                 {formatCurrency(
-                  listOrder[0]?.TableByOrders[0]?.order?.total || 0,
+                  listOrder[0]?.TableByOrders[0]?.order?.total || 0
                 )}
               </span>
             </div>

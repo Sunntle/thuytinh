@@ -17,7 +17,6 @@ const PaymentLoading = () => {
   const { idOrder, idTable } = useSelector((state) => state.order);
   const [data, setData] = useState(null);
 
-  console.log(dataResponse);
   const paymentResponse = {
     idOrder: idOrder,
     transaction_id: dataResponse.vnp_TxnRef,
@@ -46,7 +45,7 @@ const PaymentLoading = () => {
     } else {
       setIsModalOpen(true);
     }
-  }, [data]);
+  }, [data, navigate]);
 
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center">
@@ -55,8 +54,9 @@ const PaymentLoading = () => {
         Quý khách vui lòng đợi trong giây lát.
       </span>
       <Modal title="Thông báo" open={isModalOpen} footer={false}>
-        {errorMessage}
+        <span className="block text-red-600 text-lg">{errorMessage}</span>
         <Button
+          className="w-full bg-red-600 active:bg-red-500 text-white mt-4"
           onClick={() =>
             (window.location.href = `http://localhost:3000/ban-${idTable[0]}/menu`)
           }

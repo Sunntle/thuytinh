@@ -219,17 +219,13 @@ exports.queryDr = asyncHandler(async (req, res) => {
     },
     (error, response, body) => {
       res.status(200).json(body);
-    },
+    }
   );
 });
 
 exports.updateTransactionOrder = asyncHandler(async (req, res) => {
-  const {
-    transaction_id,
-    transaction_date,
-    idOrder,
-    payment_gateway,
-  } = req.body;
+  const { transaction_id, transaction_date, idOrder, payment_gateway } =
+    req.body;
 
   const existingTransactionId = await Order.findOne({
     where: { transaction_id: transaction_id },
@@ -245,7 +241,7 @@ exports.updateTransactionOrder = asyncHandler(async (req, res) => {
         },
         {
           where: { id: idOrder },
-        },
+        }
       );
 
       if (orderUpdated) {
@@ -266,45 +262,49 @@ exports.updateStatus = asyncHandler(async (req, res) => {
 
   try {
     const orderUpdated = await Order.update(
-        {
-          status: 3
-        },
-        {
-          where: { id: idOrder },
-        },
+      {
+        status: 3,
+      },
+      {
+        where: { id: idOrder },
+      }
     );
 
     const tableUpdated = await Tables.update(
-        {
-          status_table: 0,
+      {
+        status_table: 0,
+      },
+      {
+        where: {
+          id: idTable,
         },
-        {
-          where: {
-            id: idTable,
-          },
-        },
+      }
     );
 
     if (orderUpdated && tableUpdated) {
-      res.status(200).json({message: 'Cập nhật trạng thái của bàn và hóa đơn thành công'})
+      res
+        .status(200)
+        .json({ message: "Cập nhật trạng thái của bàn và hóa đơn thành công" });
     }
-
   } catch (err) {
-    res.status(500).json({message: 'Cập nhật trạng thái của bàn và hóa đơn thất bại', err})
+    res.status(500).json({
+      message: "Cập nhật trạng thái của bàn và hóa đơn thất bại",
+      err,
+    });
   }
 });
 
 exports.updateOrderBilling = asyncHandler(async (req, res) => {
   const { payment_gateway, date, idOrder, idTable } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   try {
     const orderUpdated = await Order.update(
       {
         payment_gateway: payment_gateway,
         transaction_date: date,
-        status: 3
+        status: 3,
       },
-      { where: { id: +idOrder } },
+      { where: { id: +idOrder } }
     );
     const tableUpdated = await Tables.update(
       {
@@ -314,9 +314,10 @@ exports.updateOrderBilling = asyncHandler(async (req, res) => {
         where: {
           id: idTable,
         },
-      },
-  );
-    if (orderUpdated && tableUpdated) res.status(200).json({ message: "thanh cong" });
+      }
+    );
+    if (orderUpdated && tableUpdated)
+      res.status(200).json({ message: "thanh cong" });
   } catch (err) {
     res.status(500).json({ message: err });
   }
