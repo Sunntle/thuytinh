@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Spinner from "../../components/spinner";
 import { formatGia, formatNgay } from "../../utils/format";
+import { socket } from "../../socket";
 const { Title, Text } = Typography;
 const renderToString = (data) => {
   return `
@@ -32,7 +33,7 @@ const renderToString = (data) => {
 };
 function MaterialPage() {
   const [open, setOpen] = useState(false);
-  const [api, contextHolder] = notification.useNotification();
+  const [, contextHolder] = notification.useNotification();
   const [openModelEdit, setOpenModelEdit] = useState(false);
   const [materials, setMaterials] = useState([]);
   const [data, setData] = useState(null);
@@ -70,9 +71,15 @@ function MaterialPage() {
   }, [fetchData]);
 
   useEffect(() => {
-    if (notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)) {
-      fetchData()
+    socket.on("new message", arg =>{
+      if(arg.type === "material"){
+        fetchData()
+      }
+    })
+    return ()=>{
+      socket.off("new message")
     }
+   
   }, [notifications, location, fetchData])
 
   const handleDeleteMaterial = useCallback(async (id_material) => {
@@ -250,17 +257,17 @@ function MaterialPage() {
     setData(null);
   }, []);
 
-  const closeDrawer = () => {
+  const closeDrawer = useCallback(() => {
     form.resetFields();
     setOpenDrawer(!openDrawer);
-  }
+  },[form, openDrawer])
 
-  const handleFinish = async (values) => {
+  const handleFinish = useCallback(async (values) => {
     const res = await importMaterial(values);
     notification.success({ message: "Thông báo", description: res });
     fetchData()
     closeDrawer()
-  }
+  },[closeDrawer, fetchData])
   return (
     <div className="my-7 px-5">
       {contextHolder}
