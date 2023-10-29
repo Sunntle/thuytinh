@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+/* eslint-disable react/prop-types */
+import { useLayoutEffect, useMemo, useState } from "react";
 import { formatCurrency, truncateString } from "../../../utils/format.js";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { addToOrder } from "../../../redux/Order/orderSlice.js";
@@ -18,7 +19,7 @@ const Product = (props) => {
 
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth >= 1024);
     };

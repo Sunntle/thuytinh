@@ -6,15 +6,16 @@ import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import {
   deleteNotification,
+
   maskAllRead,
   maskAsRead,
 } from "../../redux/notification/notificationSystem";
-
+// import InfiniteScroll from 'react-infinite-scroll-component';
 function NotificationsComponent({
   notifications,
   openPopover,
   setOpenPopover,
-  isLoading
+  isLoading,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,16 +34,59 @@ function NotificationsComponent({
     dispatch(deleteNotification(id));
   },[dispatch])
 
+  // const handleLoadMore = useCallback(()=>{
+  //   dispatch(loadMoreData(notifications.length))
+  // },[])
+
   const getCountNoti = useMemo(() => {
     return notifications && notifications.length > 0
       ? notifications.filter((el) => el.status == 0).length
       : 0;
   }, [notifications]);
-
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)
       return <p className="text-gray-500">Không có thông báo nào</p>;
     return (
+      //   <InfiniteScroll
+      //   dataLength={notifications.length}
+      //   next={handleLoadMore}
+      //   hasMore={notifications.length < 50}
+      //   endMessage={"It is all, nothing more 🤐"}
+      //   // scrollableTarget="scrollableDiv"
+      // >
+      //   <div className="max-h-[400px] overflow-y-scroll">
+      //   {notifications.map((el, index) => {
+      //     return (
+      //       <div
+      //         key={index}
+      //         className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 hover:text-main gap-x-2"
+      //       >
+      //         <div onClick={() => handleToContent(index)} className="flex items-center gap-x-2 ">
+      //           <div className="max-w-[50px]">
+      //             <img
+      //               className="w-full  rounded-md "
+      //               src="https://t4.ftcdn.net/jpg/05/86/91/55/360_F_586915596_gPqgxPdgdJ4OXjv6GCcDWNxTjKDWZ3JD.jpg"
+      //             />
+      //           </div>
+      //           <div className={el.status == 1 ? "text-gray-500" : " pe-2"}>
+      //             {el.description}
+      //             <p className="text-main text-sm">
+      //               {formatNgay(el.createdAt, "HH:mm DD-MM-YYYY")}
+      //             </p>
+      //           </div>
+      //         </div>
+      //         <div className="px-2">
+      //           {el.status == 0 ? (
+      //             <Badge status="processing" color="#fc8e32" />
+      //           ) : (
+      //             <div onClick={() => handleDelete(el.id)}><DeleteOutlined /></div>
+      //           )}
+      //         </div>
+      //       </div>
+      //     );
+      //   })}
+      //     </div>
+      // </InfiniteScroll>
       <div className="max-h-[400px] overflow-y-scroll">
         {notifications.map((el, index) => {
           return (
@@ -74,7 +118,8 @@ function NotificationsComponent({
             </div>
           );
         })}
-      </div>
+          </div>
+    
     );
   };
   return (
