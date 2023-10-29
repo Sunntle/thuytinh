@@ -19,8 +19,8 @@ const Order = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    sendRequest(fetchTableById(+tables, tableToken), setData);
-  }, [tables, sendRequest, tableToken]);
+    sendRequest(fetchTableById(tables[0], tableToken), setData);
+  }, [tables[0], sendRequest, tableToken]);
 
   const order = data[0]?.TableByOrders?.[0]?.order || [];
 
@@ -42,7 +42,7 @@ const Order = () => {
   };
 
   const onFinish = async (values) => {
-    values = { ...values, amount: totalOrder, id_table: +tables };
+    values = { ...values, amount: totalOrder };
     const request = {
       method: "post",
       url: "/payment/create_payment_url",

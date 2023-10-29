@@ -99,7 +99,7 @@ const OrderListModal = ({
       dispatch(
         addIdOrderTable({
           idOrder: newOrder?.data?.orders?.id,
-          idTable: customerName?.tables,
+          idTable: customerName?.tables[0],
         }),
       );
     }
