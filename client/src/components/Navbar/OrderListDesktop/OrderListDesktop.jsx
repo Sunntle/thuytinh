@@ -25,7 +25,7 @@ const OrderListDesktop = (props) => {
   const [orderUpdated, setOrderUpdated] = useState(null);
   const { order: orders, idOrder } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
-  const idTable = location.pathname.split("/")[1].split("-")[1];
+  // const idTable = location.pathname.split("/")[1].split("-")[1];
   const { sendRequest } = useHttp();
   const dispatch = useDispatch();
 
@@ -69,13 +69,14 @@ const OrderListDesktop = (props) => {
       orders: orders,
       total: totalOrder,
       customerName: customerName.name,
-      table: [idTable],
+      table: [customerName.tables[0]],
       token: localStorage.getItem("tableToken")
     };
     try {
       await sendRequest(addOrder(body), setNewOrder);
       dispatch(emptyOrder());
-      navigate(`/ban-${idTable}/order`)
+      // navigate(``)
+      window.location.href=`localhost:3000/ban-${customerName.tables[0]}/order`
     } catch (err) {
       console.log(err);
     }
@@ -114,8 +115,9 @@ const OrderListDesktop = (props) => {
         ...body,
       };
       sendRequest(request, setOrderUpdated);
-      navigate(`/ban-${idTable}/order`)
       setIsOrderDesktop(false);
+      // navigate(`/ban-${customerName.tables[0]}/order`)
+      window.location.href=`http://localhost:3000/ban-${customerName.tables[0]}/order`
     } catch (err) {
       console.error(err);
     }
@@ -132,7 +134,7 @@ const OrderListDesktop = (props) => {
       <div className="relative max-w-full min-h-screen border">
         {orders?.length > 0 ? (
           orders?.map((item, index) => (
-            <div className="w-full flex flex-col">
+            <div key={index} className="w-full flex flex-col">
               <div className="flex justify-between items-center border-b pb-8 mx-3">
                 {/*Image and Product*/}
                 <div className="flex justify-between items-center space-x-6">

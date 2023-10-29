@@ -16,7 +16,7 @@ const Service = () => {
   );
 
   return (
-    <div className="relative text-slate-800 pb-24 lg:py-24 px-6 lg:px-16">
+    <div className="relative mt-24 text-slate-800 pb-24 lg:py-24 lg:mt-0 px-6 lg:px-16">
       {/* Header */}
       <div className="flex flex-col mt-8 space-y-6">
         <div className="w-full h-44 lg:h-[450px] rounded-lg">
