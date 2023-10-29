@@ -78,7 +78,7 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) {
-        return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+        return res.status(404).json({message: "Bàn bạn đã hết hạn sử dụng"});
       }
       if (decode) {
         const data = await Tables.findAll({

@@ -11,6 +11,7 @@ import { MdOutlineRoomService } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
 import OrderListDesktop from "./OrderListDesktop/OrderListDesktop.jsx";
+const regex = /^\/ban-\d+$/; 
 const Navbar = () => {
   const location = useLocation();
   const headerRef = useRef();
@@ -64,13 +65,12 @@ const Navbar = () => {
       },
     ];
   }, [idTable]);
-
   const activeClassname = useMemo(() => {
-    const checkActiveClassName = navbarRoute.find(
+    const checkActiveClassName = regex.test(location.pathname) ? navbarRoute[2] : navbarRoute.find(
       (item) =>
         location.pathname.includes(item.originRouteName) ||
         location.state?.from.includes(item.originRouteName)
-    );
+    )
     return checkActiveClassName;
   }, [location.pathname, location.state?.from, navbarRoute]);
 
