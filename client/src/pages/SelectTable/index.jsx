@@ -20,8 +20,8 @@ function SelectTable() {
   },[navigate]);
 
   useEffect(()=>{
-    if(customerName.name.length > 0 && customerName.tables > 0 ){
-      handleSelectTable(customerName.tables)
+    if(customerName.name.length > 0 && customerName.tables.length > 0 ){
+      handleSelectTable(customerName.tables[0])
     }
   }, [customerName.name.length, customerName.tables, handleSelectTable])
 

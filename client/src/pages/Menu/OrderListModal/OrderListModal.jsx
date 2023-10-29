@@ -99,11 +99,11 @@ const OrderListModal = ({
       dispatch(
         addIdOrderTable({
           idOrder: newOrder?.data?.orders?.id,
-          idTable: customerName?.tables,
+          idTable: customerName?.tables[0],
         }),
       );
     }
-  }, [newOrder]);
+  }, [customerName?.tables, dispatch, newOrder]);
 
   const handleUpdateOrder = () => {
     const body = {
