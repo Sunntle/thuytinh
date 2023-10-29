@@ -1,10 +1,7 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
-import {useSelector} from "react-redux";
 
 const DeliveryNotSupported = () => {
-  const { tables } = useSelector(state => state.customerName)
-  console.log(tables)
 
   return (
     <div className="flex h-screen w-screen justify-center items-center text-slate-800">

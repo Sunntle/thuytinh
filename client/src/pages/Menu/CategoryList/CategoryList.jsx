@@ -19,7 +19,7 @@ const CategoryList = ({ categories, activeIndex }) => {
     <>
       <div className="w-full flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">
         <Link
-          to={`/ban-${customerName?.tables}/menu`}
+            to={`/ban-${customerName?.tables[0]}/menu`}
           disabled={activeIndex === null}
           // ref={activeIndex === 0 ? activeButtonRef : null}
           className={`h-8 px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-100 ${

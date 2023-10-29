@@ -9,6 +9,7 @@ import { deleteReview, getAllReviews } from "../../services/api";
 import { desc, limit, month } from "../../utils/constant";
 import { formatNgay, getDaysInMonth } from "../../utils/format";
 const options = month.map((el) => ({ value: el, label: `Tháng: ${el}` }));
+const year = new Date().getFullYear()
 function ReviewsPage() {
   const [page, setPage] = useState(1);
   const [reviews, setReviews] = useState(null);
@@ -22,7 +23,7 @@ function ReviewsPage() {
     _time: currentMonth,
   });
   const dayInMonth = useMemo(() => {
-    return getDaysInMonth(2023, currentMonth);
+    return getDaysInMonth(year, currentMonth);
   }, [currentMonth]);
   
   const handleArrCategories = useMemo(() => {
@@ -158,6 +159,18 @@ function ReviewsPage() {
               ]}
               colors={["#22C55E"]}
               categories={handleArrCategories}
+              tooltip={{ x: {
+                formatter: function(value) {
+                  return `${value}/${currentMonth}/${year}`
+                }
+              }
+            }}
+            responsive={[ {
+              breakpoint: 1135,
+              options: {
+                xaxis: { tickAmount: 5 },
+              }
+            }]}
             />
           </Col>
         </Row>

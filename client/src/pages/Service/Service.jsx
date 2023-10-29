@@ -4,10 +4,18 @@ import { PiFishSimpleBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { CallStaff } from "../../components/index.js";
 import { ScrollToTop } from "../../utils/format";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
 
 const Service = () => {
   const navigate = useNavigate();
-  const idTable = location.pathname.split("/")[1].split("-")[1];
+  const customerName = useSelector((state) => state.customerName);
+  // const idTable = location.pathname.split("/")[1].split(."-")[1];
+  const idTable = useMemo(
+    () => customerName.tables[0],
+    [customerName.tables[0]],
+  );
+
   return (
     <div className="relative text-slate-800 pb-24 lg:py-24 px-6 lg:px-16">
       <ScrollToTop />
@@ -27,7 +35,7 @@ const Service = () => {
             <span className="text-xs text-slate-500">Thanh toán</span>
           </div>
           <div
-            onClick={() => navigate("/rating")}
+            onClick={() => navigate(`/ban-${idTable}/rating`)}
             className="bg-slate-50 p-2 rounded-lg flex active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2"
           >
             <FaFileInvoiceDollar className="w-10 h-10 rounded-lg text-white bg-green-500 p-2" />

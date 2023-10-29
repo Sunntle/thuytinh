@@ -96,7 +96,6 @@ const Menu = () => {
   const handleCancel = () => {
     setIsOrderModalOpen(false);
   };
-
   if (isLoading) {
     return <Spinner className={"my-56"} />;
   }

@@ -28,7 +28,6 @@ const customerNameSlice = createSlice({
       state.name = action.payload.name;
       state.tables = action.payload.tables;
       state.timestamp = action.payload.timestamp;
-      console.log("action", action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -43,7 +42,7 @@ const customerNameSlice = createSlice({
       .addCase(initTable.fulfilled, (state, action) => {
         state.isLoading = false;
         state.name = action.payload.name;
-        state.tables = action.payload.tables[0];
+        state.tables = action.payload.tables;
         state.timestamp = action.payload.timestamp;
       });
   },
