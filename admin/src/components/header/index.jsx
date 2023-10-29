@@ -279,7 +279,6 @@ function HeaderComponent({collapsed, setCollapsed}) {
       </div>
     );
   };
-
   const menuProps = useMemo(() => ({
     items,
     onClick: handleMenuClick,
