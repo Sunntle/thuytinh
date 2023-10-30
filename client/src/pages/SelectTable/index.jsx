@@ -4,15 +4,15 @@ import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
 import { Spin, Tabs} from "antd";
 import "./index.css";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import DeliveryNotSupported from "../DeliveryNotSupported";
+import { Spinner } from "../../components/index.js";
 
 function SelectTable() {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
-
   const [distanceState, setDistanceState] = useState(0)
   const { sendRequest, isLoading } = useHttp();
   const customerName = useSelector(state => state.customerName)
@@ -21,16 +21,16 @@ function SelectTable() {
     navigate(`/ban-${id}`,{ state: { from: 'menu' }});
   },[navigate]);
 
-  useEffect(()=>{
-    if(customerName.name.length > 0 && customerName.tables.length > 0 ){
-      handleSelectTable(customerName.tables[0])
+  useEffect(() => {
+    if (customerName.name.length > 0 && customerName.tables.length > 0) {
+      handleSelectTable(customerName.tables[0]);
     }
-  }, [customerName.name.length, customerName.tables, handleSelectTable])
+  }, [customerName.name.length, customerName.tables, handleSelectTable]);
 
   useEffect(() => {
     const position1 = {
-    latitude: 10.8524972,
-    longitude: 106.6259193
+      latitude: 10.8524972,
+      longitude: 106.6259193,
     };
     navigator.geolocation.getCurrentPosition(async (position) => {
       const position2 = {
@@ -38,13 +38,12 @@ function SelectTable() {
         longitude: position.coords.longitude,
       };
       const distance = getPreciseDistance(position1, position2);
-      setDistanceState(distance)
+      setDistanceState(distance);
       await sendRequest(
         { method: "get", url: "/table?_status_table=eq_0" },
         setTables,
       );
     });
-   
   }, [sendRequest]);
   
   useEffect(() => {
@@ -59,16 +58,8 @@ function SelectTable() {
     setTableByPosition(filteredValue);
   };
   // if(distanceState > 100 ) return <DeliveryNotSupported/>
-  if (isLoading === true) {
-    return (
-        <div className="h-screen w-full flex flex-col justify-center items-center">
-          {isLoading && <Spin size={"large"} />}
-          <span className="mt-5 text-base font-semibold">
-          Quý khách vui lòng đợi trong giây lát.
-        </span>
-        </div>
-    );
-  }
+  if (isLoading) return <Spinner />;
+
   return (
     <div className="pb-24">
       {idTable &&

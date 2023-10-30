@@ -23,7 +23,7 @@ const PaymentSuccess = () => {
     const fetchData = async () => {
       await Promise.all([
         sendRequest(fetchOrderById(idOrder), setOrderData),
-        sendRequest(fetchTableById(idTable[0], tableToken), setListOrder),
+        sendRequest(fetchTableById(idTable, tableToken), setListOrder),
       ]);
     };
     fetchData();
@@ -58,7 +58,7 @@ const PaymentSuccess = () => {
     if (paymentData !== null) {
       const body = {
         idOrder: idOrder,
-        idTable: idTable[0],
+        idTable: idTable,
       };
       const request = {
         method: "put",

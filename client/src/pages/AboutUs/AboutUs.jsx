@@ -3,7 +3,7 @@ import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
-import { truncateString } from "../../utils/format.js";
+import {ScrollToTop, truncateString} from "../../utils/format.js";
 import avtDefault from "../../assets/images/avtDefault.png";
 import { socket } from "../../services/socket";
 import { Rate } from "antd";
@@ -32,7 +32,8 @@ const AboutUs = () => {
   }, []);
 
   return (
-    <div className="lg:py-24 pb-24">
+    <div className="pb-24">
+      <ScrollToTop />
       <section className="relative mt-[-20px] h-96 w-full bg-cover bg-center bg-gray-300 bg-[url('https://i.pinimg.com/564x/c2/7a/c8/c27ac8fc11dcec58f09e8a6c72306b12.jpg')]">
         <div className="flex flex-col items-center justify-center absolute inset-0 bg-black bg-opacity-40">
           <div className="text-center text-gray-200 w-2/3 lg:w-1/3">
