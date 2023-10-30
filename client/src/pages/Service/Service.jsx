@@ -17,7 +17,7 @@ const Service = () => {
   );
 
   return (
-    <div className="relative text-slate-800 pb-24 lg:py-24 px-6 lg:px-16">
+    <div className="relative text-slate-800 pb-24 mt-24 lg:mt-0 lg:pt-12 px-6 lg:px-16">
       <ScrollToTop />
       {/* Header */}
       <div className="flex flex-col mt-8 space-y-6">
@@ -30,13 +30,16 @@ const Service = () => {
         </div>
         {/* Service */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-slate-50 p-2 rounded-lg flex active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2">
+          <div
+            onClick={() => navigate(`/ban-${idTable}/order`)}
+            className="cursor-pointer bg-slate-50 p-2 rounded-lg flex hover:bg-slate-100 transition-colors duration-200 active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2"
+          >
             <FaFileInvoiceDollar className="w-10 h-10 rounded-lg text-white bg-orange-400 p-2" />
             <span className="text-xs text-slate-500">Thanh toán</span>
           </div>
           <div
             onClick={() => navigate(`/ban-${idTable}/rating`)}
-            className="bg-slate-50 p-2 rounded-lg flex active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2"
+            className="cursor-pointer bg-slate-50 p-2 rounded-lg flex hover:bg-slate-100 transition-colors duration-200 active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2"
           >
             <FaFileInvoiceDollar className="w-10 h-10 rounded-lg text-white bg-green-500 p-2" />
             <span className="text-xs text-slate-500">Đánh giá</span>
@@ -45,7 +48,7 @@ const Service = () => {
         {/* Button Order */}
         <div
           onClick={() => navigate(`/ban-${idTable}/menu`)}
-          className="w-full bg-primary active:bg-opacity-80 h-16 rounded-lg flex items-center justify-center px-4 text-white space-x-8 drop-shadow-xl"
+          className="cursor-pointer w-full bg-primary hover:bg-primary/80 transition-colors duration-200 active:bg-primary/80 h-16 rounded-lg flex items-center justify-center px-4 text-white space-x-8 drop-shadow-xl"
         >
           <PiFishSimpleBold className="w-10 h-10 bg-orange-800 bg-opacity-60 p-2 rounded" />
           <span className="font-medium">Xem thực đơn - Gọi món</span>

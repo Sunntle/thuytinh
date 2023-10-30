@@ -64,7 +64,7 @@ const Order = () => {
   }, [payment]);
 
   return (
-    <div className="pb-24 mt-4 lg:mt-0 lg:pt-24">
+    <div className="pb-24 mt-24 lg:mt-0 lg:pt-12">
       <ScrollToTop />
       <div className="bg-white px-6 xl:px-12">
         <h1 className="mb-5 text-center text-2xl font-bold text-primary">
@@ -74,7 +74,7 @@ const Order = () => {
           <div className="w-full min-h-0 grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Main */}
             <div className="w-full overflow-hidden border md:col-span-7 p-2 rounded-lg space-y-3 shadow-sm">
-              {order?.order_details?.length ? (
+              {order?.order_details?.length > 0 ? (
                 order?.order_details?.map((item) => (
                   <div
                     key={item.id}
@@ -108,7 +108,7 @@ const Order = () => {
                   </div>
                 ))
               ) : (
-                <div className="text-center text-base font-semibold">
+                <div className="md:mt-4 text-center text-base font-semibold">
                   Vui lòng đặt món
                 </div>
               )}
@@ -136,7 +136,7 @@ const Order = () => {
                   </span>
                 </div>
                 <Button
-                  disabled={order?.order_details?.length <= 0}
+                  disabled={order?.order_details?.length === 0 || order.length === 0}
                   onClick={showModal}
                   size="large"
                   className="mt-8 w-full bg-primary text-white"

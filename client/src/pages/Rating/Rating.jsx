@@ -57,7 +57,7 @@ const Rating = () => {
   };
 
   return (
-    <div className="pb-24 lg:pt-24 px-4 lg:px-12 flex flex-col items-center justify-center">
+    <div className="pb-24 mlg:mt-0 pt-24 lg:pt-24 px-4 lg:px-12 flex flex-col items-center justify-center">
       <div className="lg:w-1/2 w-full space-y-4 px-4 p-4 bg-white rounded-md shadow-md">
         <h1 className="mb-2 text-center text-xl font-medium text-primary">
           Đánh giá của bạn
@@ -100,6 +100,7 @@ const Rating = () => {
           footer={[
             <button
               key="ok"
+              disabled={idOrder === 0}
               onClick={handleOk}
               className="bg-primary hover:bg-[#F0A500E5] text-white py-2 px-4 rounded"
             >
