@@ -19,7 +19,7 @@ const findTables = async (tables) => {
       model: TableByOrder, include: {
         model: Order, ...bien,
         attributes: ["id", "name", "phone", "total", "status", "id_employee", "createdAt", "updatedAt"]
-        , where: { status: { [Op.lt]: 3 } }
+        , where: { status: { [Op.lte]: 3 } }
       }
     },
     where: { id: { [Op.in]: tables } },
@@ -35,7 +35,7 @@ exports.getAll = asyncHandler(async (req, res) => {
       model: TableByOrder, include: {
         model: Order, ...bien,
         attributes: ["id", "name", "phone", "total", "status", "id_employee", "createdAt", "updatedAt"]
-        , where: { status: { [Op.lt]: 3 } }
+        , where: { status: { [Op.lte]: 3 } }
       }
     }
   };

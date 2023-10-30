@@ -34,7 +34,6 @@ const Tables = db.sequelize.define(
 );
 Tables.prototype.updateStatusTable = async (arr, status_table) => {
     await Tables.update({ status_table }, { where: { id: { [Op.in]: arr } } });
-    console.log("updateStatusTable", updateStatusTable)
     if (status_table === 1) {
         await Tables.increment("total_booked", { by: 1, where: { id: { [Op.in]: arr } } })
     }

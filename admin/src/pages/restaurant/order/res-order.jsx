@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import "../payment/res-payment.css"
-import { Button, Modal, Form, Radio, Drawer, Collapse } from "antd"
+import { Button, Modal, Form, Radio, Drawer, Collapse, notification } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
-import {  AddCartUpdate, RemoveAllCart } from '../../../redux/cartsystem/cartSystem'
+import { AddCartUpdate, RemoveAllCart } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
-import { createPayment, getOrderByID, updatePayment } from '../../../services/api'
+import { createPayment, getOrderByID, updateCompleteOrder, updatePayment } from '../../../services/api'
 import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSystem'
 import { formatGia } from '../../../utils/format'
 import moment from 'moment'
+import ButtonComponents from '../../../components/button'
 const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const RenderFooter = ({
@@ -119,6 +120,7 @@ const ResOrder = ({ handleCancel, open }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isModalPay, setIsModalPay] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
   const [payment, setPayment] = useState(null);
   const [switchTable, setSwitchTable] = useState(false)
   const [form] = Form.useForm();
@@ -165,7 +167,7 @@ const ResOrder = ({ handleCancel, open }) => {
     const body = { payment_gateway: "Cash", date: moment(new Date()).format("YYYYMMDDHHmmss"), idOrder: order.id, idTable: tablelist.id }
     const data = await updatePayment(body)
     if (data) {
-      navigate('/employee/payment-success/'+ order.id)
+      navigate('/employee/payment-success/' + order.id)
     }
     dispatch(RemoveTableList())
   }
@@ -177,43 +179,74 @@ const ResOrder = ({ handleCancel, open }) => {
   const closeSwithTable = () => {
     setSwitchTable(false)
   }
+  const completeOrder = async () => {
+    const { orderId, tableId } = tablelist.TableByOrders[0];
+    const { success, data } = await updateCompleteOrder({ orderId, tableId })
+    if (success) {
+      api.success({
+        message: 'Thông báo',
+        description: data
+      });
+      handleCancel()
+    } else {
+      api.info({
+        message: 'Thông báo',
+        description: data
+      });
+    }
+
+  }
   return (
-    <Drawer
-      title={`Bàn số: ${tablelist ? tablelist.id : 0 }`} placement="right"
-      footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate} handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk} isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal} switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable} submitPayment={submitPayment} customize={customize}/>}
-      closable={false}
-      onClose={handleCancel}
-      open={open}
-    >
-      <div className="flex flex-col rounded-lg">
-        {order_details && order_details.map((item, index) =>
-          <div key={index}>
-            {/* <div className='product-remove'>
+    <>
+      {contextHolder}
+      <Drawer
+        title={<div className='flex justify-between items-center' >
+          <span>{`Bàn số: ${tablelist ? tablelist.id : 0}`}</span>
+          {tablelist?.id && <ButtonComponents className='text-white bg-secondaryColor border-none'
+            content="Hoàn tất đơn hàng" onClick={completeOrder} />}
+        </div>}
+        // title={`Bàn số: ${tablelist ? tablelist.id : 0 }`} 
+        placement="right"
+        footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate}
+          handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk}
+          isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal}
+          switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable}
+          submitPayment={submitPayment} customize={customize} />}
+        closable={false}
+        onClose={handleCancel}
+        open={open}
+      >
+        <div className="flex flex-col rounded-lg">
+          {order_details && order_details.map((item, index) =>
+            <div key={index}>
+              {/* <div className='product-remove'>
                             <button className='float-right text-red-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
                         </div> */}
-            <div className='flex item-center my-3'>
-              <div className='flex-none h-16 w-15 mr-4 hover:bg-hoverColor'>
-                {/* <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item.product.ImageProducts.url} /> */}
-              </div>
-              <div className='flex-grow'>
-                <div className='flex items-end justify-between'>
-                <span className={`text-lg ${customize ? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.Product.name_product}</span>
-                  <span className='text-main mb-3'>{formatGia(item.Product.price)}</span>
+              <div className='flex item-center my-3'>
+                <div className='flex-none h-16 w-15 mr-4 hover:bg-hoverColor'>
+                  {/* <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item.product.ImageProducts.url} /> */}
                 </div>
-                <div className='flex items-center justify-between'>
-                  <span className='font-medium text-slate-500 text-lg text-sm'>Số lượng:</span>
-                  {/* <div className="flex flex-end justify-between items-center"> */}
-                  {/* <button className='border-solid border text-main' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="w-3 h-4 sm:w-4 sm:h-4 " /></button> */}
-                  <span className=" font-medium text-slate-500 text-lg text-sm"> x{item.quantity}</span>
-                  {/* <button className='border-solid border text-main' onClick={() => dispatch(AddCart(item))}><HiPlus className="w-3 h-3 sm:w-4 sm:h-4  " /></button> */}
-                  {/* </div> */}
+                <div className='flex-grow'>
+                  <div className='flex items-end justify-between'>
+                    <span className={`text-lg ${customize ? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.Product.name_product}</span>
+                    <span className='text-main mb-3'>{formatGia(item.Product.price)}</span>
+                  </div>
+                  <div className='flex items-center justify-between'>
+                    <span className='font-medium text-slate-500 text-lg text-sm'>Số lượng:</span>
+                    {/* <div className="flex flex-end justify-between items-center"> */}
+                    {/* <button className='border-solid border text-main' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="w-3 h-4 sm:w-4 sm:h-4 " /></button> */}
+                    <span className=" font-medium text-slate-500 text-lg text-sm"> x{item.quantity}</span>
+                    {/* <button className='border-solid border text-main' onClick={() => dispatch(AddCart(item))}><HiPlus className="w-3 h-3 sm:w-4 sm:h-4  " /></button> */}
+                    {/* </div> */}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
-    </Drawer>
+          )}
+        </div>
+      </Drawer>
+    </>
+
   )
 }
 export default ResOrder;

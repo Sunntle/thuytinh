@@ -59,13 +59,12 @@ const getQtyMaterialByProduct = async (product) => {
 
 
 const checkQtyMaterials = async (data, model) => {
-    console.log(data.length)
     const checkOver = await model.findAll({
         where: {
-            [Op.and]: data.map((item) => ({
+            [Op.or]: data.map((item) => ({
                 id: item.id_material,
                 amount: {
-                    [Op.gt]: item.total
+                    [Op.gte]: item.total
                 }
             }))
         }, raw: true

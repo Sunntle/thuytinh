@@ -82,7 +82,7 @@ const ResChooseTable = () => {
   };
 
   const handleDetailModal = (index) => {
-    console.log(tableListData?.TableByOrders)
+    console.log(index?.TableByOrders)
     if (index?.TableByOrders.length === 0 || index?.TableByOrders == undefined) {
       api.info({
         message: 'Thông báo!!!',
