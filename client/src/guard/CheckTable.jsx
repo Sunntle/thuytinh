@@ -6,7 +6,7 @@ import axios from "../utils/axiosConfig.js";
 
 function CheckTable(props) {
   const location = useLocation();
-  const [isTableExist, setTableExist] = useState(false)
+  const [isTableExist, setTableExist] = useState("")
   const [loading, setLoading] = useState(true)
   const tokenTable = localStorage.getItem("tableToken")
   let idTable = !location.pathname.includes("undefined") ? location.pathname.split("/")[1].split("-")[1]: undefined // exist  = quet QR // undefined
@@ -17,14 +17,14 @@ function CheckTable(props) {
         if(idTable){
           const response = await axios.get(`/table?_id=eq_${idTable}`)
           if(response.length == 0)  {
-            setTableExist(false)
+            setTableExist("Không tồn tại bàn này!")
             return
           }
           if(response[0].token == tokenTable) {
-            setTableExist(true)
+            setTableExist("Đúng")
             return
           }
-          setTableExist(false)
+          response[0].token == null ? setTableExist("Bàn đang trống") : setTableExist("Bàn đã được sử dụng")
         }
       }catch(err){
         console.log(err);
@@ -36,7 +36,7 @@ function CheckTable(props) {
   },[idTable, tokenTable])
   if(loading) return <Spinner/>
   // eslint-disable-next-line react/prop-types
-  return isTableExist ? (props.children) : (<SelectTable/>)
+  return isTableExist == "Đúng" ? (props.children) : (<SelectTable isTableExist={isTableExist}/>)
 }
 
 export default CheckTable
