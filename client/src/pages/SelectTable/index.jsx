@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import DeliveryNotSupported from "../DeliveryNotSupported";
 import { Spinner } from "../../components/index.js";
 
-function SelectTable() {
+function SelectTable({isTableExist}) {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
@@ -58,11 +58,11 @@ function SelectTable() {
     setTableByPosition(filteredValue);
   };
   // if(distanceState > 100 ) return <DeliveryNotSupported/>
+  if(isTableExist == "Không tồn tại bàn này!") return <h2>{isTableExist}</h2>
   if (isLoading) return <Spinner />;
-
   return (
     <div className="pb-24">
-      {idTable &&
+      {idTable && isTableExist == "Bàn đã được sử dụng" &&
         idTable !== customerName.tables?.at(1) &&
         (<p className="-3 text-center">Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!</p>)}
       <div className="w-full h-12 uppercase font-semibold text-lg text-white bg-primary flex justify-center items-center">
