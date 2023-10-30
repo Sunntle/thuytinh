@@ -1,4 +1,4 @@
-import {  useCallback, useState } from "react";
+import {  useCallback, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import serviceImg from "../../assets/images/Service 24_7-pana.png";
 import { useDispatch, useSelector } from "react-redux";

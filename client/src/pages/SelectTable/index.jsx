@@ -2,7 +2,7 @@ import { getPreciseDistance } from "geolib";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
-import {Spin, Tabs} from "antd";
+import { Spin, Tabs} from "antd";
 import "./index.css";
 import {  useSelector } from "react-redux";
 import DeliveryNotSupported from "../DeliveryNotSupported";
@@ -12,9 +12,11 @@ function SelectTable() {
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
+
   const [distanceState, setDistanceState] = useState(0)
   const { sendRequest, isLoading } = useHttp();
   const customerName = useSelector(state => state.customerName)
+  const idTable = location.pathname.split("/")[1].split("-")[1]
   const handleSelectTable = useCallback(async (id) => {
     navigate(`/ban-${id}`,{ state: { from: 'menu' }});
   },[navigate]);
@@ -69,7 +71,12 @@ function SelectTable() {
   }
   return (
     <div className="pb-24">
-      <div className="w-full h-12 uppercase font-semibold text-lg text-white bg-primary flex justify-center items-center">chọn bàn</div>
+      {idTable &&
+        idTable !== customerName.tables?.at(1) &&
+        (<p className="-3 text-center">Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!</p>)}
+      <div className="w-full h-12 uppercase font-semibold text-lg text-white bg-primary flex justify-center items-center">
+        Chọn bàn
+      </div>
       <div className="bg-white px-6 xl:px-12">
         <Tabs
           type={"line"}
@@ -84,7 +91,11 @@ function SelectTable() {
                 <div className="w-full h-screen max-w-full">
                   <div className="grid grid-cols-2 md:grid-col-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {tableByPosition?.map((table) => (
-                      <div key={table.id} onClick={() => handleSelectTable(table.id)} className="cursor-pointer w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center">
+                      <div
+                        key={table.id}
+                        onClick={() => handleSelectTable(table.id)}
+                        className="cursor-pointer w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center"
+                      >
                         {table.name_table}
                       </div>
                     ))}
