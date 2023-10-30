@@ -124,8 +124,8 @@ console.log(order)
           />
         </div>
         {/*  */}
-        <div className="w-full px-4 mt-4 flex justify-between items-start text-sm md:text-base font-semibold">
-          <Button onClick={backHome} className="border-none shadow-none text-main text-base md:text-lg underline p-2">Quay về trang chủ</Button>
+        <div className="w-full px-4 mt-4 flex justify-end items-start text-sm md:text-base font-semibold">
+          {/* <Button onClick={backHome} className="border-none shadow-none text-main text-base md:text-lg underline p-2">Quay về trang chủ</Button> */}
           <div className="min-w-0 flex flex-col justify-start items-end space-y-3">
             <div className="flex justify-between items-center w-full space-x-5">
               <span className="whitespace-nowrap">Tạm tính:</span>
