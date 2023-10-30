@@ -35,18 +35,19 @@ const ResPayment = () => {
             let res;
             const body = {
                 orders: carts,
-                total: totalVAT,
+                total: total.cartTotalAmount,
                 customerName: "Nv_" + staff.user.name,
                 table: [tablelist.id],
                 id_employee: staff.user.id
             };
             res = await addOrder(body);
+            console.log(res.success)
             dispatch(RemoveAllCart());
             dispatch(RemoveTableList());
-            navigate("/employee/choosetable")
+            res.success  && navigate("/employee/choosetable") 
             message.open({
-                type: "success",
-                content: "Đặt món thành công thành công!",
+                type:res.success ? "success" : "info",
+                content: res.success ? "Đặt món thành công thành công!" : res.data ,
             });
         } catch (err) {
             console.log(err);
@@ -65,7 +66,7 @@ const ResPayment = () => {
                 id_order: tablelist.TableByOrders[0].order.id,
                 carts: carts,
                 id_table: tablelist.id,
-                total: totalVAT
+                total: total.cartTotalAmount
             };
             console.log(body)
             res = await updateOrder(body);
@@ -126,11 +127,11 @@ const ResPayment = () => {
                 <div className='Order-total border rounded-md'>
                     <div className='tax'>
                         <span>Thuế VAT:</span>
-                        <span className='float-right'>10%</span>
+                        <span className='float-right'>0%</span>
                     </div>
                     <div className='total mt-3'>
                         <span className='font-medium text-lg'>Tổng tiền:</span>
-                        <span className='float-right text-lg text-main'>{formatGia(totalVAT) || 0}</span>
+                        <span className='float-right text-lg text-main'>{formatGia(total.cartTotalAmount) || 0}</span>
                     </div>
                     {tablelist ? (
                         <div className='grid grid-cols-2 mt-12'>

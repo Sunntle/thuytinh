@@ -68,7 +68,6 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     return res.status(200).json(await User.findAll({ where: { role: 'R2' }, attributes: ["id", "name", "phone"], raw: true }));
   }
   const query = {
-    raw: true,
     include:
     {
       model: Order,
@@ -85,10 +84,10 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     };
   if (_sort) query.order = [[_sort, _order]];
   if (_like) {
-    const [a, b, c] = _like.split("_")
+    const [a, b, c] = _like.split("_")//_like=role_R1_not
     query.where = query.where || {};
     query.where[Op.or] = query.where[Op.or] || [];
-    let symbol = Op.substring
+    let symbol = Op.like
     if (c == "not") {
       symbol = Op.notLike
     }
@@ -101,17 +100,18 @@ exports.getAllUser = asyncHandler(async (req, res) => {
 
   const { count, rows } = await User.findAndCountAll(query);
   const adminOnline = getAllUserOnline()
-  const data = rows.map(itemA => {
-    const matchingItemB = adminOnline.find((itemB) => itemB.id === itemA.id);
+  rows.forEach(itemA => {
+    const matchingItemB = adminOnline.find((itemB) => itemB.id === itemA.dataValues.id);
     if (matchingItemB) {
-      itemA.status = true;
+      itemA.dataValues.status = true;
+    }else{
+      itemA.dataValues.status = false
     }
-    return itemA
   })
   return res.status(200).json({
     success: true,
     total: count,
-    data: data,
+    data: rows,
   });
 });
 exports.getDetailUser = asyncHandler(async (req, res) => {

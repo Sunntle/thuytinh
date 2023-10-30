@@ -4,11 +4,11 @@ import { useDispatch } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import ButtonComponents from "../../components/button";
 import Spinner from "../../components/spinner";
 import { AddCart } from "../../redux/cartsystem/cartSystem";
 import { getAllCate, getAllMaterial, getAllProduct } from "../../services/api";
-import { formatGia, truncateString } from "../../utils/format";
+import { formatGia } from "../../utils/format";
+import { PlusOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -24,21 +24,23 @@ function SearchPage() {
     async (_limit = 6, _offset = 0) => {
       try {
         const kw = searchParams.get("keyword");
-        const res = await getAllProduct({
-          q: kw,
-          _limit: _limit,
-          _offset: _offset,
-        });
-        const resMaterial = await getAllMaterial({
-          q: kw,
-          _limit: _limit,
-          _offset: _offset,
-        });
-        const resCategory = await getAllCate({
-          q: kw,
-          _limit: _limit,
-          _offset: _offset,
-        });
+        const [res, resMaterial, resCategory] = await Promise.all([
+          getAllProduct({
+            q: kw,
+            _limit: _limit,
+            _offset: _offset,
+          }),
+          getAllMaterial({
+            q: kw,
+            _limit: _limit,
+            _offset: _offset,
+          }),
+          getAllCate({
+            q: kw,
+            _limit: _limit,
+            _offset: _offset,
+          }),
+        ]);
         setProduct(res);
         setMaterial(resMaterial);
         setCategory(resCategory);
@@ -118,38 +120,50 @@ function SearchPage() {
       return (
         <h4 className=" text-gray-600  pb-3">Không có sản phẩm phù hợp</h4>
       );
+
+      //comment something
     return (
       <div className="my-3">
         <Title level={4} className="font-semibol">
-          Món án: <span className="text-main">{product?.total}</span>
+          Món ăn: <span className="text-main">{product?.total}</span>
         </Title>
         <Row gutter={[10, 10]}>
           {product?.data.map((el, index) => (
-            <Col xs={24} md={8} key={index} className="flex items-center">
-              <div>
+            <Col md={4} sm={8} xs={12} className="rounded-lg" key={index}>
+              <div className="shadow-xl border-solid border border-gray-300 rounded-lg min-h-[250px] w-auto">
                 <img
-                  className="w-full"
-                  style={{ maxWidth: "180px" }}
-                  src={el?.imageUrls?.split(";")[0]}
-                  alt=""
+                  className="h-full w-full rounded-t-lg"
+                  src={el?.ImageProducts[0]?.url}
                 />
-              </div>
-              <div className="flex flex-col gap-y-1">
-                <Link
-                  to={`/employee/menu?id=${el.id}`}
-                  className="text-black font-semibold text-lg hover:text-main"
-                >
-                  {el.name_product}
-                </Link>
-                <p className="text-gray-500">
-                  {truncateString(el?.description, 40)}
-                </p>
-                <p className="text-main text-xl">{formatGia(el.price)}</p>
-                <ButtonComponents
-                  onClick={() => dispatch(AddCart(el))}
-                  content="Thêm vào giỏ hàng"
-                  className="text-main border-solid border border-secondaryColor"
-                ></ButtonComponents>
+  
+                <div className="p-4 flex flex-col">
+                  <div className="font-medium">{el.name_product}</div>
+                  <div className="text-xs mt-2 text-slate-500">
+                    Số lượng : {el.amount}
+                  </div>
+                  <div className="flex justify-between items-center">
+                    {el.discount > 0 ? (
+                      <div className="product-price flex justify-between items-center">
+                        <p className=" font-medium text-main text-lg mr-1">
+                          {" "}
+                          {formatGia(el.price - (el.price * el.discount) / 100)}
+                        </p>
+                        <p className=" font-medium text-slate-300 line-through text-xs ">
+                          {" "}
+                          {formatGia(el.price)}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className=" font-medium text-main text-lg mr-1">
+                        {formatGia(el.price)}
+                      </p>
+                    )}
+                    <PlusOutlined
+                      onClick={() => dispatch(AddCart(el))}
+                      className="p-2 bg-main rounded-full text-white"
+                    />
+                  </div>
+                </div>
               </div>
             </Col>
           ))}
@@ -180,6 +194,7 @@ function SearchPage() {
           {material?.data.map((el, index) => (
             <div key={index} className="flex items-center gap-5 pb-4">
               <div>
+                {console.log(el)}
                 <img
                   className="w-full"
                   style={{ maxWidth: "180px" }}
@@ -197,7 +212,7 @@ function SearchPage() {
                 <p className="text-gray-500  my-2">
                   Số lượng: {el.amount} {el.unit}
                 </p>
-                <p className="text-main text-lg">{formatGia(el.price)}</p>
+                <p className="text-main text-lg">{formatGia(el.Warehouses[0]?.price_import)}</p>
               </div>
             </div>
           ))}

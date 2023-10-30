@@ -11,6 +11,16 @@ export const fetchNotification = createAsyncThunk('notification/fetchNotificatio
     if (response.some(el => el.status == 0)) lastNotification = response[0]
     return { data: response, lastNotification }
 })
+
+// export const loadMoreData = createAsyncThunk('notification/loadMoreData', async (step, thunkApi) => {
+//     const {content: listNoti, isLoading} = thunkApi.getState().notifications
+//     if(isLoading) return
+//     const response = await getAllNotification({ _sort: "createdAt", _order: "DESC", _limit: 10, _offset: step });
+//     let lastNotification = null
+//     if (response.some(el => el.status == 0)) lastNotification = response[0]
+//     return { data: [...listNoti, ...response], lastNotification }
+// })
+
 export const maskAllRead = createAsyncThunk('notification/maskAllRead', async (_, thunkApi) => {
     const listNoti = thunkApi.getState().notifications.content
     if (listNoti.some((el) => el.status == 0 || el.status === false)) {
@@ -70,6 +80,14 @@ const notificationSystem = createSlice({
                 state.lastNotification = action.payload.lastNotification
                 state.isLoading = false
             })
+            // .addCase(loadMoreData.pending, (state) => {
+            //     state.isLoading = true;
+            // })
+            // .addCase(loadMoreData.fulfilled, (state, action) => {
+            //     state.content = action.payload.data;
+            //     state.lastNotification = action.payload.lastNotification
+            //     state.isLoading = false
+            // })
             .addCase(maskAllRead.pending, (state) => {
                 state.isLoading = true;
             })
