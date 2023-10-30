@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 const initialState = {
   order: [],
   idOrder: 0,
@@ -11,7 +10,8 @@ const orderSlice = createSlice({
   reducers: {
     addToOrder: (state, action) => {
       const food = action.payload;
-      const existingItem = state.order.find((item) => item.id === food.id);
+      console.log(state)
+      const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem) {
         if (existingItem.quantity < existingItem.amount) {
           existingItem.quantity += 1;

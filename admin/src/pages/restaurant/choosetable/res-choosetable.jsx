@@ -14,8 +14,8 @@ const ButtonTable = ({ table, handleTableClick, handleDetailModal }) => (
   <div key={table.id}>
     <span
       className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
-          ? 'bg-main text-white border-yellow-400 border-3px border-solid'
-          : 'bg-[#D1D5DB] text-white'
+        ? 'bg-main text-white border-yellow-400 border-3px border-solid'
+        : 'bg-[#D1D5DB] text-white'
         } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
     >
       <FiUsers className="w-6 h-6 mb-2" />
@@ -54,22 +54,28 @@ const ResChooseTable = () => {
   const tableListData = useSelector((state) => state.tablelist);
   const [open, setOpen] = useState(false);
   const [api, contextHolder] = notification.useNotification();
-
   useEffect(() => {
-    const fetchData = async () => {
-      const resTable = await getAllTable();
-      dispatch(AddTable(resTable));
-    };
-    fetchData();
-  }, [dispatch]);
-  useEffect(() => {
+    socket.on("new message", arg => {
+      if (arg.type === "order") {
+        fetchData()
+      }
+    })
     socket.on("status table", (arg) => {
-      console.log(arg)
+      // console.log(arg) return token status_table updatedAt
+      fetchData()
     })
     return () => {
-      socket.off("status table")
+      socket.off("new message")
     }
   }, [socket])
+  const fetchData = async () => {
+    const resTable = await getAllTable();
+    dispatch(AddTable(resTable));
+  };
+  useEffect(() => {
+    fetchData();
+  }, [dispatch]);
+
   const handleTableClick = (index) => {
     dispatch(AddTableList(index));
     navigate('/employee/menu/');
@@ -77,17 +83,17 @@ const ResChooseTable = () => {
 
   const handleDetailModal = (index) => {
     console.log(tableListData?.TableByOrders)
-    if(index?.TableByOrders.length === 0 || index?.TableByOrders == undefined) {
+    if (index?.TableByOrders.length === 0 || index?.TableByOrders == undefined) {
       api.info({
         message: 'Thông báo!!!',
         description:
           'Người dùng đang đặt hàng!!!',
       });
-    }else{
+    } else {
       dispatch(AddTableList(index));
       setOpen(true)
     }
-    
+
   }
   const handleCancel = () => {
     dispatch(RemoveTableList())
