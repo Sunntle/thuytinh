@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Button, Drawer, message, Modal} from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Drawer, message, Modal } from "antd";
 import "./index.css";
 import { formatCurrency } from "../../../utils/format.js";
 import { HiXMark } from "react-icons/hi2";
@@ -7,14 +7,15 @@ import { AiFillWarning } from "react-icons/ai";
 import {
   addIdOrderTable,
   addOrderDetailUpdate,
-  decreaseQuantity, emptyOrder,
+  decreaseQuantity,
+  emptyOrder,
   increaseQuantity,
   removeFromOrder,
 } from "../../../redux/Order/orderSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import useHttp from "../../../hooks/useHttp.js";
-import {addOrder} from "../../../services/api.js";
-import {useNavigate} from "react-router-dom";
+import { addOrder } from "../../../services/api.js";
+import { useNavigate } from "react-router-dom";
 
 const { confirm } = Modal;
 
@@ -69,44 +70,38 @@ const OrderListDesktop = (props) => {
       total: totalOrder,
       customerName: customerName.name,
       table: [customerName.tables[0]],
-      token: localStorage.getItem("tableToken")
+      token: localStorage.getItem("tableToken"),
     };
     try {
       await sendRequest(addOrder(body), setNewOrder);
       messageApi.open({
-        type: 'success',
-        content: 'Đặt món thành công'
-      })
+        type: "success",
+        content: "Đặt món thành công",
+      });
       dispatch(emptyOrder());
-      window.location.href=`http://localhost:3000/ban-${customerName.tables[0]}/order`
+      window.location.href = `http://localhost:3000/ban-${customerName.tables[0]}/order`;
     } catch (err) {
-      messageApi.open({
-        type: 'error',
-        content: 'Đặt món thất bại'
-      })
       console.log(err);
+    } finally {
+      setIsOrderDesktop(false);
     }
-    setIsOrderDesktop(false);
   };
 
   useEffect(() => {
-    if (newOrder?.success === false) {
-      alert(newOrder?.data);
-    } else if (newOrder?.success === true) {
-      let dataPrevious = newOrder?.data?.detail?.map((item, i) => ({
-        ...item,
-        inDb: item.quantity,
-        ...newOrder?.data?.product[i],
-      }));
-      dispatch(addOrderDetailUpdate(dataPrevious));
+    if (newOrder?.success) {
       dispatch(
-          addIdOrderTable({
-            idOrder: newOrder?.data?.orders?.id,
-            idTable: customerName?.tables[0],
-          }),
+        addIdOrderTable({
+          idOrder: newOrder?.data?.orders?.id,
+          idTable: customerName?.tables[0],
+        }),
       );
+    } else {
+      messageApi.open({
+        type: "error",
+        content: "Đặt món thất bại",
+      });
     }
-  }, [newOrder]);
+  }, [customerName?.tables, dispatch, newOrder]);
 
   const handleUpdateOrder = () => {
     const body = {
@@ -121,10 +116,12 @@ const OrderListDesktop = (props) => {
         ...body,
       };
       sendRequest(request, setOrderUpdated);
-      setIsOrderDesktop(false);
-      window.location.href=`http://localhost:3000/ban-${customerName.tables[0]}/order`
+      dispatch(emptyOrder());
+      window.location.href = `http://localhost:3000/ban-${customerName.tables[0]}/order`;
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsOrderDesktop(false);
     }
   };
 
@@ -136,7 +133,6 @@ const OrderListDesktop = (props) => {
       onClose={() => setIsOrderDesktop(false)}
     >
       <span className="block text-xl font-semibold my-4">Món đã chọn</span>
-      {contextHolder}
       <div className="relative max-w-full min-h-screen">
         {orders?.length > 0 ? (
           orders?.map((item, index) => (
@@ -206,10 +202,10 @@ const OrderListDesktop = (props) => {
         <div className="w-full flex justify-end items-center text-lg font-semibold text-primary mt-10 px-2 space-x-2">
           <Button onClick={handleUpdateOrder}>Cập nhật</Button>
           <Button
-              disabled={orders?.length === 0}
-              className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
-              size="middle"
-              onClick={submitOrderList}
+            disabled={orders?.length === 0}
+            className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
+            size="middle"
+            onClick={submitOrderList}
           >
             Đặt món
           </Button>

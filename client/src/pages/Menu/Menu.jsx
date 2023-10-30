@@ -40,7 +40,7 @@ const Menu = () => {
   const [categories, setCategories] = useState(null);
   const { order: orders } = useSelector((state) => state.order);
   const debouncedValue = useDebounce(searchValue, 100);
-  const limit = 5;
+  const limit = 15;
   const [offset, setOffset] = useState(0);
 
   const fetchFoods = useCallback(async () => {
