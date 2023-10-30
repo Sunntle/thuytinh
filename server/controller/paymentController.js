@@ -38,7 +38,7 @@ exports.createPaymentUrl = asyncHandler(async (req, res) => {
   let vnpUrl = process.env.VNP_URL;
   let returnUrl = process.env.VNP_RETURNURL;
   let orderId = moment(date).format("DDHHmmss");
-  let amount = req.body.amount;
+  let amount = req.body.amount
   let bankCode = req.body.bankCode;
 
   let currCode = "VND";
@@ -74,7 +74,7 @@ exports.VnpIPN = asyncHandler(async (req, res) => {
   let vnp_Params = req.query;
   let secureHash = vnp_Params["vnp_SecureHash"];
 
-  let orderId = vnp_Params["vnp_TxnRef"];
+  // let orderId = vnp_Params["vnp_TxnRef"];
   let rspCode = vnp_Params["vnp_ResponseCode"];
 
   delete vnp_Params["vnp_SecureHash"];
@@ -135,7 +135,7 @@ exports.ReturnURL = asyncHandler(async (req, res) => {
 
   vnp_Params = sortObj(vnp_Params);
 
-  let tmnCode = process.env.VNP_TMNCODE;
+  // let tmnCode = process.env.VNP_TMNCODE;
   let secretKey = process.env.VNP_HASHSECRET;
 
   let signData = queryString.stringify(vnp_Params, { encode: false });
@@ -172,7 +172,7 @@ exports.queryDr = asyncHandler(async (req, res) => {
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
 
-  let currCode = "VND";
+  // let currCode = "VND";
   let vnp_CreateDate = moment(date).format("YYYYMMDDHHmmss");
 
   let data =
@@ -195,7 +195,7 @@ exports.queryDr = asyncHandler(async (req, res) => {
     vnp_OrderInfo;
 
   let hmac = crypto.createHmac("sha512", secretKey);
-  let vnp_SecureHash = hmac.update(new Buffer(data, "utf-8")).digest("hex");
+  let vnp_SecureHash = hmac.update(Buffer.from(data, "utf-8")).digest("hex");
 
   let dataObj = {
     vnp_RequestId: vnp_RequestId,
@@ -219,7 +219,7 @@ exports.queryDr = asyncHandler(async (req, res) => {
     },
     (error, response, body) => {
       res.status(200).json(body);
-    }
+    },
   );
 });
 
@@ -241,7 +241,7 @@ exports.updateTransactionOrder = asyncHandler(async (req, res) => {
         },
         {
           where: { id: idOrder },
-        }
+        },
       );
 
       if (orderUpdated) {
@@ -267,7 +267,7 @@ exports.updateStatus = asyncHandler(async (req, res) => {
       },
       {
         where: { id: idOrder },
-      }
+      },
     );
 
     const tableUpdated = await Tables.update(
@@ -278,7 +278,7 @@ exports.updateStatus = asyncHandler(async (req, res) => {
         where: {
           id: idTable,
         },
-      }
+      },
     );
 
     if (orderUpdated && tableUpdated) {
@@ -304,7 +304,7 @@ exports.updateOrderBilling = asyncHandler(async (req, res) => {
         transaction_date: date,
         status: 3,
       },
-      { where: { id: +idOrder } }
+      { where: { id: +idOrder } },
     );
     const tableUpdated = await Tables.update(
       {
@@ -314,7 +314,7 @@ exports.updateOrderBilling = asyncHandler(async (req, res) => {
         where: {
           id: idTable,
         },
-      }
+      },
     );
     if (orderUpdated && tableUpdated)
       res.status(200).json({ message: "thanh cong" });

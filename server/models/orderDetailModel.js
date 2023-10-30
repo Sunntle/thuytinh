@@ -31,9 +31,7 @@ OrderDetail.beforeBulkCreate(async (item) => {
     return Product.increment("sold", { by: quantity, where: { id: id_product } });
   }));
 });
-OrderDetail.beforeUpdate(async (item) => {
-  console.log(item);
-});
+
 
 
 module.exports = OrderDetail;

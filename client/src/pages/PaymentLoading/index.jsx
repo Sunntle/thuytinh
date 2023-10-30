@@ -58,7 +58,7 @@ const PaymentLoading = () => {
         <Button
           className="w-full bg-red-600 active:bg-red-500 text-white mt-4"
           onClick={() =>
-            (window.location.href = `http://localhost:3000/ban-${idTable[0]}/menu`)
+            (window.location.href = `http://localhost:3000/ban-${idTable}/menu`)
           }
         >
           Quay về trang chủ

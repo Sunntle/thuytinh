@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Modal } from "antd";
+import {Button, message, Modal} from "antd";
 import "./index.css";
 import { BiSolidTrash } from "react-icons/bi";
 import { AiFillWarning } from "react-icons/ai";
@@ -30,6 +30,7 @@ const OrderListModal = ({
   const customerName = useSelector((state) => state.customerName);
   const idTable = location.pathname.split("/")[1].split("-")[1];
   const { sendRequest } = useHttp();
+  const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
 
   // Calculate Total Bill
@@ -80,8 +81,16 @@ const OrderListModal = ({
     };
     try {
       await sendRequest(addOrder(body), setNewOrder);
+      messageApi.open({
+        type: 'success',
+        content: 'Đặt món thành công'
+      })
       dispatch(emptyOrder());
     } catch (err) {
+      messageApi.open({
+        type: 'error',
+        content: 'Đặt món thất bại'
+      })
       console.log(err);
     }
     setIsOrderModalOpen(false);
@@ -148,6 +157,7 @@ const OrderListModal = ({
       ]}
     >
       <div className="max-h-96 overflow-y-auto space-y-3 custom-scrollbar">
+        {contextHolder}
         {orders?.length > 0 ? (
           orders?.map((item, index) => (
             <div
