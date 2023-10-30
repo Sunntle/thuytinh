@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {Button, message, Modal} from "antd";
+import { Button, message, Modal } from "antd";
 import "./index.css";
 import { BiSolidTrash } from "react-icons/bi";
 import { AiFillWarning } from "react-icons/ai";
@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { formatCurrency } from "../../../utils/format.js";
 import {
   addIdOrderTable,
-  addOrderDetailUpdate,
   decreaseQuantity,
   emptyOrder,
   increaseQuantity,
@@ -81,39 +80,35 @@ const OrderListModal = ({
     };
     try {
       await sendRequest(addOrder(body), setNewOrder);
-      messageApi.open({
-        type: 'success',
-        content: 'Đặt món thành công'
-      })
       dispatch(emptyOrder());
     } catch (err) {
-      messageApi.open({
-        type: 'error',
-        content: 'Đặt món thất bại'
-      })
       console.log(err);
+    } finally {
+      setIsOrderModalOpen(false);
     }
-    setIsOrderModalOpen(false);
   };
+
   useEffect(() => {
-    if (newOrder?.success === false) {
-      alert(newOrder?.data);
-    } else if (newOrder?.success === true) {
-      let dataPrevious = newOrder?.data?.detail?.map((item, i) => ({
-        ...item,
-        inDb: item.quantity,
-        ...newOrder?.data?.product[i],
-      }));
-      dispatch(addOrderDetailUpdate(dataPrevious));
+    if (newOrder?.success) {
+      messageApi.open({
+        type: "success",
+        content: "Đặt món thành công",
+      });
       dispatch(
         addIdOrderTable({
           idOrder: newOrder?.data?.orders?.id,
           idTable: customerName?.tables[0],
         }),
       );
+    } else {
+      messageApi.open({
+        type: "error",
+        content: "Đặt món thất bại",
+      });
     }
   }, [customerName?.tables, dispatch, newOrder]);
-  const handleUpdateOrder = () => {
+
+  const handleUpdateOrder = async () => {
     const body = {
       total: totalOrder,
       carts: orders,
@@ -125,10 +120,12 @@ const OrderListModal = ({
         url: "/order",
         ...body,
       };
-      sendRequest(request, setOrderUpdated);
-      setIsOrderModalOpen(false);
+      await sendRequest(request, setOrderUpdated);
+      dispatch(emptyOrder());
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsOrderModalOpen(false);
     }
   };
 

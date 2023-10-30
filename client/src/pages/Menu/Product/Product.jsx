@@ -81,7 +81,7 @@ const Product = (props) => {
           onClick={() => handleAddToOrder(props.item)}
         >
           <AiFillPlusCircle
-            className={`w-6 h-6 md:w-8 md:h-8 text-primary active:text-opacity-80 group-hover:text-primary/80 transition-colors duration-200 ${
+            className={`w-6 h-6 md:w-8 md:h-8 text-primary group-disabled:text-primary/20 active:text-primary/80 group-hover:text-primary/80 transition-colors duration-200 ${
               amount <= 0 ? "text-primary/20" : ""
             }`}
           />

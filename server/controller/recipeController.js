@@ -29,6 +29,7 @@ exports.list = async (req, res) => {
   }, []);
   res.status(200).json(result);
 };
+
 exports.getRecipeByProduct = async (req, res) => {
   try {
     const idProduct = req.params.id;

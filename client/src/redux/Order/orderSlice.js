@@ -10,10 +10,9 @@ const orderSlice = createSlice({
   reducers: {
     addToOrder: (state, action) => {
       const food = action.payload;
-      console.log(state)
       const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem) {
-        if (existingItem.quantity < existingItem.amount) {
+        if (existingItem.quantity < food.amount) {
           existingItem.quantity += 1;
         } else {
           alert('Hết món')
@@ -41,7 +40,7 @@ const orderSlice = createSlice({
     increaseQuantity: (state, action) => {
       const food = action.payload;
       const existingItem = state.order.find((item) => item.id === food.id);
-      if (existingItem) {
+      if (existingItem && existingItem.quantity < 10) {
         existingItem.quantity += 1;
       }
     },
