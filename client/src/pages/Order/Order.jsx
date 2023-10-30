@@ -57,7 +57,6 @@ const Order = () => {
       let inDb = quantity;
       return { ...Product, quantity, inDb };
     });
-    // console.log(dataPrevious);
     dispatch(addOrderDetailUpdate(dataPrevious));
     navigate(`/ban-${tables[0]}/menu`)
   };

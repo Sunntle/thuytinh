@@ -59,7 +59,6 @@ const getQtyMaterialByProduct = async (product) => {
 
 
 const checkQtyMaterials = async (data, model) => {
-    console.log(data.length)
     const checkOver = await model.findAll({
         where: {
             [Op.or]: data.map((item) => ({

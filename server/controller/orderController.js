@@ -42,9 +42,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
       data: "Bàn đã có người đặt",
     });
 
-  const { approve, over } =
-    await Materials.prototype.checkAmountByProduct(orders);
-  console.log(approve);
+  const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
   if (approve.length === 0)
     return res
       .status(200)
@@ -80,6 +78,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
     product,
     over,
     tableByOrder: tableData,
+    over
   };
 
   let storeNotification = await Notification.create(
@@ -193,6 +192,18 @@ exports.updateOrderAdmin = asyncHandler(async (req, res) => {
     })),
   );
   res.status(200).json("Update thành công");
+});
+exports.completeOrder = asyncHandler(async (req, res) => {
+  const { orderId, tableId } = req.body;
+  const is = await Order.findOne({ where: { id: orderId, status: 3 }, raw: true });
+  console.log(is)
+  if (is) {
+    await Tables.update({ status_table: 0, token: null }, { where: { id: tableId } });
+    await Order.update({ status: 4 }, { where: { id: orderId } });
+    res.status(200).json({ success: true, data: "Update thành công" });
+  } else {
+    res.status(404).json({ success: false, data: "Người dùng chưa thanh toán" });
+  }
 });
 
 exports.dashBoard = asyncHandler(async (req, res) => {

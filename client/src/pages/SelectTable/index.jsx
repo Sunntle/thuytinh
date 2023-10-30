@@ -2,13 +2,13 @@ import { getPreciseDistance } from "geolib";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
-import { Spin, Tabs} from "antd";
+import { Spin, Tabs } from "antd";
 import "./index.css";
 import { useSelector } from "react-redux";
 import DeliveryNotSupported from "../DeliveryNotSupported";
 import { Spinner } from "../../components/index.js";
 
-function SelectTable({isTableExist}) {
+function SelectTable({ isTableExist }) {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
@@ -18,8 +18,8 @@ function SelectTable({isTableExist}) {
   const customerName = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
   const handleSelectTable = useCallback(async (id) => {
-    navigate(`/ban-${id}`,{ state: { from: 'menu' }});
-  },[navigate]);
+    navigate(`/ban-${id}`, { state: { from: 'menu' } });
+  }, [navigate]);
 
   useEffect(() => {
     if (customerName.name.length > 0 && customerName.tables.length > 0) {
@@ -45,7 +45,7 @@ function SelectTable({isTableExist}) {
       );
     });
   }, [sendRequest]);
-  
+
   useEffect(() => {
     if (tables && tables.length > 0) {
       const filteredValue = tables.filter((table) => table.position === "in");
@@ -58,7 +58,7 @@ function SelectTable({isTableExist}) {
     setTableByPosition(filteredValue);
   };
   // if(distanceState > 100 ) return <DeliveryNotSupported/>
-  if(isTableExist == "Không tồn tại bàn này!") return <h2>{isTableExist}</h2>
+  if (isTableExist == "Không tồn tại bàn này!") return <h2>{isTableExist}</h2>
   if (isLoading) return <Spinner />;
   return (
     <div className="pb-24">

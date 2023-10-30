@@ -259,7 +259,6 @@ exports.updateTransactionOrder = asyncHandler(async (req, res) => {
 
 exports.updateStatus = asyncHandler(async (req, res) => {
   const { idTable, idOrder } = req.body;
-
   try {
     const orderUpdated = await Order.update(
       {
@@ -269,19 +268,18 @@ exports.updateStatus = asyncHandler(async (req, res) => {
         where: { id: idOrder },
       },
     );
-
-    const tableUpdated = await Tables.update(
-      {
-        status_table: 0,
-      },
-      {
-        where: {
-          id: idTable,
-        },
-      },
-    );
-
-    if (orderUpdated && tableUpdated) {
+    // const tableUpdated = await Tables.update(
+    //   {
+    //     status_table: 0,
+    //   },
+    //   {
+    //     where: {
+    //       id: idTable,
+    //     },
+    //   },
+    // );
+    // if (orderUpdated && tableUpdated) {
+    if (orderUpdated) {
       res
         .status(200)
         .json({ message: "Cập nhật trạng thái của bàn và hóa đơn thành công" });
@@ -306,17 +304,18 @@ exports.updateOrderBilling = asyncHandler(async (req, res) => {
       },
       { where: { id: +idOrder } },
     );
-    const tableUpdated = await Tables.update(
-      {
-        status_table: 0,
-      },
-      {
-        where: {
-          id: idTable,
-        },
-      },
-    );
-    if (orderUpdated && tableUpdated)
+    // const tableUpdated = await Tables.update(
+    //   {
+    //     status_table: 0,
+    //   },
+    //   {
+    //     where: {
+    //       id: idTable,
+    //     },
+    //   },
+    // );
+    //if (orderUpdated && tableUpdated)
+    if (orderUpdated)
       res.status(200).json({ message: "thanh cong" });
   } catch (err) {
     res.status(500).json({ message: err });

@@ -1,4 +1,4 @@
-import {  useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import serviceImg from "../../assets/images/Service 24_7-pana.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,14 +12,14 @@ const EnterName = (props) => {
   const idTable = location.pathname.split("/")[1].split("-")[1]
   const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
-  },[]);
+  }, []);
 
-  const storeToken = useCallback((data)=>{
+  const storeToken = useCallback((data) => {
     localStorage.setItem("tableToken", data)
-  },[])
+  }, [])
 
-  const handleSubmitName = useCallback(async() => {
-    const data = {tables: [idTable], name: customerName, timestamp: new Date().valueOf()}
+  const handleSubmitName = useCallback(async () => {
+    const data = { tables: [idTable], name: customerName, timestamp: new Date().valueOf() }
     await sendRequest({
       method: 'put',
       url: '/table/token',
@@ -27,9 +27,9 @@ const EnterName = (props) => {
     }, storeToken)
     dispatch(getCustomerName(data))
     // navigate(`/ban-${customerNameState.tables[0]}/menu`);
-  },[customerName, dispatch, idTable, sendRequest, storeToken]);
-  if(customerNameState.isLoading) return "Loading...."
-  if(customerNameState?.name?.length  > 0) return props.children
+  }, [customerName, dispatch, idTable, sendRequest, storeToken]);
+  if (customerNameState.isLoading) return "Loading...."
+  if (customerNameState?.name?.length > 0) return props.children
   return (
     <div className="h-screen w-screen flex items-center">
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">

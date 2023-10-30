@@ -9,7 +9,7 @@ export const getAllOrder = (params) => {
   return axios.get(`/api/order`, { params });
 };
 export const getOrderByID = (id) => {
-  return axios.get(`/api/order/${id}`, );
+  return axios.get(`/api/order/${id}`,);
 };
 export const delOrder = (id) => {
   return axios.delete(`/api/order/${id}`);
@@ -19,6 +19,9 @@ export const updateOrder = (body) => {
 };
 export const updateOrderAdmin = (data) => {
   return axios.put(`/api/order/admin`, data);
+}
+export const updateCompleteOrder = (data) => {
+  return axios.put(`/api/order/complete-order`, data);
 }
 // table //
 export const getAllTable = (params) => {
