@@ -36,7 +36,7 @@ const ResMenu = () => {
     return (
         <div className='w-full p-10'>
             <FloatButton.BackTop />
-            <Row gutter={[32, 16]}>
+            <Row gutter={[16, 16]}>
                 <Col xs={24} lg={16}>
                     <div className='save-product w-full mt-4'>
                         <Swiper
@@ -64,7 +64,7 @@ const ResMenu = () => {
                         )}
                         <Row gutter={[16, 16]}>
                             {filteredProducts?.map((product, index) => (
-                                <Col md={8} sm={8} xs={12} className='rounded-lg' key={index}>
+                                <Col lg={8} md={12} sm={12} xs={12} className='rounded-lg' key={index}>
                                     {product.discount > 0 ? (
                                         <Badge.Ribbon text={`${product.discount}%`} color='red'>
                                             <div className='shadow-xl border-solid border border-gray-300 rounded-lg min-h-[250px] w-auto' >

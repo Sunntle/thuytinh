@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Drawer, Tabs } from 'antd';
+import { Button, Drawer, Tabs, notification } from 'antd';
 import { FiUsers } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -53,6 +53,7 @@ const ResChooseTable = () => {
   const tableData = useSelector((state) => state.table);
   const tableListData = useSelector((state) => state.tablelist);
   const [open, setOpen] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,8 +76,18 @@ const ResChooseTable = () => {
   };
 
   const handleDetailModal = (index) => {
-    dispatch(AddTableList(index));
-    setOpen(true)
+    console.log(tableListData?.TableByOrders)
+    if(index?.TableByOrders.length === 0 || index?.TableByOrders == undefined) {
+      api.info({
+        message: 'Thông báo!!!',
+        description:
+          'Người dùng đang đặt hàng!!!',
+      });
+    }else{
+      dispatch(AddTableList(index));
+      setOpen(true)
+    }
+    
   }
   const handleCancel = () => {
     dispatch(RemoveTableList())
@@ -147,6 +158,7 @@ const ResChooseTable = () => {
   return (
     <>
       <div className="w-full p-10">
+        {contextHolder}
         <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1" items={items} />
         <ResOrder handleCancel={handleCancel} open={open} />
       </div>
