@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Drawer, Modal} from "antd";
+import {Button, Drawer, message, Modal} from "antd";
 import "./index.css";
 import { formatCurrency } from "../../../utils/format.js";
 import { HiXMark } from "react-icons/hi2";
@@ -20,12 +20,11 @@ const { confirm } = Modal;
 
 const OrderListDesktop = (props) => {
   const { isOrderDesktop, setIsOrderDesktop } = props;
-  const navigate = useNavigate()
   const [newOrder, setNewOrder] = useState(null);
   const [orderUpdated, setOrderUpdated] = useState(null);
   const { order: orders, idOrder } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
-  // const idTable = location.pathname.split("/")[1].split("-")[1];
+  const [messageApi, contextHolder] = message.useMessage();
   const { sendRequest } = useHttp();
   const dispatch = useDispatch();
 
@@ -74,10 +73,17 @@ const OrderListDesktop = (props) => {
     };
     try {
       await sendRequest(addOrder(body), setNewOrder);
+      messageApi.open({
+        type: 'success',
+        content: 'Đặt món thành công'
+      })
       dispatch(emptyOrder());
-      // navigate(``)
-      window.location.href=`localhost:3000/ban-${customerName.tables[0]}/order`
+      window.location.href=`http://localhost:3000/ban-${customerName.tables[0]}/order`
     } catch (err) {
+      messageApi.open({
+        type: 'error',
+        content: 'Đặt món thất bại'
+      })
       console.log(err);
     }
     setIsOrderDesktop(false);
@@ -116,7 +122,6 @@ const OrderListDesktop = (props) => {
       };
       sendRequest(request, setOrderUpdated);
       setIsOrderDesktop(false);
-      // navigate(`/ban-${customerName.tables[0]}/order`)
       window.location.href=`http://localhost:3000/ban-${customerName.tables[0]}/order`
     } catch (err) {
       console.error(err);
@@ -131,7 +136,8 @@ const OrderListDesktop = (props) => {
       onClose={() => setIsOrderDesktop(false)}
     >
       <span className="block text-xl font-semibold my-4">Món đã chọn</span>
-      <div className="relative max-w-full min-h-screen border">
+      {contextHolder}
+      <div className="relative max-w-full min-h-screen">
         {orders?.length > 0 ? (
           orders?.map((item, index) => (
             <div key={index} className="w-full flex flex-col">
@@ -202,7 +208,6 @@ const OrderListDesktop = (props) => {
           <Button
               disabled={orders?.length === 0}
               className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
-              key="submit"
               size="middle"
               onClick={submitOrderList}
           >

@@ -1,4 +1,4 @@
-import {  useCallback, useState } from "react";
+import {  useCallback, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import serviceImg from "../../assets/images/Service 24_7-pana.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,7 +34,7 @@ const EnterName = (props) => {
     <div className="h-screen w-screen flex items-center">
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">
         <div className="w-6/12 lg:w-6/12 m-auto">
-          <img className="w-full h-full" src={serviceImg} alt="" />
+          <img className="w-full h-full" loading={"lazy"} src={serviceImg} alt="" />
         </div>
         <div className="flex flex-col items-center space-y-3 lg:space-y-6">
           <span className="font-medium text-sm w-9/12 lg:text-xl text-center">

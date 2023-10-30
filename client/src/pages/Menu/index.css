@@ -7,3 +7,19 @@
 .custom-scrollbar::-webkit-scrollbar {
     display: none; /* Safari and Chrome */
 }
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-btn-default {
+    @apply text-slate-500 border-none shadow-none;
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+    @apply text-primary
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-btn-default:not(:disabled):not(.ant-btn-disabled):active {
+    @apply text-primary;
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-btn:not(:disabled):focus-visible {
+    @apply outline-primary/20
+}

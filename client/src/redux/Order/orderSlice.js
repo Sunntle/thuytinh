@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   order: [],
   idOrder: 0,
-  idTable: 0
-}
+  idTable: 0,
+};
 const orderSlice = createSlice({
   name: "order",
   initialState: initialState,
@@ -13,7 +13,11 @@ const orderSlice = createSlice({
       console.log(state)
       const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem) {
-        existingItem.quantity += 1;
+        if (existingItem.quantity < existingItem.amount) {
+          existingItem.quantity += 1;
+        } else {
+          alert('Hết món')
+        }
       } else {
         state.order.push({ ...food, quantity: 1 });
       }
@@ -25,14 +29,14 @@ const orderSlice = createSlice({
       state.idOrder = action.payload;
     },
     addIdOrderTable: (state, action) => {
-      const { idTable, idOrder } = action.payload
-      state.idOrder = idOrder
-      state.idTable = idTable
+      const { idTable, idOrder } = action.payload;
+      state.idOrder = idOrder;
+      state.idTable = idTable;
     },
     removeFromOrder: (state, action) => {
       const id = action.payload;
-      const index = state.order.findIndex(item => item.id === id)
-      state.order.splice(index, 1)
+      const index = state.order.findIndex((item) => item.id === id);
+      state.order.splice(index, 1);
     },
     increaseQuantity: (state, action) => {
       const food = action.payload;
@@ -58,5 +62,14 @@ const orderSlice = createSlice({
   },
 });
 
-export const { emptyOrder, addIdOrderTable, addOrderDetailUpdate, addIdOrder, addToOrder, removeFromOrder, increaseQuantity, decreaseQuantity } = orderSlice.actions
-export const orderReducer = orderSlice.reducer
+export const {
+  emptyOrder,
+  addIdOrderTable,
+  addOrderDetailUpdate,
+  addIdOrder,
+  addToOrder,
+  removeFromOrder,
+  increaseQuantity,
+  decreaseQuantity,
+} = orderSlice.actions;
+export const orderReducer = orderSlice.reducer;
