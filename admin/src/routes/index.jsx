@@ -108,7 +108,7 @@ const router = createBrowserRouter([
         element: <ResRevenue />,
       },
       {
-        path: "payment-success",
+        path: "payment-success/:id",
         element: <PaymentSuccess />,
       },
       {

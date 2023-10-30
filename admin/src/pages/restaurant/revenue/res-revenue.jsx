@@ -178,6 +178,22 @@ const ResRevenue = () => {
                 data={data}
               />
             </div>
+            <div className='mt-6 border-solid border-2 rounded border-orange-400'>
+          <div className="m-4 text-lg font-medium">Nguyên liệu sắp hết</div>
+          <ColumnChart
+            customClassName='max-w-full'
+            series={[
+              {
+                name: "Nguyên liệu gần hết",
+                data: dataChart.map((item) => item.amount),
+              },
+            ]}
+            colors="#fc8019"
+            categories={dataChart.map(
+              (item) => `${item.name_material} (${item.unit})`
+            )}
+          />
+        </div>
           </Col>
           <Col xs={24} lg={8}>
             <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
@@ -236,22 +252,6 @@ const ResRevenue = () => {
             </div>
           </Col>
         </Row>
-        <div className='mt-6 border-solid border-2 rounded border-orange-400'>
-          <div className="m-4 text-lg font-medium">Nguyên liệu sắp hết</div>
-          <ColumnChart
-            customClassName='max-w-full'
-            series={[
-              {
-                name: "Nguyên liệu gần hết",
-                data: dataChart.map((item) => item.amount),
-              },
-            ]}
-            colors="#fc8019"
-            categories={dataChart.map(
-              (item) => `${item.name_material} (${item.unit})`
-            )}
-          />
-        </div>
         <Table className='mt-4' columns={columns} dataSource={dataOrder} rowKey={"id"} />
       </div>
     </div>
