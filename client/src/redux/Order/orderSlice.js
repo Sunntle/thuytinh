@@ -1,8 +1,8 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-    order: [],
-    idOrder: 0,
-    idTable: 0
+  order: [],
+  idOrder: 0,
+  idTable: 0
 }
 const orderSlice = createSlice({
   name: "order",
@@ -10,7 +10,8 @@ const orderSlice = createSlice({
   reducers: {
     addToOrder: (state, action) => {
       const food = action.payload;
-      const existingItem = state.order.find((item) => item.id === food.id);
+      console.log(state)
+      const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
@@ -23,15 +24,15 @@ const orderSlice = createSlice({
     addIdOrder: (state, action) => {
       state.idOrder = action.payload;
     },
-    addIdOrderTable: (state,action) => {
-      const {idTable, idOrder} = action.payload
+    addIdOrderTable: (state, action) => {
+      const { idTable, idOrder } = action.payload
       state.idOrder = idOrder
       state.idTable = idTable
     },
     removeFromOrder: (state, action) => {
       const id = action.payload;
-      const index = state.order.findIndex(item=> item.id === id)
-      state.order.splice(index,1)
+      const index = state.order.findIndex(item => item.id === id)
+      state.order.splice(index, 1)
     },
     increaseQuantity: (state, action) => {
       const food = action.payload;
@@ -47,7 +48,7 @@ const orderSlice = createSlice({
         if (existingItem.inDb && existingItem.inDb === existingItem.quantity) {
           existingItem.quantiy = existingItem.inDb;
         } else {
-            existingItem.quantity -= 1;
+          existingItem.quantity -= 1;
         }
       }
     },
@@ -57,5 +58,5 @@ const orderSlice = createSlice({
   },
 });
 
-export const {emptyOrder,addIdOrderTable,addOrderDetailUpdate,addIdOrder, addToOrder,removeFromOrder, increaseQuantity, decreaseQuantity} = orderSlice.actions
+export const { emptyOrder, addIdOrderTable, addOrderDetailUpdate, addIdOrder, addToOrder, removeFromOrder, increaseQuantity, decreaseQuantity } = orderSlice.actions
 export const orderReducer = orderSlice.reducer
