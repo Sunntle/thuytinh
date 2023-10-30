@@ -120,6 +120,8 @@ function SearchPage() {
       return (
         <h4 className=" text-gray-600  pb-3">Không có sản phẩm phù hợp</h4>
       );
+
+      //comment something
     return (
       <div className="my-3">
         <Title level={4} className="font-semibol">
@@ -133,6 +135,7 @@ function SearchPage() {
                   className="h-full w-full rounded-t-lg"
                   src={el?.ImageProducts[0]?.url}
                 />
+  
                 <div className="p-4 flex flex-col">
                   <div className="font-medium">{el.name_product}</div>
                   <div className="text-xs mt-2 text-slate-500">
