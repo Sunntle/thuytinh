@@ -5,7 +5,7 @@ import { fetchOrderById, fetchTableById } from "../../services/api.js";
 import { Spin, Table } from "antd";
 import logo2 from "../../assets/images/logo2.png";
 import moment from "moment";
-import { formatCurrency } from "../../utils/format.js";
+import { calculateTotalWithVAT, formatCurrency } from "../../utils/format.js";
 import "./index.css";
 import { Link } from "react-router-dom";
 
@@ -23,12 +23,11 @@ const PaymentSuccess = () => {
     const fetchData = async () => {
       await Promise.all([
         sendRequest(fetchOrderById(idOrder), setOrderData),
-        sendRequest(fetchTableById(idTable[0], tableToken), setListOrder),
+        sendRequest(fetchTableById(idTable, tableToken), setListOrder),
       ]);
     };
     fetchData();
   }, [sendRequest, idOrder, idTable, tableToken]);
-  console.log("re-render");
 
   useEffect(() => {
     if (orderData !== null) {
@@ -58,7 +57,7 @@ const PaymentSuccess = () => {
     if (paymentData !== null) {
       const body = {
         idOrder: idOrder,
-        idTable: idTable[0],
+        idTable: idTable,
       };
       const request = {
         method: "put",
@@ -177,7 +176,7 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap font-semibold text-primary">
                 {moment(
                   orderData?.data?.transaction_date,
-                  "YYYYMMDDHHmmss"
+                  "YYYYMMDDHHmmss",
                 ).format("DD-MM-YYYY")}
               </span>
             </div>
@@ -204,7 +203,7 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Tạm tính:</span>
               <span className="block font-semibold text-primary">
                 {formatCurrency(
-                  listOrder[0]?.TableByOrders[0]?.order?.total || 0
+                  listOrder[0]?.TableByOrders[0]?.order?.total || 0,
                 )}
               </span>
             </div>
@@ -220,7 +219,9 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Tổng cộng:</span>
               <span className="block font-semibold">
                 {formatCurrency(
-                  listOrder[0]?.TableByOrders[0]?.order?.total || 0
+                  calculateTotalWithVAT(
+                    listOrder[0]?.TableByOrders[0]?.order?.total,
+                  ),
                 )}
               </span>
             </div>

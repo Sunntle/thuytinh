@@ -10,17 +10,23 @@ import useHttp from "../../hooks/useHttp.js";
 import { fetchTableById } from "../../services/api.js";
 import { useDispatch, useSelector } from "react-redux";
 import "./index.css";
-import { emptyOrder } from "../../redux/Order/orderSlice.js";
+import {
+  addOrderDetailUpdate,
+  emptyOrder,
+} from "../../redux/Order/orderSlice.js";
+import { Spinner } from "../../components/index.js";
+import { useNavigate } from "react-router-dom";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [payment, setPayment] = useState(null);
-  const { sendRequest } = useHttp();
+  const { sendRequest, isLoading } = useHttp();
   const [data, setData] = useState([]);
   const { tables } = useSelector((state) => state.customerName);
   const [form] = Form.useForm();
   const tableToken = localStorage.getItem("tableToken");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     sendRequest(fetchTableById(tables[0], tableToken), setData);
@@ -30,7 +36,7 @@ const Order = () => {
 
   const totalOrder = useMemo(
     () => calculateTotalWithVAT(order?.total, 10),
-    [order?.total]
+    [order?.total],
   );
 
   const showModal = () => {
@@ -43,6 +49,16 @@ const Order = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleAddNewOrder = async () => {
+    let dataPrevious = order?.order_details?.map((item, i) => {
+      const { Product, quantity } = item;
+      let inDb = quantity;
+      return { ...Product, quantity, inDb };
+    });
+    dispatch(addOrderDetailUpdate(dataPrevious));
+    navigate(`/ban-${tables[0]}/menu`)
   };
 
   const onFinish = async (values) => {
@@ -63,8 +79,10 @@ const Order = () => {
     }
   }, [payment]);
 
+  if (isLoading) return <Spinner />;
+
   return (
-    <div className="pb-24 mt-4 lg:mt-0 lg:pt-24">
+    <div className="pb-24 mt-24 lg:mt-0 lg:pt-12">
       <ScrollToTop />
       <div className="bg-white px-6 xl:px-12">
         <h1 className="mb-5 text-center text-2xl font-bold text-primary">
@@ -74,7 +92,7 @@ const Order = () => {
           <div className="w-full min-h-0 grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Main */}
             <div className="w-full overflow-hidden border md:col-span-7 p-2 rounded-lg space-y-3 shadow-sm">
-              {order?.order_details?.length ? (
+              {order?.order_details?.length > 0 ? (
                 order?.order_details?.map((item) => (
                   <div
                     key={item.id}
@@ -108,7 +126,7 @@ const Order = () => {
                   </div>
                 ))
               ) : (
-                <div className="text-center text-base font-semibold">
+                <div className="md:mt-4 text-center text-base font-semibold">
                   Vui lòng đặt món
                 </div>
               )}
@@ -136,10 +154,20 @@ const Order = () => {
                   </span>
                 </div>
                 <Button
-                  disabled={order?.order_details?.length <= 0}
+                  onClick={handleAddNewOrder}
+                  size="large"
+                  type={"text"}
+                  className="mt-8 w-full"
+                >
+                  Thêm món mới
+                </Button>
+                <Button
+                  disabled={
+                    order?.order_details?.length === 0 || order.length === 0
+                  }
                   onClick={showModal}
                   size="large"
-                  className="mt-8 w-full bg-primary text-white"
+                  className="mt-3 w-full bg-primary text-white"
                 >
                   Thanh toán
                 </Button>

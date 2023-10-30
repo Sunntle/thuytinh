@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Modal } from "antd";
+import { Button, message, Modal } from "antd";
 import "./index.css";
 import { BiSolidTrash } from "react-icons/bi";
 import { AiFillWarning } from "react-icons/ai";
@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { formatCurrency } from "../../../utils/format.js";
 import {
   addIdOrderTable,
-  addOrderDetailUpdate,
   decreaseQuantity,
   emptyOrder,
   increaseQuantity,
@@ -30,6 +29,7 @@ const OrderListModal = ({
   const customerName = useSelector((state) => state.customerName);
   const idTable = location.pathname.split("/")[1].split("-")[1];
   const { sendRequest } = useHttp();
+  const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
 
   // Calculate Total Bill
@@ -83,28 +83,32 @@ const OrderListModal = ({
       dispatch(emptyOrder());
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsOrderModalOpen(false);
     }
-    setIsOrderModalOpen(false);
   };
+
   useEffect(() => {
-    if (newOrder?.success === false) {
-      alert(newOrder?.data);
-    } else if (newOrder?.success === true) {
-      let dataPrevious = newOrder?.data?.detail?.map((item, i) => ({
-        ...item,
-        inDb: item.quantity,
-        ...newOrder?.data?.product[i],
-      }));
-      dispatch(addOrderDetailUpdate(dataPrevious));
+    if (newOrder?.success) {
+      messageApi.open({
+        type: "success",
+        content: "Đặt món thành công",
+      });
       dispatch(
         addIdOrderTable({
           idOrder: newOrder?.data?.orders?.id,
           idTable: customerName?.tables[0],
         }),
       );
+    } else {
+      messageApi.open({
+        type: "error",
+        content: "Đặt món thất bại",
+      });
     }
   }, [customerName?.tables, dispatch, newOrder]);
-  const handleUpdateOrder = () => {
+
+  const handleUpdateOrder = async () => {
     const body = {
       total: totalOrder,
       carts: orders,
@@ -116,10 +120,12 @@ const OrderListModal = ({
         url: "/order",
         ...body,
       };
-      sendRequest(request, setOrderUpdated);
-      setIsOrderModalOpen(false);
+      await sendRequest(request, setOrderUpdated);
+      dispatch(emptyOrder());
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsOrderModalOpen(false);
     }
   };
 
@@ -133,11 +139,12 @@ const OrderListModal = ({
       onCancel={handleCancel}
       centered
       footer={[
-        <Button key={1} onClick={handleUpdateOrder}>
+
+        <Button key={1} onClick={handleUpdateOrder} disabled={orders.some(i => Boolean(i.inDb))}>
           Cập nhật
         </Button>,
         <Button
-          disabled={orders?.length === 0}
+          disabled={orders?.length === 0 || !orders.some(i => Boolean(i.inDb))}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
           key={2}
           size="middle"
@@ -148,6 +155,7 @@ const OrderListModal = ({
       ]}
     >
       <div className="max-h-96 overflow-y-auto space-y-3 custom-scrollbar">
+        {contextHolder}
         {orders?.length > 0 ? (
           orders?.map((item, index) => (
             <div

@@ -40,14 +40,14 @@ const Menu = () => {
   const [categories, setCategories] = useState(null);
   const { order: orders } = useSelector((state) => state.order);
   const debouncedValue = useDebounce(searchValue, 100);
-  const limit = 2;
+  const limit = 15;
   const [offset, setOffset] = useState(0);
 
   const fetchFoods = useCallback(async () => {
     setIsProductLoading(true);
     try {
       const response = await instance.get(
-        `/product?_limit=${limit}&_offset=${offset}`
+        `/product?_limit=${limit}&_offset=${offset}`,
       );
       setFoods({
         total: response.total,
@@ -97,11 +97,11 @@ const Menu = () => {
     setIsOrderModalOpen(false);
   };
   if (isLoading) {
-    return <Spinner className={"my-56"} />;
+    return <Spinner />;
   }
 
   return (
-    <div className="pb-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
+    <div className="pb-24 mt-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
       <ScrollToTop />
       <div className="flex flex-col mt-8 space-y-8 lg:mt-24">
         <div className="lg:hidden grid grid-cols-12 gap-4 text-slate-500 ">
@@ -135,17 +135,19 @@ const Menu = () => {
           <CategoryList categories={categories} activeIndex={+categoryIndex} />
         </div>
         <ProductList foods={foods} />
-        <Button
-          loading={isProductLoading}
-          type="default"
-          className={`text-lg text-primary flex items-center justify-center ${
-            categoryIndex !== null ? "hidden" : ""
-          }`}
-          onClick={() => fetchFoods()}
-        >
-          <span>Xem thêm</span>
-          <FiChevronDown className="w-6 h-6" />
-        </Button>
+        {foods && (
+          <Button
+            loading={isProductLoading}
+            type="default"
+            className={`text-lg flex items-center justify-center ${
+              categoryIndex !== null ? "hidden" : ""
+            }`}
+            onClick={() => fetchFoods()}
+          >
+            <span>Xem thêm</span>
+            <FiChevronDown className="w-6 h-6" />
+          </Button>
+        )}
         <OrderListModal
           isModalOpen={isOrderModalOpen}
           handleOk={handleOk}

@@ -65,12 +65,17 @@ const Navbar = () => {
       },
     ];
   }, [idTable]);
+
   const activeClassname = useMemo(() => {
-    const checkActiveClassName = regex.test(location.pathname) ? navbarRoute[2] : navbarRoute.find(
-      (item) =>
-        location.pathname.includes(item.originRouteName) ||
-        location.state?.from.includes(item.originRouteName)
-    )
+    let checkActiveClassName
+    if(regex.test(location.pathname))  checkActiveClassName = navbarRoute[2]
+    if(location.pathname == "/" || location.pathname == "/home")  checkActiveClassName = navbarRoute[0]
+    else{
+      checkActiveClassName = navbarRoute.find(
+        (item) =>
+          location.pathname.includes(item.originRouteName) ||
+          location.state?.from.includes(item.originRouteName)
+      )}
     return checkActiveClassName;
   }, [location.pathname, location.state?.from, navbarRoute]);
 

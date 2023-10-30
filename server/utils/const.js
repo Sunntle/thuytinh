@@ -64,8 +64,7 @@ const checkQtyMaterials = async (data, model) => {
             [Op.or]: data.map((item) => ({
                 id: item.id_material,
                 amount: {
-                    [Op.gt]: item.total,
-                    [Op.gt]: 0
+                    [Op.gte]: item.total
                 }
             }))
         }, raw: true
