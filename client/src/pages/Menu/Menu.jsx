@@ -41,25 +41,24 @@ const Menu = () => {
   const { order: orders } = useSelector((state) => state.order);
   const debouncedValue = useDebounce(searchValue, 100);
   const limit = 15;
-  const [offset, setOffset] = useState(0);
+
 
   const fetchFoods = useCallback(async () => {
     setIsProductLoading(true);
     try {
       const response = await instance.get(
-        `/product?_limit=${limit}&_offset=${offset}`,
+        `/product?_limit=${limit}&_offset=${foods.data.length}`,
       );
       setFoods({
         total: response.total,
         data: [...foods.data, ...response.data],
       });
-      setOffset(offset + limit);
       setIsProductLoading(false);
     } catch (err) {
       setIsProductLoading(true);
       console.error(err);
     }
-  }, [offset, foods.data]);
+  }, [foods.data]);
 
   useEffect(() => {
     sendRequest(apiService.fetchCategories(), setCategories);
@@ -96,9 +95,7 @@ const Menu = () => {
   const handleCancel = () => {
     setIsOrderModalOpen(false);
   };
-  if (isLoading) {
-    return <Spinner />;
-  }
+  if (isLoading) return <Spinner />;
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
