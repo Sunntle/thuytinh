@@ -41,6 +41,7 @@ const LayoutMain = () => {
   }, [api]);
   useEffect(() => {
     socket.on("new message", (arg) => {
+      console.log(arg);
       dispatch(addNewMessage(arg))
       openNotification(arg)
     })

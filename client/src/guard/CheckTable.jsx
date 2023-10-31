@@ -36,7 +36,7 @@ function CheckTable(props) {
   }, [idTable, tokenTable])
   if (loading) return <Spinner />
   // eslint-disable-next-line react/prop-types
-  return isTableExist == "Đúng" ? (props.children) : (<SelectTable isTableExist={isTableExist} />)
+  return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? (props.children) : (<SelectTable isTableExist={isTableExist} />)
 }
 
 export default CheckTable

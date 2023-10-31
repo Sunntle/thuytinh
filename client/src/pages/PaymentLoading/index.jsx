@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { parseQueryString } from "../../utils/format.js";
 import { Button, Modal, Spin } from "antd";
@@ -10,21 +10,20 @@ const PaymentLoading = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { sendRequest } = useHttp();
-  const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dataResponse = parseQueryString(location.search);
   const { idOrder, idTable } = useSelector((state) => state.order);
   const [data, setData] = useState(null);
 
-  const paymentResponse = {
+  const paymentResponse = useMemo(()=>({
     idOrder: idOrder,
     transaction_id: dataResponse.vnp_TxnRef,
     transaction_date: dataResponse.vnp_PayDate,
     payment_gateway: dataResponse.vnp_BankCode,
-  };
+  }),[dataResponse.vnp_BankCode, dataResponse.vnp_PayDate, dataResponse.vnp_TxnRef, idOrder]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (checkErrorCode(dataResponse?.vnp_ResponseCode) === true) {
       const request = {
         method: "put",
@@ -36,20 +35,19 @@ const PaymentLoading = () => {
       const { message } = checkErrorCode(dataResponse?.vnp_ResponseCode);
       setErrorMessage(message);
     }
-  }, [sendRequest]);
+  }, [dataResponse?.vnp_ResponseCode, paymentResponse, sendRequest]);
 
   useEffect(() => {
     if (data !== null) {
       setIsModalOpen(false);
-      navigate("/payment-success");
+      navigate("/payment-success", {state: {idOrder}});
     } else {
       setIsModalOpen(true);
     }
-  }, [data, navigate]);
+  }, [data, idOrder, navigate]);
 
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center">
-      {isLoading && <Spin size={"large"} />}
       <span className="mt-5 text-base font-semibold">
         Quý khách vui lòng đợi trong giây lát.
       </span>

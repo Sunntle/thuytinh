@@ -4,7 +4,7 @@ import axios from "../utils/axiosConfig";
 const useHttp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const sendRequest = useCallback(async (request, getData) => {
+  const sendRequest = useCallback(async (request, getData, render) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -12,6 +12,7 @@ const useHttp = () => {
       const response = await axios[method](url, {
           ...rest,
       });
+      if(render) return response
       if(typeof getData == "function") getData(response);
       else getData = response
     } catch (err) {
