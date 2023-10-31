@@ -139,12 +139,11 @@ const OrderListModal = ({
       onCancel={handleCancel}
       centered
       footer={[
-
-        <Button key={1} onClick={handleUpdateOrder} disabled={orders.some(i => Boolean(i.inDb))}>
+        <Button key={1} onClick={handleUpdateOrder} disabled={orders.some(i => i.inDb && false)}>
           Cập nhật
         </Button>,
         <Button
-          disabled={orders?.length === 0 || !orders.some(i => Boolean(i.inDb))}
+          disabled={orders?.length === 0 || orders.some(i => i.inDb && true)}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
           key={2}
           size="middle"

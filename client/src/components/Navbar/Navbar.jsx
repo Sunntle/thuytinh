@@ -15,7 +15,7 @@ const regex = /^\/ban-\d+$/;
 const Navbar = () => {
   const location = useLocation();
   const headerRef = useRef();
-  const { sendRequest } = useHttp();
+  const { sendRequest, isLoading } = useHttp();
   const [categories, setCategories] = useState(null);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
   const [isOrderDesktop, setIsOrderDesktop] = useState(false)
@@ -68,15 +68,17 @@ const Navbar = () => {
 
   const activeClassname = useMemo(() => {
     let checkActiveClassName
-    if(regex.test(location.pathname))  checkActiveClassName = navbarRoute[2]
-    if(location.pathname == "/" || location.pathname == "/home")  checkActiveClassName = navbarRoute[0]
+    if(regex.test(location.pathname))  return checkActiveClassName = navbarRoute[2]
+    if(location.pathname == "/" || location.pathname == "/home")  return checkActiveClassName = navbarRoute[0]
     else{
       checkActiveClassName = navbarRoute.find(
         (item) =>
           location.pathname.includes(item.originRouteName) ||
           location.state?.from.includes(item.originRouteName)
-      )}
-    return checkActiveClassName;
+      )
+      return checkActiveClassName;
+    }
+  
   }, [location.pathname, location.state?.from, navbarRoute]);
 
   useLayoutEffect(() => {
@@ -93,15 +95,24 @@ const Navbar = () => {
         }
       }
     };
+
+    const handleResize = ()=>{
+      if(window.screen.width > 1024 && categories == null){
+        if(isLoading) return
+        sendRequest({ url: "/category", method: "get" }, setCategories);
+      }
+    }
+
     window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("scroll", handleScroll);
-    };
-  }, [checkRoute]);
+      window.removeEventListener("resize", handleResize)
 
-  useEffect(() => {
-    sendRequest({ url: "/category", method: "get" }, setCategories);
-  }, [sendRequest]);
+    };
+  }, [categories, checkRoute, isLoading, sendRequest]);
+
+
   const handleMenuMouseEnter = useCallback(() => {
     setIsMenuHovered(true);
   },[]);
