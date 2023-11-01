@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { parseQueryString } from "../../utils/format.js";
 import { Button, Modal, Spin } from "antd";
@@ -14,7 +14,6 @@ const PaymentLoading = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dataResponse = parseQueryString(location.search);
   const { idOrder, idTable } = useSelector((state) => state.order);
-  const [data, setData] = useState(null);
 
   const paymentResponse = useMemo(()=>({
     idOrder: idOrder,
@@ -22,29 +21,27 @@ const PaymentLoading = () => {
     transaction_date: dataResponse.vnp_PayDate,
     payment_gateway: dataResponse.vnp_BankCode,
   }),[dataResponse.vnp_BankCode, dataResponse.vnp_PayDate, dataResponse.vnp_TxnRef, idOrder]);
+  
+  const handleNavigate =  useCallback(async()=>{
+    const request = {
+      method: "put",
+      url: "/payment/update_transaction",
+      ...paymentResponse,
+    };
+    const data = await sendRequest(request, undefined, true);
+    if (data !== null) {
+      setIsModalOpen(false);
+      navigate("/payment-success", {state: {idOrder}});
+    }else throw new Error("No data") },[idOrder, navigate, paymentResponse, sendRequest])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (checkErrorCode(dataResponse?.vnp_ResponseCode) === true) {
-      const request = {
-        method: "put",
-        url: "/payment/update_transaction",
-        ...paymentResponse,
-      };
-      sendRequest(request, setData);
+       handleNavigate()
     } else {
       const { message } = checkErrorCode(dataResponse?.vnp_ResponseCode);
       setErrorMessage(message);
     }
-  }, [dataResponse?.vnp_ResponseCode, paymentResponse, sendRequest]);
-
-  useEffect(() => {
-    if (data !== null) {
-      setIsModalOpen(false);
-      navigate("/payment-success", {state: {idOrder}});
-    } else {
-      setIsModalOpen(true);
-    }
-  }, [data, idOrder, navigate]);
+  }, [dataResponse?.vnp_ResponseCode, handleNavigate]);
 
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center">
