@@ -1,9 +1,9 @@
 
-import { Form, Input, message, notification } from 'antd';
+import { Form, Input, message } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import { callLogin } from '../../services/api';
 import { doLoginAction } from '../../redux/account/accountSlice';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 
 const LoginPage = () => {
@@ -22,7 +22,6 @@ const LoginPage = () => {
     }, [acc])
     const onFinish = async (values) => {
         const res = await callLogin(values);
-        console.log(res)
         if (res.account) {
             messageApi.open({
                 type: 'success',

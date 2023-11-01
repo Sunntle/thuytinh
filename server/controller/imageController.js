@@ -1,6 +1,23 @@
 const { ImageProduct } = require("../models");
 const { Op, where } = require("sequelize");
 const cloudinary = require("cloudinary").v2;
+exports.getAllImagesInCloud = async (req, res) => {
+  try {
+    const {_limit, _offset,...rest} = req.body
+    const options = { resource_type: 'image', type: 'upload', max_results: _limit ?? 500 };
+    cloudinary.api.resources(options, function (error, result) {
+      if (error) {
+        console.error('Error:', error);
+      } else {
+        res.status(200).json(result.resources);
+      }
+    });
+    
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 exports.addNew = async (req, res) => {
   try {
     const images = req.files;

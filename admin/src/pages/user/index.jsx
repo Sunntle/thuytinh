@@ -41,6 +41,7 @@ const options = [
     id: 'Khách hàng'
   },
 ]
+const LIMIT = 10
 function UserPage() {
   const [admin, setAdmin] = useState(null);
   const [user, setUser] = useState(null);
@@ -50,8 +51,8 @@ function UserPage() {
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
   const userStore = useSelector((state) => state.account);
-  const notifications = useSelector((state) => state.notifications);
   const [open, setOpen] = useState(false);
+
   const fetchData = useCallback(async (role) => {
     try {
       setLoading(true);
@@ -69,8 +70,8 @@ function UserPage() {
         }
         default: {
           const [dataAdmin, dataUser] = await Promise.all([
-            getAllUser({ _like: "role_R1_not" }),
-            getAllUser({ _like: "role_R1" }),
+            getAllUser({ _like: "role_R1_not"}),
+            getAllUser({ _like: "role_R1"}),
           ]);
           dataAdmin.success && setAdmin(dataAdmin);
           dataUser.success && setUser(dataUser);
@@ -148,20 +149,15 @@ function UserPage() {
         setAdmin((prev) => ({ ...prev, data: arrAdmin }));
       }
     });
+    socket.on("new message", arg =>{
+      if(arg.type == "user") fetchData()
+    })
     return () => {
       socket.off("update-admin-online");
+      socket.off("new message")
     };
-  }, [admin]);
+  }, [admin, fetchData]);
 
-  useEffect(() => {
-    if (
-      notifications.lastNotification &&
-      notifications.lastNotification?.type ==
-      location.pathname.split("/").at(-1)
-    ) {
-      fetchData();
-    }
-  }, [fetchData, notifications.lastNotification]);
   const onFinish = useCallback(
     async (values) => {
       const formData = new FormData();
@@ -183,6 +179,7 @@ function UserPage() {
     },
     [fetchData, messageApi]
   );
+
   const handleFinish = useCallback(
     async (values) => {
       const { success, mes } = await callRegister(values);
@@ -450,6 +447,7 @@ function UserPage() {
     ),
     [form, form1, onFinish, openModalProfile, submitResetPass]
   );
+
   const renderRegisterModal = useMemo(()=>(<Modal
     open={open}
     title="Thêm tài khoản mới"
@@ -459,6 +457,7 @@ function UserPage() {
   >
     <RegisterPage handleFinish={handleFinish} />
   </Modal>),[handleFinish, open])
+
   const columnsUser = useMemo(
     () => [
       {
@@ -566,6 +565,7 @@ function UserPage() {
   const renderTableAdmin = () => {
     return (
       <Table
+        defaultPageSize={LIMIT}
         columns={columnsAdmin}
         dataSource={admin?.data}
         onChange={onChange}
@@ -573,6 +573,7 @@ function UserPage() {
       />
     );
   };
+  
   const renderTableUser = () => {
     return (
       <Table
@@ -583,6 +584,7 @@ function UserPage() {
       />
     );
   };
+
   const items = [
     {
       label: "Khách hàng",

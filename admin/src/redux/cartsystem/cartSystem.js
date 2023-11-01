@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     carts: [],
-    quantity: 0
+    quantity: 0,
+    err: null
 }
 const cartSystem = createSlice({
     name: "cart",
@@ -12,13 +13,14 @@ const cartSystem = createSlice({
 
             if (find >= 0) {
                 if (action.payload.amount === 0 || action.payload.amount === state.carts[find].quantity) {
-                    alert('Sản phẩm hết hàng!');
+                    state.err = "Sản phẩm hết hàng !";
                 } else {
                     state.carts[find].quantity += 1;
                 }
             } else {
                 if (action.payload.amount === 0) {
-                    alert('Sản phẩm hết hàng!');
+                    // alert('Sản phẩm hết hàng!');
+                    state.err = "Sản phẩm hết hàng !";
                 }
                 else {
                     const newProduct = { ...action.payload, quantity: 1 };
@@ -27,26 +29,50 @@ const cartSystem = createSlice({
             }
 
             return state;
-        }
-
-        ,
+        },
+        setErr: (state, action) => {
+            state.err = action.payload;
+        },
         AddCartUpdate: (state, action) => {
             const tempvar = { ...action.payload, quantity: action.payload.quantity };
             state.carts.push(tempvar);
         },
         RemoveCart: (state, action) => {
-            const nextCartItems = state.carts.filter(item => item.id !== action.payload.id);
-            state.carts = nextCartItems;
+            const itemIndex = state.carts.findIndex(
+                (cartItem) => cartItem.id === action.payload.id
+            );
+            if(state.carts[itemIndex].inDb){
+                state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
+            }else{
+                state.carts.splice(itemIndex, 1);
+            }
+            
         },
         RemoveAllCart: (state) => {
-            state.carts = [];
+            
+            if(state.carts.some((item)=>(item.inDb && true))){
+                state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
+            }else{
+                state.carts = [];
+            }
+            
         },
         DecreaseCart: (state, action) => {
             const itemIndex = state.carts.findIndex(
                 (cartItem) => cartItem.id === action.payload.id
             );
-            if (state.carts[itemIndex].quantity > 1) {
-                state.carts[itemIndex].quantity -= 1;
+            if (state.carts[itemIndex].quantity >= 1) {
+                console.log(state.carts[itemIndex].inDb)
+                if(state.carts[itemIndex].inDb && state.carts[itemIndex].inDb === state.carts[itemIndex].quantity){
+                    state.carts[itemIndex].quantiy = state.carts[itemIndex].inDb;
+                    state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
+                }else if(state.carts[itemIndex].quantity === 1){
+                    state.carts[itemIndex].quantity = 1
+                   
+                }else{
+                    state.carts[itemIndex].quantity -= 1; 
+                }
+                
             }
             // }else if(state.carts[itemIndex].quantity === 1){
             //     const nextCartItems = state.carts.filter(item=>item.id!==action.payload.id);
@@ -76,5 +102,5 @@ const cartSystem = createSlice({
     }
 })
 
-export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart, DecreaseCart, getTotal } = cartSystem.actions;
+export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart, DecreaseCart, getTotal, setErr } = cartSystem.actions;
 export default cartSystem.reducer;

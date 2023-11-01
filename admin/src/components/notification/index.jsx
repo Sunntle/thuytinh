@@ -2,7 +2,7 @@ import { Badge, Button, Popover, Tooltip, Typography } from "antd";
 import { formatNgay } from "../../utils/format";
 import { BellOutlined, CheckOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import {
   deleteNotification,
@@ -11,6 +11,8 @@ import {
   maskAsRead,
 } from "../../redux/notification/notificationSystem";
 // import InfiniteScroll from 'react-infinite-scroll-component';
+/* eslint-disable react-refresh/only-export-components */
+
 function NotificationsComponent({
   notifications,
   openPopover,
@@ -32,7 +34,7 @@ function NotificationsComponent({
 
   const handleDelete = useCallback(async (id) => {
     dispatch(deleteNotification(id));
-  },[dispatch])
+  }, [dispatch])
 
   // const handleLoadMore = useCallback(()=>{
   //   dispatch(loadMoreData(notifications.length))
@@ -118,8 +120,8 @@ function NotificationsComponent({
             </div>
           );
         })}
-          </div>
-    
+      </div>
+
     );
   };
   return (
@@ -136,7 +138,7 @@ function NotificationsComponent({
             <Button
               className="border-0"
               shape="circle"
-              icon={isLoading ? <LoadingOutlined/>:<CheckOutlined />}
+              icon={isLoading ? <LoadingOutlined /> : <CheckOutlined />}
               onClick={handleCheckedAll}
             />
           </Tooltip>
@@ -147,7 +149,7 @@ function NotificationsComponent({
       onOpenChange={() => setOpenPopover(!openPopover)}
       placement="topRight"
     >
-      <Badge count={getCountNoti} style={{borderColor: 'rgb(255, 77, 79)'}}>
+      <Badge count={getCountNoti} style={{ borderColor: 'rgb(255, 77, 79)' }}>
         <Button
           type="primary"
           className="border-borderSecondaryColor bg-secondaryColor"
@@ -160,4 +162,4 @@ function NotificationsComponent({
   );
 }
 
-export default NotificationsComponent;
+export default memo(NotificationsComponent);

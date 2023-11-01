@@ -54,6 +54,9 @@ const ResChooseTable = () => {
   const tableListData = useSelector((state) => state.tablelist);
   const [open, setOpen] = useState(false);
   const [api, contextHolder] = notification.useNotification();
+
+
+
   useEffect(() => {
     socket.on("new message", arg => {
       if (arg.type === "order") {

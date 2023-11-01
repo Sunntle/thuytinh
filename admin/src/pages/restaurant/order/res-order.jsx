@@ -135,7 +135,8 @@ const ResOrder = ({ handleCancel, open }) => {
     dispatch(RemoveAllCart())
     index.TableByOrders[0].order.order_details.forEach(item => {
       console.log(item.quantity)
-      dispatch(AddCartUpdate({ quantity: item.quantity, ...item.Product }))
+      let inDb = item.quantity;
+      dispatch(AddCartUpdate({ quantity: item.quantity, ...item.Product,inDb }))
     });
     dispatch(AddTableList(index))
     navigate('/employee/menu/');

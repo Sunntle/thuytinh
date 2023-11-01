@@ -32,7 +32,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { doLogoutAction, fetchAccount } from "../../redux/account/accountSlice";
 import { ChangeMode } from "../../redux/customize/customize";
-import { fetchNotification } from "../../redux/notification/notificationSystem";
 import {
   callLogout,
   callUpdateAccount,
@@ -44,6 +43,7 @@ import { LightSvg, NAV_ITEMS } from "../../utils/constant";
 import { roleRext, truncateString } from "../../utils/format";
 import NotificationsComponent from "../notification";
 import { DarkSvg } from "../../utils/constant";
+import Clock from "../clock/Clock";
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
 
@@ -66,6 +66,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
   const noti = useSelector((state) => state.notifications);
   const customize = useSelector((state) => state.customize);
   const dispatch = useDispatch();
+
   const items = useMemo(() => ([
     {
       label: <span className="font-semibold">{user?.user.name}</span>,
@@ -82,9 +83,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
       icon: <LogoutOutlined />,
     },
   ]), [user?.user.name]);
-  useEffect(() => {
-    dispatch(fetchNotification());
-  }, [dispatch]);
+
   const handleMenuClick = useCallback(
     async (e) => {
       if (e.key == 2) {
@@ -113,12 +112,12 @@ function HeaderComponent({collapsed, setCollapsed}) {
 
     }, [dispatch, form, user.user]);
 
-  const handleRemoveKeyWord = (index) => {
+  const handleRemoveKeyWord = useCallback((index) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord"));
     searchArr.splice(index, 1);
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
-  };
+  },[]);
 
   const handleSearch = useCallback((keyword) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
@@ -130,12 +129,11 @@ function HeaderComponent({collapsed, setCollapsed}) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const dataProducts = await getAllProduct({
+      const [dataProducts, dataCate] = await Promise.all([getAllProduct({
         _sort: "sold",
         _order: "DESC",
         _limit: 8,
-      });
-      const dataCate = await getAllCate();
+      }),getAllCate()]);
       setCategories(dataCate);
       setData(dataProducts);
     };
@@ -314,7 +312,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
           />
         </div>
         <div className="flex items-center justify-center gap-x-4">
-          {/* <Clock/> */}
+          <Clock/>
           <Tooltip title={customize.darkMode ? 'Chế độ sáng': 'Chế độ tối'}>
             <Button
               size="large"

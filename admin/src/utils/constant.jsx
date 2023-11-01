@@ -54,11 +54,17 @@ export const DarkSvg = () => (
     </g>
   </svg>
 );
+export const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
+export const overMasterial = ["2", "500", "9", "5", "50", "20", "10"];
+
+
+
+
 
 export const LightSvg = () => (
   <svg
-  width="1em"
-  height="1em"
+    width="1em"
+    height="1em"
     viewBox="0 0 24.00 24.00"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -76,12 +82,12 @@ export const LightSvg = () => (
         {" "}
         <path
           d="M5 12H1M23 12h-4M7.05 7.05 4.222 4.222M19.778 19.778 16.95 16.95M7.05 16.95l-2.828 2.828M19.778 4.222 16.95 7.05"
-   
+
         ></path>{" "}
         <path
           d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
           fill="#ffffff"
-   
+
         ></path>{" "}
         <path d="M12 19v4M12 1v4"></path>{" "}
       </g>{" "}
