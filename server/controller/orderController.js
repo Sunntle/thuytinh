@@ -81,12 +81,12 @@ exports.createOrder = asyncHandler(async (req, res) => {
     over
   };
 
-  if(!id_employee){
+  if (!id_employee) {
     await Notification.create(
       { type: "order", description: `Có đơn hàng mới`, content: order_result.id },
       { raw: true },
     );
-    _io.of("/client").emit("status order", {...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3"});// check correct order
+    _io.of("/client").emit("status order", { ...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3" });// check correct order
   }
 
   res.status(200).json({ success: true, data: result });
@@ -213,7 +213,6 @@ exports.dashBoard = asyncHandler(async (req, res) => {
   const type = req.query.type;
   const info = type === "MONTH" ? "T/" : "Năm : ";
   const currentMonth = new Date();
-
   const previousMonth = new Date();
   previousMonth.setMonth(previousMonth.getMonth() - 1);
   previousMonth.setDate(1);
@@ -225,9 +224,8 @@ exports.dashBoard = asyncHandler(async (req, res) => {
         where(fn("YEAR", col("createdAt")), currentMonth.getFullYear()),
       ],
     },
-    raw: true,
+    raw: true
   });
-
   let con = {
     group: [Sequelize.fn(type, Sequelize.col("createdAt"))],
     order: [[type, "ASC"]],
@@ -241,8 +239,8 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     };
   data.montdPreAndCur = await Order.findAll({
     attributes: [
-      [Sequelize.fn("SUM", Sequelize.col("total")), "total"],
-      [Sequelize.fn("MONTH", Sequelize.col("createdAt")), "month"],
+      [fn("SUM", col("total")), "total"],
+      [fn("MONTH", col("createdAt")), "month"],
     ],
     where: {
       createdAt: {
@@ -250,15 +248,15 @@ exports.dashBoard = asyncHandler(async (req, res) => {
           {
             [Op.between]: [previousMonth, currentMonth],
           },
-          Sequelize.where(
-            Sequelize.fn("YEAR", Sequelize.col("createdAt")),
+          where(
+            fn("YEAR", col("createdAt")),
             currentYear(),
           ),
         ],
       },
     },
-    group: [Sequelize.fn("MONTH", Sequelize.col("createdAt"))],
-    order: [[Sequelize.fn("MONTH", Sequelize.col("createdAt")), "desc"]],
+    group: [fn("MONTH", col("createdAt"))],
+    order: [[fn("MONTH", col("createdAt")), "desc"]],
     raw: true,
   });
 
@@ -280,9 +278,9 @@ exports.dashBoard = asyncHandler(async (req, res) => {
   data.chart_order = (
     await Order.findAll({
       attributes: [
-        [Sequelize.fn(type, Sequelize.col("createdAt")), type],
-        [Sequelize.fn("COUNT", Sequelize.col("id")), "totalOrder"],
-        [Sequelize.fn("SUM", Sequelize.col("total")), "total"],
+        [fn(type, col("createdAt")), type],
+        [fn("COUNT", col("id")), "totalOrder"],
+        [fn("SUM", col("total")), "total"],
       ],
       ...con,
     })
