@@ -141,10 +141,10 @@ const ResPayment = () => {
 
                             {tablelist.status_table > 0 ? (<div className='flex justify-center font-semibold col-span-1 m-1'>
 
-                                <button className='bg-indigo-500 text-white' onClick={sumitUpdateOrder}>Cập nhật</button>
+                                <button className={`bg-indigo-500 text-white ${carts.length > 0 ? "" : "bg-indigo-300 pointer-events-none"}`} onClick={sumitUpdateOrder}>Cập nhật</button>
 
                             </div>) : (<div className='flex justify-center font-semibold col-span-1 m-1'>
-                                <button className='bg-blue-500 text-white' onClick={submitOrderList}>Đặt món</button>
+                                <button className={`bg-blue-500 text-white ${carts.length > 0 ? "" : "bg-blue-300 pointer-events-none"}`} onClick={submitOrderList}>Đặt món</button>
                             </div>)}
                         </div>
                     ) : (

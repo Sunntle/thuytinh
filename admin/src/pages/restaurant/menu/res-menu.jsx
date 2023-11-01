@@ -1,4 +1,4 @@
-import { Col, Row, Divider, FloatButton, Button, Pagination as PaginationMenu, Badge } from 'antd';
+import { Col, Row, Divider, FloatButton, Button, Pagination as PaginationMenu, Badge ,notification} from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useRef, useState } from 'react';
@@ -16,6 +16,7 @@ const ResMenu = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
+    const [api, contextHolder] = notification.useNotification();
     console.log(product)
     const fetchData = async (page, _limit) => {
         const resCa = await getAllCate();
@@ -33,8 +34,22 @@ const ResMenu = () => {
         fetchData(e, p)
         setPage(e)
     }
+    // xu ly quantity
+    const handleAddCarts = (item) => {
+        console.log(item)
+        if(item.amount === 0){
+            api.info({
+                message: 'Thông báo!!!',
+                description:
+                  'Sản phẩm hết hàng!!!',
+              });
+        }else{
+            dispatch(AddCart(item))
+        }
+    }
     return (
         <div className='w-full px-5 py-10'>
+            {contextHolder}
             <FloatButton.BackTop />
             <Row gutter={[16, 16]}>
                 <Col xs={24} lg={16}>
@@ -69,15 +84,16 @@ const ResMenu = () => {
                                         <Badge.Ribbon text={`${product.discount}%`} color='red'>
                                             <div className='shadow-xl border-solid border border-gray-300 rounded-lg min-h-[230px] w-auto' >
                                                 <img className='h-full w-full rounded-t-lg' src={product?.ImageProducts[0]?.url} />
-                                                <div className='p-2 flex flex-col'>
+                                                <div className='p-4 flex flex-col'>
                                                     <div className='font-medium'>{product.name_product}</div>
                                                     <div className='text-xs mt-2 text-slate-500'>Số lượng : {product.amount}</div>
-                                                    <div className='flex justify-between items-center'>
-                                                        <div className='product-price flex justify-between items-center'>                                                            
+                                                    <div className='flex justify-between items-center mt-2'>
+                                                        <div className='product-price flex justify-between items-center'>                                                       
                                                             <p className=' font-medium text-main text-lg mr-1'> {(formatGia(product.price - (product.price * product.discount / 100)))}</p>
-                                                            <p className=' font-medium text-slate-300 line-through text-xs '> {(formatGia(product.price))}</p>
+                                                            <p className=' font-medium text-slate-300 line-through text-xs '> {(formatGia(product.price))}</p>  
                                                         </div>
-                                                        <PlusOutlined onClick={() => dispatch(AddCart(product))} size={30} className='p-1 bg-main rounded-full text-white' />
+                                                        {/* <PlusOutlined onClick={() => dispatch(AddCart(product))} size={30} className='p-1 bg-main rounded-full text-white' /> */}
+                                                        <PlusOutlined onClick={() => handleAddCarts(product)} size={30} className='p-1 bg-main rounded-full text-white' />
                                                     </div>
                                                 </div>
                                             </div>
@@ -85,12 +101,12 @@ const ResMenu = () => {
                                     ) : (
                                         <div className='shadow-xl border-solid border border-gray-300 rounded-lg min-h-[230px] h-auto w-auto'>
                                             <img className='h-full w-full rounded-t-lg' src={product?.ImageProducts[0]?.url} />
-                                            <div className='p-2 flex flex-col'>
-                                                <div className='font-medium'>{product.name_product}</div>
+                                            <div className='p-4 flex flex-col'>
+                                                <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
                                                 <div className='text-xs text-slate-500 mt-2'>Số lượng : {product.amount}</div>
                                                 <div className='flex justify-between items-center'>
                                                     <p className=' font-medium text-main text-lg mt-1'> {(formatGia(product.price))}</p>
-                                                    <PlusOutlined onClick={() => dispatch(AddCart(product))} size={30} className='p-1 bg-main rounded-full text-white' />
+                                                    <PlusOutlined onClick={() => handleAddCarts(product)} size={30} className='p-1 bg-main rounded-full text-white' />
                                                 </div>
                                             </div>
                                         </div>)}
