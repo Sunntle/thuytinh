@@ -10,7 +10,7 @@ exports.handleCallStaff = (socket) => {
   socket.on("call staff", async (idTable) => {
     try {
       callStaff.push({ socketId: socket.id, idTable: idTable });
-      const res = await Notification.create({
+       await Notification.create({
         type: "call-staff",
         description: `Gọi nhân viên - Bàn ${idTable} !!!`,
       });

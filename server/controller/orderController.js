@@ -81,12 +81,13 @@ exports.createOrder = asyncHandler(async (req, res) => {
     over
   };
 
-  let storeNotification = await Notification.create(
-    { type: "order", description: `Có đơn hàng mới`, content: order_result.id },
-    { raw: true },
-  );
-
-  _io.of("/client").emit("status order", result);
+  if(!id_employee){
+    await Notification.create(
+      { type: "order", description: `Có đơn hàng mới`, content: order_result.id },
+      { raw: true },
+    );
+    _io.of("/client").emit("status order", {...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3"});// check correct order
+  }
 
   res.status(200).json({ success: true, data: result });
 });

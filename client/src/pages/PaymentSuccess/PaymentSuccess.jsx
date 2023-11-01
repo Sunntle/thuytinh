@@ -1,33 +1,30 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
-import { fetchOrderById, fetchTableById } from "../../services/api.js";
+import { fetchOrderById } from "../../services/api.js";
 import { Spin, Table } from "antd";
 import logo2 from "../../assets/images/logo2.png";
 import moment from "moment";
 import { calculateTotalWithVAT, formatCurrency } from "../../utils/format.js";
 import "./index.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const PaymentSuccess = () => {
-  const { idOrder, idTable } = useSelector((state) => state.order);
-  const { name: customerName } = useSelector((state) => state.customerName);
-  const [dataUpdated, setDataUpdated] = useState(null);
+  // const { idOrder, idTable } = useSelector((state) => state.order);
   const [orderData, setOrderData] = useState(null);
-  const [listOrder, setListOrder] = useState([]);
-  const [paymentData, setPaymentData] = useState(null);
   const { sendRequest, isLoading } = useHttp();
-  const tableToken = localStorage.getItem("tableToken");
+  const location = useLocation()
+
+  const idOrder = useMemo(()=>location?.state?.idOrder,[location?.state?.idOrder])
+
+  const fetchData = useCallback(async () => {
+  await Promise.all([
+    sendRequest(fetchOrderById(idOrder), setOrderData),
+  ]);
+},[idOrder, sendRequest]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      await Promise.all([
-        sendRequest(fetchOrderById(idOrder), setOrderData),
-        sendRequest(fetchTableById(idTable, tableToken), setListOrder),
-      ]);
-    };
-    fetchData();
-  }, [sendRequest, idOrder, idTable, tableToken]);
+    if(idOrder) fetchData();
+  }, [fetchData, idOrder]);
 
   useEffect(() => {
     if (orderData !== null) {
@@ -35,40 +32,36 @@ const PaymentSuccess = () => {
         orderData?.data?.transaction_id !== null &&
         orderData?.data?.transaction_date !== null
       ) {
-        const body = {
-          orderId: orderData?.data?.transaction_id,
-          transDate: orderData?.data?.transaction_date,
-        };
         try {
-          const request = {
-            method: "post",
-            url: "/payment/vnpay_querydr",
-            ...body,
-          };
-          sendRequest(request, setPaymentData);
+          const handlePostPayment = async()=>{
+            const request = {
+              method: "post",
+              url: "/payment/vnpay_querydr",
+              ...{
+                orderId: orderData?.data?.transaction_id,
+                transDate: orderData?.data?.transaction_date,
+              },
+            };
+            const test = await sendRequest(request, undefined, true);
+            if(test.message) return new Error(test.message)
+            const updateStatusPayment = {
+              method: "put",
+              url: "/payment/update_status",
+              ...{
+                idOrder: idOrder,
+              },
+            };
+            await sendRequest(updateStatusPayment, undefined, true);
+          }
+          handlePostPayment()
         } catch (err) {
           console.log(err);
         }
       }
     }
-  }, [orderData, sendRequest]);
+  }, [idOrder, orderData, sendRequest]);
 
-  useEffect(() => {
-    if (paymentData !== null) {
-      const body = {
-        idOrder: idOrder,
-        idTable: idTable,
-      };
-      const request = {
-        method: "put",
-        url: "/payment/update_status",
-        ...body,
-      };
-      sendRequest(request, setDataUpdated);
-    }
-  }, [paymentData, idOrder, idTable, sendRequest]);
-
-  const columns = [
+  const columns = useMemo(()=>([
     {
       title: "Tên món ăn",
       dataIndex: "Product.name_product",
@@ -96,19 +89,17 @@ const PaymentSuccess = () => {
         <span>{formatCurrency(record?.Product?.price * record?.quantity)}</span>
       ),
     },
-  ];
-
-  if (isLoading === true) {
-    return (
-      <div className="h-screen w-full flex flex-col justify-center items-center">
-        {isLoading && <Spin size={"large"} />}
-        <span className="mt-5 text-base font-semibold">
-          Quý khách vui lòng đợi trong giây lát.
-        </span>
-      </div>
-    );
-  }
-
+  ]),[]);
+  
+  if (isLoading) (
+    <div className="h-screen w-full flex flex-col justify-center items-center">
+      {isLoading && <Spin size={"large"} />}
+      <span className="mt-5 text-base font-semibold">
+        Quý khách vui lòng đợi trong giây lát.
+      </span>
+    </div>
+  )
+    if(!idOrder) return <p>Some thing wrong</p>
   return (
     <div className="lg:bg-slate-100 lg:py-2 min-h-screen max-w-full">
       <div className="relative h-screen w-screen bg-white max-w-full lg:max-w-3xl mx-auto lg:shadow-2xl text-slate-800">
@@ -147,7 +138,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Tên khách hàng:</span>
               <span className="block font-semibold text-primary">
-                {listOrder[0]?.TableByOrders[0]?.order?.name}
+                {orderData?.data?.name}
               </span>
             </div>
             <div className="flex justify-between items-center space-x-1 w-full">
@@ -159,7 +150,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Số bàn:</span>
               <span className="whitespace-nowrap font-semibold text-primary">
-                {listOrder[0]?.id}
+                {orderData?.data?.TableByOrders[0].id}
               </span>
             </div>
           </div>
@@ -187,7 +178,7 @@ const PaymentSuccess = () => {
           <Table
             columns={columns}
             pagination={false}
-            dataSource={listOrder[0]?.TableByOrders[0]?.order?.order_details}
+            dataSource={orderData?.data?.order_details}
           />
         </div>
         {/*  */}
@@ -203,7 +194,7 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Tạm tính:</span>
               <span className="block font-semibold text-primary">
                 {formatCurrency(
-                  listOrder[0]?.TableByOrders[0]?.order?.total || 0,
+                  orderData?.data?.total || 0,
                 )}
               </span>
             </div>
@@ -220,7 +211,7 @@ const PaymentSuccess = () => {
               <span className="block font-semibold">
                 {formatCurrency(
                   calculateTotalWithVAT(
-                    listOrder[0]?.TableByOrders[0]?.order?.total,
+                    orderData?.data?.total,10
                   ),
                 )}
               </span>

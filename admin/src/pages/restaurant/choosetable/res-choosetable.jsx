@@ -168,7 +168,7 @@ const ResChooseTable = () => {
     <>
       <div className="w-full p-10">
         {contextHolder}
-        <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1" items={items} />
+        <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1"  animated items={items} />
         <ResOrder handleCancel={handleCancel} open={open} />
       </div>
     </>

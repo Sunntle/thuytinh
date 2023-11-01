@@ -246,7 +246,7 @@ exports.updateTransactionOrder = asyncHandler(async (req, res) => {
 
       if (orderUpdated) {
         res.status(200).json({
-          message: "Cập nhật mã giao dịch thành công",
+          orderUpdated
         });
       } else {
         res.status(500).json({ message: "Cập nhật mã giao dịch thất bại" });

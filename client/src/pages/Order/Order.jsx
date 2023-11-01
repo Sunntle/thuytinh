@@ -1,5 +1,5 @@
 import { Button, Collapse, Divider, Form, Modal, Radio } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import {
   ScrollToTop,
@@ -30,7 +30,7 @@ const Order = () => {
 
   useEffect(() => {
     sendRequest(fetchTableById(tables[0], tableToken), setData);
-  }, [tables[0], sendRequest, tableToken]);
+  }, [sendRequest, tableToken, tables]);
 
   const order = data[0]?.TableByOrders?.[0]?.order || [];
 
@@ -60,7 +60,7 @@ const Order = () => {
     dispatch(addOrderDetailUpdate(dataPrevious));
     navigate(`/ban-${tables[0]}/menu`)
   };
-
+  
   const onFinish = async (values) => {
     values = { ...values, amount: totalOrder };
     const request = {
@@ -73,12 +73,13 @@ const Order = () => {
     form.resetFields();
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (payment !== null) {
+      setIsModalOpen(false)
       window.location.href = String(payment);
     }
   }, [payment]);
-
+  
   if (isLoading) return <Spinner />;
 
   return (
