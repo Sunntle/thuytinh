@@ -1,10 +1,9 @@
-import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, notification } from "antd";
+import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, notification, Button, Tooltip } from "antd";
 import ButtonComponents from "../../components/button";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table } from "antd";
 import ConfirmComponent from "../../components/confirm";
 import AddNewMaterial from "./add";
-const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
 import {
   addNewMaterial,
   deleteMaterial,
@@ -20,6 +19,7 @@ import { useLocation } from "react-router-dom";
 import Spinner from "../../components/spinner";
 import { formatGia, formatNgay } from "../../utils/format";
 import { socket } from "../../socket";
+import { overMasterial, unitMasterial } from "../../utils/constant";
 const { Title, Text } = Typography;
 const renderToString = (data) => {
   return `
@@ -44,7 +44,7 @@ function MaterialPage() {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
-  
+
   const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
     console.log("fetch");
@@ -71,15 +71,15 @@ function MaterialPage() {
   }, [fetchData]);
 
   useEffect(() => {
-    socket.on("new message", arg =>{
-      if(arg.type === "material"){
+    socket.on("new message", arg => {
+      if (arg.type === "material") {
         fetchData()
       }
     })
-    return ()=>{
+    return () => {
       socket.off("new message")
     }
-   
+
   }, [notifications, location, fetchData])
 
   const handleDeleteMaterial = useCallback(async (id_material) => {
@@ -260,14 +260,18 @@ function MaterialPage() {
   const closeDrawer = useCallback(() => {
     form.resetFields();
     setOpenDrawer(!openDrawer);
-  },[form, openDrawer])
+  }, [form, openDrawer])
 
   const handleFinish = useCallback(async (values) => {
     const res = await importMaterial(values);
     notification.success({ message: "Thông báo", description: res });
     fetchData()
     closeDrawer()
-  },[closeDrawer, fetchData])
+  }, [closeDrawer, fetchData])
+  const unitMasterialTextOver = () => {
+    let result = unitMasterial.map((val, i) => (`${overMasterial[i]} ${val}`)).join(", ")
+    return result
+  }
   return (
     <div className="my-7 px-5">
       {contextHolder}
@@ -279,6 +283,7 @@ function MaterialPage() {
             <Title level={5} className="text-center">
               Danh sách nguyên liệu nhập gần đây
             </Title>
+
             <div className="h-[28vh] overflow-y-auto flex flex-col  no-scrollbar rounded-sm drop-shadow-sm">
               {listImportMaterial.map((item) => (
                 <div key={item.id} className="border_bottom p-2">
@@ -328,15 +333,20 @@ function MaterialPage() {
 
               }}
             />
+            <div className="text-center font-medium">
+              <Text>Dưới {unitMasterialTextOver()} sẽ thông báo</Text>
+            </div>
           </Col>
         </Row>
 
 
         <Row justify="space-between" align="center" className="mb-4">
-          <Col xs={6}>
-            <Title level={3}>Danh sách nguyên liệu</Title>
+          <Col xs={6} className="flex items-center gap-4">
+            <Title level={5} className="mb-0">Danh sách nguyên liệu </Title>
           </Col>
+
           <Col xs={6} style={{ textAlign: "-webkit-right" }}>
+
             <ButtonComponents
               className="border-borderSecondaryColor text-main"
               content={"Thêm mới"}

@@ -1,11 +1,11 @@
-import { Col, Row, Divider, FloatButton, Button, Pagination as PaginationMenu, Badge } from 'antd';
+import { Col, Row, Divider, FloatButton, Button, Pagination as PaginationMenu, Badge, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useRef, useState } from 'react';
 import ResPayment from '../payment/res-payment';
 import { getAllCate, getAllProduct } from '../../../services/api';
-import { useDispatch } from 'react-redux';
-import { AddCart } from '../../../redux/cartsystem/cartSystem';
+import { useDispatch, useSelector } from 'react-redux';
+import { AddCart, setErr } from '../../../redux/cartsystem/cartSystem';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css/navigation';
 import { formatGia } from '../../../utils/format';
@@ -14,9 +14,10 @@ const ResMenu = () => {
     const [product, setProduct] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const warning = useSelector(state => state.cart.err);
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
-    console.log(product)
+    const [messageApi, contextHolder] = message.useMessage();
     const fetchData = async (page, _limit) => {
         const resCa = await getAllCate();
         const resProduct = await getAllProduct({ _offset: _limit * (page - 1), _limit });
@@ -33,8 +34,16 @@ const ResMenu = () => {
         fetchData(e, p)
         setPage(e)
     }
+
+    useEffect(() => {
+        if (warning) {
+            messageApi.warning(warning);
+            dispatch(setErr(null))
+        }
+    }, [warning]);
     return (
         <div className='w-full p-10'>
+            {contextHolder}
             <FloatButton.BackTop />
             <Row gutter={[16, 16]}>
                 <Col xs={24} lg={16}>
@@ -73,7 +82,7 @@ const ResMenu = () => {
                                                     <div className='font-medium'>{product.name_product}</div>
                                                     <div className='text-xs mt-2 text-slate-500'>Số lượng : {product.amount}</div>
                                                     <div className='flex justify-between items-center'>
-                                                        <div className='product-price flex justify-between items-center'>                                                            
+                                                        <div className='product-price flex justify-between items-center'>
                                                             <p className=' font-medium text-main text-lg mr-1'> {(formatGia(product.price - (product.price * product.discount / 100)))}</p>
                                                             <p className=' font-medium text-slate-300 line-through text-xs '> {(formatGia(product.price))}</p>
                                                         </div>

@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     carts: [],
-    quantity: 0
+    quantity: 0,
+    err: null
 }
 const cartSystem = createSlice({
     name: "cart",
@@ -12,13 +13,14 @@ const cartSystem = createSlice({
 
             if (find >= 0) {
                 if (action.payload.amount === 0 || action.payload.amount === state.carts[find].quantity) {
-                    alert('Sản phẩm hết hàng!');
+                    state.err = "Sản phẩm hết hàng !";
                 } else {
                     state.carts[find].quantity += 1;
                 }
             } else {
                 if (action.payload.amount === 0) {
-                    alert('Sản phẩm hết hàng!');
+                    // alert('Sản phẩm hết hàng!');
+                    state.err = "Sản phẩm hết hàng !";
                 }
                 else {
                     const newProduct = { ...action.payload, quantity: 1 };
@@ -27,9 +29,10 @@ const cartSystem = createSlice({
             }
 
             return state;
-        }
-
-        ,
+        },
+        setErr: (state, action) => {
+            state.err = action.payload;
+        },
         AddCartUpdate: (state, action) => {
             const tempvar = { ...action.payload, quantity: action.payload.quantity };
             state.carts.push(tempvar);
@@ -76,5 +79,5 @@ const cartSystem = createSlice({
     }
 })
 
-export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart, DecreaseCart, getTotal } = cartSystem.actions;
+export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart, DecreaseCart, getTotal, setErr } = cartSystem.actions;
 export default cartSystem.reducer;

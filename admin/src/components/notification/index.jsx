@@ -32,7 +32,7 @@ function NotificationsComponent({
 
   const handleDelete = useCallback(async (id) => {
     dispatch(deleteNotification(id));
-  },[dispatch])
+  }, [dispatch])
 
   // const handleLoadMore = useCallback(()=>{
   //   dispatch(loadMoreData(notifications.length))
@@ -118,8 +118,8 @@ function NotificationsComponent({
             </div>
           );
         })}
-          </div>
-    
+      </div>
+
     );
   };
   return (
@@ -136,7 +136,7 @@ function NotificationsComponent({
             <Button
               className="border-0"
               shape="circle"
-              icon={isLoading ? <LoadingOutlined/>:<CheckOutlined />}
+              icon={isLoading ? <LoadingOutlined /> : <CheckOutlined />}
               onClick={handleCheckedAll}
             />
           </Tooltip>
@@ -147,7 +147,7 @@ function NotificationsComponent({
       onOpenChange={() => setOpenPopover(!openPopover)}
       placement="topRight"
     >
-      <Badge count={getCountNoti} style={{borderColor: 'rgb(255, 77, 79)'}}>
+      <Badge count={getCountNoti} style={{ borderColor: 'rgb(255, 77, 79)' }}>
         <Button
           type="primary"
           className="border-borderSecondaryColor bg-secondaryColor"
