@@ -2,7 +2,7 @@ import { Badge, Button, Popover, Tooltip, Typography } from "antd";
 import { formatNgay } from "../../utils/format";
 import { BellOutlined, CheckOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import {
   deleteNotification,
@@ -11,6 +11,8 @@ import {
   maskAsRead,
 } from "../../redux/notification/notificationSystem";
 // import InfiniteScroll from 'react-infinite-scroll-component';
+/* eslint-disable react-refresh/only-export-components */
+
 function NotificationsComponent({
   notifications,
   openPopover,
@@ -160,4 +162,4 @@ function NotificationsComponent({
   );
 }
 
-export default NotificationsComponent;
+export default memo(NotificationsComponent);

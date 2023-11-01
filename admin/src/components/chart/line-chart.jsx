@@ -1,7 +1,8 @@
+/* eslint-disable react-refresh/only-export-components */
 import Chart from "react-apexcharts";
 import { Select, Row, Col, Progress } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-
+import { memo } from "react";
 const LineChart = ({ setTimeChart, timeChart, data }) => {
   const { montdPreAndCur, chart_order, countOrder } = data;
   const handleChange = (value) => {
@@ -111,4 +112,4 @@ const LineChart = ({ setTimeChart, timeChart, data }) => {
   );
 };
 
-export default LineChart;
+export default memo(LineChart);

@@ -64,7 +64,7 @@ const LayoutMain = () => {
         <Layout className="layout_area ">
           <Sider
             theme={customize.darkMode ? 'dark' : 'light'}
-            breakpoint="lg"
+            breakpoint="xl"
             className="layout_area_sider"
             trigger={null}
             collapsible={!screen}

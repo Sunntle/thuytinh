@@ -10,8 +10,8 @@ function Clock() {
         let intervalId;
 
         intervalId = setInterval(() => {
-            const newTime = new Date(time.getTime() + 1000);
-            setTime(() => newTime);
+            const newTime = new Date();
+            setTime(newTime);
         }, 1000);
 
         return () => {

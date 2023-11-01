@@ -13,7 +13,8 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "NhaHangThuyTinh",
-    format: async (req, file) => "png", // Changed this to return "png" for the format
+    // background_removal: "cloudinary_ai" // remove background
+    format: async (req, file) => "webp", // Changed this to return "png" for the format
   },
 });
 
