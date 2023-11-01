@@ -55,7 +55,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
   let dataTable = await TableByOrder.bulkCreate(
     arrTable.map((item) => ({ tableId: item, orderId: order_result.id })),
   );
-  if (id_employee) await Tables.prototype.updateStatusTable(arrTable, 1);
+  if (id_employee) await Tables.prototype.updateStatusTable({ status_table: 1 }, arrTable);
   let tableData = await TableByOrder.findAll({
     include: { model: Tables },
     where: { id: { [Op.in]: dataTable.map((i) => i.id) } },
@@ -115,7 +115,6 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
 
 exports.delOrder = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  console.log(id);
   await Order.destroy({ where: { id } });
   res.status(200).json("Xóa đơn hàng thành công");
 });
@@ -196,9 +195,11 @@ exports.updateOrderAdmin = asyncHandler(async (req, res) => {
 exports.completeOrder = asyncHandler(async (req, res) => {
   const { orderId, tableId } = req.body;
   const is = await Order.findOne({ where: { id: orderId, status: 3 }, raw: true });
-  console.log(is)
   if (is) {
-    await Tables.update({ status_table: 0, token: null }, { where: { id: tableId } });
+    await Tables.prototype.updateStatusTable({
+      status_table: 0,
+      token: null
+    }, [tableId])
     await Order.update({ status: 4 }, { where: { id: orderId } });
     res.status(200).json({ success: true, data: "Update thành công" });
   } else {
@@ -297,7 +298,6 @@ exports.dashBoard = asyncHandler(async (req, res) => {
 
 exports.getOrderById = asyncHandler(async (req, res) => {
   const { id: idOrder } = req.params;
-
   try {
     const existingOrder = await Order.findOne({
       where: { id: idOrder },

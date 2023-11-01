@@ -115,6 +115,7 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
   const { id, qr_code, name_table } = req.body;
+  console.log(req.body)
   const is = await Tables.findOne({
     where: {
       [Op.and]: [
@@ -125,21 +126,19 @@ exports.update = asyncHandler(async (req, res) => {
     raw: true
   });
   if (is) return res.status(404).json({ success: false, data: "Đã có tên bàn trên" });
-  await Tables.update(req.body, { where: { id: id } })
+  await Tables.prototype.updateStatusTable(req.body, [id]);
   res.status(200).json({ success: true, data: "Tạo bàn thành công" });
-
 });
 
 
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
   const { tables } = req.body;
+  console.log(tables)
   let token = generateTable(JSON.stringify(req.body));
-  await Tables.update({
+  await Tables.prototype.updateStatusTable({
     status_table: 1,
     token: token
-  },
-    { where: { id: { [Op.in]: tables } } }
-  );
+  }, tables)
   res.status(200).json(token);
 });
 
@@ -155,7 +154,7 @@ exports.switchTables = asyncHandler(async (req, res) => {
   if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json("Bàn đang được sử dụng");
   await TableByOrder.update({ tableId: newTable }, { where: { tableId: currentTable, orderId: idOrder } });
   let getCurrent = await Tables.findOne({ where: { id: currentTable }, raw: true });
-  await Tables.update({ token: getCurrent.token, status_table: 1 }, { where: { id: newTable } });
-  await Tables.update({ token: null, status_table: 0 }, { where: { id: currentTable } });
+  await Tables.prototype.updateStatusTable({ token: getCurrent.token, status_table: 1 }, [newTable]);
+  await Tables.prototype.updateStatusTable({ token: null, status_table: 0 }, [currentTable]);
   res.status(200).json("Chuyển thành bàn thành công");
 });

@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import LayoutAdmin from "../Layout/admin";
 import DashBoard from "../pages/DashBoard";
 import MenuPage from "../pages/menu";
-import OrderPage from "../pages/Order";
+import OrderPage from "../pages/order";
 import ProductPage from "../pages/product";
 import MaterialPage from "../pages/material";
 import CategoryPage from "../pages/category";
