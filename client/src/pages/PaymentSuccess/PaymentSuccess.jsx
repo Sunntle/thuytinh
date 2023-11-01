@@ -22,7 +22,7 @@ const PaymentSuccess = () => {
   ]);
 },[idOrder, sendRequest]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if(idOrder) fetchData();
   }, [fetchData, idOrder]);
 
