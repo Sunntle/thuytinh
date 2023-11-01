@@ -16,7 +16,7 @@ exports.list = async (req, res) => {
   };
 
   const { count, rows } = await Materials.findAndCountAll(query);
-  const listImport = await Warehouse.findAll({ order: [['createdAt', 'DESC']] })
+  const listImport = await Warehouse.findAll({ order: [['createdAt', 'DESC']], include:{model: Materials, attributes: ["name_material", "unit"]} })
 
   const dataChart = await Materials.findAll({
     attributes: ["id", "amount", "name_material", "unit", "image"],

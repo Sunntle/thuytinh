@@ -127,7 +127,6 @@ const OrderListDesktop = (props) => {
 
   return (
     <Drawer
-      size={"large"}
       closable={false}
       open={isOrderDesktop}
       onClose={() => setIsOrderDesktop(false)}

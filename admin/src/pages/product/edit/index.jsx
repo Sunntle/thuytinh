@@ -21,10 +21,12 @@ const optionsStatus = [
 function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
   const [form] = Form.useForm();
   const [statusForm, setStatusForm] = useState("1");
+  
   const handleEditProduct = useCallback((dataForm) => {
     handleFinish({ ...dataForm, formName: "product", id: data?.id });
     handleCancel();
   },[data?.id, handleCancel, handleFinish]);
+
   const fileList = useMemo(()=>data?.ImageProducts.map((el) => {
     return {
       uid: el.id,
