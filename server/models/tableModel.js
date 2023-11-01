@@ -32,11 +32,13 @@ const Tables = db.sequelize.define(
     },
     { timestamps: true }
 );
-Tables.prototype.updateStatusTable = async (arr, status_table) => {
-    await Tables.update({ status_table }, { where: { id: { [Op.in]: arr } } });
-    if (status_table === 1) {
-        await Tables.increment("total_booked", { by: 1, where: { id: { [Op.in]: arr } } })
+Tables.prototype.updateStatusTable = async (update, idArr) => {
+    await Tables.update(update, { where: { id: { [Op.in]: idArr } } });
+    if (update.status_table === 1) {
+        await Tables.increment("total_booked", { by: 1, where: { id: { [Op.in]: idArr } } })
     }
+    let data = await Tables.findAll({ where: { id: { [Op.in]: idArr } }, raw: true })
+    _io.of("/admin").emit("status table", data);
 }
 Tables.prototype.checkStatus = async (arr, status_table, token) => {
     const list = await Tables.findAll({
@@ -51,10 +53,6 @@ Tables.prototype.checkStatus = async (arr, status_table, token) => {
     });
     return list.length === 0 ? true : false
 }
-
-Tables.afterBulkUpdate(async (data) => {
-    _io.of("/admin").emit("status table", data.attributes);
-});
 
 
 module.exports = Tables;

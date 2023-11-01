@@ -110,7 +110,7 @@ async function synchronizeModels() {
   }
 }
 
-synchronizeModels();
+// synchronizeModels();
 module.exports = {
   Warehouse,
   TableByOrder,

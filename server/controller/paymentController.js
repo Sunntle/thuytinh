@@ -261,24 +261,9 @@ exports.updateStatus = asyncHandler(async (req, res) => {
   const { idTable, idOrder } = req.body;
   try {
     const orderUpdated = await Order.update(
-      {
-        status: 3,
-      },
-      {
-        where: { id: idOrder },
-      },
-    );
-    // const tableUpdated = await Tables.update(
-    //   {
-    //     status_table: 0,
-    //   },
-    //   {
-    //     where: {
-    //       id: idTable,
-    //     },
-    //   },
-    // );
-    // if (orderUpdated && tableUpdated) {
+      { status: 3 },
+      { where: { id: idOrder } });
+
     if (orderUpdated) {
       res
         .status(200)
@@ -287,14 +272,13 @@ exports.updateStatus = asyncHandler(async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "Cập nhật trạng thái của bàn và hóa đơn thất bại",
-      err,
+      err
     });
   }
 });
 
 exports.updateOrderBilling = asyncHandler(async (req, res) => {
   const { payment_gateway, date, idOrder, idTable } = req.body;
-  console.log(req.body);
   try {
     const orderUpdated = await Order.update(
       {
@@ -304,17 +288,7 @@ exports.updateOrderBilling = asyncHandler(async (req, res) => {
       },
       { where: { id: +idOrder } },
     );
-    // const tableUpdated = await Tables.update(
-    //   {
-    //     status_table: 0,
-    //   },
-    //   {
-    //     where: {
-    //       id: idTable,
-    //     },
-    //   },
-    // );
-    //if (orderUpdated && tableUpdated)
+
     if (orderUpdated)
       res.status(200).json({ message: "thanh cong" });
   } catch (err) {
