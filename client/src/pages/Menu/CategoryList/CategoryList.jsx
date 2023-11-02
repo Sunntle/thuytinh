@@ -17,14 +17,15 @@ const CategoryList = ({ categories, activeIndex }) => {
   }, [activeButtonRef]);
 
   const isCategoryActive = (category) => category.id === activeIndex;
+  const isCategoryExist = activeIndex === 0 || !categories?.some(el=> el.id === activeIndex)
   return (
     <div className="w-full flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">
       <Link
         to={`/ban-${customerName?.tables[0]}/menu`}
         disabled={activeIndex === null}
-        ref={activeIndex === 0 ? activeButtonRef : null}
+        ref={ isCategoryExist? activeButtonRef : null}
         className={`h-8 px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-100 ${
-          activeIndex === 0
+          isCategoryExist
             ? "text-white bg-primary shadow"
             : "text-slate-800 bg-white"
         }`}

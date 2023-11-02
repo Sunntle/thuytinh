@@ -12,7 +12,6 @@ import { FiChevronDown } from "react-icons/fi";
 import OrderListModal from "./OrderListModal/OrderListModal.jsx";
 import CategoryList from "./CategoryList/CategoryList.jsx";
 import ProductList from "./ProductList/ProductList.jsx";
-import { Spinner } from "../../components/index.js";
 import { Button } from "antd";
 
 // Hooks
@@ -35,7 +34,7 @@ const Menu = () => {
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [isProductLoading, setIsProductLoading] = useState(false);
   const { sendRequest, isLoading } = useHttp();
-  const [foods, setFoods] = useState({ total: 0, data: [] });
+  const [foods, setFoods] = useState({ total: 0, data: []});
   const [categories, setCategories] = useState(null);
   const { order: orders } = useSelector((state) => state.order);
   const debouncedValue = useDebounce(searchValue, 100);
@@ -45,26 +44,31 @@ const Menu = () => {
     setIsProductLoading(true);
     try {
       const response = await instance.get(
-        `/product?_limit=${limit}&_offset=${foods.data.length}`,
+        `/product?_limit=${limit}&_offset=${foods.data.length}`
       );
-      setFoods({
+      setFoods(prev => ({
         total: response.total,
-        data: [...foods.data, ...response.data],
-      });
-      setIsProductLoading(false);
+        data: [...prev.data, ...response.data]
+      }));
     } catch (err) {
-      setIsProductLoading(true);
       console.error(err);
+    }finally{
+      setIsProductLoading(false)
     }
   }, [foods.data]);
 
   useEffect(() => {
-    sendRequest(apiService.fetchCategories(), setCategories);
-    if (categoryIndex !== null) {
-      sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods);
-    } else {
-      fetchFoods();
+    const checkCate = async() =>{
+      const response = await sendRequest(apiService.fetchCategories(), undefined, true);
+      if (categoryIndex !== null && response.some(el=> el.id == categoryIndex)) {
+        sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods);
+        setCategories(response)
+      } else {
+        fetchFoods();
+        setCategories(response)
+      }
     }
+    checkCate()
   }, [sendRequest, categoryIndex]);
 
   const handleChangeSearchValue = (e) => {
@@ -93,7 +97,7 @@ const Menu = () => {
   const handleCancel = () => {
     setIsOrderModalOpen(false);
   };
-  if (isLoading) return <Spinner />;
+
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
@@ -129,7 +133,7 @@ const Menu = () => {
           </span>
           <CategoryList categories={categories} activeIndex={+categoryIndex} />
         </div>
-        <ProductList foods={foods} />
+        <ProductList foods={foods} isLoading={isLoading}/>
         {foods.data.length > 0 && (
           <Button
             loading={isProductLoading}
