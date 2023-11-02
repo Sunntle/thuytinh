@@ -17,7 +17,6 @@ const CategoryList = ({ categories, activeIndex }) => {
   }, [activeButtonRef]);
 
   const isCategoryActive = (category) => category.id === activeIndex;
-
   return (
     <div className="w-full flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">
       <Link

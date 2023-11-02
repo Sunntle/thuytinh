@@ -28,11 +28,10 @@ import * as apiService from "../../services/api.js";
 
 // Extenal Files
 import "./index.css";
-
+const limit = 15;
 const Menu = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchParams] = useSearchParams();
-  const categoryIndex = searchParams.get("category");
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [isProductLoading, setIsProductLoading] = useState(false);
   const { sendRequest, isLoading } = useHttp();
@@ -40,8 +39,7 @@ const Menu = () => {
   const [categories, setCategories] = useState(null);
   const { order: orders } = useSelector((state) => state.order);
   const debouncedValue = useDebounce(searchValue, 100);
-  const limit = 15;
-
+  const categoryIndex = searchParams.get("category") || null;
 
   const fetchFoods = useCallback(async () => {
     setIsProductLoading(true);
@@ -132,14 +130,14 @@ const Menu = () => {
           <CategoryList categories={categories} activeIndex={+categoryIndex} />
         </div>
         <ProductList foods={foods} />
-        {foods && (
+        {foods.data.length > 0 && (
           <Button
             loading={isProductLoading}
             type="default"
             className={`text-lg flex items-center justify-center ${
               categoryIndex !== null ? "hidden" : ""
             }`}
-            onClick={() => fetchFoods()}
+            onClick={fetchFoods}
           >
             <span>Xem thêm</span>
             <FiChevronDown className="w-6 h-6" />
