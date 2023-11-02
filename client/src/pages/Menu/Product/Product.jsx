@@ -1,20 +1,27 @@
+// React
 import { useLayoutEffect, useMemo, useState } from "react";
-import { formatCurrency, truncateString } from "../../../utils/format.js";
+// React-icons
 import { AiFillPlusCircle } from "react-icons/ai";
+// Components
+import ProductDetail from "../ProductDetail/ProductDetail.jsx";
+import Image from "../../../components/Image/Image.jsx";
+// Utils
+import { formatCurrency } from "../../../utils/format.js";
+// Redux
 import { addToOrder } from "../../../redux/Order/orderSlice.js";
 import { useDispatch } from "react-redux";
-import ProductDetail from "../ProductDetail/ProductDetail.jsx";
+// Motion
+import { motion } from "framer-motion";
 
 const Product = (props) => {
-  const { id, name_product, price, amount } = props.item;
-  const dispatch = useDispatch();
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const [productDetail, setProductDetail] = useState(false);
+  const { id, name_product, price, amount, discount } = props.item;
   const imageUrl = useMemo(
     () => props.item.imageUrls || props.item.ImageProducts?.[0]?.url,
     [props.item],
   );
-
+  const dispatch = useDispatch();
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [productDetail, setProductDetail] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
 
   useLayoutEffect(() => {
@@ -46,25 +53,32 @@ const Product = (props) => {
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 1.15 }}
       key={id}
       className="min-h-0 w-auto h-auto border rounded-lg shadow"
     >
       <div className="w-full h-40" onClick={showProductDetail}>
-        <img
-          className="w-full h-full rounded-t-lg"
-          loading={"lazy"}
+        <Image
+          loading={!imageUrl && true}
           src={imageUrl}
+          className="rounded-t-lg"
           alt={name_product}
         />
       </div>
       <div className="flex justify-between items-center p-2 text-slate-500">
         <div className="flex h-full flex-col justify-end">
-          {amount <= 0 ? ( <span className="text-xs font-medium text-red-600 line-clamp-1">
+          {amount <= 0 ? (
+            <span className="text-xs font-medium text-red-600 line-clamp-1">
               Hết món
-            </span>) : ( <span className="text-xs font-medium text-green-600 line-clamp-1">
+            </span>
+          ) : (
+            <span className="text-xs font-medium text-green-600 line-clamp-1">
               Còn món
-            </span>)}
+            </span>
+          )}
           <span className="text-base lg:text-lg font-medium line-clamp-1">
             {name_product}
           </span>
@@ -72,7 +86,7 @@ const Product = (props) => {
             {formatCurrency(price)}
           </p>
           <span className="text-sm md:text-sm lg:text-base font-medium text-primary">
-            {formatCurrency(price)}
+            {formatCurrency(price) || formatCurrency(price)}
           </span>
         </div>
         <button
@@ -90,7 +104,7 @@ const Product = (props) => {
       {productDetail && (
         <ProductDetail id={id} openDrawer={openDrawer} onClose={onClose} />
       )}
-    </div>
+    </motion.div>
   );
 };
 

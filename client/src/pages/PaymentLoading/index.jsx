@@ -1,7 +1,12 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { parseQueryString } from "../../utils/format.js";
-import { Button, Modal, Spin } from "antd";
+import { Button, Modal } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
 import { checkErrorCode } from "../../utils/payment.js";
@@ -15,14 +20,22 @@ const PaymentLoading = () => {
   const dataResponse = parseQueryString(location.search);
   const { idOrder, idTable } = useSelector((state) => state.order);
 
-  const paymentResponse = useMemo(()=>({
-    idOrder: idOrder,
-    transaction_id: dataResponse.vnp_TxnRef,
-    transaction_date: dataResponse.vnp_PayDate,
-    payment_gateway: dataResponse.vnp_BankCode,
-  }),[dataResponse.vnp_BankCode, dataResponse.vnp_PayDate, dataResponse.vnp_TxnRef, idOrder]);
-  
-  const handleNavigate =  useCallback(async()=>{
+  const paymentResponse = useMemo(
+    () => ({
+      idOrder: idOrder,
+      transaction_id: dataResponse.vnp_TxnRef,
+      transaction_date: dataResponse.vnp_PayDate,
+      payment_gateway: dataResponse.vnp_BankCode,
+    }),
+    [
+      dataResponse.vnp_BankCode,
+      dataResponse.vnp_PayDate,
+      dataResponse.vnp_TxnRef,
+      idOrder,
+    ],
+  );
+
+  const handleNavigate = useCallback(async () => {
     const request = {
       method: "put",
       url: "/payment/update_transaction",
@@ -31,12 +44,13 @@ const PaymentLoading = () => {
     const data = await sendRequest(request, undefined, true);
     if (data !== null) {
       setIsModalOpen(false);
-      navigate("/payment-success", {state: {idOrder}});
-    }else throw new Error("No data") },[idOrder, navigate, paymentResponse, sendRequest])
+      navigate("/payment-success", { state: { idOrder } });
+    } else throw new Error("No data");
+  }, [idOrder, navigate, paymentResponse, sendRequest]);
 
   useEffect(() => {
     if (checkErrorCode(dataResponse?.vnp_ResponseCode) === true) {
-       handleNavigate()
+      handleNavigate();
     } else {
       const { message } = checkErrorCode(dataResponse?.vnp_ResponseCode);
       setErrorMessage(message);
