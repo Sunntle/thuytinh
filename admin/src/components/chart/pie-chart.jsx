@@ -1,5 +1,7 @@
+/* eslint-disable react-refresh/only-export-components */
 import Chart from "react-apexcharts";
 import { Avatar } from 'antd';
+import { memo } from "react";
 
 
 
@@ -33,4 +35,5 @@ const PieChart = (props) => {
         </>
     )
 }
-export default PieChart
+
+export default memo(PieChart)

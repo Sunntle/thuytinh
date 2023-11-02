@@ -7,6 +7,7 @@ import Spinner from "./components/spinner";
 import { fetchAccount } from "./redux/account/accountSlice";
 import router from "./routes";
 import { socket } from "./socket";
+import { fetchNotification } from "./redux/notification/notificationSystem";
 const nextCallAccount = ['/', '/register'];
 const App = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const App = () => {
     if (!nextCallAccount.includes(window.location.pathname)) {
       dispatch(fetchAccount());
     }
+    dispatch(fetchNotification())
   }, [dispatch]);
   useEffect(() => {
     if (user.isAuthenticated) {

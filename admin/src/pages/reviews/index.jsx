@@ -1,5 +1,5 @@
 import { DownCircleFilled, UpCircleFilled } from "@ant-design/icons";
-import { Col, Pagination, Popconfirm, Rate, Row, Select, message, Typography } from "antd";
+import { Col, Pagination, Popconfirm, Rate, Row, Select, message, Typography, Statistic } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ButtonComponents from "../../components/button";
 import ColumnChart from "../../components/chart/column-chart";
@@ -8,14 +8,17 @@ import Spinner from "../../components/spinner";
 import { deleteReview, getAllReviews } from "../../services/api";
 import { desc, limit, month } from "../../utils/constant";
 import { formatNgay, getDaysInMonth } from "../../utils/format";
+import CountUp from 'react-countup';
+const formatter = (value) => <CountUp end={value} separator="," />;
 const options = month.map((el) => ({ value: el, label: `Tháng: ${el}` }));
 const year = new Date().getFullYear()
+const initMonth = new Date().getMonth() + 1
 function ReviewsPage() {
   const [page, setPage] = useState(1);
   const [reviews, setReviews] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dataChart, setDataChart] = useState([]);
-  const [currentMonth, setMonth] = useState(new Date().getMonth() + 1);
+  const [currentMonth, setMonth] = useState(initMonth);
   const [reviewsCurrent, setReviewsCurrent] = useState(null);
   const [filter, setFilter] = useState({
     _offset: 0,
@@ -96,7 +99,7 @@ function ReviewsPage() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData,fetchReviews]);
+  }, [fetchData]);
 
   if (loading) {
     return <Spinner />;
@@ -107,7 +110,7 @@ function ReviewsPage() {
       <div className="p-5 mb-6 rounded-md border border-solid border-gray-300">
         <Row align={"middle"} justify={"center"}>
           <Col sm={24} md={8}>
-            <Typography.Title level={2} >
+            <Typography.Title level={2}>
               Phản hồi từ khách hàng
             </Typography.Title>
             <p className="text-gray-500 mb-6">
@@ -121,33 +124,38 @@ function ReviewsPage() {
                 className="lg:text-xl text-gray-700 mb-3 font-semibold"
               ></Select>
             </h4>
-            <Typography.Title style={{ display: "inline"}}>
-              {reviews?.total}
-            </Typography.Title>
-            <span className="mx-3">lượt đánh giá</span>
-            <span
-              style={reviews?.percentChange >= 0 ? { color: "#22C55E" } : { color: "#EF4444" }}
-              className="font-bold text-xl inline-flex items-center gap-x-1.5 my-3"
-            >
-              {reviews?.percentChange >= 0 ? (
-                <>
-                  {reviews?.percentChange}%
-                  <UpCircleFilled
-                    className="text-2xl"
-                    style={{ color: "#22C55E" }}
-                  />
-                </>
-              ) : (
-                <>
-                  {reviews?.percentChange}%
-                  <DownCircleFilled
-                    className="text-2xl"
-                    style={{ color: "#EF4444" }}
-                  />
-                </>
-              )}
-            </span>
-            <span> so với tháng trước</span>
+            <div className="flex items-baseline">
+            <Statistic
+              value={reviews?.total}
+              formatter={formatter}
+              valueStyle={{margin: "0.2em"}}
+            />
+            <span>lượt đánh giá</span>
+            <Statistic
+              value={reviews?.percentChange}
+              valueStyle={reviews?.percentChange >= 0 ? {
+                color: "#22C55E", margin: "0.5em", fontWeight: 600 
+              } : { color: "#EF4444", margin: "0.5em", fontWeight: 600 }}
+              suffix={
+                <div>
+                  %{" "}
+                  {reviews?.percentChange >= 0 ? (
+                    <UpCircleFilled
+                      className="text-2xl"
+                      style={{ color: "#22C55E" }}
+                    />
+                  ) : (
+                    <DownCircleFilled
+                      className="text-2xl"
+                      style={{ color: "#EF4444" }}
+                    />
+                  )}
+    
+                </div>
+              }
+            />
+            <span>so với tháng trước</span>
+            </div>
           </Col>
           <Col sm={24} md={16}>
             <ColumnChart
@@ -159,26 +167,27 @@ function ReviewsPage() {
               ]}
               colors={["#22C55E"]}
               categories={handleArrCategories}
-              tooltip={{ x: {
-                formatter: function(value) {
-                  return `${value}/${currentMonth}/${year}`
-                }
-              }
-            }}
-            responsive={[ {
-              breakpoint: 1135,
-              options: {
-                xaxis: { tickAmount: 5 },
-              }
-            }]}
+              tooltip={{
+                x: {
+                  formatter: function (value) {
+                    return `${value}/${currentMonth}/${year}`;
+                  },
+                },
+              }}
+              responsive={[
+                {
+                  breakpoint: 1135,
+                  options: {
+                    xaxis: { tickAmount: 5 },
+                  },
+                },
+              ]}
             />
           </Col>
         </Row>
       </div>
       <div className="mb-6 p-5 rounded-md border border-solid border-gray-300">
-        <Typography.Title level={3}>
-          Đánh giá gần đây
-        </Typography.Title>
+        <Typography.Title level={3}>Đánh giá gần đây</Typography.Title>
         <SearchComponent
           className="max-w-md"
           onChange={handleSearch}
@@ -186,12 +195,15 @@ function ReviewsPage() {
           onClear={handleClear}
         />
         <Row gutter={[20, 20]} className="my-6">
-          {console.log(reviewsCurrent)}
           {reviewsCurrent?.data?.map((el, index) => {
             return (
               <Col key={index} xs={24} sm={12} lg={8}>
                 <div className="p-8 rounded-md border border-solid border-gray-300">
-                  <Row gutter={[20, 20]} justify="space-between" align={"middle"}>
+                  <Row
+                    gutter={[20, 20]}
+                    justify="space-between"
+                    align={"middle"}
+                  >
                     <Col xs="12">
                       <Row
                         gutter={[20, 20]}
@@ -246,7 +258,9 @@ function ReviewsPage() {
                       ""
                     )}
                   </div>
-                  <Typography.Paragraph className=" h-16">{el.description}</Typography.Paragraph>
+                  <Typography.Paragraph className=" h-16">
+                    {el.description}
+                  </Typography.Paragraph>
                   <p className="text-gray-500 my-3 font-semibold">
                     {formatNgay(el["order.createdAt"])}
                   </p>

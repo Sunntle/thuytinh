@@ -3,7 +3,7 @@ const {
   generateRefreshToken,
   generateHash,
 } = require("../middlewares/jwt");
-const { User, Order, Notification } = require("../models");
+const { User, Order } = require("../models");
 const { Op } = require("sequelize");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");

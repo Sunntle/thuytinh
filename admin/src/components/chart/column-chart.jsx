@@ -1,6 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
+import { memo } from "react";
 import Chart from "react-apexcharts";
 import { useSelector } from "react-redux";
 
+// eslint-disable-next-line react-refresh/only-export-components
 function ColumnChart({ series, colors, customOptions, customClassName, categories, tooltip, columnWidth = "70%", responsive }) {
 
   const customize = useSelector(state => state.customize)
@@ -63,4 +66,4 @@ function ColumnChart({ series, colors, customOptions, customClassName, categorie
   );
 }
 
-export default ColumnChart;
+export default memo(ColumnChart);
