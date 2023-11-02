@@ -57,15 +57,18 @@ exports.list = async (req, res) => {
     rows.length > 0 &&
       rows.forEach((product) => {
         const { Recipes } = product;
-        if (Recipes.length == 0) return product.dataValues.amount = 0
+        if (Recipes.length == 0) return (product.dataValues.amount = 0);
         const arrCount = [];
         for (const recipe of Recipes) {
           const { Material } = recipe;
-          const countProduct = Material.amount > 0 && recipe.quantity > 0 && Math.floor(Material.amount / recipe.quantity);
+          const countProduct =
+            Material.amount > 0 &&
+            recipe.quantity > 0 &&
+            Math.floor(Material.amount / recipe.quantity);
           if (countProduct < 1 || countProduct == false) {
-            arrCount.push(0)
+            arrCount.push(0);
             break;
-          };
+          }
           arrCount.push(countProduct);
         }
         product.dataValues.amount = Math.min(...arrCount);
@@ -109,16 +112,19 @@ exports.getDetail = async (req, res) => {
       const arrCount = [];
       for (const recipe of recipes) {
         const { Material } = recipe;
-        const countProduct = Material.amount > 0 && recipe.quantity > 0 && Math.floor(Material.amount / recipe.quantity);
+        const countProduct =
+          Material.amount > 0 &&
+          recipe.quantity > 0 &&
+          Math.floor(Material.amount / recipe.quantity);
         if (countProduct < 1 || countProduct == false) {
-          arrCount.push(0)
+          arrCount.push(0);
           break;
-        };
+        }
         arrCount.push(countProduct);
       }
       response.dataValues.amount = Math.min(...arrCount);
-    }else{ 
-      response.dataValues.amount = 0
+    } else {
+      response.dataValues.amount = 0;
     }
     res.status(200).json(response);
   } catch (err) {
@@ -129,14 +135,37 @@ exports.getDetail = async (req, res) => {
 
 exports.getByCategory = async (req, res) => {
   const _id = req.params.id;
-
   try {
-    const response = await Product.findAll({
+    const { count, rows } = await Product.findAndCountAll({
       where: { id_category: _id },
-      include: [{ model: ImageProduct, attributes: ["url"] }],
+      include: [
+        { model: ImageProduct, attributes: ["url"] },
+        {
+          model: Recipes,
+          attributes: ["quantity"],
+          include: [{ model: Materials, attributes: ["amount"] }],
+        },
+      ],
     });
-    res.status(200).json({ data: response });
+    if(count == 0)  res.status(200).json({ data: rows, total: count });
+    rows.forEach((product) => {
+      const { Recipes } = product;
+      if (Recipes.length == 0) return
+      const arrCount = [];
+      for (const recipe of Recipes) {
+        const { Material } = recipe;
+        const countProduct = Material.amount > 0 && recipe.quantity > 0 && Math.floor(Material.amount / recipe.quantity);
+        if (countProduct < 1 || countProduct == false) {
+          arrCount.push(0)
+          break;
+        };
+        arrCount.push(countProduct);
+      }
+      product.dataValues.amount = Math.min(...arrCount);
+    });
+    res.status(200).json({ data: rows, total: count });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 };

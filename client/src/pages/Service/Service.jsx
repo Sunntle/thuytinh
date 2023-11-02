@@ -6,7 +6,7 @@ import { CallStaff } from "../../components/index.js";
 import { ScrollToTop } from "../../utils/format";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import Rating from "../Rating/Rating.jsx";
+import Rating from "./Rating.jsx";
 
 const Service = () => {
   const navigate = useNavigate();

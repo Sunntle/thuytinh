@@ -114,6 +114,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     <Drawer
       closable={false}
       open={isOrderDesktop}
+      size="large"
       onClose={() => setIsOrderDesktop(false)}
     >
       {contextHolder}

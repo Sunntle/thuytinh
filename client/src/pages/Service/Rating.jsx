@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { Form, Rate, Modal, Input, Button } from "antd";
+import {  useState } from "react";
+import { Form, Rate, Modal, Input } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
-import { fetchTableById } from "../../services/api.js";
 
 const desc = ["Rất tệ", "Tệ", "Tạm được", "Tốt", "Rất tuyệt vời"];
 
@@ -12,14 +11,8 @@ const Rating = ({ ratingModal, setRatingModal }) => {
   const [form] = Form.useForm();
   const customerName = useSelector((state) => state.customerName);
   const { idOrder } = useSelector((state) => state.order);
-  const idTable = useMemo(() => customerName.tables, [customerName.tables]);
-  const tableToken = localStorage.getItem("tableToken");
   const { sendRequest } = useHttp();
-
-  useEffect(() => {
-    sendRequest(fetchTableById(idTable, tableToken), undefined, false);
-  }, [idTable, sendRequest, tableToken]);
-
+  console.log(idOrder, customerName);
   const onFinish = async (values) => {
     const { rating, text } = values;
     const dataToSend = {
@@ -50,7 +43,6 @@ const Rating = ({ ratingModal, setRatingModal }) => {
   };
 
   const handleCloseRatingModal = () => {
-    console.log("a");
     setRatingModal(false);
   };
 
@@ -91,7 +83,7 @@ const Rating = ({ ratingModal, setRatingModal }) => {
           <Form.Item>
             <button
               type="submit"
-              disabled={idOrder === 0 || customerName.name}
+              disabled={idOrder === 0 || customerName.name.length == 0}
               className="w-full rounded-md bg-primary py-2 font-medium text-white disabled:bg-slate-200 hover:bg-[#F0A500E5]"
             >
               Gửi đánh giá

@@ -7,7 +7,7 @@ const variantsWrapperBanner = {
   open: {
     opacity: 1,
     translateX: 0,
-    transition: { staggerChildren: 0.5, delayChildren: 0.2 },
+    transition: { staggerChildren: 0.2, delayChildren: 0.1 },
   },
   closed: {
     opacity: 0,
@@ -54,7 +54,7 @@ const Banner = () => {
           ref={ref}
           animate={isInView ? "open" : "closed"}
           variants={variantsWrapperBanner}
-          transition={{ duration: 1.5 }}
+          transition={{ duration: 0.5 }}
           className="absolute top-0 lg:px-16 md:px-12 px-8 w-full max-w-2xl h-full flex flex-col items-start justify-center"
         >
           <motion.div variants={variantsBannerItem}>
