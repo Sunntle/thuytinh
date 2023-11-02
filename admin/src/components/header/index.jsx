@@ -221,18 +221,19 @@ function HeaderComponent({collapsed, setCollapsed}) {
         {categories.length > 0 && (
           <>
             <Typography.Title level={5}>Danh mục</Typography.Title>
-            <div className="my-5">
+            <div >
               <Swiper
                 speed={1000}
-                slidesPerView={7}
+                slidesPerView={6}
                 spaceBetween={20}
                 className="mySwiper"
               >
                 {categories?.map((el) => (
                   <SwiperSlide key={el.id} className="my-5">
                     <Link
+ 
                       to={`/employee/menu?category=${el.id}`}
-                      className="border rounded-full border-gray-300 border-solid py-2 px-3 transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
+                      className="w-full py-1 flex justify-center whitespace-nowrap items-center border rounded-full border-gray-300 border-solid transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
                     >
                       {truncateString(el.name_category, 12)}
                     </Link>
@@ -290,9 +291,9 @@ function HeaderComponent({collapsed, setCollapsed}) {
             <img src="Logo" className="max-w-md object-cover" alt="" />
             Logo here
           </div>
-        </div>
-        <Button
+          <Button
           type="text"
+          size="large"
           icon={
             collapsed ? (
               <MenuUnfoldOutlined style={{ color: "white" }} />
@@ -301,7 +302,9 @@ function HeaderComponent({collapsed, setCollapsed}) {
             )
           }
           onClick={() => setCollapsed(!collapsed)}
-        />
+          />
+        </div>
+        
         <div className="hidden sm:block flex-1 text-center mx-3">
           <SearchComponent
             className="bg-secondaryColor w-full max-w-2xl "

@@ -111,7 +111,7 @@ const DashBoard = () => {
                           </div>
                           <div>
                             <h6 className="font-semibold text-lg">
-                              {truncateString(el.name_product, 12)}
+                              {truncateString(el.name_product, 11)}
                             </h6>
                             <div className="mb-2">
                               <h6 className="text-main font-semibold  whitespace-nowrap text-lg">
