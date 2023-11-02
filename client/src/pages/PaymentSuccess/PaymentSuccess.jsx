@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchOrderById } from "../../services/api.js";
 import { Spin, Table } from "antd";
@@ -12,18 +18,19 @@ const PaymentSuccess = () => {
   // const { idOrder, idTable } = useSelector((state) => state.order);
   const [orderData, setOrderData] = useState(null);
   const { sendRequest, isLoading } = useHttp();
-  const location = useLocation()
+  const location = useLocation();
 
-  const idOrder = useMemo(()=>location?.state?.idOrder,[location?.state?.idOrder])
+  const idOrder = useMemo(
+    () => location?.state?.idOrder,
+    [location?.state?.idOrder],
+  );
 
   const fetchData = useCallback(async () => {
-  await Promise.all([
-    sendRequest(fetchOrderById(idOrder), setOrderData),
-  ]);
-},[idOrder, sendRequest]);
+    await Promise.all([sendRequest(fetchOrderById(idOrder), setOrderData)]);
+  }, [idOrder, sendRequest]);
 
   useEffect(() => {
-    if(idOrder) fetchData();
+    if (idOrder) fetchData();
   }, [fetchData, idOrder]);
 
   useEffect(() => {
@@ -33,7 +40,7 @@ const PaymentSuccess = () => {
         orderData?.data?.transaction_date !== null
       ) {
         try {
-          const handlePostPayment = async()=>{
+          const handlePostPayment = async () => {
             const request = {
               method: "post",
               url: "/payment/vnpay_querydr",
@@ -43,7 +50,7 @@ const PaymentSuccess = () => {
               },
             };
             const test = await sendRequest(request, undefined, true);
-            if(test.message) return new Error(test.message)
+            if (test.message) return new Error(test.message);
             const updateStatusPayment = {
               method: "put",
               url: "/payment/update_status",
@@ -52,8 +59,8 @@ const PaymentSuccess = () => {
               },
             };
             await sendRequest(updateStatusPayment, undefined, true);
-          }
-          handlePostPayment()
+          };
+          handlePostPayment();
         } catch (err) {
           console.log(err);
         }
@@ -61,45 +68,49 @@ const PaymentSuccess = () => {
     }
   }, [idOrder, orderData, sendRequest]);
 
-  const columns = useMemo(()=>([
-    {
-      title: "Tên món ăn",
-      dataIndex: "Product.name_product",
-      key: "name",
-      render: (_, record) => <span>{record?.Product?.name_product}</span>,
-    },
-    {
-      title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
-    },
-    {
-      title: "Giá",
-      dataIndex: "Product.price",
-      key: "price",
-      render: (_, record) => (
-        <span>{formatCurrency(record?.Product?.price)}</span>
-      ),
-    },
-    {
-      title: "Tổng cộng",
-      dataIndex: "total",
-      key: "total",
-      render: (_, record) => (
-        <span>{formatCurrency(record?.Product?.price * record?.quantity)}</span>
-      ),
-    },
-  ]),[]);
-  
-  if (isLoading) (
+  const columns = useMemo(
+    () => [
+      {
+        title: "Tên món ăn",
+        dataIndex: "Product.name_product",
+        key: "name",
+        render: (_, record) => <span>{record?.Product?.name_product}</span>,
+      },
+      {
+        title: "Số lượng",
+        dataIndex: "quantity",
+        key: "quantity",
+      },
+      {
+        title: "Giá",
+        dataIndex: "Product.price",
+        key: "price",
+        render: (_, record) => (
+          <span>{formatCurrency(record?.Product?.price)}</span>
+        ),
+      },
+      {
+        title: "Tổng cộng",
+        dataIndex: "total",
+        key: "total",
+        render: (_, record) => (
+          <span>
+            {formatCurrency(record?.Product?.price * record?.quantity)}
+          </span>
+        ),
+      },
+    ],
+    [],
+  );
+
+  if (isLoading)
     <div className="h-screen w-full flex flex-col justify-center items-center">
       {isLoading && <Spin size={"large"} />}
       <span className="mt-5 text-base font-semibold">
         Quý khách vui lòng đợi trong giây lát.
       </span>
-    </div>
-  )
-    if(!idOrder) return <p>Some thing wrong</p>
+    </div>;
+  if (!idOrder) return <p>Some thing wrong</p>;
   return (
     <div className="lg:bg-slate-100 lg:py-2 min-h-screen max-w-full">
       <div className="relative h-screen w-screen bg-white max-w-full lg:max-w-3xl mx-auto lg:shadow-2xl text-slate-800">
@@ -193,9 +204,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center w-full space-x-5">
               <span className="whitespace-nowrap">Tạm tính:</span>
               <span className="block font-semibold text-primary">
-                {formatCurrency(
-                  orderData?.data?.total || 0,
-                )}
+                {formatCurrency(orderData?.data?.total || 0)}
               </span>
             </div>
             <div className="flex justify-between items-center w-full space-x-5">
@@ -210,20 +219,18 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Tổng cộng:</span>
               <span className="block font-semibold">
                 {formatCurrency(
-                  calculateTotalWithVAT(
-                    orderData?.data?.total,10
-                  ),
+                  calculateTotalWithVAT(orderData?.data?.total, 10),
                 )}
               </span>
             </div>
           </div>
         </div>
-        <div className="relative w-full mt-20 flex flex-col justify-center items-center">
-          <div className="w-5/12 bg-slate-800 h-1 rounded"></div>
-          <span className="mt-10 text-primary text-2xl font-semibold">
-            Xin chân thành cảm ơn quý khách
-          </span>
-        </div>
+        {/*<div className="relative w-full mt-20 flex flex-col justify-center items-center">*/}
+        {/*  <div className="w-5/12 bg-slate-800 h-1 rounded"></div>*/}
+        {/*  <span className="mt-10 text-primary text-2xl font-semibold">*/}
+        {/*    Xin chân thành cảm ơn quý khách*/}
+        {/*  </span>*/}
+        {/*</div>*/}
       </div>
     </div>
   );

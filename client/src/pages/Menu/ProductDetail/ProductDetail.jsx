@@ -12,6 +12,7 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
 
   useEffect(() => {
+    sendRequest(fetchProductById(id), setProductDetail,false);
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth >= 1024);
     };
@@ -20,15 +21,11 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [id, sendRequest]);
 
   if (isLargeScreen) {
     return null;
   }
-
-  useEffect(() => {
-    sendRequest(fetchProductById(id), setProductDetail);
-  }, [sendRequest, id]);
 
   return isLoading ? (
     <Drawer

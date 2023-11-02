@@ -1,21 +1,30 @@
-import { useEffect, useState } from "react";
-import { Button, message, Modal } from "antd";
-import "./index.css";
-import { BiSolidTrash } from "react-icons/bi";
+// React
+import { useCallback, useMemo } from "react";
+// React-icons
 import { AiFillWarning } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
+import { HiXMark } from "react-icons/hi2";
+// Components
+import { Button, message, Modal, Popconfirm } from "antd";
+// Hooks
+import useHttp from "../../../hooks/useHttp.js";
+// Utils
 import { formatCurrency } from "../../../utils/format.js";
 import {
   addIdOrderTable,
-  decreaseQuantity,
   emptyOrder,
-  increaseQuantity,
-  removeFromOrder,
 } from "../../../redux/Order/orderSlice.js";
-import useHttp from "../../../hooks/useHttp.js";
+// Services
 import { addOrder } from "../../../services/api.js";
-
-const { confirm } = Modal;
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import {
+  handleDeleteConfirm,
+  handleOrderReduxDecreaseQuantity,
+  handleOrderReduxIncreaseQuantity,
+} from "../../../utils/buttonUtils.js";
+// External File
+import "./index.css";
+import Image from "../../../components/Image/Image.jsx";
 
 const OrderListModal = ({
   isModalOpen,
@@ -23,8 +32,6 @@ const OrderListModal = ({
   handleCancel,
   setIsOrderModalOpen,
 }) => {
-  const [newOrder, setNewOrder] = useState(null);
-  const [orderUpdated, setOrderUpdated] = useState(null);
   const { order: orders, idOrder } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const idTable = location.pathname.split("/")[1].split("-")[1];
@@ -33,44 +40,14 @@ const OrderListModal = ({
   const dispatch = useDispatch();
 
   // Calculate Total Bill
-  const totalOrder = orders?.reduce((acc, cur) => {
-    acc += cur.quantity * cur.price;
-    return acc;
-  }, 0);
+  const totalOrder = useMemo(() => {
+    orders?.reduce((acc, cur) => {
+      acc += cur.quantity * cur.price;
+      return acc;
+    }, 0);
+  }, [orders]);
 
-  const showDeleteConfirm = (id) => {
-    confirm({
-      title: "Bạn muốn xóa món ăn này ?",
-      icon: <AiFillWarning className="w-5 h-5 text-red-600" />,
-      okText: "Có",
-      okType: "danger",
-      cancelText: "Không",
-      onOk() {
-        try {
-          dispatch(removeFromOrder(id));
-        } catch (err) {
-          console.log(err);
-        }
-      },
-      onCancel() {
-        console.log("Cancel");
-      },
-    });
-  };
-
-  const handleIncreaseQuantity = (data) => {
-    if (data) {
-      dispatch(increaseQuantity(data));
-    }
-  };
-
-  const handleDecreaseQuantity = (data) => {
-    if (data) {
-      dispatch(decreaseQuantity(data));
-    }
-  };
-
-  const submitOrderList = async () => {
+  const submitOrderList = useCallback(async () => {
     const body = {
       orders: orders,
       total: totalOrder,
@@ -79,34 +56,42 @@ const OrderListModal = ({
       token: localStorage.getItem("tableToken"),
     };
     try {
-      await sendRequest(addOrder(body), setNewOrder);
+      const response = await sendRequest(addOrder(body), undefined, true);
+      console.log(response);
+      if (response?.success) {
+        dispatch(
+          addIdOrderTable({
+            idOrder: response?.data?.orders?.id,
+            idTable: customerName?.tables[0],
+          }),
+        );
+        messageApi.open({
+          type: "success",
+          content: "Đặt món thành công",
+        });
+      } else {
+        messageApi.open({
+          type: "error",
+          content: "Đặt món thất bại",
+        });
+      }
       dispatch(emptyOrder());
     } catch (err) {
       console.log(err);
     } finally {
       setIsOrderModalOpen(false);
     }
-  };
-
-  useEffect(() => {
-    if (newOrder?.success) {
-      messageApi.open({
-        type: "success",
-        content: "Đặt món thành công",
-      });
-      dispatch(
-        addIdOrderTable({
-          idOrder: newOrder?.data?.orders?.id,
-          idTable: customerName?.tables[0],
-        }),
-      );
-    } else {
-      messageApi.open({
-        type: "error",
-        content: "Đặt món thất bại",
-      });
-    }
-  }, [customerName?.tables, dispatch, newOrder]);
+  }, [
+    customerName.name,
+    customerName?.tables,
+    dispatch,
+    idTable,
+    messageApi,
+    orders,
+    sendRequest,
+    setIsOrderModalOpen,
+    totalOrder,
+  ]);
 
   const handleUpdateOrder = async () => {
     const body = {
@@ -120,8 +105,14 @@ const OrderListModal = ({
         url: "/order",
         ...body,
       };
-      await sendRequest(request, setOrderUpdated);
-      dispatch(emptyOrder());
+      const response = await sendRequest(request, undefined, true);
+      if (response.success === true) {
+        dispatch(emptyOrder());
+        messageApi.open({
+          type: "success",
+          content: "Cập nhật món thành công",
+        });
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -139,11 +130,15 @@ const OrderListModal = ({
       onCancel={handleCancel}
       centered
       footer={[
-        <Button key={1} onClick={handleUpdateOrder} disabled={orders.some(i => i.inDb && false)}>
+        <Button
+          key={1}
+          onClick={handleUpdateOrder}
+          disabled={orders?.length === 0 || orders.some((i) => i.inDb && false)}
+        >
           Cập nhật
         </Button>,
         <Button
-          disabled={orders?.length === 0 || orders.some(i => i.inDb && true)}
+          disabled={orders?.length === 0 || orders.some((i) => i.inDb && true)}
           className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
           key={2}
           size="middle"
@@ -163,9 +158,10 @@ const OrderListModal = ({
             >
               {/* Image */}
               <div className="col-span-5">
-                <img
-                  className="w-full h-full rounded-tl-lg rounded-bl-lg"
+                <Image
+                  loading={!item.ImageProducts[0]?.url && true}
                   src={item.ImageProducts[0]?.url}
+                  className="rounded-tl-lg rounded-bl-lg"
                   alt={item.name_product}
                 />
               </div>
@@ -184,7 +180,9 @@ const OrderListModal = ({
                   <span className="text-md md:text-md">Số lượng: </span>
                   <div className="flex items-center">
                     <span
-                      onClick={() => handleDecreaseQuantity(item)}
+                      onClick={() =>
+                        handleOrderReduxDecreaseQuantity(item, dispatch)
+                      }
                       className="cursor-pointer rounded-l bg-gray-100 w-8 h-8 flex items-center justify-center duration-100 hover:bg-primary hover:text-blue-50"
                     >
                       -
@@ -197,7 +195,9 @@ const OrderListModal = ({
                       min={1}
                     />
                     <span
-                      onClick={() => handleIncreaseQuantity(item)}
+                      onClick={() =>
+                        handleOrderReduxIncreaseQuantity(item, dispatch)
+                      }
                       className="cursor-pointer rounded-r bg-gray-100 w-8 h-8 flex items-center justify-center duration-100 hover:bg-primary hover:text-blue-50"
                     >
                       +
@@ -205,10 +205,21 @@ const OrderListModal = ({
                   </div>
                 </div>
                 <div className="self-end mr-2">
-                  <BiSolidTrash
-                    onClick={() => showDeleteConfirm(item.id)}
-                    className="w-5 h-5 text-red-600"
-                  />
+                  <Popconfirm
+                    title={"Bạn có muốn xóa món ăn này"}
+                    okText={"Có"}
+                    okType={"danger"}
+                    cancelText={"Không"}
+                    onConfirm={() => handleDeleteConfirm(item.id, dispatch)}
+                    onCancel={() => console.log("Cancel")}
+                    icon={
+                      <AiFillWarning className="w-5 h-5 text-red-600 disabled:text-red-300" />
+                    }
+                  >
+                    <button disabled={item.inDb && true}>
+                      <HiXMark className="w-6 h-6 text-red-600" />
+                    </button>
+                  </Popconfirm>
                 </div>
               </div>
             </div>

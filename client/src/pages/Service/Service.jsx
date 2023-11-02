@@ -4,17 +4,16 @@ import { PiFishSimpleBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { CallStaff } from "../../components/index.js";
 import { ScrollToTop } from "../../utils/format";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import Rating from "../Rating/Rating.jsx";
 
 const Service = () => {
   const navigate = useNavigate();
   const customerName = useSelector((state) => state.customerName);
+  const [ratingModal, setRatingModal] = useState(false);
   // const idTable = location.pathname.split("/")[1].split(."-")[1];
-  const idTable = useMemo(
-    () => customerName.tables[0],
-    [customerName.tables[0]],
-  );
+  const idTable = useMemo(() => customerName.tables[0], [customerName.tables]);
 
   return (
     <div className="relative text-slate-800 pb-24 mt-24 lg:mt-0 lg:pt-12 px-6 lg:px-16">
@@ -38,12 +37,13 @@ const Service = () => {
             <span className="text-xs text-slate-500">Thanh toán</span>
           </div>
           <div
-            onClick={() => navigate(`/ban-${idTable}/rating`)}
+            onClick={() => setRatingModal(true)}
             className="cursor-pointer bg-slate-50 p-2 rounded-lg flex hover:bg-slate-100 transition-colors duration-200 active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2"
           >
             <FaFileInvoiceDollar className="w-10 h-10 rounded-lg text-white bg-green-500 p-2" />
             <span className="text-xs text-slate-500">Đánh giá</span>
           </div>
+          <Rating ratingModal={ratingModal} setRatingModal={setRatingModal} />
         </div>
         {/* Button Order */}
         <div
