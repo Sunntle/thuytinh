@@ -340,7 +340,7 @@ function MaterialPage() {
 
         <Row justify="space-between" align="center" className="mb-4">
           <Col xs={6} className="flex items-center gap-4">
-            <Title level={5} className="mb-0">Danh sách nguyên liệu </Title>
+            <Title level={3} className="mb-0">Danh sách nguyên liệu </Title>
           </Col>
 
           <Col xs={6} style={{ textAlign: "-webkit-right" }}>

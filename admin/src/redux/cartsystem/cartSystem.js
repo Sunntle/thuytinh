@@ -38,18 +38,41 @@ const cartSystem = createSlice({
             state.carts.push(tempvar);
         },
         RemoveCart: (state, action) => {
-            const nextCartItems = state.carts.filter(item => item.id !== action.payload.id);
-            state.carts = nextCartItems;
+            const itemIndex = state.carts.findIndex(
+                (cartItem) => cartItem.id === action.payload.id
+            );
+            if(state.carts[itemIndex].inDb){
+                state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
+            }else{
+                state.carts.splice(itemIndex, 1);
+            }
+            
         },
         RemoveAllCart: (state) => {
-            state.carts = [];
+            
+            if(state.carts.some((item)=>(item.inDb && true))){
+                state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
+            }else{
+                state.carts = [];
+            }
+            
         },
         DecreaseCart: (state, action) => {
             const itemIndex = state.carts.findIndex(
                 (cartItem) => cartItem.id === action.payload.id
             );
-            if (state.carts[itemIndex].quantity > 1) {
-                state.carts[itemIndex].quantity -= 1;
+            if (state.carts[itemIndex].quantity >= 1) {
+                console.log(state.carts[itemIndex].inDb)
+                if(state.carts[itemIndex].inDb && state.carts[itemIndex].inDb === state.carts[itemIndex].quantity){
+                    state.carts[itemIndex].quantiy = state.carts[itemIndex].inDb;
+                    state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
+                }else if(state.carts[itemIndex].quantity === 1){
+                    state.carts[itemIndex].quantity = 1
+                   
+                }else{
+                    state.carts[itemIndex].quantity -= 1; 
+                }
+                
             }
             // }else if(state.carts[itemIndex].quantity === 1){
             //     const nextCartItems = state.carts.filter(item=>item.id!==action.payload.id);
