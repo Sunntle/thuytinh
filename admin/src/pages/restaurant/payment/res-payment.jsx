@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 // import "./res-payment.css"
 import { Button, Divider, Modal, Spin, message, } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
-import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
-import { CloseOutlined } from '@ant-design/icons'
+import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, RemoveReduxCart, getTotal } from '../../../redux/cartsystem/cartSystem'
+import { CloseOutlined, DeleteOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
 import { addOrder, updateOrder } from '../../../services/api'
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,6 @@ const ResPayment = () => {
     const staff = useSelector((state) => state.account)
     const navigate = useNavigate();
 
-    console.log(carts)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getTotal());
@@ -42,7 +41,7 @@ const ResPayment = () => {
             };
             res = await addOrder(body);
             console.log(res.success)
-            dispatch(RemoveAllCart());
+            dispatch(RemoveAllCart(false));
             dispatch(RemoveTableList());
             res.success  && navigate("/employee/choosetable") 
             message.open({
@@ -70,7 +69,7 @@ const ResPayment = () => {
             };
             console.log(body)
             res = await updateOrder(body);
-            dispatch(RemoveAllCart());
+            dispatch(RemoveAllCart(true));
             dispatch(RemoveTableList());
             console.log(res)
             message.open({
@@ -101,10 +100,7 @@ const ResPayment = () => {
                     <div key={index}>
                         <div className='flex items-center my-3'>
                             <div className='flex items-center h-16 w-15 mr-1 hover:bg-hoverColor'>
-                                <div className='product-remove pe-2'>
-                                    <span className='text-orange-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></span>
-                                </div>
-                                <img className=' rounded-lg h-full w-full object-contain ' src={item?.ImageProducts[0]?.url} />
+                                <img className=' rounded-lg  h-full w-full  object-contain ' src={item?.ImageProducts[0]?.url} />
                             </div>
                             <div className='flex-grow'>
                                 <div className='flex justify-between'>
@@ -112,7 +108,9 @@ const ResPayment = () => {
                                     <span className='text-main text-sm mb-3'>{formatGia(item.price)}</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
-                                    <span>x{item.quantity}</span>
+                                <div className='product-remove pe-2'>
+                                    <span className='text-orange-500 cursor-pointer' onClick={() => dispatch(RemoveCart(item))}><DeleteOutlined /></span>
+                                </div>
                                     <div className="flex justify-between items-center">
                                         <span className='rounded-full bg-orange-500 p-1 cursor-pointer' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="text-white w-3 h-4 sm:w-4 sm:h-4 " /></span>
                                         <span className="font-medium text-lg mx-3 ">{item.quantity}</span>

@@ -48,14 +48,17 @@ const cartSystem = createSlice({
             }
             
         },
-        RemoveAllCart: (state) => {
-            
-            if(state.carts.some((item)=>(item.inDb && true))){
+        RemoveAllCart: (state ,action) => {
+            console.log(action.payload)
+            if(state.carts.some((item)=>(item.inDb && true)) && action.payload == false){
                 state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
             }else{
                 state.carts = [];
             }
             
+        },
+        RemoveReduxCart: (state) => {
+            state.carts = [];
         },
         DecreaseCart: (state, action) => {
             const itemIndex = state.carts.findIndex(
@@ -102,5 +105,5 @@ const cartSystem = createSlice({
     }
 })
 
-export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart, DecreaseCart, getTotal, setErr } = cartSystem.actions;
+export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart,RemoveReduxCart, DecreaseCart, getTotal, setErr } = cartSystem.actions;
 export default cartSystem.reducer;
