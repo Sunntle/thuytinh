@@ -93,9 +93,9 @@ function ReviewsPage() {
     fetchReviews({ _offset: 0, _limit: limit, _time: currentMonth });
   },[currentMonth, fetchReviews])
   
-  const handleCancelConfirm = useCallback(() => {
+  const handleCancelConfirm = () => {
     message.error("Xóa thất bại");
-  },[])
+  }
 
   useEffect(() => {
     fetchData();

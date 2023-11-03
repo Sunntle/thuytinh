@@ -36,6 +36,7 @@ exports.list = async (req, res) => {
           include: [{ model: Materials, attributes: ["amount"] }],
         },
       ],
+      distinct: true,
     };
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
