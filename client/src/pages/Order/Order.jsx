@@ -1,25 +1,24 @@
 import { Button, Collapse, Divider, Form, Modal, Radio } from "antd";
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BiPencil } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Spinner } from "../../components/index.js";
+import useHttp from "../../hooks/useHttp.js";
+import {
+  addOrderDetailUpdate,
+  emptyOrder,
+} from "../../redux/Order/orderSlice.js";
+import { fetchTableById } from "../../services/api.js";
 import {
   ScrollToTop,
   calculateTotalWithVAT,
   formatCurrency,
 } from "../../utils/format.js";
-import useHttp from "../../hooks/useHttp.js";
-import { fetchTableById } from "../../services/api.js";
-import { useDispatch, useSelector } from "react-redux";
 import "./index.css";
-import {
-  addOrderDetailUpdate,
-  emptyOrder,
-} from "../../redux/Order/orderSlice.js";
-import { Spinner } from "../../components/index.js";
-import { useNavigate } from "react-router-dom";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [payment, setPayment] = useState(null);
   const { sendRequest, isLoading } = useHttp();
   const [data, setData] = useState([]);
   const { tables } = useSelector((state) => state.customerName);
@@ -28,16 +27,12 @@ const Order = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const order = data[0]?.TableByOrders?.[0]?.order || [];
+  const totalOrder = calculateTotalWithVAT(order?.total, 10)
+
   useEffect(() => {
     sendRequest(fetchTableById(tables[0], tableToken), setData);
   }, [sendRequest, tableToken, tables]);
-
-  const order = data[0]?.TableByOrders?.[0]?.order || [];
-
-  const totalOrder = useMemo(
-    () => calculateTotalWithVAT(order?.total, 10),
-    [order?.total],
-  );
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -52,10 +47,9 @@ const Order = () => {
   };
 
   const handleAddNewOrder = async () => {
-    let dataPrevious = order?.order_details?.map((item, i) => {
+    const dataPrevious = order?.order_details?.map((item) => {
       const { Product, quantity } = item;
-      let inDb = quantity;
-      return { ...Product, quantity, inDb };
+      return { ...Product, quantity, inDb: quantity };
     });
     dispatch(addOrderDetailUpdate(dataPrevious));
     navigate(`/ban-${tables[0]}/menu`)
@@ -68,17 +62,14 @@ const Order = () => {
       url: "/payment/create_payment_url",
       ...values,
     };
-    await sendRequest(request, setPayment);
+    const response = await sendRequest(request, undefined, true);
     dispatch(emptyOrder());
     form.resetFields();
-  };
-
-  useLayoutEffect(() => {
-    if (payment !== null) {
+    if(response !== null) {
       setIsModalOpen(false)
-      window.location.href = String(payment);
+      window.location.href = String(response);
     }
-  }, [payment]);
+  };
   
   if (isLoading) return <Spinner />;
 

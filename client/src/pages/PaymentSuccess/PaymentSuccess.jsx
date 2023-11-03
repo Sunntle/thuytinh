@@ -27,7 +27,7 @@ const PaymentSuccess = () => {
   );
 
   const fetchData = useCallback(async () => {
-    await Promise.all([sendRequest(fetchOrderById(idOrder), setOrderData)]);
+    await sendRequest(fetchOrderById(idOrder), setOrderData);
   }, [idOrder, sendRequest]);
 
   useEffect(() => {

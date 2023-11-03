@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { fetchProduct } from "../../services/api.js";
 import { Banner, Reason } from "../../components/index.js";
 import useHttp from "../../hooks/useHttp.js";
-import { socket } from "../../services/socket";
 import image1 from "../../assets/images/image1.png";
 import image4 from "../../assets/images/image4.png";
 import image2 from "../../assets/images/image2.png";
@@ -20,10 +19,6 @@ const Home = () => {
     }
     fetchAllProduct()
   }, [sendRequest]);
-
-  useEffect(() => {
-    socket.emit("new user", { userName: "Taile", role: "R1" });
-  }, []);
 
   return (
     <div className="tracking-wide">

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 // import Swiper core and required modules
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -52,5 +53,7 @@ const HomeSlide = ({ listProduct }) => {
     </div>
   );
 };
-
+HomeSlide.propTypes = {
+  listProduct: PropTypes.object
+}
 export default HomeSlide;
