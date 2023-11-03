@@ -2,7 +2,7 @@ import {  useState } from "react";
 import { Form, Rate, Modal, Input } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
-
+import PropTypes from 'prop-types';
 const desc = ["Rất tệ", "Tệ", "Tạm được", "Tốt", "Rất tuyệt vời"];
 
 const Rating = ({ ratingModal, setRatingModal }) => {
@@ -12,7 +12,7 @@ const Rating = ({ ratingModal, setRatingModal }) => {
   const customerName = useSelector((state) => state.customerName);
   const { idOrder } = useSelector((state) => state.order);
   const { sendRequest } = useHttp();
-  console.log(idOrder, customerName);
+
   const onFinish = async (values) => {
     const { rating, text } = values;
     const dataToSend = {
@@ -114,5 +114,8 @@ const Rating = ({ ratingModal, setRatingModal }) => {
     </Modal>
   );
 };
-
+Rating.propTypes = {
+  ratingModal: PropTypes.any,
+  setRatingModal: PropTypes.any
+}
 export default Rating;

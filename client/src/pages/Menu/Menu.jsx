@@ -40,11 +40,11 @@ const Menu = () => {
   const debouncedValue = useDebounce(searchValue, 100);
   const categoryIndex = searchParams.get("category") || null;
 
-  const fetchFoods = useCallback(async () => {
+  const fetchFoods = useCallback(async (length = 0) => {
     setIsProductLoading(true);
     try {
       const response = await instance.get(
-        `/product?_limit=${limit}&_offset=${foods.data.length}`
+        `/product?_limit=${limit}&_offset=${length}`
       );
       setFoods(prev => ({
         total: response.total,
@@ -55,27 +55,26 @@ const Menu = () => {
     }finally{
       setIsProductLoading(false)
     }
-  }, [foods.data]);
+  }, []);
 
   useEffect(() => {
     const checkCate = async() =>{
       const response = await sendRequest(apiService.fetchCategories(), undefined, true);
       if (categoryIndex !== null && response.some(el=> el.id == categoryIndex)) {
         sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods);
-        setCategories(response)
       } else {
         fetchFoods();
-        setCategories(response)
       }
+      setCategories(response)
     }
     checkCate()
-  }, [sendRequest, categoryIndex]);
+  }, [sendRequest, categoryIndex, fetchFoods]);
 
-  const handleChangeSearchValue = (e) => {
+  const handleChangeSearchValue = useCallback((e) => {
     setSearchValue(e.target.value);
-  };
+  },[]);
 
-  const handleSubmitSearchValue = (e) => {
+  const handleSubmitSearchValue = useCallback((e) => {
     if (e.key === "Enter") {
       if (searchValue.trim() !== "") {
         try {
@@ -85,7 +84,7 @@ const Menu = () => {
         }
       }
     }
-  };
+  },[debouncedValue, searchValue, sendRequest]);
 
   const showOrderListModal = () => {
     setIsOrderModalOpen(true);
@@ -117,7 +116,7 @@ const Menu = () => {
           </div>
           {/* Ordering */}
           <div
-            onClick={() => showOrderListModal()}
+            onClick={showOrderListModal}
             className="relative col-span-2 w-full h-12 bg-slate-100 rounded-lg p-2 flex justify-center items-center lg:cursor-pointer active:bg-slate-200"
           >
             <BiFoodMenu className="w-6 h-6" />
@@ -141,7 +140,7 @@ const Menu = () => {
             className={`text-lg flex items-center justify-center ${
               categoryIndex !== null ? "hidden" : ""
             }`}
-            onClick={fetchFoods}
+            onClick={()=>fetchFoods(foods.data.length)}
           >
             <span>Xem thêm</span>
             <FiChevronDown className="w-6 h-6" />

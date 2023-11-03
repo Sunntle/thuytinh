@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
+import PropTypes from 'prop-types';
 
 const CategoryList = ({ categories, activeIndex }) => {
   const customerName = useSelector((state) => state.customerName);
@@ -51,5 +52,8 @@ const CategoryList = ({ categories, activeIndex }) => {
     </div>
   );
 };
-
+CategoryList.propTypes = {
+  categories: PropTypes.array,
+  activeIndex: PropTypes.number
+}
 export default CategoryList;
