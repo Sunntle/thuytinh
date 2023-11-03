@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchProduct } from "../../services/api.js";
 import { Banner, Reason } from "../../components/index.js";
 import useHttp from "../../hooks/useHttp.js";
@@ -15,7 +15,10 @@ const Home = () => {
   const { sendRequest } = useHttp();
 
   useEffect(() => {
-    sendRequest(fetchProduct(), setSlideProduct);
+    const fetchAllProduct = async () => {
+      await sendRequest(fetchProduct(), setSlideProduct,false);
+    }
+    fetchAllProduct()
   }, [sendRequest]);
 
   useEffect(() => {
@@ -23,7 +26,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div className="tracking-wide">
       <Banner />
       <div className="flex items-center justify-center mt-12 px-6 gap-x-6 lg:mx-16">
         <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>

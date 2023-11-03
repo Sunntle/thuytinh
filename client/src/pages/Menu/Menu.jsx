@@ -2,26 +2,21 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-
 // React-icons
 import { FiSearch } from "react-icons/fi";
 import { BiFoodMenu } from "react-icons/bi";
 import { FiChevronDown } from "react-icons/fi";
-
 // Components
 import OrderListModal from "./OrderListModal/OrderListModal.jsx";
 import CategoryList from "./CategoryList/CategoryList.jsx";
 import ProductList from "./ProductList/ProductList.jsx";
 import { Button } from "antd";
-
 // Hooks
 import useHttp from "../../hooks/useHttp.js";
 import useDebounce from "../../hooks/useDebounce.js";
-
 // Utils
 import { ScrollToTop } from "../../utils/format.js";
 import instance from "../../utils/axiosConfig.js";
-
 // Services
 import * as apiService from "../../services/api.js";
 
@@ -29,14 +24,14 @@ import * as apiService from "../../services/api.js";
 import "./index.css";
 const limit = 15;
 const Menu = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [searchParams] = useSearchParams();
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const [isProductLoading, setIsProductLoading] = useState(false);
-  const { sendRequest, isLoading } = useHttp();
   const [foods, setFoods] = useState({ total: 0, data: []});
+  const [isProductLoading, setIsProductLoading] = useState(false);
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [categories, setCategories] = useState(null);
+  const [searchParams] = useSearchParams();
   const { order: orders } = useSelector((state) => state.order);
+  const { sendRequest, isLoading } = useHttp();
   const debouncedValue = useDebounce(searchValue, 100);
   const categoryIndex = searchParams.get("category") || null;
 
@@ -60,8 +55,8 @@ const Menu = () => {
   useEffect(() => {
     const checkCate = async() =>{
       const response = await sendRequest(apiService.fetchCategories(), undefined, true);
-      if (categoryIndex !== null && response.some(el=> el.id == categoryIndex)) {
-        sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods);
+      if (categoryIndex !== null && response.some(el=> el.id === +categoryIndex)) {
+        sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods,false);
         setCategories(response)
       } else {
         fetchFoods();
@@ -79,7 +74,7 @@ const Menu = () => {
     if (e.key === "Enter") {
       if (searchValue.trim() !== "") {
         try {
-          sendRequest(apiService.searchProducts(debouncedValue), setFoods);
+          sendRequest(apiService.searchProducts(debouncedValue), setFoods,false);
         } catch (err) {
           console.error(err);
         }
@@ -139,7 +134,7 @@ const Menu = () => {
             loading={isProductLoading}
             type="default"
             className={`text-lg flex items-center justify-center ${
-              categoryIndex !== null ? "hidden" : ""
+              categoryIndex !== null || isLoading ? "hidden" : ""
             }`}
             onClick={fetchFoods}
           >

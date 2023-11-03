@@ -33,6 +33,12 @@ export const calculateTotalWithVAT = (total, VAT) => {
   return total + total * VAT || 0;
 };
 
+export const calculateTotalWithDiscount = (price, discount) => {
+  discount = (100 - discount) / 100;
+  const priceWithDiscount = price * discount
+  return priceWithDiscount || price
+}
+
 export const ScrollToTop = () => {
   useEffect(() => {
     window.scrollTo(0, 0);

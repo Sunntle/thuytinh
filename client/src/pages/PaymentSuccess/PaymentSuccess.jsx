@@ -1,18 +1,19 @@
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useState,
 } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchOrderById } from "../../services/api.js";
-import { Spin, Table } from "antd";
+import { Table } from "antd";
 import logo2 from "../../assets/images/logo2.png";
 import moment from "moment";
 import { calculateTotalWithVAT, formatCurrency } from "../../utils/format.js";
 import "./index.css";
 import { Link, useLocation } from "react-router-dom";
+import {Spinner} from "../../components/index.js";
+import PageNotFound from "../PageNotFound/PageNotFound.jsx";
 
 const PaymentSuccess = () => {
   // const { idOrder, idTable } = useSelector((state) => state.order);
@@ -103,14 +104,9 @@ const PaymentSuccess = () => {
     [],
   );
 
-  if (isLoading)
-    <div className="h-screen w-full flex flex-col justify-center items-center">
-      {isLoading && <Spin size={"large"} />}
-      <span className="mt-5 text-base font-semibold">
-        Quý khách vui lòng đợi trong giây lát.
-      </span>
-    </div>;
-  if (!idOrder) return <p>Some thing wrong</p>;
+  if (isLoading) return <Spinner />
+  if (!idOrder) return <PageNotFound />;
+
   return (
     <div className="lg:bg-slate-100 lg:py-2 min-h-screen max-w-full">
       <div className="relative h-screen w-screen bg-white max-w-full lg:max-w-3xl mx-auto lg:shadow-2xl text-slate-800">
@@ -225,12 +221,6 @@ const PaymentSuccess = () => {
             </div>
           </div>
         </div>
-        {/*<div className="relative w-full mt-20 flex flex-col justify-center items-center">*/}
-        {/*  <div className="w-5/12 bg-slate-800 h-1 rounded"></div>*/}
-        {/*  <span className="mt-10 text-primary text-2xl font-semibold">*/}
-        {/*    Xin chân thành cảm ơn quý khách*/}
-        {/*  </span>*/}
-        {/*</div>*/}
       </div>
     </div>
   );

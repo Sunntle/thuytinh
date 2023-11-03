@@ -18,13 +18,14 @@ const CategoryList = ({ categories, activeIndex }) => {
 
   const isCategoryActive = (category) => category.id === activeIndex;
   const isCategoryExist = activeIndex === 0 || !categories?.some(el=> el.id === activeIndex)
+
   return (
     <div className="w-full flex space-x-3 overflow-x-auto custom-scrollbar scroll-smooth">
       <Link
         to={`/ban-${customerName?.tables[0]}/menu`}
         disabled={activeIndex === null}
         ref={ isCategoryExist? activeButtonRef : null}
-        className={`h-8 px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-100 ${
+        className={`box-border h-8 px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-300 hover:bg-white hover:border-primary hover:text-primary ${
           isCategoryExist
             ? "text-white bg-primary shadow"
             : "text-slate-800 bg-white"
@@ -39,7 +40,7 @@ const CategoryList = ({ categories, activeIndex }) => {
             disabled={isCategoryActive(category)}
             ref={isCategoryActive(category) ? activeButtonRef : null}
             key={category.id}
-            className={`px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-100 ${
+            className={`box-border px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-300 hover:bg-white hover:border-primary hover:text-primary ${
               isCategoryActive(category)
                 ? "text-white bg-primary shadow"
                 : "text-slate-800 bg-white"
