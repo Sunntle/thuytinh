@@ -34,22 +34,21 @@ const OrderListModal = ({
 }) => {
   const { order: orders, idOrder } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
-  const idTable = location.pathname.split("/")[1].split("-")[1];
   const { sendRequest } = useHttp();
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
-
   // Calculate Total Bill
   const totalOrder = useMemo(() => (
       orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
   ), [orders]);
 
   const submitOrderList = useCallback(async () => {
+    if(customerName.tables.length == 0) return //navigate to select tables
     const body = {
       orders: orders,
       total: totalOrder,
       customerName: customerName.name,
-      table: [idTable],
+      table: customerName.tables,
       token: localStorage.getItem("tableToken"),
     };
     try {
@@ -77,17 +76,7 @@ const OrderListModal = ({
     } finally {
       setIsOrderModalOpen(false);
     }
-  }, [
-    customerName.name,
-    customerName?.tables,
-    dispatch,
-    idTable,
-    messageApi,
-    orders,
-    sendRequest,
-    setIsOrderModalOpen,
-    totalOrder,
-  ]);
+  }, [customerName.name, customerName.tables, dispatch, messageApi, orders, sendRequest, setIsOrderModalOpen, totalOrder]);
 
   const handleUpdateOrder = async () => {
     const body = {

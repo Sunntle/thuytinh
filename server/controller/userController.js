@@ -72,6 +72,7 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     {
       model: Order,
     },
+    distinct: true,
   };
   if (_limit) query.limit = +_limit;
   if (_offset) query.offset = +_offset;

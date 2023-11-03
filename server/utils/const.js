@@ -9,7 +9,7 @@ const ImageProduct = require("../models/imageModel");
 const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
 const apiQueryRest = (params) => {
     const { _offset, _limit, _sort, _order, q, title, _noQuery, ...rest } = params;
-    let query = {};
+    let query = {distinct: true};
     if (_noQuery === 1) return query.raw = true;
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
