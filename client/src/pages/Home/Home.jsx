@@ -14,11 +14,14 @@ const Home = () => {
   const { sendRequest } = useHttp();
 
   useEffect(() => {
-    sendRequest(fetchProduct(), setSlideProduct);
+    const fetchAllProduct = async () => {
+      await sendRequest(fetchProduct(), setSlideProduct,false);
+    }
+    fetchAllProduct()
   }, [sendRequest]);
 
   return (
-    <div>
+    <div className="tracking-wide">
       <Banner />
       <div className="flex items-center justify-center mt-12 px-6 gap-x-6 lg:mx-16">
         <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>

@@ -5,6 +5,7 @@ import { AiFillWarning } from "react-icons/ai";
 import { HiXMark } from "react-icons/hi2";
 // Components
 import { Button, message, Modal, Popconfirm } from "antd";
+import Image from "../../../components/Image/Image.jsx";
 // Hooks
 import useHttp from "../../../hooks/useHttp.js";
 // Utils
@@ -24,7 +25,6 @@ import {
 } from "../../../utils/buttonUtils.js";
 // External File
 import "./index.css";
-import Image from "../../../components/Image/Image.jsx";
 
 const OrderListModal = ({
   isModalOpen,
@@ -40,12 +40,9 @@ const OrderListModal = ({
   const dispatch = useDispatch();
 
   // Calculate Total Bill
-  const totalOrder = useMemo(() => {
-    orders?.reduce((acc, cur) => {
-      acc += cur.quantity * cur.price;
-      return acc;
-    }, 0);
-  }, [orders]);
+  const totalOrder = useMemo(() => (
+      orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
+  ), [orders]);
 
   const submitOrderList = useCallback(async () => {
     const body = {
@@ -57,7 +54,6 @@ const OrderListModal = ({
     };
     try {
       const response = await sendRequest(addOrder(body), undefined, true);
-      console.log(response);
       if (response?.success) {
         dispatch(
           addIdOrderTable({
@@ -133,7 +129,7 @@ const OrderListModal = ({
         <Button
           key={1}
           onClick={handleUpdateOrder}
-          disabled={orders?.length === 0 || orders.some((i) => i.inDb && false)}
+          disabled={orders?.length === 0 || orders.some((i) => i.inDb && false) || !orders.every((i) => i.inDb)}
         >
           Cập nhật
         </Button>,
@@ -189,7 +185,7 @@ const OrderListModal = ({
                     </span>
                     <input
                       readOnly={true}
-                      className="w-8 h-8 bg-white text-center text-xs outline-none"
+                      className="w-8 h-8 bg-white flex items-center justify-center text-xs outline-none"
                       type="number"
                       value={item.quantity}
                       min={1}

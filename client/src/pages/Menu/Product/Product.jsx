@@ -1,17 +1,21 @@
 // React
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 // React-icons
 import { AiFillPlusCircle } from "react-icons/ai";
 // Components
 import ProductDetail from "../ProductDetail/ProductDetail.jsx";
+import { message } from "antd";
 import Image from "../../../components/Image/Image.jsx";
 // Utils
-import { formatCurrency } from "../../../utils/format.js";
+import {
+  calculateTotalWithDiscount,
+  formatCurrency,
+} from "../../../utils/format.js";
 // Redux
 import { addToOrder } from "../../../redux/Order/orderSlice.js";
 import { useDispatch } from "react-redux";
 // Motion
-import { motion } from "framer-motion";
+import { usePresence, useAnimate } from "framer-motion";
 
 const Product = (props) => {
   const { id, name_product, price, amount, discount } = props.item;
@@ -19,6 +23,9 @@ const Product = (props) => {
     () => props.item.imageUrls || props.item.ImageProducts?.[0]?.url,
     [props.item],
   );
+  const [messageApi, contextHolder] = message.useMessage();
+  const [isPresent, safeToRemove] = usePresence();
+  const [scope, animate] = useAnimate();
   const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [productDetail, setProductDetail] = useState(false);
@@ -35,6 +42,29 @@ const Product = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isPresent) {
+      const enterAnimation = async () => {
+        await animate(
+          scope.current,
+          { opacity: [0, 1] },
+          { duration: 0.5, delay: 0.05 * id},
+        );
+      };
+      enterAnimation();
+    } else {
+      const exitAnimation = async () => {
+        await animate(
+          scope.current,
+          { opacity: [1, 0] },
+          { duration: 0.5, delay: 0.05 * id },
+        );
+        safeToRemove();
+      };
+      exitAnimation();
+    }
+  }, [animate, id, isPresent, safeToRemove, scope]);
+
   const showProductDetail = () => {
     if (!isLargeScreen) {
       setOpenDrawer(true);
@@ -50,16 +80,22 @@ const Product = (props) => {
     if (product) {
       dispatch(addToOrder(product));
     }
+    messageApi.open({
+      type: "success",
+      content: "Đã thêm món ăn",
+    });
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 1.15 }}
+    <div
+        ref={scope}
+      // initial={{ opacity: 0 }}
+      // whileInView={{ opacity: 1 }}
+      // transition={{ duration: 1.15 }}
       key={id}
-      className="min-h-0 w-auto h-auto border rounded-lg shadow"
+      className="box-border tracking-wide min-h-0 w-auto h-auto border rounded-lg shadow cursor-pointer transition-shadow duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.5)]"
     >
+      {contextHolder}
       <div className="w-full h-40" onClick={showProductDetail}>
         <Image
           loading={!imageUrl && true}
@@ -70,15 +106,13 @@ const Product = (props) => {
       </div>
       <div className="flex justify-between items-center p-2 text-slate-500">
         <div className="flex h-full flex-col justify-end">
-          {amount <= 0 ? (
-            <span className="text-xs font-medium text-red-600 line-clamp-1">
-              Hết món
-            </span>
-          ) : (
-            <span className="text-xs font-medium text-green-600 line-clamp-1">
-              Còn món
-            </span>
-          )}
+          <span
+            className={`text-xs font-medium line-clamp-1 ${
+              !amount || amount > 0 ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {!amount || amount > 0 ? "Còn món" : "Hết món"}
+          </span>
           <span className="text-base lg:text-lg font-medium line-clamp-1">
             {name_product}
           </span>
@@ -86,17 +120,17 @@ const Product = (props) => {
             {formatCurrency(price)}
           </p>
           <span className="text-sm md:text-sm lg:text-base font-medium text-primary">
-            {formatCurrency(price) || formatCurrency(price)}
+            {formatCurrency(calculateTotalWithDiscount(price, discount))}
           </span>
         </div>
         <button
           className="group"
-          disabled={amount <= 0}
+          disabled={!(!amount || amount > 0)}
           onClick={() => handleAddToOrder(props.item)}
         >
           <AiFillPlusCircle
             className={`w-6 h-6 md:w-8 md:h-8 text-primary group-disabled:text-primary/20 active:text-primary/80 group-hover:text-primary/80 transition-colors duration-200 ${
-              amount <= 0 ? "text-primary/20" : ""
+              !amount || amount > 0 ? "" : "text-primary/20"
             }`}
           />
         </button>
@@ -104,7 +138,7 @@ const Product = (props) => {
       {productDetail && (
         <ProductDetail id={id} openDrawer={openDrawer} onClose={onClose} />
       )}
-    </motion.div>
+    </div>
   );
 };
 
