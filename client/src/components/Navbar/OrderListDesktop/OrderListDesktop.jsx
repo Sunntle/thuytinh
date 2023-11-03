@@ -12,7 +12,7 @@ import { formatCurrency } from "../../../utils/format.js";
 import {
   handleDeleteConfirm,
   handleOrderReduxDecreaseQuantity,
-  handleOrderReduxIncreaseQuantity
+  handleOrderReduxIncreaseQuantity,
 } from "../../../utils/buttonUtils.js";
 // Services
 import { addOrder } from "../../../services/api.js";
@@ -35,12 +35,9 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
   const dispatch = useDispatch();
 
   // Calculate Total Bill
-  const totalOrder = useMemo(() => {
-    orders?.reduce((acc, cur) => {
-      acc += cur.quantity * cur.price;
-      return acc;
-    }, 0);
-  }, [orders]);
+  const totalOrder = useMemo(() => (
+      orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
+  ), [orders]);
 
   const submitOrderList = useCallback(async () => {
     const body = {
@@ -112,6 +109,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
 
   return (
     <Drawer
+      className="tracking-wide"
       closable={false}
       open={isOrderDesktop}
       size="large"
@@ -128,10 +126,10 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                 <div className="flex justify-between items-center space-x-6">
                   <div className="h-28 w-28">
                     <Image
-                        loading={item.ImageProducts[0]?.url && false}
-                        src={item.ImageProducts[0]?.url}
-                        className="rounded-full"
-                        alt={item.name_product}
+                      loading={item.ImageProducts[0]?.url && false}
+                      src={item.ImageProducts[0]?.url}
+                      className="rounded-full"
+                      alt={item.name_product}
                     />
                   </div>
                   <span className="text-lg text-slate-800 font-medium">
@@ -194,18 +192,31 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
             </span>
           </div>
         )}
-        <div className="w-full flex justify-between items-center text-lg font-semibold text-primary mt-10 px-2">
-          <span className="flex items-center font-normal">Quay về</span>
+        <div className="w-full flex justify-between items-center text-lg font-semibold text-primary mt-10 px-2 transition-colors duration-200">
+          <span className="flex items-center font-normal cursor-pointer hover:text-primary/80">
+            Quay về
+          </span>
           <div className="flex justify-between items-center space-x-1">
             <span className="text-sm text-slate-500">Tạm tính: </span>
             <span className="text-xl">{formatCurrency(totalOrder || 0)}</span>
           </div>
         </div>
         <div className="w-full flex justify-end items-center text-lg font-semibold text-primary mt-10 px-2 space-x-2">
-          <Button onClick={handleUpdateOrder}>Cập nhật</Button>
           <Button
-            disabled={orders?.length === 0}
-            className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
+            onClick={handleUpdateOrder}
+            disabled={
+              orders?.length === 0 ||
+              orders.some((i) => i.inDb && false) ||
+              !orders.every((i) => i.inDb)
+            }
+          >
+            Cập nhật
+          </Button>
+          <Button
+            disabled={
+              orders?.length === 0 || orders.some((i) => i.inDb && true)
+            }
+            className="bg-primary text-white hover:text-white font-medium"
             size="middle"
             onClick={submitOrderList}
           >

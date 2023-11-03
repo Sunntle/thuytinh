@@ -7,7 +7,7 @@ const LayoutContainer = () => {
   return (
     <>
       <Header />
-      <div className="min-h-[100vh]">
+      <div className="min-h-screen">
         <Outlet />
       </div>
       <Navbar />
