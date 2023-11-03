@@ -4,7 +4,7 @@ import { PiFishSimpleBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { CallStaff } from "../../components/index.js";
 import { ScrollToTop } from "../../utils/format";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import Rating from "./Rating.jsx";
 
@@ -12,8 +12,7 @@ const Service = () => {
   const navigate = useNavigate();
   const customerName = useSelector((state) => state.customerName);
   const [ratingModal, setRatingModal] = useState(false);
-  // const idTable = location.pathname.split("/")[1].split(."-")[1];
-  const idTable = useMemo(() => customerName.tables[0], [customerName.tables]);
+  const idTable = customerName.tables[0];
 
   return (
     <div className="relative text-slate-800 pb-24 mt-24 lg:mt-0 lg:pt-12 px-6 lg:px-16">

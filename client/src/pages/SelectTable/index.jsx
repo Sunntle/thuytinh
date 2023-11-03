@@ -2,12 +2,12 @@ import { getPreciseDistance } from "geolib";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
-import { Spin, Tabs } from "antd";
+import { Tabs } from "antd";
 import "./index.css";
 import { useSelector } from "react-redux";
 import DeliveryNotSupported from "../DeliveryNotSupported";
 import { Spinner } from "../../components/index.js";
-
+import PropTypes from 'prop-types';
 function SelectTable({ isTableExist }) {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ function SelectTable({ isTableExist }) {
   const { sendRequest, isLoading } = useHttp();
   const customerName = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
+  
   const handleSelectTable = useCallback(async (id) => {
     navigate(`/ban-${id}`, { state: { from: 'menu' } });
   }, [navigate]);
@@ -100,5 +101,7 @@ function SelectTable({ isTableExist }) {
     </div>
   );
 }
-
+SelectTable.propTypes = {
+  isTableExist: PropTypes.string
+}
 export default SelectTable;

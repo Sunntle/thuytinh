@@ -1,7 +1,6 @@
-import React from "react";
 import { formatCurrency } from "../../../utils/format.js";
 import { AiFillPlusCircle } from "react-icons/ai";
-
+import PropTypes from 'prop-types';
 // import Swiper core and required modules
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -10,10 +9,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import {
-  SlideNextButton,
-  SlidePrevButton,
-} from "./HomeSlideButton/HomeSlideButton.jsx";
 import {addToOrder} from "../../../redux/Order/orderSlice.js";
 import { useDispatch } from "react-redux";
 
@@ -91,5 +86,7 @@ const HomeSlide = ({ listProduct }) => {
     </div>
   );
 };
-
+HomeSlide.propTypes = {
+  listProduct: PropTypes.object
+}
 export default HomeSlide;
