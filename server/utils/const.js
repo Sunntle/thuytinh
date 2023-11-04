@@ -1,4 +1,4 @@
-
+const moment = require("moment");
 const { Op } = require("sequelize");
 const Recipes = require("../models/recipeModel");
 const Materials = require("../models/materialsModel");
@@ -82,4 +82,23 @@ const bien = {
     }
 }
 
-module.exports = { bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };
+function tinhWeek(weekNumber) {
+    const allDaysInWeek = [];
+    const year = moment().year();
+    const startDate = moment().year(year).isoWeek(weekNumber).startOf('isoWeek');
+    const endDate = moment().year(year).isoWeek(weekNumber).endOf('isoWeek');
+
+    let currentDay = startDate.clone();
+    while (currentDay.isSameOrBefore(endDate)) {
+        allDaysInWeek.push(currentDay.format('YYYY-MM-DD'));
+        currentDay.add(1, 'days');
+    }
+    return allDaysInWeek;
+}
+
+function currentYear(pa = "startOf") {
+    const date = moment()[pa]("year");
+    return date.format("YYYY-MM-DD");
+}
+
+module.exports = { currentYear, tinhWeek, bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };

@@ -428,7 +428,7 @@ const OrderPage = () => {
                         <Form.Item
                           label="Người phục vụ"
                           name="id_employee"
-                          rules={[{ required: true }]}
+                        // rules={[{ required: true }]}
                         >
                           <Select
                             placeholder="Nhân viên"

@@ -21,9 +21,9 @@ export function getDaysInMonth(year, month) {
   return new Date(year, +month + 1, 0).getDate()
 }
 export const roleRext = (params) => {
-  switch(params){
+  switch (params) {
     case "R1": return "Khách hàng";
-    case "R4" : return "Admin";
+    case "R4": return "Admin";
     case "Khách hàng": return "R1";
     case "Admin": return "R4";
     case "Nhân viên": return "R2";
@@ -54,6 +54,17 @@ export function calculateDailyRevenue(transactions) {
   return dailyRevenue;
 }
 
+let unitlist = ["", "K", "M", "G"];
+export function formatnumber(number) {
+  let sign = Math.sign(number);
+  let unit = 0;
+
+  while (Math.abs(number) >= 1000) {
+    unit = unit + 1;
+    number = Math.floor(Math.abs(number) / 100) / 10;
+  }
+  return (sign * Math.abs(number) + unitlist[unit]);
+}
 export function calculateWeeklyRevenue(transactions) {
   const today = new Date();
   const dayOfWeek = today.getDay();
@@ -61,6 +72,10 @@ export function calculateWeeklyRevenue(transactions) {
   startDate.setDate(today.getDate() - dayOfWeek);
   const endDate = new Date(today);
   endDate.setDate(today.getDate() - dayOfWeek + 7);
+  console.log("dayOfWeek", dayOfWeek)
+  console.log("startDate", startDate)
+  console.log("endDate", endDate)
+
 
   let weeklyRevenue = 0;
 

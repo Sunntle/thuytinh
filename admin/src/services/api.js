@@ -169,8 +169,8 @@ export const deleteReview = (id) => {
   return axios.delete(`/api/review/` + id);
 };
 
-export const getDataDashboard = (type) => {
-  return axios.get(`/api/order/thongke`, { params: { type: type } });
+export const getDataDashboard = (params) => {
+  return axios.get(`/api/order/thongke`, { params });
 };
 //notifications 
 export const getAllNotification = (params) => {

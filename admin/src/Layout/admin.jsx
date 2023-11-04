@@ -58,7 +58,7 @@ const LayoutMain = () => {
         {contextHolder}
       </div>
       <header className="sticky top-0 w-full z-10 ">
-        <HeaderComponent collapsed={collapsed} setCollapsed={setCollapsed}/>
+        <HeaderComponent collapsed={collapsed} setCollapsed={setCollapsed} />
       </header>
       <main className="main_area rounded-t-3xl overflow-hidden">
         <Layout className="layout_area ">
