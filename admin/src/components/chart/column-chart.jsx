@@ -64,3 +64,5 @@ function ColumnChart({ series, colors, customOptions, customClassName, categorie
 }
 
 export default ColumnChart;
+
+

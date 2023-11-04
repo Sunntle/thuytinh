@@ -58,13 +58,13 @@ const LayoutMain = () => {
         {contextHolder}
       </div>
       <header className="sticky top-0 w-full z-10 ">
-        <HeaderComponent collapsed={collapsed} setCollapsed={setCollapsed}/>
+        <HeaderComponent collapsed={collapsed} setCollapsed={setCollapsed} />
       </header>
       <main className="main_area rounded-t-3xl overflow-hidden">
         <Layout className="layout_area ">
           <Sider
             theme={customize.darkMode ? 'dark' : 'light'}
-            breakpoint="lg"
+            breakpoint="xl"
             className="layout_area_sider"
             trigger={null}
             collapsible={!screen}

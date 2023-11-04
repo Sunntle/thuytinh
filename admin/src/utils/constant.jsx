@@ -101,3 +101,15 @@ export const LightSvg = () => (
     </g>
   </svg>
 );
+
+export const renderToString = (data) => {
+  return `
+    <Text class="flex p-2 flex-col gap-2">
+      <img src="${data.image}" class="w-20 mx-auto"/>
+      <Text>Tên: ${data.x}</Text>
+      <Text>Số lượng: ${data.y}/(${data.unit})</Text>
+      ${data.detail ? `<Text> Chuyển đổi: ${data.detail}</Text>` : ''}
+    </Text>
+  `;
+};
+export const weekArrText = ["Tuần hiện tại", "Tuần trước", "2 Tuần trước", " 3 Tuần trước", "4 Tuần trước", "5 Tuần trước"]

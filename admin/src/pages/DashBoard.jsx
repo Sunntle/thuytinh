@@ -1,25 +1,30 @@
 import { CiViewTimeline } from "react-icons/ci";
 import PieChart from "../components/chart/pie-chart";
-import LineChart from "../components/chart/line-chart";
-import { Col, Row, Badge } from "antd";
+import AreaChart from "../components/chart/area-chart";
+import { Col, Row, Badge, Typography, Segmented } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useEffect, useState, useCallback } from "react";
-import { formatGia, truncateString } from "../utils/format";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { formatGia, truncateString, formatnumber } from "../utils/format";
 import { Autoplay } from "swiper/modules";
-import {  getAllProduct, getDataDashboard } from "../services/api";
+import { getAllProduct, getDataDashboard } from "../services/api";
 import Spinner from "../components/spinner";
 import { Link } from "react-router-dom";
-
+import LineChart from "../components/chart/line-chart";
+import moment from "moment";
+import { weekArrText } from "../utils/constant";
+const { Text, Title } = Typography;
 const DashBoard = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
+  const currentWeek = moment().week();
   const [timeChart, setTimeChart] = useState("MONTH");
+  const [week, setWeek] = useState(currentWeek);
   const [dataProduct, setDataProduct] = useState(null);
   const [discount, setDiscount] = useState(null);
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [res1, res2, resProductsDiscount] = await Promise.all([getDataDashboard(timeChart), getAllProduct({
+      const [res1, res2, resProductsDiscount] = await Promise.all([getDataDashboard({ weekcurrent: week, type: timeChart }), getAllProduct({
         _sort: "sold",
         _order: "DESC",
         _sold: "gte_0",
@@ -39,12 +44,18 @@ const DashBoard = () => {
     } finally {
       setLoading(false);
     }
-  }, [timeChart])
+  }, [timeChart, week])
 
   useEffect(() => {
     fetchData()
   }, [timeChart, fetchData])
   if (loading) return <Spinner />
+
+  const dataOpWeek = weekArrText.map((v, i) => ({ label: v, value: currentWeek - i })).reverse();
+
+  const handChangeWeek = (val) => {
+    setWeek(val)
+  }
   return (
     <div className="w-full my-7 px-5">
       <Row gutter={[32, 16]}>
@@ -64,11 +75,103 @@ const DashBoard = () => {
             </div>
           </div>
           <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2 mb-6">
-            <LineChart
+            <AreaChart
               timeChart={timeChart}
               setTimeChart={setTimeChart}
               data={data}
             />
+          </div>
+          <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2 mb-6">
+
+            <LineChart
+              series={[{
+                name: 'Tổng đơn hàng trong ngày',
+                type: 'column',
+                data: data?.chartWeek?.map(i => i.totalOrder) || []
+              }, {
+                name: 'Tổng tiền trong ngày',
+                type: 'area',
+                data: data?.chartWeek?.map(i => i.total) || []
+              }]}
+              labels={data?.chartWeek?.map(i => i.createdAt) || []}
+              yaxis={[
+                {
+                  min: 0,
+                  max: (max) => {
+                    return
+                  },
+
+                  axisTicks: {
+                    show: true,
+                  },
+                  axisBorder: {
+                    show: true,
+                    color: '#008FFB'
+                  },
+                  labels: {
+                    style: {
+                      colors: '#008FFB',
+                    },
+                    formatter: (val) => {
+                      return Math.ceil(val) + " đơn"
+                    }
+                  },
+                  title: {
+                    style: {
+                      color: '#008FFB',
+                    }
+                  },
+                  tooltip: {
+                    enabled: true
+                  },
+
+
+                },
+                {
+                  seriesName: 'Income',
+                  opposite: true,
+                  axisTicks: {
+                    show: true,
+                  },
+                  axisBorder: {
+                    show: true,
+                    color: '#00E396'
+                  },
+                  labels: {
+                    style: {
+                      colors: '#00E396',
+                    },
+
+                    formatter: (val) => {
+                      return formatnumber(val)
+                    }
+
+                  },
+
+                  title: {
+                    text: "Vnđ",
+                    style: {
+                      color: '#00E396',
+                    }
+                  },
+                }
+              ]}
+              dataLabels={{
+                enabled: true,
+                enabledOnSeries: [0, 1],
+                formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+                  return formatnumber(value)
+                }
+              }}
+            >
+              <div>
+                <Title level={4} className="text-center mt-4">Thông kê theo tuần</Title>
+                <div className="flex justify-center">
+                  <Segmented options={dataOpWeek} defaultValue={week} onChange={handChangeWeek} />
+                </div>
+
+              </div>
+            </LineChart>
           </div>
 
           <div className="mb-6">
@@ -97,7 +200,7 @@ const DashBoard = () => {
                 //   slidesPerView: 3,
                 // },
               }}
-              // modules={[Autoplay]}
+            // modules={[Autoplay]}
             >
               {discount?.data.map((el) => {
                 return (
@@ -120,8 +223,8 @@ const DashBoard = () => {
                             <div className="mb-2">
                               <h6 className="text-main font-semibold  whitespace-nowrap text-lg">
                                 {el.discount > 0 ? formatGia(
-                                  el.price - (el.price * el.discount /100)
-                                ): formatGia(el.price)}
+                                  el.price - (el.price * el.discount / 100)
+                                ) : formatGia(el.price)}
                               </h6>
                               <p className="text-gray-400 font-semibold line-through whitespace-nowrap text-xs">
                                 {formatGia(el.price)}

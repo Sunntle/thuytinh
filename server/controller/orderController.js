@@ -3,7 +3,7 @@ const {
   apiQueryRest,
   checkQtyMaterials,
   getQtyMaterialByProduct,
-  bien,
+  bien, currentYear, tinhWeek
 } = require("../utils/const");
 const asyncHandler = require("express-async-handler");
 const {
@@ -22,10 +22,7 @@ const {
 } = require("../models");
 const { Op, Sequelize, literal, where, fn, col } = require("sequelize");
 
-function currentYear(pa = "startOf") {
-  const date = moment()[pa]("year");
-  return date.format("YYYY-MM-DD");
-}
+
 
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table, id_employee, token } = req.body;
@@ -178,8 +175,9 @@ exports.updateOrder = asyncHandler(async (req, res) => {
       }
     }
   }
-  res.status(200).json("Update thành công");
+  res.status(200).json({ message: "Update thành công", over });
 });
+
 
 exports.updateOrderAdmin = asyncHandler(async (req, res) => {
   const { table, id, ...rest } = req.body;
@@ -210,10 +208,16 @@ exports.completeOrder = asyncHandler(async (req, res) => {
 
 exports.dashBoard = asyncHandler(async (req, res) => {
   let data = {};
-  const type = req.query.type;
-  const info = type === "MONTH" ? "T/" : "Năm : ";
   const currentMonth = new Date();
   const previousMonth = new Date();
+
+  const { type, weekcurrent } = req.query;
+  const info = type === "MONTH" ? "T/" : "Năm : ";
+
+  let dateInWeek = tinhWeek(weekcurrent);
+
+
+
   previousMonth.setMonth(previousMonth.getMonth() - 1);
   previousMonth.setDate(1);
   data.costMaterial = await Warehouse.findOne({
@@ -231,6 +235,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     order: [[type, "ASC"]],
     raw: true,
   };
+
   if (type === "MONTH")
     con.where = {
       createdAt: {
@@ -259,6 +264,22 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     order: [[fn("MONTH", col("createdAt")), "desc"]],
     raw: true,
   });
+  data.chartWeek = await Order.findAll({
+    attributes: [
+      [fn('date', col('createdAt')), 'createdAt'],
+      [fn('sum', col('total')), 'total'],
+      [fn('count', col('id')), 'totalOrder']
+    ],
+    where: {
+      createdAt: {
+        [Op.gte]: dateInWeek.shift(),
+        [Op.lte]: dateInWeek.pop()
+      }
+    },
+    group: [fn('date', col('createdAt'))],
+    raw: true
+  });
+
 
   const { count, rows } = await Product.findAndCountAll({
     attributes: ["name_product", "sold"],

@@ -15,23 +15,27 @@ import {
   getAllMaterial,
 } from "../../../services/api";
 import PieChart from "../../../components/chart/pie-chart";
-import LineChart from "../../../components/chart/line-chart";
+import AreaChart from "../../../components/chart/area-chart";
 import { socket } from "../../../socket";
 import ColumnChart from "../../../components/chart/column-chart";
+import moment from "moment";
+import { renderToString } from "../../../utils/constant";
+import { useSelector } from "react-redux";
 
 const ResRevenue = () => {
   const [revenue, setRevenue] = useState({ daily: 0, weekly: 0, monthly: 0 });
   const [data, setData] = useState({});
   const [timeChart, setTimeChart] = useState("MONTH");
+  const customize = useSelector(state => state.customize)
   const [admin, setAdmin] = useState(null);
   const [dataOrder, setDataOrder] = useState([]);
   const [dataChart, setDataChart] = useState([])
-  console.log(data)
+
 
   const fetchData = useCallback(async () => {
     try {
       // const res = await getDataDashboard(timeChart);
-      const [{ data }, res1, dataAdmin, res] = await Promise.all([getAllOrder(), getDataDashboard(timeChart), getAllUser({ _like: "role_R1_not" }), getAllMaterial()])
+      const [{ data }, res1, dataAdmin, res] = await Promise.all([getAllOrder(), getDataDashboard({ weekcurrent: moment().week(), type: timeChart }), getAllUser({ _like: "role_R1_not" }), getAllMaterial()])
       const daily = calculateDailyRevenue(data);
       const weekly = calculateWeeklyRevenue(data);
       const monthly = calculateMonthlyRevenue(data)
@@ -56,7 +60,17 @@ const ResRevenue = () => {
         return data;
       });
       setDataOrder(avl);
-      setDataChart(res.dataChart);
+      const convert = res.dataChart.map(i => {
+        let q = { x: i.name_material, unit: i.unit, image: i.image }
+        if (i.unit === "gram") {
+          q = { ...q, y: i.amount / 1000, detail: `${i.unit} => kg` }
+        } else {
+          q = { ...q, y: i.amount }
+        }
+        return q
+      })
+      setDataChart(convert);
+      console.log(first)
     } catch (err) {
       console.log(err);
     }
@@ -172,28 +186,54 @@ const ResRevenue = () => {
               </div>
             </div>
             <div className="chart-line_area mt-4 rounded-lg border-solid border-2 border-orange-400">
-              <LineChart
+              <AreaChart
                 timeChart={timeChart}
                 setTimeChart={setTimeChart}
                 data={data}
               />
             </div>
             <div className='mt-6 border-solid border-2 rounded border-orange-400'>
-          <div className="m-4 text-lg font-medium">Nguyên liệu sắp hết</div>
-          <ColumnChart
-            customClassName='max-w-full'
-            series={[
-              {
-                name: "Nguyên liệu gần hết",
-                data: dataChart.map((item) => item.amount),
-              },
-            ]}
-            colors="#fc8019"
-            categories={dataChart.map(
-              (item) => `${item.name_material} (${item.unit})`
-            )}
-          />
-        </div>
+              <div className="m-4 text-lg font-medium">Nguyên liệu sắp hết</div>
+              <ColumnChart
+                series={[
+                  {
+                    name: "Nguyên liệu gần hết",
+                    data: dataChart.map((item) => item),
+                  },
+                ]}
+                colors="#EF4444"
+                columnWidth="20px"
+                customOptions={{
+                  yaxis: {
+                    min: 0,
+                    max: (max) => {
+                      if (max == 0) return 20
+                      return max;
+                    },
+                    tickAmount: 1,
+                    labels: {
+                      formatter: (val) => {
+                        return val
+                      }
+                    },
+                  },
+                  xaxis: {
+                    categories: dataChart.map(
+                      (item) => item.x
+                    ),
+                  },
+
+                  tooltip: {
+                    theme: customize.darkMode ? 'dark' : 'light',
+                    custom: function ({ _, seriesIndex, dataPointIndex, w }) {
+                      let data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                      return renderToString(data)
+                    }
+                  }
+
+                }}
+              />
+            </div>
           </Col>
           <Col xs={24} lg={8}>
             <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">

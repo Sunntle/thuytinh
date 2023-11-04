@@ -19,18 +19,9 @@ import { useLocation } from "react-router-dom";
 import Spinner from "../../components/spinner";
 import { formatGia, formatNgay } from "../../utils/format";
 import { socket } from "../../socket";
-import { overMasterial, unitMasterial } from "../../utils/constant";
+import { overMasterial, unitMasterial, renderToString } from "../../utils/constant";
 const { Title, Text } = Typography;
-const renderToString = (data) => {
-  return `
-    <div class="flex p-2 flex-col gap-2">
-      <img src="${data.image}" class="w-20 mx-auto"/>
-      <div>Tên: ${data.x}</div>
-      <div>Số lượng: ${data.y}/(${data.unit})</div>
-      ${data.detail ? `<div> Chuyển đổi: ${data.detail}</div>` : ''}
-    </div>
-  `;
-};
+
 function MaterialPage() {
   const [open, setOpen] = useState(false);
   const [, contextHolder] = notification.useNotification();
@@ -39,6 +30,7 @@ function MaterialPage() {
   const [data, setData] = useState(null);
   const [dataChart, setDataChart] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const customize = useSelector(state => state.customize)
   const notifications = useSelector(state => state.notifications);
   const [listImportMaterial, setListImportMaterial] = useState([])
   const location = useLocation();
@@ -47,7 +39,6 @@ function MaterialPage() {
 
   const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
-    console.log("fetch");
     setMaterials({
       ...res,
       data: res.data.map((el) => ({ ...el, key: el.id, price: el.Warehouses?.[0]?.price_import || 0 })),
@@ -304,9 +295,6 @@ function MaterialPage() {
                 },
               ]}
               colors="#EF4444"
-              // categories={dataChart.map(
-              //   (item) => `${item.name_material} (${item.unit})`
-              // )}
               columnWidth="20px"
               customOptions={{
                 yaxis: {
@@ -316,6 +304,11 @@ function MaterialPage() {
                     return max;
                   },
                   tickAmount: 1,
+                  labels: {
+                    formatter: (val) => {
+                      return val
+                    }
+                  },
                 },
                 xaxis: {
                   categories: dataChart.map(
@@ -324,9 +317,9 @@ function MaterialPage() {
                 },
 
                 tooltip: {
+                  theme: customize.darkMode ? 'dark' : 'light',
                   custom: function ({ _, seriesIndex, dataPointIndex, w }) {
                     let data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
-
                     return renderToString(data)
                   }
                 }
