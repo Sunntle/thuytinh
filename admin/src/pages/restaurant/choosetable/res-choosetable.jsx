@@ -54,6 +54,8 @@ const ResChooseTable = () => {
   const tableListData = useSelector((state) => state.tablelist);
   const [open, setOpen] = useState(false);
   const [api, contextHolder] = notification.useNotification();
+  const userId = useSelector((state) => state.account.user.id)
+  
 
 
 
@@ -73,6 +75,7 @@ const ResChooseTable = () => {
   }, [socket])
   const fetchData = async () => {
     const resTable = await getAllTable();
+    console.log(resTable)
     dispatch(AddTable(resTable));
   };
   useEffect(() => {
@@ -84,16 +87,19 @@ const ResChooseTable = () => {
     navigate('/employee/menu/');
   };
 
-  const handleDetailModal = (index) => {
-    console.log(index?.TableByOrders)
-    if (index?.TableByOrders.length === 0 || index?.TableByOrders == undefined) {
+  const handleDetailModal = async (table) => {
+     const resTableId = await getTableId(table.id,{id_employee: userId})
+     const tableByOrders = resTableId[0].TableByOrders;
+     console.log(tableByOrders)
+    if (tableByOrders && tableByOrders.length === 0 || tableByOrders == undefined) {
       api.info({
         message: 'Thông báo!!!',
         description:
           'Người dùng đang đặt hàng!!!',
       });
-    } else {
-      dispatch(AddTableList(index));
+    } 
+    else {
+      dispatch(AddTableList(resTableId));
       setOpen(true)
     }
 

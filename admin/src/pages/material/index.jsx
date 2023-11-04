@@ -271,14 +271,13 @@ function MaterialPage() {
       ) : (<>
         <Row justify="space-between" gutter={[0, 12]}>
           <Col xs={24} lg={8} >
-            <Title level={5} className="text-center">
+            <Title level={3}>
               Danh sách nguyên liệu nhập gần đây
             </Title>
-
-            <div className="h-[28vh] overflow-y-auto flex flex-col  no-scrollbar rounded-sm drop-shadow-sm">
+            <div className="h-[28vh] overflow-y-auto flex flex-col  rounded-sm drop-shadow-sm">
               {listImportMaterial.map((item) => (
-                <div key={item.id} className="border_bottom p-2">
-                  <Text>{`Ngày ${formatNgay(item.createdAt)} với số lượng ${item.amount_import} giá : ${formatGia(item.price_import)}`} </Text>
+                <div key={item.id} className="border_bottom py-2">
+                  <Text><span className="text-main">{formatNgay(item.createdAt)}</span>: {item.Material.name_material} - {item.amount_import}{item.Material.unit} với giá : <span className="font-semibold">{formatGia(item.price_import)}/1{item.Material.unit}</span></Text>
                 </div>
               ))}
             </div>
@@ -335,7 +334,7 @@ function MaterialPage() {
 
         <Row justify="space-between" align="center" className="mb-4">
           <Col xs={6} className="flex items-center gap-4">
-            <Title level={5} className="mb-0">Danh sách nguyên liệu </Title>
+            <Title level={3} className="mb-0">Danh sách nguyên liệu </Title>
           </Col>
 
           <Col xs={6} style={{ textAlign: "-webkit-right" }}>

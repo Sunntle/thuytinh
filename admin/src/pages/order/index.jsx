@@ -24,6 +24,7 @@ import moment from "moment";
 import { useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import Spinner from "../../components/spinner";
+import {socket} from "../../socket"
 const { Title } = Typography;
 const config = {
   rules: [
@@ -74,8 +75,6 @@ const OrderPage = () => {
     searchInput.current = null;
     window.location.href = '/admin/order';
   };
-  const notifications = useSelector(state => state.notifications)
-  const location = useLocation();
   const fetchData = useCallback(async (query) => {
     const { data, total } = await getAllOrder(query);
     const avl = total > 0 && data.map((item) => {
@@ -189,10 +188,13 @@ const OrderPage = () => {
 
   });
   useEffect(() => {
-    if (notifications.lastNotification && notifications.lastNotification?.type == location.pathname.split("/").at(-1)) {
-      fetchData(query)
+    socket.on("new message", arg=>{
+      if(arg == "order") fetchData(query)
+    })
+    return ()=>{
+      socket.off("new message")
     }
-  }, [notifications, location, fetchData, query]);
+  }, [fetchData, query]);
 
 
   const columns = [
@@ -300,7 +302,7 @@ const OrderPage = () => {
 
 
   const onFinish = async (values) => {
-    let res = await updateOrderAdmin(values);
+    await updateOrderAdmin(values);
     fetchData(query);
     onClose();
   };

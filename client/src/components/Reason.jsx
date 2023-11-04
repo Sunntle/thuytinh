@@ -2,6 +2,7 @@ import { BsBookmarkCheckFill } from "react-icons/bs";
 import { FaShippingFast } from "react-icons/fa";
 import { RiServiceFill } from "react-icons/ri";
 import { truncateString } from "../utils/format.js";
+import { motion, stagger } from "framer-motion";
 
 const AboutUs = () => {
   return (
@@ -13,8 +14,13 @@ const AboutUs = () => {
         Nhà hàng Thuỷ Tinh là lựa chọn tuyệt vời khi có đầy đủ các dịch vụ dành
         cho khách hàng thân yêu của chúng tôi.
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-8">
-        <div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 1.5, when: "afterChildren" }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-8"
+      >
+        <motion.div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
           <div className="overflow-hidden rounded-t-xl h-[220px]">
             <img
               className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
@@ -41,8 +47,8 @@ const AboutUs = () => {
               Xem Menu
             </button>
           </div>
-        </div>
-        <div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
+        </motion.div>
+        <motion.div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
           <div className="overflow-hidden rounded-t-xl h-[220px]">
             <img
               className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
@@ -69,8 +75,8 @@ const AboutUs = () => {
               Xem Menu
             </button>
           </div>
-        </div>
-        <div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
+        </motion.div>
+        <motion.div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
           <div className="overflow-hidden rounded-t-xl h-[220px]">
             <img
               className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
@@ -97,8 +103,8 @@ const AboutUs = () => {
               Xem Menu
             </button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

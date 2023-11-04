@@ -4,15 +4,9 @@ import { useSelector } from "react-redux";
 
 const Header = () => {
   const customerName = useSelector((state) => state.customerName);
-  // if (!table)
-  //   return (
-  //     <>
-  //       <span className="flex justify-center items-center">Không lấy được dữ liệu</span>
-  //     </>
-  //   );
   return (
     <div
-      className={`w-full h-20 z-40 absolute  top-0 lg:hidden bg-primary rounded-b-3xl drop-shadow-md px-6 text-white flex items-center ${
+      className={`tracking-wide w-full h-20 z-40 absolute  top-0 lg:hidden bg-primary rounded-b-3xl drop-shadow-md px-6 text-white flex items-center ${
         customerName ? "justify-between" : "justify-center"
       }`}
     >

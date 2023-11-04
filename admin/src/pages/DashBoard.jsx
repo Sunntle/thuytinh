@@ -13,6 +13,7 @@ import LineChart from "../components/chart/line-chart";
 import moment from "moment";
 import { weekArrText } from "../utils/constant";
 const { Text, Title } = Typography;
+import CountUp from 'react-countup';
 const DashBoard = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -21,15 +22,11 @@ const DashBoard = () => {
   const [week, setWeek] = useState(currentWeek);
   const [dataProduct, setDataProduct] = useState(null);
   const [discount, setDiscount] = useState(null);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [res1, res2, resProductsDiscount] = await Promise.all([getDataDashboard({ weekcurrent: week, type: timeChart }), getAllProduct({
-        _sort: "sold",
-        _order: "DESC",
-        _sold: "gte_0",
-        _limit: 10,
-      }), getAllProduct({
+      const [res1, resProductsDiscount] = await Promise.all([getDataDashboard({ weekcurrent: week, type: timeChart }), getAllProduct({
         _sort: "discount",
         _order: "DESC",
         _discount: "gte_0",
@@ -38,7 +35,6 @@ const DashBoard = () => {
       ]);
       setDiscount(resProductsDiscount);
       setData(res1);
-      setDataProduct(res2.data);
     } catch (err) {
       console.log(err);
     } finally {
@@ -63,15 +59,15 @@ const DashBoard = () => {
           <div className="rounded-lg border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2">
               <span className="font-medium text-sm text-center ">Tổng thu nhập - Năm {new Date().getFullYear()}</span>
-              <p className="text-orange-400 text-lg font-medium text-center">{formatGia(data?.totalOrderYear || 0)}</p>
+              <p className="text-orange-400 text-lg font-medium text-center">{data?.totalOrderYear ? (<CountUp end={data?.totalOrderYear} separator="," />) : 0}</p>
             </div>
             <div className="w-1/3  p-4 h-full flex flex-col justify-center items gap-1">
               <span className="font-medium text-sm text-center">Thu nhập - Tháng {new Date().getMonth() + 1}</span>
-              <p className="text-lg font-medium text-green-500 text-center">{formatGia(data.montdPreAndCur?.[0]?.total || 0)}</p>
+              <p className="text-lg font-medium text-green-500 text-center">{data.montdPreAndCur?.[0]?.total ? (<CountUp end={data.montdPreAndCur?.[0]?.total} separator="," />) : 0}</p>
             </div>
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1">
               <span className="font-medium text-sm text-center">Chi phí</span>
-              <p className="text-lg font-medium text-red-500 text-center">{formatGia(data?.costMaterial?.total_cost || 0)}</p>
+              <p className="text-lg font-medium text-red-500 text-center">{data?.costMaterial?.total_cost ? (<CountUp end={data?.costMaterial?.total_cost} separator="," />) : 0}</p>
             </div>
           </div>
           <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2 mb-6">
@@ -185,10 +181,10 @@ const DashBoard = () => {
             </div>
             <Swiper
               speed={1500}
-              // autoplay={{
-              //   delay: 1500,
-              //   disableOnInteraction: false,
-              // }}
+              autoplay={{
+                delay: 1500,
+                disableOnInteraction: false,
+              }}
               slidesPerView={1}
               className="mySwiper"
               breakpoints={{
@@ -200,7 +196,7 @@ const DashBoard = () => {
                 //   slidesPerView: 3,
                 // },
               }}
-            // modules={[Autoplay]}
+              modules={[Autoplay]}
             >
               {discount?.data.map((el) => {
                 return (
@@ -218,7 +214,7 @@ const DashBoard = () => {
                           </div>
                           <div>
                             <h6 className="font-semibold text-lg">
-                              {truncateString(el.name_product, 12)}
+                              {truncateString(el.name_product, 11)}
                             </h6>
                             <div className="mb-2">
                               <h6 className="text-main font-semibold  whitespace-nowrap text-lg">
@@ -251,7 +247,7 @@ const DashBoard = () => {
               </div>
               <div className="flex flex-col justify-center items-start ms-5">
                 <span className=" font-medium">Số đơn hàng</span>
-                <span className="font-medium text-xl">{data?.countOrder || 0}</span>
+                <span className="font-medium text-xl">{data?.countOrder ? <CountUp end={data?.countOrder} separator="," /> : 0}</span>
               </div>
             </div>
             <div className="flex flex-row ">
@@ -260,7 +256,7 @@ const DashBoard = () => {
               </div>
               <div className="flex flex-col justify-center items-start  ms-5">
                 <span className=" font-medium">Số món ăn</span>
-                <span className="font-medium text-xl">{data?.food}</span>
+                <span className="font-medium text-xl">{data?.food ? <CountUp end={data?.food} separator="," /> : 0}</span>
               </div>
             </div>
             <div className="flex flex-row ">
@@ -269,7 +265,7 @@ const DashBoard = () => {
               </div>
               <div className="flex flex-col justify-center items-start   ms-5">
                 <span className=" font-medium">Số bàn đã đặt</span>
-                <span className="font-medium text-xl">{data?.table}</span>
+                <span className="font-medium text-xl">{data?.table ? <CountUp end={data?.table} separator="," /> : 0}</span>
               </div>
             </div>
             <div className="flex flex-row ">
@@ -278,7 +274,7 @@ const DashBoard = () => {
               </div>
               <div className="flex flex-col justify-center items-start  ms-5">
                 <span className=" font-medium">Số nhân viên</span>
-                <span className="font-medium text-xl">{data?.user}</span>
+                <span className="font-medium text-xl">{data?.user ? <CountUp end={data?.user} separator="," /> : 0}</span>
               </div>
             </div>
           </div>

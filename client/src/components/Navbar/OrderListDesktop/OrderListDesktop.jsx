@@ -1,28 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { Button, Drawer, message, Modal } from "antd";
-import "./index.css";
-import { formatCurrency } from "../../../utils/format.js";
-import { HiXMark } from "react-icons/hi2";
+// React
+import { useCallback, useMemo, useState } from "react";
+// React-icons
 import { AiFillWarning } from "react-icons/ai";
+import { HiXMark } from "react-icons/hi2";
+// Components
+import { Button, Drawer, message, Popconfirm } from "antd";
+// Hooks
+import useHttp from "../../../hooks/useHttp.js";
+// Utils
+import { formatCurrency } from "../../../utils/format.js";
+import {
+  handleDeleteConfirm,
+  handleOrderReduxDecreaseQuantity,
+  handleOrderReduxIncreaseQuantity,
+} from "../../../utils/buttonUtils.js";
+// Services
+import { addOrder } from "../../../services/api.js";
+// Redux
+import { useDispatch, useSelector } from "react-redux";
 import {
   addIdOrderTable,
-  addOrderDetailUpdate,
-  decreaseQuantity,
   emptyOrder,
-  increaseQuantity,
-  removeFromOrder,
 } from "../../../redux/Order/orderSlice.js";
-import { useDispatch, useSelector } from "react-redux";
-import useHttp from "../../../hooks/useHttp.js";
-import { addOrder } from "../../../services/api.js";
-import { useNavigate } from "react-router-dom";
+// External File
+import "./index.css";
+import Image from "../../Image/Image.jsx";
 
-const { confirm } = Modal;
-
-const OrderListDesktop = (props) => {
-  const { isOrderDesktop, setIsOrderDesktop } = props;
+const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
   const [newOrder, setNewOrder] = useState(null);
-  const [orderUpdated, setOrderUpdated] = useState(null);
   const { order: orders, idOrder } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const [messageApi, contextHolder] = message.useMessage();
@@ -30,41 +35,11 @@ const OrderListDesktop = (props) => {
   const dispatch = useDispatch();
 
   // Calculate Total Bill
-  const totalOrder = orders?.reduce((acc, cur) => {
-    acc += cur.quantity * cur.price;
-    return acc;
-  }, 0);
-  const showDeleteConfirm = (id) => {
-    confirm({
-      title: "Bạn muốn xóa món ăn này ?",
-      icon: <AiFillWarning className="w-5 h-5 text-red-600" />,
-      okText: "Có",
-      okType: "danger",
-      cancelText: "Không",
-      onOk() {
-        try {
-          dispatch(removeFromOrder(id));
-        } catch (err) {
-          console.log(err);
-        }
-      },
-      onCancel() {
-        console.log("Cancel");
-      },
-    });
-  };
-  const handleIncreaseQuantity = (data) => {
-    if (data) {
-      dispatch(increaseQuantity(data));
-    }
-  };
+  const totalOrder = useMemo(() => (
+      orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
+  ), [orders]);
 
-  const handleDecreaseQuantity = (data) => {
-    if (data) {
-      dispatch(decreaseQuantity(data));
-    }
-  };
-  const submitOrderList = async () => {
+  const submitOrderList = useCallback(async () => {
     const body = {
       orders: orders,
       total: totalOrder,
@@ -73,37 +48,44 @@ const OrderListDesktop = (props) => {
       token: localStorage.getItem("tableToken"),
     };
     try {
-      await sendRequest(addOrder(body), setNewOrder);
-      messageApi.open({
-        type: "success",
-        content: "Đặt món thành công",
-      });
-      dispatch(emptyOrder());
-      window.location.href = `http://localhost:3000/ban-${customerName.tables[0]}/order`;
+      const response = await sendRequest(addOrder(body), setNewOrder, true);
+      if (response?.success) {
+        dispatch(
+          addIdOrderTable({
+            idOrder: newOrder?.data?.orders?.id,
+            idTable: customerName?.tables[0],
+          }),
+        );
+        dispatch(emptyOrder());
+        messageApi.open({
+          type: "success",
+          content: "Đặt món thành công",
+        });
+        window.location.href = `http://localhost:3000/ban-${customerName.tables[0]}/order`;
+      } else {
+        messageApi.open({
+          type: "error",
+          content: "Đặt món thất bại",
+        });
+      }
     } catch (err) {
       console.log(err);
     } finally {
       setIsOrderDesktop(false);
     }
-  };
+  }, [
+    customerName.name,
+    customerName.tables,
+    dispatch,
+    messageApi,
+    newOrder?.data?.orders?.id,
+    orders,
+    sendRequest,
+    setIsOrderDesktop,
+    totalOrder,
+  ]);
 
-  useEffect(() => {
-    if (newOrder?.success) {
-      dispatch(
-        addIdOrderTable({
-          idOrder: newOrder?.data?.orders?.id,
-          idTable: customerName?.tables[0],
-        }),
-      );
-    } else {
-      messageApi.open({
-        type: "error",
-        content: "Đặt món thất bại",
-      });
-    }
-  }, [customerName?.tables, dispatch, newOrder]);
-
-  const handleUpdateOrder = () => {
+  const handleUpdateOrder = async () => {
     const body = {
       total: totalOrder,
       carts: orders,
@@ -115,7 +97,7 @@ const OrderListDesktop = (props) => {
         url: "/order",
         ...body,
       };
-      sendRequest(request, setOrderUpdated);
+      await sendRequest(request, undefined, true);
       dispatch(emptyOrder());
       window.location.href = `http://localhost:3000/ban-${customerName.tables[0]}/order`;
     } catch (err) {
@@ -127,11 +109,13 @@ const OrderListDesktop = (props) => {
 
   return (
     <Drawer
-      size={"large"}
+      className="tracking-wide"
       closable={false}
       open={isOrderDesktop}
+      size="large"
       onClose={() => setIsOrderDesktop(false)}
     >
+      {contextHolder}
       <span className="block text-xl font-semibold my-4">Món đã chọn</span>
       <div className="relative max-w-full min-h-screen">
         {orders?.length > 0 ? (
@@ -141,9 +125,10 @@ const OrderListDesktop = (props) => {
                 {/*Image and Product*/}
                 <div className="flex justify-between items-center space-x-6">
                   <div className="h-28 w-28">
-                    <img
-                      className="w-full h-full object-cover rounded-full"
+                    <Image
+                      loading={item.ImageProducts[0]?.url && false}
                       src={item.ImageProducts[0]?.url}
+                      className="rounded-full"
                       alt={item.name_product}
                     />
                   </div>
@@ -155,7 +140,9 @@ const OrderListDesktop = (props) => {
                 <div className="flex justify-between items-center space-x-12">
                   <div className="flex items-center">
                     <span
-                      onClick={() => handleDecreaseQuantity(item)}
+                      onClick={() =>
+                        handleOrderReduxDecreaseQuantity(item, dispatch)
+                      }
                       className="cursor-pointer rounded-l bg-gray-100 w-8 h-8 flex items-center justify-center duration-100 hover:bg-primary hover:text-blue-50"
                     >
                       -
@@ -168,7 +155,9 @@ const OrderListDesktop = (props) => {
                       min={1}
                     />
                     <span
-                      onClick={() => handleIncreaseQuantity(item)}
+                      onClick={() =>
+                        handleOrderReduxIncreaseQuantity(item, dispatch)
+                      }
                       className="cursor-pointer rounded-r bg-gray-100 w-8 h-8 flex items-center justify-center duration-100 hover:bg-primary hover:text-blue-50"
                     >
                       +
@@ -176,10 +165,21 @@ const OrderListDesktop = (props) => {
                   </div>
                   <span>{formatCurrency(item.price)}</span>
                   <span className="cursor-pointer group">
-                    <HiXMark
-                      onClick={() => showDeleteConfirm(item.id)}
-                      className="w-6 h-6 text-red-600 group-hover:text-red-500 transition-colors"
-                    />
+                    <Popconfirm
+                      title={"Bạn có muốn xóa món ăn này"}
+                      okText={"Có"}
+                      okType={"danger"}
+                      cancelText={"Không"}
+                      onConfirm={() => handleDeleteConfirm(item.id, dispatch)}
+                      onCancel={() => console.log("Cancel")}
+                      icon={
+                        <AiFillWarning className="w-5 h-5 text-red-600 disabled:text-red-300" />
+                      }
+                    >
+                      <button disabled={item.inDb && true}>
+                        <HiXMark className="w-5 h-5 text-red-600" />
+                      </button>
+                    </Popconfirm>
                   </span>
                 </div>
               </div>
@@ -192,18 +192,31 @@ const OrderListDesktop = (props) => {
             </span>
           </div>
         )}
-        <div className="w-full flex justify-between items-center text-lg font-semibold text-primary mt-10 px-2">
-          <span className="flex items-center font-normal">Quay về</span>
+        <div className="w-full flex justify-between items-center text-lg font-semibold text-primary mt-10 px-2 transition-colors duration-200">
+          <span className="flex items-center font-normal cursor-pointer hover:text-primary/80">
+            Quay về
+          </span>
           <div className="flex justify-between items-center space-x-1">
             <span className="text-sm text-slate-500">Tạm tính: </span>
             <span className="text-xl">{formatCurrency(totalOrder || 0)}</span>
           </div>
         </div>
         <div className="w-full flex justify-end items-center text-lg font-semibold text-primary mt-10 px-2 space-x-2">
-          <Button onClick={handleUpdateOrder}>Cập nhật</Button>
           <Button
-            disabled={orders?.length === 0}
-            className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
+            onClick={handleUpdateOrder}
+            disabled={
+              orders?.length === 0 ||
+              orders.some((i) => i.inDb && false) ||
+              !orders.every((i) => i.inDb)
+            }
+          >
+            Cập nhật
+          </Button>
+          <Button
+            disabled={
+              orders?.length === 0 || orders.some((i) => i.inDb && true)
+            }
+            className="bg-primary text-white hover:text-white font-medium"
             size="middle"
             onClick={submitOrderList}
           >

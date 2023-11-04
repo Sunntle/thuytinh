@@ -21,9 +21,7 @@ const RenderFooter = ({
   form,
   onFinish,
   showModal,
-  closeSwithTable,
   openSwithTable,
-  switchTable,
   submitPayment,
   customize
 }) => (
@@ -124,7 +122,8 @@ const ResOrder = ({ handleCancel, open }) => {
   const [payment, setPayment] = useState(null);
   const [switchTable, setSwitchTable] = useState(false)
   const [form] = Form.useForm();
-  const tablelist = useSelector((state) => state.tablelist);
+  const tablelist = useSelector((state) => state.tablelist?.[0]);
+  console.log(tablelist)
   const tablebyorders = tablelist?.TableByOrders?.[0]
   const order = tablebyorders?.order;
   const order_details = order?.order_details;
@@ -135,7 +134,8 @@ const ResOrder = ({ handleCancel, open }) => {
     dispatch(RemoveAllCart())
     index.TableByOrders[0].order.order_details.forEach(item => {
       console.log(item.quantity)
-      dispatch(AddCartUpdate({ quantity: item.quantity, ...item.Product }))
+      let inDb = item.quantity;
+      dispatch(AddCartUpdate({ quantity: item.quantity, ...item.Product,inDb }))
     });
     dispatch(AddTableList(index))
     navigate('/employee/menu/');

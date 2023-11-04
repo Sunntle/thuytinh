@@ -13,12 +13,13 @@ const useHttp = () => {
           ...rest,
       });
       if(render) return response
-      if(typeof getData == "function") getData(response);
-      else getData = response
+      getData(response);
     } catch (err) {
       setError(err.message || "Something went wrong!");
+    }finally{
+      setIsLoading(false);
     }
-    setIsLoading(false);
+    
   }, []);
   return {
     isLoading,

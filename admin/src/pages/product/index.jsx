@@ -15,7 +15,6 @@ import {
 } from "../../services/api";
 import AddNewProduct from "./add";
 import EditProduct from "./edit";
-import { socket } from "../../socket";
 import Spinner from "../../components/spinner";
 const { Title } = Typography;
 function ProductPage() {
@@ -26,6 +25,7 @@ function ProductPage() {
   const [products, setProducts] = useState(null);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
+
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
@@ -47,14 +47,6 @@ function ProductPage() {
     fetchData();
   }, [fetchData]);
 
-  useEffect(() => {
-    socket.on("new message", (data) => {
-      data?.name == "order" && fetchData();
-    });
-    return () => {
-      socket.off("new message");
-    };
-  }, [fetchData]);
 
   const handleDeleteProduct = useCallback(
     async (id_product) => {

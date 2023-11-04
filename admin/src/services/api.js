@@ -27,8 +27,8 @@ export const updateCompleteOrder = (data) => {
 export const getAllTable = (params) => {
   return axios.get(`/api/table`, { params });
 }
-export const getTableId = (id_order) => {
-  return axios.get(`/api/table/${id_order}`);
+export const getTableId = (id_order,params) => {
+  return axios.get(`/api/table/${id_order}`,{params});
 }
 export const updateTables = (data) => {
   return axios.put(`/api/table`, data);

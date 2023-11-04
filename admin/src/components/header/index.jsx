@@ -32,7 +32,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { doLogoutAction, fetchAccount } from "../../redux/account/accountSlice";
 import { ChangeMode } from "../../redux/customize/customize";
-import { fetchNotification } from "../../redux/notification/notificationSystem";
 import {
   callLogout,
   callUpdateAccount,
@@ -44,6 +43,7 @@ import { LightSvg, NAV_ITEMS } from "../../utils/constant";
 import { roleRext, truncateString } from "../../utils/format";
 import NotificationsComponent from "../notification";
 import { DarkSvg } from "../../utils/constant";
+import Clock from "../clock/Clock";
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
 
@@ -66,6 +66,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
   const noti = useSelector((state) => state.notifications);
   const customize = useSelector((state) => state.customize);
   const dispatch = useDispatch();
+
   const items = useMemo(() => ([
     {
       label: <span className="font-semibold">{user?.user.name}</span>,
@@ -82,9 +83,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
       icon: <LogoutOutlined />,
     },
   ]), [user?.user.name]);
-  useEffect(() => {
-    dispatch(fetchNotification());
-  }, [dispatch]);
+
   const handleMenuClick = useCallback(
     async (e) => {
       if (e.key == 2) {
@@ -113,12 +112,12 @@ function HeaderComponent({collapsed, setCollapsed}) {
 
     }, [dispatch, form, user.user]);
 
-  const handleRemoveKeyWord = (index) => {
+  const handleRemoveKeyWord = useCallback((index) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord"));
     searchArr.splice(index, 1);
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
-  };
+  },[]);
 
   const handleSearch = useCallback((keyword) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
@@ -130,12 +129,11 @@ function HeaderComponent({collapsed, setCollapsed}) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const dataProducts = await getAllProduct({
+      const [dataProducts, dataCate] = await Promise.all([getAllProduct({
         _sort: "sold",
         _order: "DESC",
         _limit: 8,
-      });
-      const dataCate = await getAllCate();
+      }),getAllCate()]);
       setCategories(dataCate);
       setData(dataProducts);
     };
@@ -223,18 +221,19 @@ function HeaderComponent({collapsed, setCollapsed}) {
         {categories.length > 0 && (
           <>
             <Typography.Title level={5}>Danh mục</Typography.Title>
-            <div className="my-5">
+            <div >
               <Swiper
                 speed={1000}
-                slidesPerView={7}
+                slidesPerView={6}
                 spaceBetween={20}
                 className="mySwiper"
               >
                 {categories?.map((el) => (
                   <SwiperSlide key={el.id} className="my-5">
                     <Link
+ 
                       to={`/employee/menu?category=${el.id}`}
-                      className="border rounded-full border-gray-300 border-solid py-2 px-3 transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
+                      className="w-full py-1 flex justify-center whitespace-nowrap items-center border rounded-full border-gray-300 border-solid transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
                     >
                       {truncateString(el.name_category, 12)}
                     </Link>
@@ -292,9 +291,9 @@ function HeaderComponent({collapsed, setCollapsed}) {
             <img src="Logo" className="max-w-md object-cover" alt="" />
             Logo here
           </div>
-        </div>
-        <Button
+          <Button
           type="text"
+          size="large"
           icon={
             collapsed ? (
               <MenuUnfoldOutlined style={{ color: "white" }} />
@@ -303,7 +302,9 @@ function HeaderComponent({collapsed, setCollapsed}) {
             )
           }
           onClick={() => setCollapsed(!collapsed)}
-        />
+          />
+        </div>
+        
         <div className="hidden sm:block flex-1 text-center mx-3">
           <SearchComponent
             className="bg-secondaryColor w-full max-w-2xl "
@@ -314,7 +315,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
           />
         </div>
         <div className="flex items-center justify-center gap-x-4">
-          {/* <Clock/> */}
+          <Clock/>
           <Tooltip title={customize.darkMode ? 'Chế độ sáng': 'Chế độ tối'}>
             <Button
               size="large"

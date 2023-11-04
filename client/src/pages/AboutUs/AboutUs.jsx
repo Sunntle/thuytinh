@@ -3,9 +3,8 @@ import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
-import {ScrollToTop, truncateString} from "../../utils/format.js";
+import {ScrollToTop} from "../../utils/format.js";
 import avtDefault from "../../assets/images/avtDefault.png";
-import { socket } from "../../services/socket";
 import { Rate } from "antd";
 import { Reason } from "../../components/index.js";
 
@@ -26,10 +25,6 @@ const AboutUs = () => {
     };
     sendRequest(request, setSlideRating);
   }, [sendRequest]);
-
-  useEffect(() => {
-    socket.emit("new rating", { userName: "Myduyen", role: "R1" });
-  }, []);
 
   return (
     <div className="pb-24">
@@ -150,7 +145,6 @@ const AboutUs = () => {
             },
           }}
           autoplay={true}
-          onSlideChange={() => console.log("slide change")}
         >
           {slideProduct &&
             slideProduct?.data?.map((rating) => {

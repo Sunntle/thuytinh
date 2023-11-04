@@ -1,4 +1,4 @@
-const moment = require("moment");
+
 const {
   apiQueryRest,
   checkQtyMaterials,
@@ -39,7 +39,8 @@ exports.createOrder = asyncHandler(async (req, res) => {
       data: "Bàn đã có người đặt",
     });
 
-  const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
+  const { approve, over } =
+    await Materials.prototype.checkAmountByProduct(orders);
   if (approve.length === 0)
     return res
       .status(200)
@@ -75,12 +76,12 @@ exports.createOrder = asyncHandler(async (req, res) => {
     product,
     over,
     tableByOrder: tableData,
-    over
+    over,
   };
 
   if (!id_employee) {
     await Notification.create(
-      { type: "order", description: `Có đơn hàng mới`, content: order_result.id },
+      { type: "order", description: `Bàn -${table[0]} vừa đặt món`, content: order_result.id },
       { raw: true },
     );
     _io.of("/client").emit("status order", { ...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3" });// check correct order
@@ -175,7 +176,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
       }
     }
   }
-  res.status(200).json({ message: "Update thành công", over });
+  res.status(200).json({ message: "Update thành công", over, success: true });
 });
 
 
@@ -202,7 +203,9 @@ exports.completeOrder = asyncHandler(async (req, res) => {
     await Order.update({ status: 4 }, { where: { id: orderId } });
     res.status(200).json({ success: true, data: "Update thành công" });
   } else {
-    res.status(404).json({ success: false, data: "Người dùng chưa thanh toán" });
+    res
+      .status(404)
+      .json({ success: false, data: "Người dùng chưa thanh toán" });
   }
 });
 

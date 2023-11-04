@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 // import "./res-payment.css"
 import { Button, Divider, Modal, Spin, message, } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
-import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
-import { CloseOutlined } from '@ant-design/icons'
+import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, RemoveReduxCart, getTotal } from '../../../redux/cartsystem/cartSystem'
+import { CloseOutlined, DeleteOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
 import { addOrder, updateOrder } from '../../../services/api'
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,6 @@ const ResPayment = () => {
     const staff = useSelector((state) => state.account)
     const navigate = useNavigate();
 
-    console.log(staff.user.id)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getTotal());
@@ -42,7 +41,7 @@ const ResPayment = () => {
             };
             res = await addOrder(body);
             console.log(res.success)
-            dispatch(RemoveAllCart());
+            dispatch(RemoveAllCart(false));
             dispatch(RemoveTableList());
             res.success  && navigate("/employee/choosetable") 
             message.open({
@@ -70,7 +69,7 @@ const ResPayment = () => {
             };
             console.log(body)
             res = await updateOrder(body);
-            dispatch(RemoveAllCart());
+            dispatch(RemoveAllCart(true));
             dispatch(RemoveTableList());
             console.log(res)
             message.open({
@@ -101,10 +100,7 @@ const ResPayment = () => {
                     <div key={index}>
                         <div className='flex items-center my-3'>
                             <div className='flex items-center h-16 w-15 mr-1 hover:bg-hoverColor'>
-                                <div className='product-remove pe-2'>
-                                    <button className='text-orange-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
-                                </div>
-                                <img className=' rounded-lg h-full w-full object-contain ' src={item?.ImageProducts[0]?.url} />
+                                <img className=' rounded-lg  h-full w-full  object-contain ' src={item?.ImageProducts[0]?.url} />
                             </div>
                             <div className='flex-grow'>
                                 <div className='flex justify-between'>
@@ -112,11 +108,13 @@ const ResPayment = () => {
                                     <span className='text-main text-sm mb-3'>{formatGia(item.price)}</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
-                                    <span>x{item.quantity}</span>
+                                <div className='product-remove pe-2'>
+                                    <span className='text-orange-500 cursor-pointer' onClick={() => dispatch(RemoveCart(item))}><DeleteOutlined /></span>
+                                </div>
                                     <div className="flex justify-between items-center">
-                                        <button className='rounded-full bg-orange-500 p-1' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="text-white w-3 h-4 sm:w-4 sm:h-4 " /></button>
+                                        <span className='rounded-full bg-orange-500 p-1 cursor-pointer' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="text-white w-3 h-4 sm:w-4 sm:h-4 " /></span>
                                         <span className="font-medium text-lg mx-3 ">{item.quantity}</span>
-                                        <button className='rounded-full bg-orange-500 p-1' onClick={() => dispatch(AddCart(item))}><HiPlus className="text-white w-3 h-3 sm:w-4 sm:h-4 " /></button>
+                                        <span className='rounded-full bg-orange-500 p-1 cursor-pointer' onClick={() => dispatch(AddCart(item))}><HiPlus className="text-white w-3 h-3 sm:w-4 sm:h-4 " /></span>
                                     </div>
                                 </div>
                             </div>
@@ -136,21 +134,21 @@ const ResPayment = () => {
                     {tablelist ? (
                         <div className='grid grid-cols-2 mt-12'>
                             <div className='flex justify-center font-semibold col-span-1 m-1'>
-                                <button className='bg-red-500 text-white' onClick={() => dispatch(RemoveAllCart())}>Hủy</button>
+                                <div className='flex items-center justify-center rounded bg-red-500 hover:bg-red-400 cursor-pointer text-white h-[40px] w-full' onClick={() => dispatch(RemoveAllCart())}>Hủy</div>
                             </div>
 
                             {tablelist.status_table > 0 ? (<div className='flex justify-center font-semibold col-span-1 m-1'>
 
-                                <button className='bg-indigo-500 text-white' onClick={sumitUpdateOrder}>Cập nhật</button>
+                                <Button className={`bg-indigo-500 text-white ${carts.length > 0 ? "" : "bg-indigo-300 pointer-events-none"}`} onClick={sumitUpdateOrder}>Cập nhật</Button>
 
                             </div>) : (<div className='flex justify-center font-semibold col-span-1 m-1'>
-                                <button className='bg-blue-500 text-white' onClick={submitOrderList}>Đặt món</button>
+                                <div className={`flex items-center justify-center rounded text-white hover:bg-blue-300 cursor-pointer h-[40px] w-full ${carts.length > 0 ? "bg-blue-500" : "bg-blue-300 pointer-events-none"}`} onClick={submitOrderList}>Đặt món</div>
                             </div>)}
                         </div>
                     ) : (
                         <div className='grid grid-cols-2 mt-12'>
                             <div className='flex justify-center font-semibold col-span-2 m-1'>
-                                <button className='bg-green-500 text-white' onClick={chooseTable}>Chọn bàn</button>
+                                <Button className='bg-green-500 text-white' onClick={chooseTable}>Chọn bàn</Button>
                             </div>
                         </div>
                     )}

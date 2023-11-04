@@ -1,3 +1,7 @@
 .ant-drawer-content {
     border-radius: 0;
 }
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+    @apply text-primary bg-primary/20;
+}

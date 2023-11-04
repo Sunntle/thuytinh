@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
   order: [],
   idOrder: 0,
@@ -12,10 +13,14 @@ const orderSlice = createSlice({
       const food = action.payload;
       const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem) {
-        if (existingItem.quantity < food.amount) {
-          existingItem.quantity += 1;
+        if (existingItem.amount) {
+          if (existingItem.quantity < food.amount) {
+            existingItem.quantity += 1;
+          } else {
+            alert("Hết món");
+          }
         } else {
-          alert('Hết món')
+          existingItem.quantity += 1;
         }
       } else {
         state.order.push({ ...food, quantity: 1 });

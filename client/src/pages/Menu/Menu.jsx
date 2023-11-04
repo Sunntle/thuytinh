@@ -2,88 +2,85 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-
 // React-icons
 import { FiSearch } from "react-icons/fi";
 import { BiFoodMenu } from "react-icons/bi";
 import { FiChevronDown } from "react-icons/fi";
-
 // Components
 import OrderListModal from "./OrderListModal/OrderListModal.jsx";
 import CategoryList from "./CategoryList/CategoryList.jsx";
 import ProductList from "./ProductList/ProductList.jsx";
-import { Spinner } from "../../components/index.js";
 import { Button } from "antd";
-
 // Hooks
 import useHttp from "../../hooks/useHttp.js";
 import useDebounce from "../../hooks/useDebounce.js";
-
 // Utils
 import { ScrollToTop } from "../../utils/format.js";
 import instance from "../../utils/axiosConfig.js";
-
 // Services
 import * as apiService from "../../services/api.js";
 
 // Extenal Files
 import "./index.css";
-
+const limit = 15;
 const Menu = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [searchParams] = useSearchParams();
-  const categoryIndex = searchParams.get("category");
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [foods, setFoods] = useState({ total: 0, data: []});
   const [isProductLoading, setIsProductLoading] = useState(false);
-  const { sendRequest, isLoading } = useHttp();
-  const [foods, setFoods] = useState({ total: 0, data: [] });
+  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [categories, setCategories] = useState(null);
+  const [searchParams] = useSearchParams();
   const { order: orders } = useSelector((state) => state.order);
+  const { sendRequest, isLoading } = useHttp();
   const debouncedValue = useDebounce(searchValue, 100);
-  const limit = 15;
+  const categoryIndex = searchParams.get("category") || null;
 
-
-  const fetchFoods = useCallback(async () => {
+  const fetchFoods = useCallback(async (length = 0) => {
     setIsProductLoading(true);
     try {
       const response = await instance.get(
-        `/product?_limit=${limit}&_offset=${foods.data.length}`,
+        `/product?_limit=${limit}&_offset=${length}`
       );
-      setFoods({
+      setFoods(prev => ({
         total: response.total,
-        data: [...foods.data, ...response.data],
-      });
-      setIsProductLoading(false);
+        data: [...prev.data, ...response.data]
+      }));
     } catch (err) {
-      setIsProductLoading(true);
       console.error(err);
+    }finally{
+      setIsProductLoading(false)
     }
-  }, [foods.data]);
+  }, []);
 
   useEffect(() => {
-    sendRequest(apiService.fetchCategories(), setCategories);
-    if (categoryIndex !== null) {
-      sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods);
-    } else {
-      fetchFoods();
+    const checkCate = async() =>{
+      const response = await sendRequest(apiService.fetchCategories(), undefined, true);
+      if (categoryIndex !== null && response.some(el=> el.id === +categoryIndex)) {
+        sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods,false);
+        setCategories(response)
+      } else {
+        fetchFoods();
+      }
+      setCategories(response)
     }
-  }, [sendRequest, categoryIndex]);
+    checkCate()
+  }, [sendRequest, categoryIndex, fetchFoods]);
 
-  const handleChangeSearchValue = (e) => {
+  const handleChangeSearchValue = useCallback((e) => {
     setSearchValue(e.target.value);
-  };
+  },[]);
 
-  const handleSubmitSearchValue = (e) => {
+  const handleSubmitSearchValue = useCallback((e) => {
     if (e.key === "Enter") {
       if (searchValue.trim() !== "") {
         try {
-          sendRequest(apiService.searchProducts(debouncedValue), setFoods);
+          sendRequest(apiService.searchProducts(debouncedValue), setFoods,false);
         } catch (err) {
           console.error(err);
         }
       }
     }
-  };
+  },[debouncedValue, searchValue, sendRequest]);
 
   const showOrderListModal = () => {
     setIsOrderModalOpen(true);
@@ -95,7 +92,7 @@ const Menu = () => {
   const handleCancel = () => {
     setIsOrderModalOpen(false);
   };
-  if (isLoading) return <Spinner />;
+
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
@@ -115,7 +112,7 @@ const Menu = () => {
           </div>
           {/* Ordering */}
           <div
-            onClick={() => showOrderListModal()}
+            onClick={showOrderListModal}
             className="relative col-span-2 w-full h-12 bg-slate-100 rounded-lg p-2 flex justify-center items-center lg:cursor-pointer active:bg-slate-200"
           >
             <BiFoodMenu className="w-6 h-6" />
@@ -131,15 +128,15 @@ const Menu = () => {
           </span>
           <CategoryList categories={categories} activeIndex={+categoryIndex} />
         </div>
-        <ProductList foods={foods} />
-        {foods && (
+        <ProductList foods={foods} isLoading={isLoading}/>
+        {foods.data.length > 0 && (
           <Button
             loading={isProductLoading}
             type="default"
             className={`text-lg flex items-center justify-center ${
-              categoryIndex !== null ? "hidden" : ""
+              categoryIndex !== null || isLoading ? "hidden" : ""
             }`}
-            onClick={() => fetchFoods()}
+            onClick={()=>fetchFoods(foods.data.length)}
           >
             <span>Xem thêm</span>
             <FiChevronDown className="w-6 h-6" />

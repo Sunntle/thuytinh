@@ -1,26 +1,17 @@
-import {useEffect, useMemo, useState} from "react";
+import {  useState } from "react";
 import { Form, Rate, Modal, Input } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
-import { fetchTableById } from "../../services/api.js";
-
+import PropTypes from 'prop-types';
 const desc = ["Rất tệ", "Tệ", "Tạm được", "Tốt", "Rất tuyệt vời"];
 
-const Rating = () => {
+const Rating = ({ ratingModal, setRatingModal }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [value, setValue] = useState(3);
   const [form] = Form.useForm();
-  // const idTable = location.pathname.split("/")[1].split("-")[1];
   const customerName = useSelector((state) => state.customerName);
   const { idOrder } = useSelector((state) => state.order);
-  const idTable = useMemo(() => customerName.tables, [customerName.tables]);
-  const tableToken = localStorage.getItem('tableToken')
   const { sendRequest } = useHttp();
-  const [dataTable, setDataTable] = useState(null);
-
-  useEffect(() => {
-    sendRequest(fetchTableById(idTable,tableToken), setDataTable);
-  }, [sendRequest]);
 
   const onFinish = async (values) => {
     const { rating, text } = values;
@@ -47,17 +38,23 @@ const Rating = () => {
   const onFinishFailed = (error) => {
     console.error(error);
   };
-
-  const handleOk = () => {
+  const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handleCloseRatingModal = () => {
+    setRatingModal(false);
   };
 
   return (
-    <div className="pb-24 mlg:mt-0 pt-24 lg:pt-24 px-4 lg:px-12 flex flex-col items-center justify-center">
+    <Modal
+      title={"Đánh giá"}
+      centered
+      open={ratingModal}
+      onOk={handleCloseRatingModal}
+      onCancel={handleCloseRatingModal}
+      footer={false}
+    >
       <div className="lg:w-1/2 w-full space-y-4 px-4 p-4 bg-white rounded-md shadow-md">
         <h1 className="mb-2 text-center text-xl font-medium text-primary">
           Đánh giá của bạn
@@ -86,22 +83,23 @@ const Rating = () => {
           <Form.Item>
             <button
               type="submit"
-              className="w-full rounded-md bg-primary py-2 font-medium text-white hover:bg-[#F0A500E5]"
+              disabled={idOrder === 0 || customerName.name.length == 0}
+              className="w-full rounded-md bg-primary py-2 font-medium text-white disabled:bg-slate-200 hover:bg-[#F0A500E5]"
             >
               Gửi đánh giá
             </button>
           </Form.Item>
+          <span className="block text-red-600">{idOrder === 0 && 'Vui lòng đặt món để được đánh giá'}</span>
         </Form>
         <Modal
           title="Đánh giá đã được gửi"
           open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
+          onOk={handleCloseModal}
+          onCancel={handleCloseModal}
           footer={[
             <button
               key="ok"
-              disabled={idOrder === 0}
-              onClick={handleOk}
+              onClick={handleCloseModal}
               className="bg-primary hover:bg-[#F0A500E5] text-white py-2 px-4 rounded"
             >
               OK
@@ -113,8 +111,11 @@ const Rating = () => {
           </p>
         </Modal>
       </div>
-    </div>
+    </Modal>
   );
 };
-
+Rating.propTypes = {
+  ratingModal: PropTypes.any,
+  setRatingModal: PropTypes.any
+}
 export default Rating;

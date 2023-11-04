@@ -3,7 +3,7 @@ const {
   generateRefreshToken,
   generateHash,
 } = require("../middlewares/jwt");
-const { User, Order, Notification } = require("../models");
+const { User, Order } = require("../models");
 const { Op } = require("sequelize");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
@@ -72,6 +72,7 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     {
       model: Order,
     },
+    distinct: true,
   };
   if (_limit) query.limit = +_limit;
   if (_offset) query.offset = +_offset;

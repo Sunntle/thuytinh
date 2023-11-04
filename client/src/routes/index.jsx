@@ -1,9 +1,8 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
-import Order from "../pages/Order/order.jsx";
+import Order from "../pages/Order/Order.jsx"
 import Menu from "../pages/Menu/menu.jsx";
 import Layout from "../layouts/index.jsx";
-import Rate from "../pages/Rating/Rating.jsx";
 import Service from "../pages/Service/Service.jsx";
 import EnterName from "../pages/EnterName/EnterName.jsx";
 import AboutUs from "../pages/AboutUs/AboutUs.jsx";
@@ -79,11 +78,7 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <AboutUs />,
-      },
-      {
-        path: "rating",
-        element: <Rate />,
-      },
+      }
     ],
   },
   { path: "/payment-loading", element: <PaymentLoading /> },

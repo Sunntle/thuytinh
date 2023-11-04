@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import Chart from "react-apexcharts";
 import { useSelector } from "react-redux";
 
