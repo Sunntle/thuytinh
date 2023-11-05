@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import Order from "../pages/Order/Order.jsx"
-import Menu from "../pages/Menu/menu.jsx";
+import Menu from "../pages/Menu/Menu.jsx";
 import Layout from "../layouts/index.jsx";
 import Service from "../pages/Service/Service.jsx";
 import EnterName from "../pages/EnterName/EnterName.jsx";
