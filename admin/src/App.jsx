@@ -2,7 +2,7 @@ import { ConfigProvider as ConfigProviderAntd, theme } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RouterProvider } from "react-router-dom";
-import "./app.scss";
+import "./App.scss";
 import Spinner from "./components/spinner";
 import { fetchAccount } from "./redux/account/accountSlice";
 import router from "./routes";
@@ -25,7 +25,7 @@ const App = () => {
     if (user.isAuthenticated) {
       socket.emit("user connect", user.user)
     }
-    return ()=>{
+    return () => {
       socket && socket.off("user connect")
     }
   }, [user])
@@ -62,10 +62,10 @@ const App = () => {
             triggerBg: "#000000",
             siderBg: "#FC8019",
           },
-          Tabs:{
-            inkBarColor:"#FC8019",
-            itemSelectedColor:"#FC8019",
-            itemHoverColor:"#FC8019",
+          Tabs: {
+            inkBarColor: "#FC8019",
+            itemSelectedColor: "#FC8019",
+            itemHoverColor: "#FC8019",
             itemActiveColor: "#7e808c",
             titleFontSizeLG: 18
           },

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { doLogoutAction } from "../redux/account/accountSlice";
 const instance = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: import.meta.env.VITE_APP_API_URL,
   withCredentials: true,
 });
 const handleRefreshToken = async () => {

@@ -10,11 +10,14 @@ import { getAllProduct, getDataDashboard } from "../services/api";
 import Spinner from "../components/spinner";
 import { Link } from "react-router-dom";
 import LineChart from "../components/chart/line-chart";
-import moment from "moment";
 import { weekArrText } from "../utils/constant";
 const { Text, Title } = Typography;
 import CountUp from 'react-countup';
+import moment from "moment";
+import 'moment/dist/locale/vi';
 const DashBoard = () => {
+  moment.locale('vi');
+  console.log(moment().week())
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const currentWeek = moment().week();

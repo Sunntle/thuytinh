@@ -31,7 +31,7 @@ export const NAV_ITEMS = [
     getItem("Doanh thu", "/employee/renvenue")
   ]),
 ];
-export const url = 'http://localhost:3000/ban-';
+export const url = import.meta.env.VITE_APP_CLIENT_URL + '/ban-';
 
 export const DarkSvg = () => (
   <svg
