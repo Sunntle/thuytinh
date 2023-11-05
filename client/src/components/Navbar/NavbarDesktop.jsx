@@ -10,7 +10,6 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
   const { order: orders } = useSelector((state) => state.order);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
   const [isOrderDesktop, setIsOrderDesktop] = useState(false);
-
   const handleMenuMouseEnter = useCallback(() => {
     setIsMenuHovered(true);
   }, []);
@@ -53,19 +52,19 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
           >
             Thực đơn
           </NavLink>
-          <HiOutlineChevronRight
+          {categories?.length > 0 && ( <HiOutlineChevronRight
             size={20}
             className={`transition-transform ml-1 duration-200 ${
               isMenuHovered ? "rotate-90" : "rotate-0"
             }`}
-          />
+          />)}
           <AnimatePresence>
             {isMenuHovered && categories?.length > 0 && (
               <motion.ul
-                initial={{ opacity: 0, x: "-50px" }}
+                initial={{ opacity: 0, x: "-10px" }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: "-100px" }}
-                transition={{ duration: 0.15, ease: "linear" }}
+                transition={{ duration: 0.1, ease: "linear" }}
                 className="z-40 absolute w-40 top-12 left-0 space-y-2 bg-white border rounded border-gray-200 py-2 px-3 transition-all duration-300"
               >
                 {categories?.map((category, index) => (

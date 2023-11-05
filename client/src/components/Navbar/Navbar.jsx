@@ -92,14 +92,13 @@ const Navbar = () => {
         }
       }
     };
-
-    const handleResize = () => {
+    const handleResize = async() => {
       if (window.screen.width > 1024 && categories == null) {
         if (isLoading) return;
-        sendRequest({ url: "/category", method: "get" }, setCategories, false);
+        await sendRequest({ url: "/category", method: "get" }, setCategories);
       }
     };
-
+    handleResize()
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
     return () => {
@@ -107,7 +106,6 @@ const Navbar = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [categories, checkRoute, isLoading, sendRequest]);
-
   return (
     <div>
       <div className="fixed tracking-wide px-6 lg:hidden z-40 bg-white bottom-0 w-full h-16 lg:px-16 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-400 overflow-hidden">
