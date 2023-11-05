@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import LineChart from "../components/chart/line-chart";
 import moment from "moment";
 import { weekArrText } from "../utils/constant";
+import {Helmet} from "react-helmet";
 const { Text, Title } = Typography;
 import CountUp from 'react-countup';
 const DashBoard = () => {
@@ -54,6 +55,10 @@ const DashBoard = () => {
   }
   return (
     <div className="w-full my-7 px-5">
+       <Helmet>
+        <title>My Title</title>
+        <meta name="description" content="Helmet application" />
+    </Helmet>
       <Row gutter={[32, 16]}>
         <Col xs={24} lg={16}>
           <div className="rounded-lg border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
