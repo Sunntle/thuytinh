@@ -25,6 +25,7 @@ import {
 // External File
 import "./index.css";
 import Image from "../../Image/Image.jsx";
+import PropTypes from "prop-types";
 
 const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
   const [newOrder, setNewOrder] = useState(null);
@@ -226,6 +227,11 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       </div>
     </Drawer>
   );
+};
+
+OrderListDesktop.propTypes = {
+  isOrderDesktop: PropTypes.bool,
+  setIsOrderDesktop: PropTypes.func,
 };
 
 export default OrderListDesktop;

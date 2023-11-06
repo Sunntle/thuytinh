@@ -1,6 +1,6 @@
-import React from "react";
 import Product from "../Product/Product.jsx";
 import Spinner from "../../../components/Spinner.jsx";
+import PropTypes from "prop-types";
 
 const ProductList = ({ foods, isLoading }) => {
     if (isLoading) return <Spinner />;
@@ -21,6 +21,17 @@ const ProductList = ({ foods, isLoading }) => {
         ))}
     </div>
   );
+};
+
+ProductList.propTypes = {
+    foods: PropTypes.shape({
+        data: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.number,
+            })
+        ),
+    }),
+    isLoading: PropTypes.bool,
 };
 
 export default ProductList;

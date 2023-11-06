@@ -5,6 +5,7 @@ import OrderListDesktop from "./OrderListDesktop/OrderListDesktop.jsx";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineChevronRight } from "react-icons/hi2";
+import PropTypes from "prop-types";
 
 const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
   const { order: orders } = useSelector((state) => state.order);
@@ -119,6 +120,13 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
       </div>
     </div>
   );
+};
+
+NavbarDesktop.propTypes = {
+  headerRef: PropTypes.object,
+  checkRoute: PropTypes.bool,
+  idTable: PropTypes.number,
+  categories: PropTypes.array,
 };
 
 export default NavbarDesktop;

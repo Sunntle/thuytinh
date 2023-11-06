@@ -15,6 +15,8 @@ import LayoutContainer from "../layouts/LayoutContainer";
 import PaymentLoading from "../pages/PaymentLoading/index.jsx";
 import DeliveryNotSupported from "../pages/DeliveryNotSupported/index.jsx";
 import Home from "../pages/Home/Home";
+import SignIn from "../pages/SignIn/SignIn.jsx";
+import SignUp from "../pages/SignUp/SignUp.jsx";
 
 const router = createBrowserRouter([
   {
@@ -85,6 +87,8 @@ const router = createBrowserRouter([
   { path: "/payment-success", element: <PaymentSuccess /> },
   { path: "/url-return", element: <PaymentSuccess /> },
   { path: "/delivery-not-supported", element: <DeliveryNotSupported /> },
+  { path: "/sign-up", element: <SignUp />},
+  { path: "/sign-in", element: <SignIn />},
   {
     path: "*",
     element: <PageNotFound />,

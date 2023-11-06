@@ -9,8 +9,6 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import {Product} from "../../../components/index.js";
 
-
-
 const HomeSlide = ({ listProduct }) => {
   return (
     <div className="relative w-auto">
