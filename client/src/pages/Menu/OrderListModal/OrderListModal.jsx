@@ -25,6 +25,7 @@ import {
 } from "../../../utils/buttonUtils.js";
 // External File
 import "./index.css";
+import PropTypes from "prop-types";
 
 const OrderListModal = ({
   isModalOpen,
@@ -230,6 +231,13 @@ const OrderListModal = ({
       </div>
     </Modal>
   );
+};
+
+OrderListModal.propTypes = {
+  isModalOpen: PropTypes.bool,
+  handleOk: PropTypes.func,
+  handleCancel: PropTypes.func,
+  setIsOrderModalOpen: PropTypes.func,
 };
 
 export default OrderListModal;
