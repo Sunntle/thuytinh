@@ -1,5 +1,5 @@
 import { HiOutlineBellAlert } from "react-icons/hi2";
-import { socketAdmin } from "../../services/socket.js";
+import { socket } from "../../services/socket.js";
 import { useState } from "react";
 import { message } from "antd";
 
@@ -7,8 +7,9 @@ const CallStaff = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const idTable = location.pathname.split("/")[1].split("-")[1];
+
   const handleCallStaff = async () => {
-    if (isDisabled) return ; //
+    if (isDisabled) return; //
     setIsDisabled(true);
 
     setTimeout(() => {
@@ -16,7 +17,7 @@ const CallStaff = () => {
     }, 5000);
 
     try {
-      socketAdmin.emit("call staff", idTable);
+      socket.emit("call-staff", idTable);
       await messageApi.open({
         type: "success",
         content: "Gọi nhân viên thành công",
@@ -29,7 +30,7 @@ const CallStaff = () => {
       console.log(err);
     }
   };
-  
+
   return (
     <>
       {contextHolder}

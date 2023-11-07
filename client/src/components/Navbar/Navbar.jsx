@@ -4,11 +4,13 @@ import { FiUser } from "react-icons/fi";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { IoRestaurantOutline } from "react-icons/io5";
-import { MdOutlineRoomService } from "react-icons/md";
+import { MdOutlineRoomService, MdOutlineTableBar } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
-import NavbarDesktop from "./NavbarDesktop.jsx";
+import NavbarDesktop from "./NavbarDesktop/NavbarDesktop.jsx";
+
 const regex = /^\/tables-\d+$/;
+
 const Navbar = () => {
   const location = useLocation();
   const headerRef = useRef();
@@ -33,7 +35,7 @@ const Navbar = () => {
       {
         id: 5,
         route: `/book-table`,
-        icon: <FiUser className="w-6 h-6" />,
+        icon: <MdOutlineTableBar className="w-6 h-6" />,
         routeName: "Đặt bàn",
         originRouteName: "book-table",
       },
@@ -71,7 +73,7 @@ const Navbar = () => {
           originRouteName: "order",
         },
         b,
-        c
+        c,
       ];
     }
     return initialNavItem;
@@ -107,13 +109,13 @@ const Navbar = () => {
         }
       }
     };
-    const handleResize = async() => {
+    const handleResize = async () => {
       if (window.screen.width > 1024 && categories == null) {
         if (isLoading) return;
         await sendRequest({ url: "/category", method: "get" }, setCategories);
       }
     };
-    handleResize()
+    handleResize();
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
     return () => {
