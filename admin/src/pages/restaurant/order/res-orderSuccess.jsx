@@ -1,31 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { useSelector,useDispatch } from "react-redux";
-import { Spin, Table } from "antd";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { Table } from "antd";
 import moment from "moment";
-import { Link, useParams } from "react-router-dom";
-import { useNavigate} from 'react-router-dom';
-import './index.css'
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "./index.css";
 import { formatGia } from "../../../utils/format";
-import { Button } from 'antd';
 import { RemoveTableList } from "../../../redux/table/listTableSystem";
 import { getOrderByID } from "../../../services/api";
-
+const today = new Date();
 const PaymentSuccess = () => {
-  const tablelist = useSelector((state) => state.tablelist)
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const today = new Date()
   const [order, setOrder] = useState([]);
-  const {id} = useParams();
+  const { id } = useParams();
 
   const fetchData = async () => {
     const resCa = await getOrderByID(id);
     setOrder(resCa);
-}
-useEffect(() => {
+  };
+  useEffect(() => {
     fetchData();
-}, []);
-console.log(order)
+  }, []);
+  
   const columns = [
     {
       title: "Tên món ăn",
@@ -42,9 +39,7 @@ console.log(order)
       title: "Giá",
       dataIndex: "Product.price",
       key: "price",
-      render: (_, record) => (
-        <span>{formatGia(record?.Product?.price) }</span>
-      ),
+      render: (_, record) => <span>{formatGia(record?.Product?.price)}</span>,
     },
     {
       title: "Tổng cộng",
@@ -56,9 +51,9 @@ console.log(order)
     },
   ];
   const backHome = () => {
-    dispatch(RemoveTableList())
-    navigate("/employee/choosetable")
-  }
+    dispatch(RemoveTableList());
+    navigate("/employee/choosetable");
+  };
   return (
     <div className="lg:p-10 min-h-screen max-w-full ">
       <div className="relative h-screen w-screen max-w-full mx-auto">
@@ -105,10 +100,7 @@ console.log(order)
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Ngày:</span>
               <span className="whitespace-nowrap font-semibold text-main">
-                {moment(
-                  today,
-                  "YYYYMMDDHHmmss",
-                ).format("DD-MM-YYYY")}
+                {moment(today, "YYYYMMDDHHmmss").format("DD-MM-YYYY")}
                 {/* 28-10-2023 */}
               </span>
             </div>
@@ -130,9 +122,7 @@ console.log(order)
             <div className="flex justify-between items-center w-full space-x-5">
               <span className="whitespace-nowrap">Tạm tính:</span>
               <span className="block font-semibold text-main">
-                {
-                  formatGia(order?.data?.total || 0) 
-                }
+                {formatGia(order?.data?.total || 0)}
               </span>
             </div>
             <div className="flex justify-between items-center w-full space-x-5">
@@ -146,9 +136,7 @@ console.log(order)
             <div className="flex justify-between items-center w-full space-x-5 py-1 px-3">
               <span className="whitespace-nowrap">Tổng cộng:</span>
               <span className="block font-semibold">
-                {
-                  formatGia(order?.data?.total || 0)
-                }
+                {formatGia(order?.data?.total || 0)}
               </span>
             </div>
           </div>

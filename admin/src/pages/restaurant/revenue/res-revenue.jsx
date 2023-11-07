@@ -1,26 +1,26 @@
 import { Avatar, Badge, Col, List, Row, Table, Typography } from "antd";
+import moment from "moment";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import "swiper/css/autoplay";
+import AreaChart from "../../../components/chart/area-chart";
+import ColumnChart from "../../../components/chart/column-chart";
+import PieChart from "../../../components/chart/pie-chart";
 import {
-  calculateDailyRevenue,
-  calculateWeeklyRevenue,
-  calculateMonthlyRevenue,
-  formatGia,
-  formatNgay,
-} from "../../../utils/format";
-import {
+  getAllMaterial,
   getAllOrder,
   getAllUser,
   getDataDashboard,
-  getAllMaterial,
 } from "../../../services/api";
-import PieChart from "../../../components/chart/pie-chart";
-import AreaChart from "../../../components/chart/area-chart";
 import { socket } from "../../../socket";
-import ColumnChart from "../../../components/chart/column-chart";
-import moment from "moment";
 import { renderToString } from "../../../utils/constant";
-import { useSelector } from "react-redux";
+import {
+  calculateDailyRevenue,
+  calculateMonthlyRevenue,
+  calculateWeeklyRevenue,
+  formatGia,
+  formatNgay,
+} from "../../../utils/format";
 
 const ResRevenue = () => {
   const [revenue, setRevenue] = useState({ daily: 0, weekly: 0, monthly: 0 });
@@ -70,7 +70,6 @@ const ResRevenue = () => {
         return q
       })
       setDataChart(convert);
-      console.log(first)
     } catch (err) {
       console.log(err);
     }
@@ -86,7 +85,7 @@ const ResRevenue = () => {
         title: 'Mã đơn hàng',
         dataIndex: 'id',
         render: (_, record) => (
-          <span className='font-medium cursor-pointer' onClick={() => showDetail(record)}>TTLGH{record.id}</span>
+          <span className='font-medium cursor-pointer'>TTLGH{record.id}</span>
         )
       },
       {

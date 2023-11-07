@@ -4,7 +4,7 @@ module.exports = {
   entry: "./index.js",
   output: {
     filename: "main.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "dist-dev"),
     publicPath: "/",
     filename: "[name].js",
     clean: true,
@@ -12,7 +12,7 @@ module.exports = {
   target: "node",
   mode: 'development',
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: [".js"],
     fallback: {
         "mock-aws-s3": false,
         "pg-hstore": false,

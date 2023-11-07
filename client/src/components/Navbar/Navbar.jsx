@@ -8,8 +8,7 @@ import { MdOutlineRoomService } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
 import NavbarDesktop from "./NavbarDesktop.jsx";
-
-const regex = /^\/ban-\d+$/;
+const regex = /^\/tables-\d+$/;
 const Navbar = () => {
   const location = useLocation();
   const headerRef = useRef();
@@ -23,7 +22,7 @@ const Navbar = () => {
   const idTable = useMemo(() => customerName.tables[0], [customerName.tables]);
 
   const navbarRoute = useMemo(() => {
-    return [
+    const initialNavItem = [
       {
         id: 1,
         route: `/home`,
@@ -32,39 +31,55 @@ const Navbar = () => {
         originRouteName: "home",
       },
       {
-        id: 2,
-        route: `/ban-${idTable}/service`,
-        icon: <MdOutlineRoomService className="w-6 h-6" />,
-        routeName: "Dịch vụ",
-        originRouteName: "service",
-      },
-      {
-        id: 3,
-        route: `/ban-${idTable}/menu`,
-        icon: <IoRestaurantOutline className="w-6 h-6" />,
-        routeName: "Thực đơn",
-        originRouteName: "menu",
-      },
-      {
-        id: 4,
-        route: `/ban-${idTable}/order`,
-        icon: <HiOutlineClipboardList className="w-6 h-6" />,
-        routeName: "Món đã đặt",
-        originRouteName: "order",
-      },
-      {
         id: 5,
-        route: `/ban-${idTable}/account`,
+        route: `/book-table`,
+        icon: <FiUser className="w-6 h-6" />,
+        routeName: "Đặt bàn",
+        originRouteName: "book-table",
+      },
+      {
+        id: 6,
+        route: `/account`,
         icon: <FiUser className="w-6 h-6" />,
         routeName: "Tài khoản",
         originRouteName: "account",
       },
     ];
+    if (idTable) {
+      const [a, b, c] = initialNavItem;
+      return [
+        a,
+        {
+          id: 2,
+          route: `/tables-${idTable}/service`,
+          icon: <MdOutlineRoomService className="w-6 h-6" />,
+          routeName: "Dịch vụ",
+          originRouteName: "service",
+        },
+        {
+          id: 3,
+          route: `/tables-${idTable}/menu`,
+          icon: <IoRestaurantOutline className="w-6 h-6" />,
+          routeName: "Thực đơn",
+          originRouteName: "menu",
+        },
+        {
+          id: 4,
+          route: `/tables-${idTable}/order`,
+          icon: <HiOutlineClipboardList className="w-6 h-6" />,
+          routeName: "Món đã đặt",
+          originRouteName: "order",
+        },
+        b,
+        c
+      ];
+    }
+    return initialNavItem;
   }, [idTable]);
 
   const activeClassname = useMemo(() => {
     let checkActiveClassName;
-    if (regex.test(location.pathname))
+    if (regex.test(location.pathname) && navbarRoute.length > 3)
       return (checkActiveClassName = navbarRoute[2]);
     if (location.pathname == "/" || location.pathname == "/home")
       return (checkActiveClassName = navbarRoute[0]);
@@ -106,6 +121,7 @@ const Navbar = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [categories, checkRoute, isLoading, sendRequest]);
+
   return (
     <div>
       <div className="fixed tracking-wide px-6 lg:hidden z-40 bg-white bottom-0 w-full h-16 lg:px-16 py-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex justify-between items-center text-slate-400 overflow-hidden">

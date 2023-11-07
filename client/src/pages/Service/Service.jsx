@@ -29,7 +29,7 @@ const Service = () => {
         {/* Service */}
         <div className="grid grid-cols-2 gap-4">
           <div
-            onClick={() => navigate(`/ban-${idTable}/order`)}
+            onClick={() => navigate(`/tables-${idTable}/order`)}
             className="cursor-pointer bg-slate-50 p-2 rounded-lg flex hover:bg-slate-100 transition-colors duration-200 active:bg-slate-100 flex-col items-center justify-center drop-shadow space-y-2"
           >
             <FaFileInvoiceDollar className="w-10 h-10 rounded-lg text-white bg-orange-400 p-2" />
@@ -46,7 +46,7 @@ const Service = () => {
         </div>
         {/* Button Order */}
         <div
-          onClick={() => navigate(`/ban-${idTable}/menu`)}
+          onClick={() => navigate(`/tables-${idTable}/menu`)}
           className="cursor-pointer w-full bg-primary hover:bg-primary/80 transition-colors duration-200 active:bg-primary/80 h-16 rounded-lg flex items-center justify-center px-4 text-white space-x-8 drop-shadow-xl"
         >
           <PiFishSimpleBold className="w-10 h-10 bg-orange-800 bg-opacity-60 p-2 rounded" />
