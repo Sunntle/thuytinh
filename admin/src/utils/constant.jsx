@@ -31,7 +31,7 @@ export const NAV_ITEMS = [
     getItem("Doanh thu", "/employee/renvenue")
   ]),
 ];
-export const url = 'http://localhost:3000/ban-';
+export const url = 'http://localhost:3000/tables-';
 
 export const DarkSvg = () => (
   <svg

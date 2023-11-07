@@ -5,21 +5,20 @@ import useHttp from "../../hooks/useHttp";
 import { Tabs } from "antd";
 import "./index.css";
 import { useSelector } from "react-redux";
-import DeliveryNotSupported from "../DeliveryNotSupported";
 import { Spinner } from "../../components/index.js";
 import PropTypes from 'prop-types';
+
 function SelectTable({ isTableExist }) {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
-  const [distanceState, setDistanceState] = useState(0)
   const { sendRequest, isLoading } = useHttp();
   const customerName = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
   
   const handleSelectTable = useCallback(async (id) => {
-    navigate(`/ban-${id}`, { state: { from: 'menu' } });
+    navigate(`/tables-${id}`, { state: { from: 'menu' } });
   }, [navigate]);
 
   useEffect(() => {
@@ -39,13 +38,13 @@ function SelectTable({ isTableExist }) {
         longitude: position.coords.longitude,
       };
       const distance = getPreciseDistance(position1, position2);
-      setDistanceState(distance);
+      // if(distance > 1000 ) return navigate("/book-table")
       await sendRequest(
         { method: "get", url: "/table?_status_table=eq_0" },
         setTables,
       );
     });
-  }, [sendRequest]);
+  }, [navigate, sendRequest]);
 
   useEffect(() => {
     if (tables && tables.length > 0) {
@@ -58,7 +57,7 @@ function SelectTable({ isTableExist }) {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-  // if(distanceState > 100 ) return <DeliveryNotSupported/>
+  
   if (isTableExist == "Không tồn tại bàn này!") return <h2>{isTableExist}</h2>
   if (isLoading) return <Spinner />;
   return (

@@ -13,7 +13,7 @@ import LineChart from "../components/chart/line-chart";
 import moment from "moment";
 import { weekArrText } from "../utils/constant";
 import {Helmet} from "react-helmet";
-const { Text, Title } = Typography;
+const { Title } = Typography;
 import CountUp from 'react-countup';
 const DashBoard = () => {
   const [data, setData] = useState({});
@@ -21,7 +21,6 @@ const DashBoard = () => {
   const currentWeek = moment().week();
   const [timeChart, setTimeChart] = useState("MONTH");
   const [week, setWeek] = useState(currentWeek);
-  const [dataProduct, setDataProduct] = useState(null);
   const [discount, setDiscount] = useState(null);
 
   const fetchData = useCallback(async () => {
@@ -55,24 +54,49 @@ const DashBoard = () => {
   }
   return (
     <div className="w-full my-7 px-5">
-       <Helmet>
-        <title>My Title</title>
-        <meta name="description" content="Helmet application" />
-    </Helmet>
+      <Helmet>
+        <title>Dashboard Admin - Thuy Tinh</title>
+        <meta name="description" content="Admin" />
+      </Helmet>
       <Row gutter={[32, 16]}>
         <Col xs={24} lg={16}>
           <div className="rounded-lg border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2">
-              <span className="font-medium text-sm text-center ">Tổng thu nhập - Năm {new Date().getFullYear()}</span>
-              <p className="text-orange-400 text-lg font-medium text-center">{data?.totalOrderYear ? (<CountUp end={data?.totalOrderYear} separator="," />) : 0}</p>
+              <span className="font-medium text-sm text-center ">
+                Tổng thu nhập - Năm {new Date().getFullYear()}
+              </span>
+              <p className="text-orange-400 text-lg font-medium text-center">
+                {data?.totalOrderYear ? (
+                  <CountUp end={data?.totalOrderYear} separator="," />
+                ) : (
+                  0
+                )}
+              </p>
             </div>
             <div className="w-1/3  p-4 h-full flex flex-col justify-center items gap-1">
-              <span className="font-medium text-sm text-center">Thu nhập - Tháng {new Date().getMonth() + 1}</span>
-              <p className="text-lg font-medium text-green-500 text-center">{data.montdPreAndCur?.[0]?.total ? (<CountUp end={data.montdPreAndCur?.[0]?.total} separator="," />) : 0}</p>
+              <span className="font-medium text-sm text-center">
+                Thu nhập - Tháng {new Date().getMonth() + 1}
+              </span>
+              <p className="text-lg font-medium text-green-500 text-center">
+                {data.montdPreAndCur?.[0]?.total ? (
+                  <CountUp
+                    end={data.montdPreAndCur?.[0]?.total}
+                    separator=","
+                  />
+                ) : (
+                  0
+                )}
+              </p>
             </div>
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1">
               <span className="font-medium text-sm text-center">Chi phí</span>
-              <p className="text-lg font-medium text-red-500 text-center">{data?.costMaterial?.total_cost ? (<CountUp end={data?.costMaterial?.total_cost} separator="," />) : 0}</p>
+              <p className="text-lg font-medium text-red-500 text-center">
+                {data?.costMaterial?.total_cost ? (
+                  <CountUp end={data?.costMaterial?.total_cost} separator="," />
+                ) : (
+                  0
+                )}
+              </p>
             </div>
           </div>
           <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2 mb-6">
@@ -83,23 +107,25 @@ const DashBoard = () => {
             />
           </div>
           <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2 mb-6">
-
             <LineChart
-              series={[{
-                name: 'Tổng đơn hàng trong ngày',
-                type: 'column',
-                data: data?.chartWeek?.map(i => i.totalOrder) || []
-              }, {
-                name: 'Tổng tiền trong ngày',
-                type: 'area',
-                data: data?.chartWeek?.map(i => i.total) || []
-              }]}
-              labels={data?.chartWeek?.map(i => i.createdAt) || []}
+              series={[
+                {
+                  name: "Tổng đơn hàng trong ngày",
+                  type: "column",
+                  data: data?.chartWeek?.map((i) => i.totalOrder) || [],
+                },
+                {
+                  name: "Tổng tiền trong ngày",
+                  type: "area",
+                  data: data?.chartWeek?.map((i) => i.total) || [],
+                },
+              ]}
+              labels={data?.chartWeek?.map((i) => i.createdAt) || []}
               yaxis={[
                 {
                   min: 0,
-                  max: (max) => {
-                    return
+                  max: () => {
+                    return;
                   },
 
                   axisTicks: {
@@ -107,79 +133,82 @@ const DashBoard = () => {
                   },
                   axisBorder: {
                     show: true,
-                    color: '#008FFB'
+                    color: "#008FFB",
                   },
                   labels: {
                     style: {
-                      colors: '#008FFB',
+                      colors: "#008FFB",
                     },
                     formatter: (val) => {
-                      return Math.ceil(val) + " đơn"
-                    }
+                      return Math.ceil(val) + " đơn";
+                    },
                   },
                   title: {
                     style: {
-                      color: '#008FFB',
-                    }
+                      color: "#008FFB",
+                    },
                   },
                   tooltip: {
-                    enabled: true
+                    enabled: true,
                   },
-
-
                 },
                 {
-                  seriesName: 'Income',
+                  seriesName: "Income",
                   opposite: true,
                   axisTicks: {
                     show: true,
                   },
                   axisBorder: {
                     show: true,
-                    color: '#00E396'
+                    color: "#00E396",
                   },
                   labels: {
                     style: {
-                      colors: '#00E396',
+                      colors: "#00E396",
                     },
 
                     formatter: (val) => {
-                      return formatnumber(val)
-                    }
-
+                      return formatnumber(val);
+                    },
                   },
 
                   title: {
                     text: "Vnđ",
                     style: {
-                      color: '#00E396',
-                    }
+                      color: "#00E396",
+                    },
                   },
-                }
+                },
               ]}
               dataLabels={{
                 enabled: true,
                 enabledOnSeries: [0, 1],
-                formatter: function (value, { seriesIndex, dataPointIndex, w }) {
-                  return formatnumber(value)
-                }
+                formatter: function (
+                  value,
+                  { seriesIndex, dataPointIndex, w }
+                ) {
+                  return formatnumber(value);
+                },
               }}
             >
               <div>
-                <Title level={4} className="text-center mt-4">Thông kê theo tuần</Title>
+                <Title level={4} className="text-center mt-4">
+                  Thông kê theo tuần
+                </Title>
                 <div className="flex justify-center">
-                  <Segmented options={dataOpWeek} defaultValue={week} onChange={handChangeWeek} />
+                  <Segmented
+                    options={dataOpWeek}
+                    defaultValue={week}
+                    onChange={handChangeWeek}
+                  />
                 </div>
-
               </div>
             </LineChart>
           </div>
 
           <div className="mb-6">
             <div className="flex justify-between items-center">
-              <h4 className="font-bold text-lg mb-2">
-                Món giảm giá
-              </h4>
+              <h4 className="font-bold text-lg mb-2">Món giảm giá</h4>
               <Link to="/admin/product" style={{ color: "#FC8019" }}>
                 Xem tất cả
               </Link>
@@ -195,7 +224,7 @@ const DashBoard = () => {
               breakpoints={{
                 686: {
                   slidesPerView: 2,
-                  spaceBetween: 10
+                  spaceBetween: 10,
                 },
                 // 1249: {
                 //   slidesPerView: 3,
@@ -223,9 +252,11 @@ const DashBoard = () => {
                             </h6>
                             <div className="mb-2">
                               <h6 className="text-main font-semibold  whitespace-nowrap text-lg">
-                                {el.discount > 0 ? formatGia(
-                                  el.price - (el.price * el.discount / 100)
-                                ) : formatGia(el.price)}
+                                {el.discount > 0
+                                  ? formatGia(
+                                      el.price - (el.price * el.discount) / 100
+                                    )
+                                  : formatGia(el.price)}
                               </h6>
                               <p className="text-gray-400 font-semibold line-through whitespace-nowrap text-xs">
                                 {formatGia(el.price)}
@@ -252,7 +283,13 @@ const DashBoard = () => {
               </div>
               <div className="flex flex-col justify-center items-start ms-5">
                 <span className=" font-medium">Số đơn hàng</span>
-                <span className="font-medium text-xl">{data?.countOrder ? <CountUp end={data?.countOrder} separator="," /> : 0}</span>
+                <span className="font-medium text-xl">
+                  {data?.countOrder ? (
+                    <CountUp end={data?.countOrder} separator="," />
+                  ) : (
+                    0
+                  )}
+                </span>
               </div>
             </div>
             <div className="flex flex-row ">
@@ -261,7 +298,9 @@ const DashBoard = () => {
               </div>
               <div className="flex flex-col justify-center items-start  ms-5">
                 <span className=" font-medium">Số món ăn</span>
-                <span className="font-medium text-xl">{data?.food ? <CountUp end={data?.food} separator="," /> : 0}</span>
+                <span className="font-medium text-xl">
+                  {data?.food ? <CountUp end={data?.food} separator="," /> : 0}
+                </span>
               </div>
             </div>
             <div className="flex flex-row ">
@@ -270,7 +309,13 @@ const DashBoard = () => {
               </div>
               <div className="flex flex-col justify-center items-start   ms-5">
                 <span className=" font-medium">Số bàn đã đặt</span>
-                <span className="font-medium text-xl">{data?.table ? <CountUp end={data?.table} separator="," /> : 0}</span>
+                <span className="font-medium text-xl">
+                  {data?.table ? (
+                    <CountUp end={data?.table} separator="," />
+                  ) : (
+                    0
+                  )}
+                </span>
               </div>
             </div>
             <div className="flex flex-row ">
@@ -279,12 +324,16 @@ const DashBoard = () => {
               </div>
               <div className="flex flex-col justify-center items-start  ms-5">
                 <span className=" font-medium">Số nhân viên</span>
-                <span className="font-medium text-xl">{data?.user ? <CountUp end={data?.user} separator="," /> : 0}</span>
+                <span className="font-medium text-xl">
+                  {data?.user ? <CountUp end={data?.user} separator="," /> : 0}
+                </span>
               </div>
             </div>
           </div>
           <div className="border-2 rounded-lg p-4 border-gray-400 border-solid">
-            <span className="font-medium text-lg">Top 5 sản phẩm được ưa chuộng</span>
+            <span className="font-medium text-lg">
+              Top 5 sản phẩm được ưa chuộng
+            </span>
             <div className="overflow-hidden w-full ">
               <PieChart data={data?.productBySold || []} />
             </div>

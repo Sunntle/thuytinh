@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import PropTypes from "prop-types";
-import './index.css'
 
 const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
   const { order: orders } = useSelector((state) => state.order);
@@ -36,7 +35,7 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
           Trang chủ
         </NavLink>
         <NavLink
-          to={`/ban-${idTable}/service`}
+          to={`/tables-${idTable}/service`}
           className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Dịch vụ
@@ -44,10 +43,12 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         <div
           onMouseEnter={handleMenuMouseEnter}
           onMouseLeave={handleMenuMouseLeave}
-          className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded navbar`}
+          className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded ${
+            isMenuHovered ? "text-primary bg-white" : "text-white"
+          }`}
         >
           <NavLink
-            to={`/ban-${idTable}/menu`}
+            to={`/tables-${idTable}/menu`}
             className="font-normal text-base"
           >
             Thực đơn
@@ -104,7 +105,7 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         </div>
         <div
           onClick={() => setIsOrderDesktop(true)}
-          className="group cursor-pointer flex justify-between items-center border-2 border-white rounded-full space-x-2 py-2 px-4 transition-colors duration-300 hover:bg-white hover:text-primary"
+          className="group cursor-pointer flex justify-between items-center border-2 border-white rounded-full space-x-2 py-2 px-4 transition-colors duration-300 hover:text-primary hover:bg-white"
         >
           <span className="font-medium">Món đã chọn</span>
           {/*<HiOutlineClipboardList size={24} className="group-hover:text-primary text-white transition-colors duration-300" />*/}

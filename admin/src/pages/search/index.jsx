@@ -106,7 +106,7 @@ function SearchPage() {
                     src={category.thumbnail}
                     alt=""
                   />
-                  <h6 className="font-semibold">{category.name_category}</h6>
+                  <Link to={`/employee/menu?category=${category.id}`} className="font-semibold text-xl hover:text-main">{category.name_category}</Link>
                 </div>
               </SwiperSlide>
             );
@@ -137,7 +137,7 @@ function SearchPage() {
                 />
   
                 <div className="p-4 flex flex-col">
-                  <div className="font-medium">{el.name_product}</div>
+                  <Link to={`/employee/menu?product=${category.id}`} className="font-medium text-xl hover:text-main">{el.name_product}</Link>
                   <div className="text-xs mt-2 text-slate-500">
                     Số lượng : {el.amount}
                   </div>

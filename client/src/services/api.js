@@ -45,7 +45,7 @@ export const fetchProductById = (id) => {
 export const searchProducts = (query) => {
   return {
     method: "get",
-    url: `product/search?query=${query}`,
+    url: `product?q=${query}`,
   };
 };
 

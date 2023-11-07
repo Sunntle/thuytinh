@@ -17,6 +17,7 @@ import DeliveryNotSupported from "../pages/DeliveryNotSupported/index.jsx";
 import Home from "../pages/Home/Home";
 import SignIn from "../pages/SignIn/SignIn.jsx";
 import SignUp from "../pages/SignUp/SignUp.jsx";
+import BookingTable from "../pages/BookingTable/index.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
         path: "thankyou",
         element: <ThanksPage />,
       },
+      {
+        path: "book-table",
+        element: <BookingTable />,
+      }
     ],
   },
   {

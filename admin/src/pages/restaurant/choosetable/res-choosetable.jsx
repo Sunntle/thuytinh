@@ -90,7 +90,6 @@ const ResChooseTable = () => {
   const handleDetailModal = async (table) => {
      const resTableId = await getTableId(table.id,{id_employee: userId})
      const tableByOrders = resTableId[0].TableByOrders;
-     console.log(tableByOrders)
     if (tableByOrders && tableByOrders.length === 0 || tableByOrders == undefined) {
       api.info({
         message: 'Thông báo!!!',
