@@ -24,7 +24,7 @@ function CheckTable(props) {
             setTableExist("Đúng")
             return
           }
-          response[0].token == null ? setTableExist("Bàn đang trống") : setTableExist("Bàn đã được sử dụng")
+          response[0].token == null || response[0]?.token == '' ? setTableExist("Bàn đang trống") : setTableExist("Bàn đã được sử dụng")
         }
       } catch (err) {
         console.log(err);
