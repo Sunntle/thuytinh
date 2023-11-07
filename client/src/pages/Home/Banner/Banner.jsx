@@ -2,6 +2,7 @@ import { Typography } from "antd";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import bannerBg from '../../../assets/images/Banner1.png'
 
 const variantsWrapperBanner = {
   open: {
@@ -32,8 +33,9 @@ const variantsBannerItem = {
   },
 };
 
-const imageUrls =
-  "https://images.pexels.com/photos/13262499/pexels-photo-13262499.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+// const imageUrls =
+//   "https://images.pexels.com/photos/13262499/pexels-photo-13262499.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+
 // eslint-disable-next-line react/prop-types
 const Banner = () => {
   const ref = useRef(null);
@@ -45,7 +47,7 @@ const Banner = () => {
         <div
           className="h-full w-full "
           style={{
-            backgroundImage: `url(${imageUrls})`,
+            backgroundImage: `url(${bannerBg})`,
             filter: "brightness(50%)",
             backgroundPosition: "center",
           }}

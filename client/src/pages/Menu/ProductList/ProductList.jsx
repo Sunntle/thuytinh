@@ -1,5 +1,5 @@
 import Product from "../Product/Product.jsx";
-import Spinner from "../../../components/Spinner.jsx";
+import Spinner from "../../../components/Spinner/Spinner.jsx";
 import PropTypes from "prop-types";
 
 const ProductList = ({ foods, isLoading }) => {

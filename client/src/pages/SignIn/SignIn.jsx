@@ -1,7 +1,5 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import bgSignUP from "../../assets/images/Login-amico.png";
-import bgWrapper from "../../assets/images/stacked-peaks-haikei.svg";
 import { FaGooglePlus } from "react-icons/fa6";
 import { FaFacebook } from "react-icons/fa";
 
@@ -14,7 +12,7 @@ const SignIn = () => {
         <img
           className="w-full h-full object-cover"
           loading={"lazy"}
-          src={bgWrapper}
+          src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1699338069/NhaHangThuyTinh/nvspywoqvgdkishqy0cn.webp"
           alt=""
         />
       </div>
@@ -106,7 +104,7 @@ const SignIn = () => {
           <div className="w-[450px] h-[450px]">
             <img
               className="w-full h-full object-cover"
-              src={bgSignUP}
+              src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1699338151/NhaHangThuyTinh/wjk8d9pktxryjjdw87xq.webp"
               loading={"lazy"}
               alt=""
             />

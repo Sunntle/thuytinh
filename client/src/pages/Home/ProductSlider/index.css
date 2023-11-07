@@ -1,0 +1,34 @@
+.swiper {
+    width: 100%;
+    height: 100%;
+    @apply bg-black
+}
+
+.swiper-slide {
+    font-size: 18px;
+}
+
+.swiper-slide img {
+    @apply w-full h-full block object-cover;
+}
+
+.swiper-pagination-bullet {
+    @apply hidden transition-all duration-300 bg-transparent text-white/80 opacity-100 lg:inline-block relative cursor-pointer w-48 h-56 hover:bg-white/60 rounded-none rounded-tl-[35%] rounded-br-[35%] pb-12;
+}
+
+.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet, .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+    @apply mx-4;
+}
+
+.swiper-pagination-bullet-active {
+    @apply bg-white/90 text-slate-500;
+}
+
+@keyframes appearance {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100;
+    }
+}

@@ -1,13 +1,21 @@
+// React
 import { useEffect, useState } from "react";
-import { fetchProduct } from "../../services/api.js";
-import { Banner, Reason } from "../../components/index.js";
+import { Link } from "react-router-dom";
+// Components
+import HomeSlide from "./HomeSlide/index.jsx";
+import Banner from "./Banner/Banner.jsx";
+import Reason from "../../components/Reason/Reason.jsx";
+// Service
+import { fetchProductByLimit } from "../../services/api.js";
+// Hooks
 import useHttp from "../../hooks/useHttp.js";
+// Framer Motion
+import { motion } from "framer-motion";
+// External File
 import image1 from "../../assets/images/image1.png";
 import image4 from "../../assets/images/image4.png";
 import image2 from "../../assets/images/image2.png";
-import HomeSlide from "./HomeSlide/HomeSlide.jsx";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import ProductSlider from "./ProductSlider/index.jsx";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
@@ -15,9 +23,9 @@ const Home = () => {
 
   useEffect(() => {
     const fetchAllProduct = async () => {
-      await sendRequest(fetchProduct(), setSlideProduct,false);
-    }
-    fetchAllProduct()
+      await sendRequest(fetchProductByLimit(7), setSlideProduct, false);
+    };
+    fetchAllProduct();
   }, [sendRequest]);
 
   return (
@@ -72,6 +80,8 @@ const Home = () => {
           />
         </div>
       </motion.section>
+
+      <ProductSlider products={slideProduct} />
 
       <Reason />
     </div>

@@ -14,6 +14,13 @@ export const fetchProduct = () => {
   };
 };
 
+export const fetchProductByLimit = (_limit) => {
+  return {
+    method: "get",
+    url: `/product?_limit=${_limit}`,
+  };
+}
+
 export const fetchProductByLoadMore = (_limit, _offset) => {
   return {
     method: "get",

@@ -49,7 +49,7 @@ const Product = (props) => {
         await animate(
           scope.current,
           { opacity: [0, 1] },
-          { duration: 0.5, delay: 0.05 * id},
+          { duration: 0.5, delay: 0.05 * id },
         );
       };
       enterAnimation();
@@ -89,12 +89,12 @@ const Product = (props) => {
 
   return (
     <div
-        ref={scope}
+      ref={scope}
       key={id}
       className="box-border tracking-wide min-h-0 w-auto h-auto border rounded-lg shadow cursor-pointer transition-shadow duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)]"
     >
       {contextHolder}
-      <div className="w-full h-40" onClick={showProductDetail}>
+      <div className="w-full h-32 lg:h-40" onClick={showProductDetail}>
         <Image
           loading={!imageUrl && true}
           src={imageUrl}
@@ -142,6 +142,6 @@ const Product = (props) => {
 
 Product.propTypes = {
   item: PropTypes.object,
-}
+};
 
 export default Product;

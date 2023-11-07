@@ -30,13 +30,13 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
       <nav className="lg:flex lg:space-x-6">
         <NavLink
           to="/home"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Trang chủ
         </NavLink>
         <NavLink
           to={`/tables-${idTable}/service`}
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Dịch vụ
         </NavLink>
@@ -84,13 +84,13 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         </div>
         <NavLink
           to="/contact"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Liên hệ
         </NavLink>
         <NavLink
           to="/about"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Về chúng tôi
         </NavLink>
