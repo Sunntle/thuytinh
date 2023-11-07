@@ -7,7 +7,7 @@ import { IoRestaurantOutline } from "react-icons/io5";
 import { MdOutlineRoomService } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
-import NavbarDesktop from "./NavbarDesktop.jsx";
+import NavbarDesktop from "./NavbarDesktop/NavbarDesktop.jsx";
 const regex = /^\/tables-\d+$/;
 const Navbar = () => {
   const location = useLocation();
@@ -46,7 +46,7 @@ const Navbar = () => {
       },
     ];
     if (idTable) {
-      const [a, b, c] = initialNavItem;
+      const [a, , c] = initialNavItem;
       return [
         a,
         {
@@ -70,7 +70,6 @@ const Navbar = () => {
           routeName: "Món đã đặt",
           originRouteName: "order",
         },
-        b,
         c
       ];
     }

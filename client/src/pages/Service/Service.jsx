@@ -1,4 +1,4 @@
-import banner from "../../assets/images/banner.jpg";
+// import banner from "../../assets/images/banner.jpg";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { PiFishSimpleBold } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import { CallStaff } from "../../components/index.js";
 import { ScrollToTop } from "../../utils/format";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import Rating from "./Rating.jsx";
+import Rating from "./Rating/Rating.jsx";
 
 const Service = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Service = () => {
         <div className="w-full h-44 lg:h-[450px] rounded-lg">
           <img
             className="w-full h-full rounded-lg object-fill"
-            src={banner}
+            // src={banner}
             alt=""
           />
         </div>
