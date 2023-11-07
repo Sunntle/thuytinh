@@ -75,7 +75,7 @@ const ProductSlider = ({ products }) => {
             products.map((item, index) => (
               <SwiperSlide
                 key={index}
-                className={`relative p-2 grid lg:grid-cols-2 gap-16 lg:gap-36 pt-36 lg:pt-24 h-full overflow-hidden place-content-start text-center place-items-center lg:place-items-stretch`}
+                className={`relative p-2 grid lg:grid-cols-2 gap-16 lg:gap-36 pt-20 lg:pt-24 h-full overflow-hidden place-content-start text-center place-items-center lg:place-items-stretch`}
               >
                 <span className="absolute top-2 left-2 text-base text-[#BEB7B5]">
                   Giao hàng tận nơi: 1900 1080

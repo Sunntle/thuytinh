@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import PropTypes from "prop-types";
+import './index.css'
 
 const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
   const { order: orders } = useSelector((state) => state.order);
@@ -43,9 +44,7 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         <div
           onMouseEnter={handleMenuMouseEnter}
           onMouseLeave={handleMenuMouseLeave}
-          className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded ${
-            isMenuHovered ? "text-primary bg-white" : "text-white"
-          }`}
+          className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded navbar`}
         >
           <NavLink
             to={`/tables-${idTable}/menu`}
