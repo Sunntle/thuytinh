@@ -62,7 +62,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           type: "success",
           content: "Đặt món thành công",
         });
-        window.location.href = `http://localhost:3000/ban-${customerName.tables[0]}/order`;
+        window.location.href = `http://localhost:3000/tables-${customerName.tables[0]}/order`;
       } else {
         messageApi.open({
           type: "error",
@@ -100,7 +100,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       };
       await sendRequest(request, undefined, true);
       dispatch(emptyOrder());
-      window.location.href = `http://localhost:3000/ban-${customerName.tables[0]}/order`;
+      window.location.href = `http://localhost:3000/tables-${customerName.tables[0]}/order`;
     } catch (err) {
       console.error(err);
     } finally {

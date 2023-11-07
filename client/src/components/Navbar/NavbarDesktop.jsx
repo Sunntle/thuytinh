@@ -35,7 +35,7 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
           Trang chủ
         </NavLink>
         <NavLink
-          to={`/ban-${idTable}/service`}
+          to={`/tables-${idTable}/service`}
           className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
         >
           Dịch vụ
@@ -48,7 +48,7 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
           }`}
         >
           <NavLink
-            to={`/ban-${idTable}/menu`}
+            to={`/tables-${idTable}/menu`}
             className="font-normal text-base"
           >
             Thực đơn

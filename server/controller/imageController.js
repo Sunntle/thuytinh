@@ -21,10 +21,11 @@ exports.getAllImagesInCloud = async (req, res) => {
 exports.addNew = async (req, res) => {
   try {
     const images = req.files;
+    const {height = 300, width = 400} = req.body
     const data = images.map((file) => ({
-      url: file.path.replace("/upload/", "/upload/w_400,h_300/"),
+      url: file.path.replace("/upload/", `/upload/w_${width},h_${height}/`),
     }));
-    res.status(201).json(data);
+    res.status(201).json({success: true, url: data});
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }

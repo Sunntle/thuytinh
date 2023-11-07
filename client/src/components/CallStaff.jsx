@@ -1,10 +1,10 @@
 import { HiOutlineBellAlert } from "react-icons/hi2";
-import { socketAdmin } from "../services/socket.js";
+import { socket } from "../services/socket.js";
 
 const CallStaff = () => {
     const idTable = location.pathname.split("/")[1].split("-")[1];
     const handleCallStaff = ()=>{
-        socketAdmin.emit("call staff", idTable)
+        socket.emit("call-staff", idTable)
     }
     return (
         <div onClick={handleCallStaff} className="cursor-pointer fixed p-2 right-5 lg:right-20 bottom-24 w-auto h-auto bg-white border-2 active:bg-primary active:text-white transition-all border-primary rounded-full flex justify-center items-center ">

@@ -1,15 +1,15 @@
-import { Col, Row, Divider, FloatButton, Button, Pagination as PaginationMenu, Badge, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { Swiper, SwiperSlide } from "swiper/react";
-import { useEffect, useRef, useState } from 'react';
-import ResPayment from '../payment/res-payment';
-import { getAllCate, getAllProduct } from '../../../services/api';
+import { Badge, Button, Col, Divider, FloatButton, Pagination as PaginationMenu, Row, message } from 'antd';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddCart, setErr } from '../../../redux/cartsystem/cartSystem';
-import { Navigation, Pagination } from 'swiper/modules';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { AddCart, setErr } from '../../../redux/cartsystem/cartSystem';
+import { getAllCate, getAllProduct } from '../../../services/api';
 import { formatGia } from '../../../utils/format';
-import { useNavigate, createSearchParams,useSearchParams } from 'react-router-dom';
+import ResPayment from '../payment/res-payment';
 
 const ResMenu = () => {
     const [product, setProduct] = useState([]);
@@ -21,56 +21,46 @@ const ResMenu = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const selectedCategory = searchParams.get("category");
+
     const handleSetCategory = (id) => {
         navigate({
             search: createSearchParams(`category=${id}`).toString(),
         }, { replace: true });
     }
-    const fetchData = async (page, _limit) => {
-        const resCa = await getAllCate();
+    const fetchData = useCallback(async (page, _limit) => {
         let query = { _offset: _limit * (page - 1), _limit }
         if (selectedCategory) {
             query = { _id_category: `eq_${selectedCategory}`, ...query }
         }
-        const resProduct = await getAllProduct(query);
+        const [resCa, resProduct] = await Promise.all([getAllCate(),getAllProduct(query)]);
         setCategories(resCa);
         setProduct(resProduct);
-        console.log(resProduct)
-    }
+    },[selectedCategory])
+
     useEffect(() => {
         fetchData(page, 12);
-    }, [selectedCategory,page]);
+    }, [selectedCategory, page, fetchData]);
 
     const handleChangePage = (e, p) => {
         fetchData(e, p)
         setPage(e)
     }
-    // xu ly quantity
-    // const handleAddCarts = (item) => {
-    //     console.log(item)
-    //     if(item.amount === 0){
-    //         api.info({
-    //             message: 'Thông báo!!!',
-    //             description:
-    //               'Sản phẩm hết hàng!!!',
-    //           });
-    //     }else{
-    //         dispatch(AddCart(item))
-    //     }
-    // }
+
+    const title = useMemo(()=>{
+        if(selectedCategory && categories.length > 0){
+            const result = categories.find(i => i.id == selectedCategory);
+            return result.name_category;
+        }
+        return 'Tất cả sản phẩm'
+    },[categories, selectedCategory])
+
     useEffect(() => {
         if (warning) {
             messageApi.warning(warning);
             dispatch(setErr(null))
         }
-    }, [warning]);
-   let title = 'Tất cả sản phẩm';
-   if(selectedCategory && categories.length > 0){
-    console.log(selectedCategory)
-    const result = categories.find(i => i.id == selectedCategory);
-    title = result.name_category;
-    console.log(result.name_category)
-   }
+    }, [dispatch, messageApi, warning]);
+    
     return (
         <div className='w-full p-10'>
             {contextHolder}

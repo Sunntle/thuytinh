@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const db = require("./config/connectDatabase");
 const { Server } = require("socket.io");
-const { handleNewUserConnect, handleDisconnect, handleCallStaff } = require("./utils/socketHanlers")
+const { handleNewUserConnect, handleDisconnect, handleCallStaff, handlePayInCash } = require("./utils/socketHanlers")
 require("dotenv").config();
 const port = process.env.PORT || 8000;
 app.use(express.json());
@@ -35,8 +35,11 @@ global.__basedir = __dirname;
 global._io = io;
 io.of("/admin").on("connection", (socket) => {
   handleNewUserConnect(socket)
-  handleCallStaff(socket)
   handleDisconnect(socket)
+});
+io.of("/client").on("connection", (socket) => {
+  handleCallStaff(socket)
+  handlePayInCash(socket)
 });
 initRoutes(app);
 db.connectDatabase();

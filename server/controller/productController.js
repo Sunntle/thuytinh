@@ -74,7 +74,7 @@ exports.list = async (req, res) => {
         }
         product.dataValues.amount = Math.min(...arrCount);
       });
-    res.status(200).json({ total: count, data: rows });
+    res.status(200).json({ total: count, data: rows, success: true });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal server error" });
@@ -148,7 +148,7 @@ exports.getByCategory = async (req, res) => {
         },
       ],
     });
-    if(count == 0)  res.status(200).json({ data: rows, total: count });
+    if(count == 0)  res.status(200).json({ data: rows, total: count, success: true });
     rows.forEach((product) => {
       const { Recipes } = product;
       if (Recipes.length == 0) return
@@ -164,7 +164,7 @@ exports.getByCategory = async (req, res) => {
       }
       product.dataValues.amount = Math.min(...arrCount);
     });
-    res.status(200).json({ data: rows, total: count });
+    res.status(200).json({ data: rows, total: count, success: true });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal server error" });
@@ -212,23 +212,6 @@ exports.removeProduct = async (req, res) => {
       individualHooks: true,
     });
     res.status(200).json("Xóa sản phẩm thành công");
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-exports.searchProduct = async (req, res) => {
-  try {
-    const { query } = req.query;
-    const searchedProducts = await Product.findAll({
-      where: {
-        name_product: {
-          [Op.like]: `%${query}%`,
-        },
-      },
-      include: [{ model: ImageProduct, attributes: ["url", "id"] }],
-    });
-    res.status(200).json({ data: searchedProducts });
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
