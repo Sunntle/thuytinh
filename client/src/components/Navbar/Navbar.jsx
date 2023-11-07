@@ -7,7 +7,7 @@ import { IoRestaurantOutline } from "react-icons/io5";
 import { MdOutlineRoomService } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
-import NavbarDesktop from "./NavbarDesktop.jsx";
+import NavbarDesktop from "./NavbarDesktop/NavbarDesktop.jsx";
 
 const regex = /^\/ban-\d+$/;
 const Navbar = () => {

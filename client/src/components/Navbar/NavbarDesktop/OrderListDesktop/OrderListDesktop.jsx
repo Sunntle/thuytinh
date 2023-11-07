@@ -6,25 +6,25 @@ import { HiXMark } from "react-icons/hi2";
 // Components
 import { Button, Drawer, message, Popconfirm } from "antd";
 // Hooks
-import useHttp from "../../../hooks/useHttp.js";
+import useHttp from "../../../../hooks/useHttp.js";
 // Utils
-import { formatCurrency } from "../../../utils/format.js";
+import { formatCurrency } from "../../../../utils/format.js";
 import {
   handleDeleteConfirm,
   handleOrderReduxDecreaseQuantity,
   handleOrderReduxIncreaseQuantity,
-} from "../../../utils/buttonUtils.js";
+} from "../../../../utils/buttonUtils.js";
 // Services
-import { addOrder } from "../../../services/api.js";
+import { addOrder } from "../../../../services/api.js";
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import {
   addIdOrderTable,
   emptyOrder,
-} from "../../../redux/Order/orderSlice.js";
+} from "../../../../redux/Order/orderSlice.js";
 // External File
 import "./index.css";
-import Image from "../../Image/Image.jsx";
+import Image from "../../../Image/Image.jsx";
 import PropTypes from "prop-types";
 
 const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {

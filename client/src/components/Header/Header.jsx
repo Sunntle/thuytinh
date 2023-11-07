@@ -1,5 +1,5 @@
 
-import avtDefault from "../assets/images/avtDefault.png";
+import avtDefault from "../../assets/images/avtDefault.png";
 import { useSelector } from "react-redux";
 
 const Header = () => {

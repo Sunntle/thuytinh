@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import PropTypes from "prop-types";
+import './index.css'
 
 const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
   const { order: orders } = useSelector((state) => state.order);
@@ -30,22 +31,20 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
       <nav className="lg:flex lg:space-x-6">
         <NavLink
           to="/home"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Trang chủ
         </NavLink>
         <NavLink
           to={`/ban-${idTable}/service`}
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Dịch vụ
         </NavLink>
         <div
           onMouseEnter={handleMenuMouseEnter}
           onMouseLeave={handleMenuMouseLeave}
-          className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded ${
-            isMenuHovered ? "text-primary bg-white" : "text-white"
-          }`}
+          className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded navbar`}
         >
           <NavLink
             to={`/ban-${idTable}/menu`}
@@ -84,13 +83,13 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         </div>
         <NavLink
           to="/contact"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Liên hệ
         </NavLink>
         <NavLink
           to="/about"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Về chúng tôi
         </NavLink>
@@ -105,7 +104,7 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         </div>
         <div
           onClick={() => setIsOrderDesktop(true)}
-          className="group cursor-pointer flex justify-between items-center border-2 border-white rounded-full space-x-2 py-2 px-4 transition-colors duration-300 hover:text-primary hover:bg-white"
+          className="group cursor-pointer flex justify-between items-center border-2 border-white rounded-full space-x-2 py-2 px-4 transition-colors duration-300 hover:bg-white hover:text-primary"
         >
           <span className="font-medium">Món đã chọn</span>
           {/*<HiOutlineClipboardList size={24} className="group-hover:text-primary text-white transition-colors duration-300" />*/}

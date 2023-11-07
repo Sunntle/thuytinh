@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import SelectTable from "../pages/SelectTable/index.jsx";
 import { useEffect, useState } from "react";
-import Spinner from "../components/Spinner.jsx";
+import Spinner from "../components/Spinner/Spinner.jsx";
 import axios from "../utils/axiosConfig.js";
 
 function CheckTable(props) {

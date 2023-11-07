@@ -1,7 +1,5 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import bgSignUP from "../../assets/images/Login-amico.png";
-import bgWrapper from "../../assets/images/stacked-peaks-haikei.svg";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -11,7 +9,7 @@ const SignIn = () => {
         <img
           className="w-full h-full object-cover"
           loading={"lazy"}
-          src={bgWrapper}
+          src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1699338069/NhaHangThuyTinh/nvspywoqvgdkishqy0cn.webp"
           alt=""
         />
       </div>
@@ -100,14 +98,12 @@ const SignIn = () => {
           <div className="w-[450px] h-[450px]">
             <img
               className="w-full h-full object-cover"
-              src={bgSignUP}
+              src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1699338151/NhaHangThuyTinh/wjk8d9pktxryjjdw87xq.webp"
               loading={"lazy"}
               alt=""
             />
           </div>
         </div>
-        {/*<div className="col-span-2 w-full h-full bg-[url('https://images.unsplash.com/photo-1577547476482-63dc54e36e26?auto=format&fit=crop&q=80&w=2940&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-auto bg-origin-border bg-center bg-no-repeat">*/}
-        {/*</div>*/}
       </motion.div>
     </motion.div>
   );

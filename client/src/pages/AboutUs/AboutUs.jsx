@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import {ScrollToTop} from "../../utils/format.js";
 import avtDefault from "../../assets/images/avtDefault.png";
+import Reason from "../../components/Reason/Reason.jsx";
 import { Rate } from "antd";
-import { Reason } from "../../components/index.js";
 
 // CSS
 import "swiper/css";
