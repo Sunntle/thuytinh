@@ -18,6 +18,7 @@ import Home from "../pages/Home/Home";
 import SignIn from "../pages/SignIn/SignIn.jsx";
 import SignUp from "../pages/SignUp/SignUp.jsx";
 import BookingTable from "../pages/BookingTable/index.jsx";
+import SelectTable from "../pages/SelectTable/index.jsx";
 
 const router = createBrowserRouter([
   {
@@ -47,7 +48,11 @@ const router = createBrowserRouter([
       {
         path: "book-table",
         element: <BookingTable />,
-      }
+      },
+      {
+        path: "select-table",
+        element: <SelectTable/>,
+      },
     ],
   },
   {

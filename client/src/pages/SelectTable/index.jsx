@@ -38,7 +38,7 @@ function SelectTable({ isTableExist }) {
         longitude: position.coords.longitude,
       };
       const distance = getPreciseDistance(position1, position2);
-      // if(distance > 1000 ) return navigate("/book-table")
+      // if(distance > 100 ) return confirm("Bạn ở quá xa quán, đặt bàn trước nhé!") ? navigate("/book-table") : navigate("/")
       await sendRequest(
         { method: "get", url: "/table?_status_table=eq_0" },
         setTables,
@@ -57,11 +57,11 @@ function SelectTable({ isTableExist }) {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-  
+  console.log(isTableExist);
   if (isTableExist == "Không tồn tại bàn này!") return <h2>{isTableExist}</h2>
   if (isLoading) return <Spinner />;
   return (
-    <div className="pb-24">
+    <div className="pb-24 mt-[80px]">
       {idTable && isTableExist == "Bàn đã được sử dụng" &&
         idTable !== customerName.tables?.at(1) &&
         (<p className="-3 text-center">Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!</p>)}

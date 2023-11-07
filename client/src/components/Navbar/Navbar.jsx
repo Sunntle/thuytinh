@@ -8,7 +8,6 @@ import { MdOutlineRoomService, MdOutlineTableBar } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
 import NavbarDesktop from "./NavbarDesktop/NavbarDesktop.jsx";
-
 const regex = /^\/tables-\d+$/;
 
 const Navbar = () => {
@@ -33,6 +32,13 @@ const Navbar = () => {
         originRouteName: "home",
       },
       {
+        id: 7,
+        route: `/select-table`,
+        icon: <MdOutlineTableBar className="w-6 h-6" />,
+        routeName: "Chọn bàn",
+        originRouteName: "select-table",
+      },
+      {
         id: 5,
         route: `/book-table`,
         icon: <MdOutlineTableBar className="w-6 h-6" />,
@@ -48,7 +54,7 @@ const Navbar = () => {
       },
     ];
     if (idTable) {
-      const [a, b, c] = initialNavItem;
+      const [a, , c] = initialNavItem;
       return [
         a,
         {
@@ -72,8 +78,7 @@ const Navbar = () => {
           routeName: "Món đã đặt",
           originRouteName: "order",
         },
-        b,
-        c,
+        c
       ];
     }
     return initialNavItem;
