@@ -7,8 +7,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import PropTypes from "prop-types";
 import "./index.css";
-import logo from "../../../assets/images/logo.png";
-import logo3 from "../../../assets/images/logo3.png";
+import logo from "../../../assets/images/logo.svg";
+import logo3 from "../../../assets/images/logo3.svg";
 
 const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
   const { order: orders } = useSelector((state) => state.order);
@@ -44,7 +44,7 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
       } top-0 w-full h-20 px-16 py-2 drop-shadow-md`}
     >
-      <div className="w-40 h-40">
+      <div className="w-20 h-20">
         <img src={logoPath} alt="logo" />
       </div>
       <nav className="lg:flex lg:space-x-6">
