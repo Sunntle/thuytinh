@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FiUser } from "react-icons/fi";
 import OrderListDesktop from "./OrderListDesktop/OrderListDesktop.jsx";
@@ -6,7 +6,9 @@ import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import PropTypes from "prop-types";
-import './index.css'
+import "./index.css";
+import logo from "../../../assets/images/logo.png";
+import logo3 from "../../../assets/images/logo3.png";
 
 const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
   const { order: orders } = useSelector((state) => state.order);
@@ -19,6 +21,21 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
   const handleMenuMouseLeave = useCallback(() => {
     setIsMenuHovered(false);
   }, []);
+  const [logoPath, setLogoPath] = useState(logo);
+
+  const handleScroll = () => {
+    const { scrollY } = window;
+    if (scrollY > 500) {
+      setLogoPath(logo3);
+    } else {
+      setLogoPath(logo);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div
@@ -27,7 +44,9 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
       } top-0 w-full h-20 px-16 py-2 drop-shadow-md`}
     >
-      <div className="text-2xl font-bold ">LOGO</div>
+      <div className="w-40 h-40">
+        <img src={logoPath} alt="logo" />
+      </div>
       <nav className="lg:flex lg:space-x-6">
         <NavLink
           to="/home"
@@ -52,12 +71,14 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
           >
             Thực đơn
           </NavLink>
-          {categories?.length > 0 && ( <HiOutlineChevronRight
-            size={20}
-            className={`transition-transform ml-1 duration-200 ${
-              isMenuHovered ? "rotate-90" : "rotate-0"
-            }`}
-          />)}
+          {categories?.length > 0 && (
+            <HiOutlineChevronRight
+              size={20}
+              className={`transition-transform ml-1 duration-200 ${
+                isMenuHovered ? "rotate-90" : "rotate-0"
+              }`}
+            />
+          )}
           <AnimatePresence>
             {isMenuHovered && categories?.length > 0 && (
               <motion.ul
