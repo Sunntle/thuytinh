@@ -12,6 +12,7 @@
 /server/dist
 /server/dist-dev
 /docker
+/production
 /.pnp
 .pnp.js
 .env
