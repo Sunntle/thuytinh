@@ -77,6 +77,11 @@ const ResPayment = () => {
             console.log(err);
         }
     }
+    const canCelOrder = () => {
+        dispatch(RemoveAllCart());
+        dispatch(RemoveTableList());
+        navigate('/employee/choosetable/');
+    }
     return (
         <>
             <div className="border-solid border-2 border-main bg-orange-100 dark:bg-darkModeBgBox shadow-md flex flex-col gap-y-4 p-4 rounded-lg">
@@ -130,7 +135,7 @@ const ResPayment = () => {
                     {tablelist ? (
                         <div className='grid grid-cols-2 mt-12'>
                             <div className='flex justify-center font-semibold col-span-1 m-1'>
-                                <div className='flex items-center justify-center rounded bg-red-500 hover:bg-red-400 cursor-pointer text-white h-[40px] w-full' onClick={() => dispatch(RemoveAllCart())}>Hủy</div>
+                                <div className='flex items-center justify-center rounded bg-red-500 hover:bg-red-400 cursor-pointer text-white h-[40px] w-full' onClick={canCelOrder}>Hủy</div>
                             </div>
 
                             {tablelist.status_table > 0 ? (<div className='flex justify-center font-semibold col-span-1 m-1'>
