@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button, Space, notification } from 'antd';
 import HeaderComponent from "../components/header";
@@ -17,6 +17,7 @@ const LayoutMain = () => {
   const customize = useSelector(state => state.customize)
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const audio = useRef([]);
   const openNotification = useCallback((arg) => {
     const key = `open${Date.now()}`;
     const btn = (
@@ -41,9 +42,12 @@ const LayoutMain = () => {
   }, [api]);
   useEffect(() => {
     socket.on("new message", (arg) => {
-      console.log(arg);
       dispatch(addNewMessage(arg))
       openNotification(arg)
+      if (!audio.current["notify"]) {
+        audio.current["notify"] = new Audio("sound/notify.mp3");
+      }
+      if (audio.current["notify"]) audio.current["notify"].play();
     })
     return () => {
       socket.off("new message")

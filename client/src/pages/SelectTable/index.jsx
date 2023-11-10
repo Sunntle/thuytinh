@@ -7,7 +7,22 @@ import "./index.css";
 import { useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
 import PropTypes from 'prop-types';
-
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      return "User denied the request for Geolocation."
+      
+    case error.POSITION_UNAVAILABLE:
+      return "Location information is unavailable."
+      
+    case error.TIMEOUT:
+      return "The request to get user location timed out."
+      
+    case error.UNKNOWN_ERROR:
+      return "An unknown error occurred."
+      
+  }
+}
 function SelectTable({ isTableExist }) {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
@@ -32,18 +47,23 @@ function SelectTable({ isTableExist }) {
       latitude: 10.8524972,
       longitude: 106.6259193,
     };
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const position2 = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      };
-      const distance = getPreciseDistance(position1, position2);
-      // if(distance > 100 ) return confirm("Bạn ở quá xa quán, đặt bàn trước nhé!") ? navigate("/book-table") : navigate("/")
-      await sendRequest(
-        { method: "get", url: "/table?_status_table=eq_0" },
-        setTables,
-      );
-    });
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const position2 = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+        const distance = getPreciseDistance(position1, position2);
+        // if(distance > 1000 ) return navigate("/book-table")
+        await sendRequest(
+          { method: "get", url: "/table?_status_table=eq_0" },
+          setTables
+        );
+      }, showError);
+    } else {
+      // Geolocation is not supported by the browser
+      console.error("Geolocation is not supported by this browser.");
+    }
   }, [navigate, sendRequest]);
 
   useEffect(() => {
