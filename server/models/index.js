@@ -10,8 +10,8 @@ const Reviews = require("./reviewsModel");
 const OrderDetail = require("./orderDetailModel");
 const ImageProduct = require("./imageModel");
 const TableByOrder = require("./tableByOrder");
-const { sequelize } = require("../config/connectDatabase");
 const Warehouse = require("./warehouseModel");
+const { sequelize } = require("../config/connectDatabase");
 
 Recipes.belongsTo(Product, {
   foreignKey: "id_product",
@@ -100,7 +100,6 @@ Warehouse.belongsTo(Materials, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
-
 async function synchronizeModels() {
   try {
     await sequelize.sync();
@@ -120,8 +119,6 @@ async function synchronizeModels() {
     console.error("Error synchronizing models:", error);
   }
 }
-
-synchronizeModels();
 module.exports = {
   Warehouse,
   TableByOrder,
@@ -136,4 +133,6 @@ module.exports = {
   Materials,
   OrderDetail,
   Reviews,
+  synchronizeModels
 };
+
