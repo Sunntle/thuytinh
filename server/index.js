@@ -5,6 +5,7 @@ const initRoutes = require("./routes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const db = require("./config/connectDatabase");
+const {synchronizeModels} = require("./models/index")
 const { Server } = require("socket.io");
 const { handleNewUserConnect, handleDisconnect, handleCallStaff, handlePayInCash } = require("./utils/socketHanlers")
 require("dotenv").config();
@@ -23,8 +24,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const server = app.listen(port, (req, res) => {
   console.log(`Connect port: ${port}`);
 });
-
-
 const io = new Server(server, {
   cors: {
     origin: [process.env.CLIENT_URL, process.env.ADMIN_URL, process.env.CLIENT_URL_TEST, process.env.ADMIN_URL_TEST],
@@ -43,6 +42,7 @@ io.of("/client").on("connection", (socket) => {
 });
 initRoutes(app);
 db.connectDatabase();
+synchronizeModels()
 
 
 

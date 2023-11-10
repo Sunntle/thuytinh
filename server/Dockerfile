@@ -13,6 +13,6 @@ COPY . .
 RUN npm run build
 
 CMD [ "node", "dist/main.js" ]
-#yml: docker compose up -d
+
 #docker build --tag node-docker .
 #docker run -p 8080:8080 -d node-docker
