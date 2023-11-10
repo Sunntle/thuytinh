@@ -17,7 +17,6 @@ import moment from "moment";
 import 'moment/dist/locale/vi';
 const DashBoard = () => {
   moment.locale('vi');
-  console.log(moment().week())
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const currentWeek = moment().week();

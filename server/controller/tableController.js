@@ -5,28 +5,40 @@ const {
   Order,
   TableByOrder,
   User,
+  Notification,
 } = require("../models");
 
 
-const { apiQueryRest, bien } = require('../utils/const');
+const { apiQueryRest, bien, bookingValidate, templateSendUser, checkBooking, isEmpty } = require('../utils/const');
 const { Op } = require('sequelize');
-const { generateTable } = require("../middlewares/jwt");
+const { generateTable, generateHash } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
+const moment = require("moment");
+const sendEmail = require("../utils/mail");
 
 const findTables = async (tables) => {
   const re = await Tables.findAll({
     include: {
-      model: TableByOrder, include: {
-        model: Order, ...bien,
-        attributes: ["id", "name", "phone", "total", "status", "id_employee", "createdAt", "updatedAt"]
-        , where: { status: { [Op.lte]: 3 } }
+      model: TableByOrder,
+      include: {
+        model: Order,
+        attributes: ["id", "name", "phone", "total", "status", "id_employee", "createdAt", "updatedAt"],
+        where: {
+          status: {
+            [Op.and]: [
+              { [Op.lte]: 3 },
+              { [Op.ne]: 0 }
+            ]
+          }
+        }
       }
     },
     where: { id: { [Op.in]: tables } },
     nest: true
   });
-  return re
-}
+  return re;
+};
+
 
 exports.getAll = asyncHandler(async (req, res) => {
   let query = {
@@ -34,8 +46,15 @@ exports.getAll = asyncHandler(async (req, res) => {
     include: {
       model: TableByOrder, include: {
         model: Order, ...bien,
-        attributes: ["id", "name", "phone", "total", "status", "id_employee", "createdAt", "updatedAt"]
-        , where: { status: { [Op.lte]: 3 } }
+        attributes: ["id", "name", "phone", "total", "status", "id_employee", "createdAt", "updatedAt"],
+        where: {
+          status: {
+            [Op.and]: [
+              { [Op.lte]: 3 },
+              { [Op.ne]: 0 }
+            ]
+          }
+        }
       }
     }
   };
@@ -157,4 +176,78 @@ exports.switchTables = asyncHandler(async (req, res) => {
   await Tables.prototype.updateStatusTable({ token: getCurrent.token, status_table: 1 }, [newTable]);
   await Tables.prototype.updateStatusTable({ token: null, status_table: 0 }, [currentTable]);
   res.status(200).json("Chuyển thành bàn thành công");
+});
+
+const isBooking = async (time, tableId) => {
+  const checkTimeTable = await TableByOrder.findOne({
+    where: {
+      [Op.and]: [
+        { dining_option: "reservation" },
+        { status: "confirmed" },
+        {
+          createdAt: {
+            [Op.gte]: moment(time).subtract(135, 'minutes'),
+            [Op.lte]: moment(time).add(135, 'minutes')
+          }
+        },
+        { tableId: tableId }
+      ]
+    },
+    raw: true
+  });
+  const checkCurrentTimeTable = await checkBooking(time, [tableId])
+  const result = checkTimeTable ? true : false && checkCurrentTimeTable;
+  return result
+}
+exports.checkTableBooking = asyncHandler(async (req, res) => {
+  const { createdAt, tableId, party_size } = req.query;
+  const check = await isBooking(createdAt, tableId);
+  if (check) return res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
+  res.status(200).json({ success: true, message: `Có bàn vào lúc ${moment(createdAt).format('HH:mm, DD/MM/YYYY')}, cho ${party_size} người lớn.` });
+})
+
+exports.bookingTables = asyncHandler(async (req, res) => {
+  const { createdAt, party_size, phone, email, name, tableId } = req.body
+  const checkInput = bookingValidate(req.body);
+  if (checkInput == false) return res.status(404).json({ success: false, message: "Err Data" });
+  const check = await isBooking(createdAt, tableId);
+  if (check) return res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
+  const order_result = await Order.create({ name, email, phone, status: 0 });
+  let data = { createdAt, name, email, tableId, orderId: order_result.id };
+  await TableByOrder.create({
+    tableId: tableId, orderId: order_result.id,
+    dining_option: "reservation", createdAt, party_size, status: "confirmed"
+  });
+  const result = await Order.findOne({ where: { id: order_result.id }, include: TableByOrder });
+  await Notification.create(
+    { type: "table", description: `Khách hàng đặt trước bàn số ${tableId}`, content: tableId },
+    { raw: true },
+  );
+  await sendEmail(email, "Thông báo", templateSendUser(data));
+  res.status(200).json(result);
+});
+
+
+exports.getBooking = asyncHandler(async (req, res) => {
+  const { phone, email, name, tableId } = req.query;
+  if (isEmpty(phone) || isEmpty(email) || isEmpty(name) || isEmpty(tableId)) {
+    return res.status(404).json({ success: false, message: "Thiếu data" });
+  }
+
+  const data = await TableByOrder.findAll({
+    include: {
+      model: Order, where: {
+        [Op.or]: [{ name: name }, { phone: phone }, { email: email }]
+      }
+    },
+    where: {
+      dining_option: "reservation",
+      createdAt: {
+        [Op.gte]: moment(new Date())
+      },
+      tableId: tableId,
+    },
+    nest: true
+  })
+  res.status(200).json(data);
 });

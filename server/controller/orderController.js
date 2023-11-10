@@ -3,7 +3,7 @@ const {
   apiQueryRest,
   checkQtyMaterials,
   getQtyMaterialByProduct,
-  bien, currentYear, tinhWeek
+  bien, currentYear, tinhWeek, checkBooking
 } = require("../utils/const");
 const asyncHandler = require("express-async-handler");
 const {
@@ -32,13 +32,13 @@ exports.createOrder = asyncHandler(async (req, res) => {
       data: "Validate !",
     });
   const arrTable = table;
-
-  if (await Tables.prototype.checkStatus(arrTable, 0, token))
+  const checkStatus = await Tables.prototype.checkStatus(arrTable, 0, token);
+  const isBooking = await checkBooking(new Date(), arrTable, "reservation", "add")
+  if (checkStatus || isBooking)
     return res.status(200).json({
       success: false,
-      data: "Bàn đã có người đặt",
+      data: "Bàn đã có người đặt trước"
     });
-
   const { approve, over } =
     await Materials.prototype.checkAmountByProduct(orders);
   if (approve.length === 0)
@@ -51,7 +51,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
     id_employee,
   });
   let dataTable = await TableByOrder.bulkCreate(
-    arrTable.map((item) => ({ tableId: item, orderId: order_result.id })),
+    arrTable.map((item) => ({ tableId: item, orderId: order_result.id, dining_option: "eat-in" })),
   );
   if (id_employee) await Tables.prototype.updateStatusTable({ status_table: 1 }, arrTable);
   let tableData = await TableByOrder.findAll({

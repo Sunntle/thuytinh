@@ -1,11 +1,12 @@
 const moment = require("moment");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const Recipes = require("../models/recipeModel");
 const Materials = require("../models/materialsModel");
 const TableByOrder = require("../models/tableByOrder");
 const OrderDetail = require("../models/orderDetailModel");
 const Product = require("../models/productModel");
 const ImageProduct = require("../models/imageModel");
+const Order = require("../models/orderModel");
 const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
 const apiQueryRest = (params) => {
     const { _offset, _limit, _sort, _order, q, title, _noQuery, ...rest } = params;
@@ -85,7 +86,6 @@ const bien = {
 function tinhWeek(weekNumber) {
     const allDaysInWeek = [];
     moment.locale('vi');
-    console.log("êffeef", moment().week())
     const year = moment().year();
     const startDate = moment().year(year).isoWeek(weekNumber).startOf('isoWeek');
     const endDate = moment().year(year).isoWeek(weekNumber).endOf('isoWeek');
@@ -102,5 +102,45 @@ function currentYear(pa = "startOf") {
     const date = moment()[pa]("year");
     return date.format("YYYY-MM-DD");
 }
+function isEmpty(value) {
+    return (
+        (value == null) ||
+        (value.hasOwnProperty('length') && value.length === 0) ||
+        (value.constructor === Object && Object.keys(value).length === 0) ||
+        (+value === 0)
+    )
+}
+const bookingValidate = (params) => {
+    return Object.values(params).every(value => !isEmpty(value));
+}
 
-module.exports = { currentYear, tinhWeek, bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };
+
+const templateSendUser = ({ createdAt, name, tableId }) => {
+    let html = ` <div> ${name} bạn vừa đặt trước bàn số ${tableId} thời gian : ${moment(createdAt).format("DD/MM/YYYY HH:mm")} </div>`;
+    return html
+}
+
+
+
+
+const checkBooking = async (time, tableId, dining_option = "eat-in", params = "subtract", limit = 135) => {
+    const isEatIn = await TableByOrder.findAll({
+        include: {
+            model: Order, where: {
+                status: {
+                    [Op.lte]: 4,
+                    [Op.ne]: 0
+                }
+            }
+        },
+        where: {
+            dining_option: dining_option,
+            status: "confirmed",
+            createdAt: { [Op[dining_option === "eat-in" ? "gte" : "lte"]]: moment(time)[params](limit, 'minutes') },
+            tableId: { [Op.in]: tableId }
+        }
+    })
+    console.log(isEatIn)
+    return isEatIn.length > 0;
+}
+module.exports = { isEmpty, checkBooking, templateSendUser, bookingValidate, currentYear, tinhWeek, bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };
