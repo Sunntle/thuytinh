@@ -78,7 +78,7 @@ const Navbar = () => {
           routeName: "Món đã đặt",
           originRouteName: "order",
         },
-        c
+        c,
       ];
     }
     return initialNavItem;
@@ -94,7 +94,7 @@ const Navbar = () => {
       checkActiveClassName = navbarRoute.find(
         (item) =>
           location.pathname.includes(item.originRouteName) ||
-          location.state?.from.includes(item.originRouteName),
+          location.state?.from.includes(item.originRouteName)
       );
       return checkActiveClassName;
     }
