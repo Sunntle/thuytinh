@@ -1,8 +1,8 @@
 import { BsBookmarkCheckFill } from "react-icons/bs";
 import { FaShippingFast } from "react-icons/fa";
 import { RiServiceFill } from "react-icons/ri";
-import { truncateString } from "../utils/format.js";
-import { motion, stagger } from "framer-motion";
+import { truncateString } from "../../utils/format.js";
+import { motion } from "framer-motion";
 
 const AboutUs = () => {
   return (

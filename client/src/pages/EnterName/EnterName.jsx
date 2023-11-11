@@ -4,7 +4,7 @@ import serviceImg from "../../assets/images/Service 24_7-pana.png";
 import { useDispatch, useSelector } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
 import useHttp from "../../hooks/useHttp.js";
-import Spinner from "../../components/Spinner.jsx";
+import Spinner from "../../components/Spinner/Spinner.jsx";
 const EnterName = (props) => {
   const [customerName, setCustomerName] = useState("");
   const { sendRequest } = useHttp();

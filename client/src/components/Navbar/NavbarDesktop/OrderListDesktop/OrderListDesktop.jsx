@@ -6,25 +6,26 @@ import { HiXMark } from "react-icons/hi2";
 // Components
 import { Button, Drawer, message, Popconfirm } from "antd";
 // Hooks
-import useHttp from "../../../hooks/useHttp.js";
+import useHttp from "../../../../hooks/useHttp.js";
 // Utils
-import { formatCurrency } from "../../../utils/format.js";
+import { formatCurrency } from "../../../../utils/format.js";
 import {
   handleDeleteConfirm,
   handleOrderReduxDecreaseQuantity,
   handleOrderReduxIncreaseQuantity,
-} from "../../../utils/buttonUtils.js";
+} from "../../../../utils/buttonUtils.js";
 // Services
-import { addOrder } from "../../../services/api.js";
+import { addOrder } from "../../../../services/api.js";
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import {
   addIdOrderTable,
   emptyOrder,
-} from "../../../redux/Order/orderSlice.js";
+} from "../../../../redux/Order/orderSlice.js";
 // External File
 import "./index.css";
-import Image from "../../Image/Image.jsx";
+import Image from "../../../Image/Image.jsx";
+import PropTypes from "prop-types";
 
 const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
   const [newOrder, setNewOrder] = useState(null);
@@ -61,7 +62,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           type: "success",
           content: "Đặt món thành công",
         });
-        window.location.href = `http://localhost:3000/ban-${customerName.tables[0]}/order`;
+        window.location.href = `http://localhost:3000/tables-${customerName.tables[0]}/order`;
       } else {
         messageApi.open({
           type: "error",
@@ -99,7 +100,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       };
       await sendRequest(request, undefined, true);
       dispatch(emptyOrder());
-      window.location.href = `http://localhost:3000/ban-${customerName.tables[0]}/order`;
+      window.location.href = `http://localhost:3000/tables-${customerName.tables[0]}/order`;
     } catch (err) {
       console.error(err);
     } finally {
@@ -226,6 +227,11 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       </div>
     </Drawer>
   );
+};
+
+OrderListDesktop.propTypes = {
+  isOrderDesktop: PropTypes.bool,
+  setIsOrderDesktop: PropTypes.func,
 };
 
 export default OrderListDesktop;

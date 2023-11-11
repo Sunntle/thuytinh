@@ -1,4 +1,4 @@
-import { Button, Collapse, Divider, Form, Modal, Radio } from "antd";
+import { Button, Collapse, Divider, Form, Modal, Radio, message } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import {
   formatCurrency,
 } from "../../utils/format.js";
 import "./index.css";
+import { socket } from "../../services/socket.js";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,6 +24,7 @@ const Order = () => {
   const [data, setData] = useState([]);
   const { tables } = useSelector((state) => state.customerName);
   const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
   const tableToken = localStorage.getItem("tableToken");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -52,7 +54,7 @@ const Order = () => {
       return { ...Product, quantity, inDb: quantity };
     });
     dispatch(addOrderDetailUpdate(dataPrevious));
-    navigate(`/ban-${tables[0]}/menu`)
+    navigate(`/tables-${tables[0]}/menu`)
   };
   
   const onFinish = async (values) => {
@@ -70,12 +72,21 @@ const Order = () => {
       window.location.href = String(response);
     }
   };
-  
+
+  const handlePayInCash = ()=>{
+    socket.emit("pay-in-cash", {tables: tables[0]})
+    messageApi.open({
+      type: "info",
+      content: "Vui lòng đợi trong giây lát, nhân viên sẽ đến thanh toán",
+    });
+  }
+
   if (isLoading) return <Spinner />;
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 lg:pt-12">
       <ScrollToTop />
+      {contextHolder}
       <div className="bg-white px-6 xl:px-12">
         <h1 className="mb-5 text-center text-2xl font-bold text-primary">
           Món đã đặt
@@ -216,6 +227,7 @@ const Order = () => {
                       <Button
                         size={"large"}
                         className="w-full bg-primary text-white"
+                        onClick={handlePayInCash}
                       >
                         Thanh toán bằng tiền mặt
                       </Button>

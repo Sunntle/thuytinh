@@ -1,4 +1,5 @@
 import { Spin } from "antd";
+import PropTypes from "prop-types";
 
 const Spinner = ({ className }) => {
   return (
@@ -12,5 +13,7 @@ const Spinner = ({ className }) => {
     </div>
   );
 };
-
+Spinner.propTypes = {
+  className: PropTypes.string,
+};
 export default Spinner;

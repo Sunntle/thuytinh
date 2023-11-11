@@ -2,12 +2,12 @@ import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 px-16 py-12 hidden lg:block text-white min-h-0">
+    <footer className="bg-[#783F27] px-16 py-12 hidden lg:block text-white/80 min-h-0">
       <div className="max-w-screen-3xl">
         <div className="grid grid-cols-12 content-stretch">
           <div className="col-span-5 h-full flex flex-col justify-between space-y-40">
             <span className="text-2xl font-semibold">Logo Here</span>
-            <span className="text-gray-500">
+            <span className="text-[#BEB7B5]">
               © 2023 Thuy Tinh. All rights reserved
             </span>
           </div>

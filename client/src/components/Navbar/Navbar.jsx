@@ -4,12 +4,12 @@ import { FiUser } from "react-icons/fi";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { IoRestaurantOutline } from "react-icons/io5";
-import { MdOutlineRoomService } from "react-icons/md";
+import { MdOutlineRoomService, MdOutlineTableBar } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
-import NavbarDesktop from "./NavbarDesktop.jsx";
+import NavbarDesktop from "./NavbarDesktop/NavbarDesktop.jsx";
+const regex = /^\/tables-\d+$/;
 
-const regex = /^\/ban-\d+$/;
 const Navbar = () => {
   const location = useLocation();
   const headerRef = useRef();
@@ -23,7 +23,7 @@ const Navbar = () => {
   const idTable = useMemo(() => customerName.tables[0], [customerName.tables]);
 
   const navbarRoute = useMemo(() => {
-    return [
+    const initialNavItem = [
       {
         id: 1,
         route: `/home`,
@@ -32,39 +32,61 @@ const Navbar = () => {
         originRouteName: "home",
       },
       {
-        id: 2,
-        route: `/ban-${idTable}/service`,
-        icon: <MdOutlineRoomService className="w-6 h-6" />,
-        routeName: "Dịch vụ",
-        originRouteName: "service",
-      },
-      {
-        id: 3,
-        route: `/ban-${idTable}/menu`,
-        icon: <IoRestaurantOutline className="w-6 h-6" />,
-        routeName: "Thực đơn",
-        originRouteName: "menu",
-      },
-      {
-        id: 4,
-        route: `/ban-${idTable}/order`,
-        icon: <HiOutlineClipboardList className="w-6 h-6" />,
-        routeName: "Món đã đặt",
-        originRouteName: "order",
+        id: 7,
+        route: `/select-table`,
+        icon: <MdOutlineTableBar className="w-6 h-6" />,
+        routeName: "Chọn bàn",
+        originRouteName: "select-table",
       },
       {
         id: 5,
-        route: `/ban-${idTable}/account`,
+        route: `/book-table`,
+        icon: <MdOutlineTableBar className="w-6 h-6" />,
+        routeName: "Đặt bàn",
+        originRouteName: "book-table",
+      },
+      {
+        id: 6,
+        route: `/account`,
         icon: <FiUser className="w-6 h-6" />,
         routeName: "Tài khoản",
         originRouteName: "account",
       },
     ];
+    if (idTable) {
+      const [a, , c] = initialNavItem;
+      return [
+        a,
+        {
+          id: 2,
+          route: `/tables-${idTable}/service`,
+          icon: <MdOutlineRoomService className="w-6 h-6" />,
+          routeName: "Dịch vụ",
+          originRouteName: "service",
+        },
+        {
+          id: 3,
+          route: `/tables-${idTable}/menu`,
+          icon: <IoRestaurantOutline className="w-6 h-6" />,
+          routeName: "Thực đơn",
+          originRouteName: "menu",
+        },
+        {
+          id: 4,
+          route: `/tables-${idTable}/order`,
+          icon: <HiOutlineClipboardList className="w-6 h-6" />,
+          routeName: "Món đã đặt",
+          originRouteName: "order",
+        },
+        c,
+      ];
+    }
+    return initialNavItem;
   }, [idTable]);
 
   const activeClassname = useMemo(() => {
     let checkActiveClassName;
-    if (regex.test(location.pathname))
+    if (regex.test(location.pathname) && navbarRoute.length > 3)
       return (checkActiveClassName = navbarRoute[2]);
     if (location.pathname == "/" || location.pathname == "/home")
       return (checkActiveClassName = navbarRoute[0]);
@@ -72,7 +94,7 @@ const Navbar = () => {
       checkActiveClassName = navbarRoute.find(
         (item) =>
           location.pathname.includes(item.originRouteName) ||
-          location.state?.from.includes(item.originRouteName),
+          location.state?.from.includes(item.originRouteName)
       );
       return checkActiveClassName;
     }
@@ -92,14 +114,13 @@ const Navbar = () => {
         }
       }
     };
-
-    const handleResize = () => {
+    const handleResize = async () => {
       if (window.screen.width > 1024 && categories == null) {
         if (isLoading) return;
-        sendRequest({ url: "/category", method: "get" }, setCategories, false);
+        await sendRequest({ url: "/category", method: "get" }, setCategories);
       }
     };
-
+    handleResize();
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleResize);
     return () => {

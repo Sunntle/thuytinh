@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { destroyImg } = require("../utils/cloud");
 require("dotenv").config();
 const hashUserPassword = async (user) => {

@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import{ useEffect } from 'react'
 // import "./res-payment.css"
-import { Button, Divider, Modal, Spin, message, } from "antd"
+import { Button, Divider, message } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
-import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, RemoveReduxCart, getTotal } from '../../../redux/cartsystem/cartSystem'
-import { CloseOutlined, DeleteOutlined } from '@ant-design/icons'
+import { AddCart, DecreaseCart, RemoveAllCart, RemoveCart, getTotal } from '../../../redux/cartsystem/cartSystem'
+import { DeleteOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
 import { addOrder, updateOrder } from '../../../services/api'
 import { useNavigate } from 'react-router-dom';
 import { formatGia } from '../../../utils/format'
 import { RemoveTableList } from '../../../redux/table/listTableSystem'
-const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const ResPayment = () => {
 
@@ -23,7 +22,7 @@ const ResPayment = () => {
     useEffect(() => {
         dispatch(getTotal());
     }, [total])
-    const totalVAT = total.cartTotalAmount + (total.cartTotalAmount * 0.1);
+    // const totalVAT = total.cartTotalAmount + (total.cartTotalAmount * 0.1);
     //Xu ly chon ban
     const chooseTable = () => {
         navigate("/employee/choosetable")
@@ -40,7 +39,6 @@ const ResPayment = () => {
                 id_employee: staff.user.id
             };
             res = await addOrder(body);
-            console.log(res.success)
             dispatch(RemoveAllCart(false));
             dispatch(RemoveTableList());
             res.success  && navigate("/employee/choosetable") 
@@ -67,11 +65,9 @@ const ResPayment = () => {
                 id_table: tablelist.id,
                 total: total.cartTotalAmount
             };
-            console.log(body)
             res = await updateOrder(body);
             dispatch(RemoveAllCart(true));
             dispatch(RemoveTableList());
-            console.log(res)
             message.open({
                 type: "success",
                 content: "Cập nhật món mới thành công thành công!",
@@ -80,6 +76,11 @@ const ResPayment = () => {
         } catch (err) {
             console.log(err);
         }
+    }
+    const canCelOrder = () => {
+        dispatch(RemoveAllCart());
+        dispatch(RemoveTableList());
+        navigate('/employee/choosetable/');
     }
     return (
         <>
@@ -95,7 +96,7 @@ const ResPayment = () => {
                         <span className='font-medium text-main text-lg'>Chưa chọn bàn</span>
                     </div>
                 )}
-                <Divider className='bg-main m-0' />
+                {tablelist && <Divider className='bg-main m-0' />}
                 {carts && carts.map((item, index) =>
                     <div key={index}>
                         <div className='flex items-center my-3'>
@@ -121,7 +122,7 @@ const ResPayment = () => {
                         </div>
                     </div>
                 )}
-                <Divider className='bg-main my-5' />
+                {tablelist && <Divider className='bg-main my-5' />}
                 <div className='Order-total border rounded-md'>
                     <div className='tax'>
                         <span>Thuế VAT:</span>
@@ -134,7 +135,7 @@ const ResPayment = () => {
                     {tablelist ? (
                         <div className='grid grid-cols-2 mt-12'>
                             <div className='flex justify-center font-semibold col-span-1 m-1'>
-                                <div className='flex items-center justify-center rounded bg-red-500 hover:bg-red-400 cursor-pointer text-white h-[40px] w-full' onClick={() => dispatch(RemoveAllCart())}>Hủy</div>
+                                <div className='flex items-center justify-center rounded bg-red-500 hover:bg-red-400 cursor-pointer text-white h-[40px] w-full' onClick={canCelOrder}>Hủy</div>
                             </div>
 
                             {tablelist.status_table > 0 ? (<div className='flex justify-center font-semibold col-span-1 m-1'>

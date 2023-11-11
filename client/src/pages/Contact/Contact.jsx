@@ -2,8 +2,8 @@ import { SiContactlesspayment } from "react-icons/si";
 
 const Contact = () => {
   return (
-    <div className="lg:py-24 pb-24 relative flex flex-col justify-center items-center min-h-screen bg-white mx-0 lg:px-16">
-      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-4 justify-center items-center border rounded shadow-md ">
+    <div className="lg:py-24 mt-24 lg:mt-0 pb-24 relative flex flex-col justify-center items-center min-h-screen bg-white lg:px-16">
+      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-4 justify-center items-center lg:border rounded shadow-md ">
         <form className="col-span-2 grid grid-cols-1 gap-4 w-full h-full p-6">
           <h2 className="text-center text-primary text-3xl font-bold pb-4">
             LIÊN HỆ VỚI CHÚNG TÔI
@@ -28,7 +28,6 @@ const Contact = () => {
               placeholder="Nhập số điện thoại"
             />
             <textarea
-              type="textarea"
               name="message"
               rows="7"
               cols="50"

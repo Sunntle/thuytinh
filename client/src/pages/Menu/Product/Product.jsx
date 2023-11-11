@@ -16,6 +16,7 @@ import { addToOrder } from "../../../redux/Order/orderSlice.js";
 import { useDispatch } from "react-redux";
 // Motion
 import { usePresence, useAnimate } from "framer-motion";
+import PropTypes from "prop-types";
 
 const Product = (props) => {
   const { id, name_product, price, amount, discount } = props.item;
@@ -48,7 +49,7 @@ const Product = (props) => {
         await animate(
           scope.current,
           { opacity: [0, 1] },
-          { duration: 0.5, delay: 0.05 * id},
+          { duration: 0.5, delay: 0.05 * id },
         );
       };
       enterAnimation();
@@ -76,11 +77,11 @@ const Product = (props) => {
     setOpenDrawer(false);
   };
 
-  const handleAddToOrder = (product) => {
+  const handleAddToOrder = async (product) => {
     if (product) {
       dispatch(addToOrder(product));
     }
-    messageApi.open({
+    await messageApi.open({
       type: "success",
       content: "Đã thêm món ăn",
     });
@@ -88,15 +89,12 @@ const Product = (props) => {
 
   return (
     <div
-        ref={scope}
-      // initial={{ opacity: 0 }}
-      // whileInView={{ opacity: 1 }}
-      // transition={{ duration: 1.15 }}
+      ref={scope}
       key={id}
-      className="box-border tracking-wide min-h-0 w-auto h-auto border rounded-lg shadow cursor-pointer transition-shadow duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.5)]"
+      className="box-border tracking-wide min-h-0 w-auto h-auto border rounded-lg shadow cursor-pointer transition-shadow duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)]"
     >
       {contextHolder}
-      <div className="w-full h-40" onClick={showProductDetail}>
+      <div className="w-full h-32 lg:h-40" onClick={showProductDetail}>
         <Image
           loading={!imageUrl && true}
           src={imageUrl}
@@ -140,6 +138,10 @@ const Product = (props) => {
       )}
     </div>
   );
+};
+
+Product.propTypes = {
+  item: PropTypes.object,
 };
 
 export default Product;

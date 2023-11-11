@@ -27,9 +27,9 @@ function NotificationsComponent({
 
   const handleToContent = useCallback((index) => {
     const content = notifications[index];
-    const navigateTo = `/admin/${content.type}`;
+    const navigateTo = content.type.includes('-') ? `/employee/choosetable` :`/admin/${content.type}`;
     dispatch(maskAsRead(content));
-    content.type != "call-staff" && navigate(navigateTo);
+    navigate(navigateTo);
   }, [dispatch, navigate, notifications])
 
   const handleDelete = useCallback(async (id) => {

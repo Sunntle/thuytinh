@@ -1,22 +1,40 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FiUser } from "react-icons/fi";
 import OrderListDesktop from "./OrderListDesktop/OrderListDesktop.jsx";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineChevronRight } from "react-icons/hi2";
+import PropTypes from "prop-types";
+import "./index.css";
+import logo from "../../../assets/images/logo.svg";
+import logo3 from "../../../assets/images/logo3.svg";
 
 const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
   const { order: orders } = useSelector((state) => state.order);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
   const [isOrderDesktop, setIsOrderDesktop] = useState(false);
-
   const handleMenuMouseEnter = useCallback(() => {
     setIsMenuHovered(true);
   }, []);
 
   const handleMenuMouseLeave = useCallback(() => {
     setIsMenuHovered(false);
+  }, []);
+  const [logoPath, setLogoPath] = useState(logo);
+
+  const handleScroll = () => {
+    const { scrollY } = window;
+    if (scrollY > 500) {
+      setLogoPath(logo3);
+    } else {
+      setLogoPath(logo);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -26,46 +44,48 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
       } top-0 w-full h-20 px-16 py-2 drop-shadow-md`}
     >
-      <div className="text-2xl font-bold ">LOGO</div>
+      <div className="w-20 h-20">
+        <img src={logoPath} alt="logo" />
+      </div>
       <nav className="lg:flex lg:space-x-6">
         <NavLink
           to="/home"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Trang chủ
         </NavLink>
         <NavLink
-          to={`/ban-${idTable}/service`}
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          to={`/tables-${idTable}/service`}
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Dịch vụ
         </NavLink>
         <div
           onMouseEnter={handleMenuMouseEnter}
           onMouseLeave={handleMenuMouseLeave}
-          className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded ${
-            isMenuHovered ? "text-primary bg-white" : "text-white"
-          }`}
+          className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded navbar`}
         >
           <NavLink
-            to={`/ban-${idTable}/menu`}
+            to={`/tables-${idTable}/menu`}
             className="font-normal text-base"
           >
             Thực đơn
           </NavLink>
-          <HiOutlineChevronRight
-            size={20}
-            className={`transition-transform ml-1 duration-200 ${
-              isMenuHovered ? "rotate-90" : "rotate-0"
-            }`}
-          />
+          {categories?.length > 0 && (
+            <HiOutlineChevronRight
+              size={20}
+              className={`transition-transform ml-1 duration-200 ${
+                isMenuHovered ? "rotate-90" : "rotate-0"
+              }`}
+            />
+          )}
           <AnimatePresence>
             {isMenuHovered && categories?.length > 0 && (
               <motion.ul
-                initial={{ opacity: 0, x: "-50px" }}
+                initial={{ opacity: 0, x: "-10px" }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: "-100px" }}
-                transition={{ duration: 0.15, ease: "linear" }}
+                transition={{ duration: 0.1, ease: "linear" }}
                 className="z-40 absolute w-40 top-12 left-0 space-y-2 bg-white border rounded border-gray-200 py-2 px-3 transition-all duration-300"
               >
                 {categories?.map((category, index) => (
@@ -84,13 +104,13 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
         </div>
         <NavLink
           to="/contact"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Liên hệ
         </NavLink>
         <NavLink
           to="/about"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 hover:text-primary hover:bg-white rounded"
+          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >
           Về chúng tôi
         </NavLink>
@@ -120,6 +140,13 @@ const NavbarDesktop = ({ headerRef, checkRoute, idTable, categories }) => {
       </div>
     </div>
   );
+};
+
+NavbarDesktop.propTypes = {
+  headerRef: PropTypes.object,
+  checkRoute: PropTypes.bool,
+  idTable: PropTypes.number,
+  categories: PropTypes.array,
 };
 
 export default NavbarDesktop;

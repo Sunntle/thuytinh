@@ -5,21 +5,35 @@ import useHttp from "../../hooks/useHttp";
 import { Tabs } from "antd";
 import "./index.css";
 import { useSelector } from "react-redux";
-import DeliveryNotSupported from "../DeliveryNotSupported";
 import { Spinner } from "../../components/index.js";
 import PropTypes from 'prop-types';
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      return "User denied the request for Geolocation."
+      
+    case error.POSITION_UNAVAILABLE:
+      return "Location information is unavailable."
+      
+    case error.TIMEOUT:
+      return "The request to get user location timed out."
+      
+    case error.UNKNOWN_ERROR:
+      return "An unknown error occurred."
+      
+  }
+}
 function SelectTable({ isTableExist }) {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
-  const [distanceState, setDistanceState] = useState(0)
   const { sendRequest, isLoading } = useHttp();
   const customerName = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
   
   const handleSelectTable = useCallback(async (id) => {
-    navigate(`/ban-${id}`, { state: { from: 'menu' } });
+    navigate(`/tables-${id}`, { state: { from: 'menu' } });
   }, [navigate]);
 
   useEffect(() => {
@@ -33,19 +47,24 @@ function SelectTable({ isTableExist }) {
       latitude: 10.8524972,
       longitude: 106.6259193,
     };
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const position2 = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      };
-      const distance = getPreciseDistance(position1, position2);
-      setDistanceState(distance);
-      await sendRequest(
-        { method: "get", url: "/table?_status_table=eq_0" },
-        setTables,
-      );
-    });
-  }, [sendRequest]);
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const position2 = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+        const distance = getPreciseDistance(position1, position2);
+        // if(distance > 1000 ) return navigate("/book-table")
+        await sendRequest(
+          { method: "get", url: "/table?_status_table=eq_0" },
+          setTables
+        );
+      }, showError);
+    } else {
+      // Geolocation is not supported by the browser
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, [navigate, sendRequest]);
 
   useEffect(() => {
     if (tables && tables.length > 0) {
@@ -58,11 +77,11 @@ function SelectTable({ isTableExist }) {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-  // if(distanceState > 100 ) return <DeliveryNotSupported/>
+  console.log(isTableExist);
   if (isTableExist == "Không tồn tại bàn này!") return <h2>{isTableExist}</h2>
   if (isLoading) return <Spinner />;
   return (
-    <div className="pb-24">
+    <div className="pb-24 mt-[80px]">
       {idTable && isTableExist == "Bàn đã được sử dụng" &&
         idTable !== customerName.tables?.at(1) &&
         (<p className="-3 text-center">Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!</p>)}

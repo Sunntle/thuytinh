@@ -1,1 +1,1 @@
-export const regexRouter = /^\/ban-\d+\/[a-zA-Z]+$/g;
+export const regexRouter = /^\/tables-\d+\/[a-zA-Z]+$/g;

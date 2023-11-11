@@ -46,7 +46,6 @@ export function calculateDailyRevenue(transactions) {
   let dailyRevenue = 0;
   for (const totalOrder of transactions) {
     const transactionDate = new Date(totalOrder.createdAt);
-    console.log(transactionDate.toDateString());
     if (transactionDate.toDateString() === today.toDateString()) {
       dailyRevenue += totalOrder.total;
     }
@@ -72,11 +71,6 @@ export function calculateWeeklyRevenue(transactions) {
   startDate.setDate(today.getDate() - dayOfWeek);
   const endDate = new Date(today);
   endDate.setDate(today.getDate() - dayOfWeek + 7);
-  console.log("dayOfWeek", dayOfWeek)
-  console.log("startDate", startDate)
-  console.log("endDate", endDate)
-
-
   let weeklyRevenue = 0;
 
   for (const totalOrder of transactions) {

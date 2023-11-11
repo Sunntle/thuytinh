@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import Order from "../pages/Order/Order.jsx"
-import Menu from "../pages/Menu/menu.jsx";
+import Menu from "../pages/Menu/Menu.jsx";
 import Layout from "../layouts/index.jsx";
 import Service from "../pages/Service/Service.jsx";
 import EnterName from "../pages/EnterName/EnterName.jsx";
@@ -15,6 +15,10 @@ import LayoutContainer from "../layouts/LayoutContainer";
 import PaymentLoading from "../pages/PaymentLoading/index.jsx";
 import DeliveryNotSupported from "../pages/DeliveryNotSupported/index.jsx";
 import Home from "../pages/Home/Home";
+import SignIn from "../pages/SignIn/SignIn.jsx";
+import SignUp from "../pages/SignUp/SignUp.jsx";
+import BookingTable from "../pages/BookingTable/index.jsx";
+import SelectTable from "../pages/SelectTable/index.jsx";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +44,14 @@ const router = createBrowserRouter([
       {
         path: "thankyou",
         element: <ThanksPage />,
+      },
+      {
+        path: "book-table",
+        element: <BookingTable />,
+      },
+      {
+        path: "select-table",
+        element: <SelectTable/>,
       },
     ],
   },
@@ -85,6 +97,8 @@ const router = createBrowserRouter([
   { path: "/payment-success", element: <PaymentSuccess /> },
   { path: "/url-return", element: <PaymentSuccess /> },
   { path: "/delivery-not-supported", element: <DeliveryNotSupported /> },
+  { path: "/sign-up", element: <SignUp />},
+  { path: "/sign-in", element: <SignIn />},
   {
     path: "*",
     element: <PageNotFound />,

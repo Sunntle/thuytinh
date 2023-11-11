@@ -9,6 +9,7 @@ import { HiMiniXMark } from "react-icons/hi2";
 import { fetchProductById } from "../../../services/api.js";
 import Image from "../../../components/Image/Image.jsx";
 import { Spinner } from "../../../components/index.js";
+import PropTypes from "prop-types";
 
 const ProductDetail = ({ openDrawer, onClose, id }) => {
   const [productDetail, setProductDetail] = useState({});
@@ -118,5 +119,9 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
     </Drawer>
   );
 };
-
+ProductDetail.propTypes = {
+  openDrawer: PropTypes.bool,
+  onClose: PropTypes.func,
+  id: PropTypes.number,
+};
 export default memo(ProductDetail);
