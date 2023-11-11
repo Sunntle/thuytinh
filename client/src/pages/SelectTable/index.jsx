@@ -1,6 +1,6 @@
 import { getPreciseDistance } from "geolib";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
 import { Tabs } from "antd";
 import "./index.css";
@@ -23,15 +23,16 @@ function showError(error) {
       
   }
 }
-function SelectTable({ isTableExist }) {
+function SelectTable() {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
   const { sendRequest, isLoading } = useHttp();
+  const location = useLocation()
   const customerName = useSelector(state => state.customerName)
-  const idTable = location.pathname.split("/")[1].split("-")[1]
-  
+  const isTableExist = location.state?.isTableExist
+  const idTable = location.state?.prevTable
   const handleSelectTable = useCallback(async (id) => {
     navigate(`/tables-${id}`, { state: { from: 'menu' } });
   }, [navigate]);
@@ -77,14 +78,16 @@ function SelectTable({ isTableExist }) {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-  console.log(isTableExist);
-  if (isTableExist == "Không tồn tại bàn này!") return <h2>{isTableExist}</h2>
+ 
+  if (isTableExist == "Không tồn tại bàn này!") return <h2 className="py-5 mt-[80px] text-center">{isTableExist}</h2>
+
   if (isLoading) return <Spinner />;
+
   return (
     <div className="pb-24 mt-[80px]">
       {idTable && isTableExist == "Bàn đã được sử dụng" &&
         idTable !== customerName.tables?.at(1) &&
-        (<p className="-3 text-center">Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!</p>)}
+        (<p className="py-3 text-center">Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!</p>)}
       <div className="w-full h-12 uppercase font-semibold text-lg text-white bg-primary flex justify-center items-center">
         Chọn bàn
       </div>
