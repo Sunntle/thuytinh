@@ -233,7 +233,6 @@ exports.getBooking = asyncHandler(async (req, res) => {
   if (isEmpty(phone) || isEmpty(email) || isEmpty(name) || isEmpty(tableId)) {
     return res.status(404).json({ success: false, message: "Thiếu data" });
   }
-
   const data = await TableByOrder.findAll({
     include: {
       model: Order, where: {
@@ -250,4 +249,17 @@ exports.getBooking = asyncHandler(async (req, res) => {
     nest: true
   })
   res.status(200).json(data);
+});
+
+
+exports.activeBooking = asyncHandler(async (req, res) => {
+  const { orderId, tableId } = req.body;
+  const findtable = await Tables.findByPk(tableId, { raw: true });
+  if (+findtable.status_table === 0) {
+    await Order.update({ status: 1 }, { where: { id: orderId } });
+    await Tables.prototype.updateStatusTable({ token: null, status_table: 1 }, [tableId]);
+    return res.status(200).json({ success: true, message: "Kích hoạt thành công" });
+  }
+
+  res.status(404).json({ success: false, message: "Bàn đã được hoạt động" });
 });
