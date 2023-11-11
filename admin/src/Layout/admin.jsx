@@ -1,14 +1,14 @@
+import { Button, Layout, Menu, Space, notification } from 'antd';
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Button, Space, notification } from 'antd';
-import HeaderComponent from "../components/header";
-import { Layout, Menu } from "antd";
-const { Content, Sider } = Layout;
-import { NAV_ITEMS } from "../utils/constant";
-import { socket } from "../socket";
+import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import AudioNotify from "../assets/sound/notify.mp3";
+import HeaderComponent from "../components/header";
 import { addNewMessage } from "../redux/notification/notificationSystem";
-
+import { socket } from "../socket";
+import { NAV_ITEMS } from "../utils/constant";
+const { Content, Sider } = Layout;
 const LayoutMain = () => {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
@@ -17,7 +17,8 @@ const LayoutMain = () => {
   const customize = useSelector(state => state.customize)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const audio = useRef([]);
+  const audio = useRef(null);
+
   const openNotification = useCallback((arg) => {
     const key = `open${Date.now()}`;
     const btn = (
@@ -33,26 +34,32 @@ const LayoutMain = () => {
       btn,
       key,
       placement: 'bottomRight',
-      //     onClose: () => {
-      //   console.log(
-      //     'Notification was closed. Either the close button was clicked or duration time elapsed.',
-      //   );
-      // },
     });
   }, [api]);
+
+  const playAudio = useCallback(() => {
+    try {
+      if (!audio.current) {
+        audio.current = new Audio(AudioNotify);
+      }
+      if (audio.current) {
+        audio.current.play();
+      }
+    } catch (error) {
+      console.error('Audio playback failed:', error);
+    }
+  },[]);
+ 
   useEffect(() => {
-    socket.on("new message", (arg) => {
+    socket.on("new message", async(arg) => {
       dispatch(addNewMessage(arg))
       openNotification(arg)
-      if (!audio.current["notify"]) {
-        audio.current["notify"] = new Audio("sound/notify.mp3");
-      }
-      if (audio.current["notify"]) audio.current["notify"].play();
+      playAudio();
     })
     return () => {
       socket.off("new message")
     }
-  }, [openNotification, dispatch])
+  }, [openNotification, dispatch, playAudio])
   const onClick = (e) => {
     navigate(e.key);
   };
@@ -61,6 +68,10 @@ const LayoutMain = () => {
       <div>
         {contextHolder}
       </div>
+      <Helmet>
+        <title>{pathname.includes('employee') ? 'Employee' : 'Dashboard Admin'}</title>
+        <meta name="description" content="Admin" />
+      </Helmet>
       <header className="sticky top-0 w-full z-10 ">
         <HeaderComponent collapsed={collapsed} setCollapsed={setCollapsed} />
       </header>
