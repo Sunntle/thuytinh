@@ -1,0 +1,46 @@
+/* Time Picker*/
+:where(.css-dev-only-do-not-override-byeoj0).ant-picker:hover, :where(.css-dev-only-do-not-override-byeoj0).ant-picker-focused {
+    border-color: #fc8019;
+    box-shadow: 0 0 0 2px #fc801950;
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-btn {
+    @apply bg-primary
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
+    @apply bg-primary/80
+}
+
+:where(.css-dev-only-do-not-override-byeoj0) a:hover {
+    @apply text-primary/80
+}
+
+:where(.css-dev-only-do-not-override-byeoj0) a {
+    @apply text-slate-500
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-picker-dropdown .ant-picker-time-panel-column > li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+    @apply bg-primary/10
+}
+
+/* Select */
+.ant-select-focused:where(.css-dev-only-do-not-override-byeoj0).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+    border-color: #fc8019;
+    box-shadow: 0 0 0 2px #fc801950;
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-select-dropdown .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+    @apply bg-primary/10
+
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector {
+    border-color: #fc8019;
+    box-shadow: 0 0 0 2px #fc801950;
+}
+
+/*Form Item*/
+:where(.css-dev-only-do-not-override-byeoj0).ant-form-item {
+    margin-bottom: 0;
+}
