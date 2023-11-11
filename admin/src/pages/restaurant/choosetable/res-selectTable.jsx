@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Drawer, Tabs } from 'antd';
+import { Button, Tabs } from 'antd';
 import { FiUsers } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { AddTable, RemoveTable } from '../../../redux/table/tableSystem';
-import { getAllTable, getTableId, switchTables } from '../../../services/api';
-import { Modal } from 'antd';
+import { AddTable} from '../../../redux/table/tableSystem';
+import { getAllTable, switchTables } from '../../../services/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import ResOrder from '../order/res-order';
 import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSystem';
@@ -63,7 +62,6 @@ const ResSelectTable = () => {
   }, [dispatch]);
   useEffect(() => {
     socket.on("status table", (arg) => {
-      console.log(arg)
     })
     return () => {
       socket.off("status table")

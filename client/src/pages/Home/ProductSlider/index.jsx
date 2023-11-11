@@ -1,5 +1,5 @@
 // React
-import { lazy, memo, Suspense, useState } from "react";
+import { memo, useState } from "react";
 import * as ReactDOMServer from "react-dom/server";
 import PropTypes from "prop-types";
 // Components
@@ -13,13 +13,9 @@ import "swiper/css/effect-fade";
 // import { SlidePrevButton, SlideNextButton } from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx";
 // External Files
 import "./index.css";
-import PaginationSlider from "./PaginationSlider/index.jsx";
-import { Spinner } from "../../../components/index.js";
+import img from "../../../assets/images/sub-buzz-1009-1646440684-8-removebg-preview.png";
 
-const { SlidePrevButton, SlideNextButton } = lazy(() =>
-  import("../HomeSlide/HomeSlideButton/HomeSlideButton.jsx"),
-);
-const ProductSlider = memo(({ products }) => {
+const ProductSlider = ({ products }) => {
   products = products?.data?.slice(0, 4)?.map((item) => ({
     name: item.name_product,
     image:
@@ -66,10 +62,8 @@ const ProductSlider = memo(({ products }) => {
                 <ProductSlide item={item} currentSlide={currentSlide} />
               </SwiperSlide>
             ))}
-          <Suspense fallback={<Spinner />}>
-            <SlidePrevButton className="hidden lg:block" />
-            <SlideNextButton className="hidden lg:block" />
-          </Suspense>
+          <SlidePrevButton className="hidden lg:block"/>
+          <SlideNextButton className="hidden lg:block"/>
         </Swiper>
       </div>
     </>
