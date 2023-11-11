@@ -47,10 +47,10 @@ const NavbarDesktop = ({ headerRef, checkRoute, categories, idTable, navbarList 
         <img src={logoPath} alt="logo" />
       </div>
       <nav className="lg:flex lg:space-x-6">
-        {navbarList?.map(navItem =>{
+        {navbarList?.map((navItem, index) =>{
           if(navItem.id == 3){
             return <div
-            key={navItem.id}
+            key={index}
             onMouseEnter={handleMenuMouseEnter}
             onMouseLeave={handleMenuMouseLeave}
             className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded navbar`}
@@ -94,7 +94,7 @@ const NavbarDesktop = ({ headerRef, checkRoute, categories, idTable, navbarList 
           </div>
           }
           return <NavLink
-          key={navItem.id}
+          key={index}
           to={navItem.route}
           className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
         >

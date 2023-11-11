@@ -56,7 +56,7 @@ const initialNavItemDesktop = [
 ]
 const handleNavLink = (arrayNavLink, navItemAdded, idTable)=>{
   if(idTable){
-     return [...arrayNavLink, ...navItemAdded].map(el=> !(el.id == 5 || el.id == 7) )?.sort((a, b) => a.id - b.id)
+     return [...arrayNavLink, ...navItemAdded].filter(el=> !(el.id == 5 || el.id == 7) )?.sort((a, b) => a.id - b.id)
   }
   return arrayNavLink
 }
@@ -116,7 +116,7 @@ const Navbar = () => {
         originRouteName: "menu",
       },
     ];
-    handleNavLink(initialNavItemDesktop, navItem, idTable);
+    return handleNavLink(initialNavItemDesktop, navItem, idTable);
   }, [idTable]);
 
   const activeClassname = useMemo(() => {
