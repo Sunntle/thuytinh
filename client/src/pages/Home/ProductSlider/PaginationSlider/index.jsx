@@ -14,9 +14,8 @@ const PaginationSlider = memo(({ className, index, products }) => {
         }}
       >
         <div
-          className={`w-44 h-44 z-40 absolute -top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-full drop-shadow-2xl rotate-${
-            (index + 1) * 45
-          }`}
+          className={`w-44 h-44 z-40 absolute -top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-full drop-shadow-2xl rotate-${(index + 1) * 45
+            }`}
         >
           <Image
             src={img}

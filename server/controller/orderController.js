@@ -280,6 +280,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
       }
     },
     group: [fn('date', col('createdAt'))],
+    order: [["createdAt", "asc"]],
     raw: true
   });
 

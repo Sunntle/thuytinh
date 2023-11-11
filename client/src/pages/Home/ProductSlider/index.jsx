@@ -1,25 +1,24 @@
 // React
-import { lazy, memo, Suspense, useState } from "react";
+import { useState } from "react";
 import * as ReactDOMServer from "react-dom/server";
 import PropTypes from "prop-types";
 // Components
-import ProductSlide from "./ProductSlide/index.jsx";
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-// import { SlidePrevButton, SlideNextButton } from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx";
+import {
+  SlidePrevButton,
+  SlideNextButton,
+} from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx";
 // External Files
 import "./index.css";
 import PaginationSlider from "./PaginationSlider/index.jsx";
-import { Spinner } from "../../../components/index.js";
+import ProductSlide from "./ProductSlide/index.jsx";
 
-const { SlidePrevButton, SlideNextButton } = lazy(() =>
-  import("../HomeSlide/HomeSlideButton/HomeSlideButton.jsx"),
-);
-const ProductSlider = memo(({ products }) => {
+const ProductSlider = ({ products }) => {
   products = products?.data?.slice(0, 4)?.map((item) => ({
     name: item.name_product,
     image:
@@ -47,34 +46,28 @@ const ProductSlider = memo(({ products }) => {
   };
 
   return (
-    <>
-      <div className="w-full h-screen">
-        <Swiper
-          effect="fade"
-          pagination={pagination}
-          modules={[Pagination, EffectFade]}
-          className="mySwiper"
-          draggable={true}
-          onSlideChange={handleSlideChange}
-        >
-          {products &&
-            products.map((item, index) => (
-              <SwiperSlide
-                key={index}
-                className={`relative p-2 grid lg:grid-cols-2 gap-16 lg:gap-36 pt-36 lg:pt-24 h-full overflow-hidden place-content-start text-center place-items-center lg:place-items-stretch`}
-              >
-                <ProductSlide item={item} currentSlide={currentSlide} />
-              </SwiperSlide>
-            ))}
-          <Suspense fallback={<Spinner />}>
-            <SlidePrevButton className="hidden lg:block" />
-            <SlideNextButton className="hidden lg:block" />
-          </Suspense>
-        </Swiper>
-      </div>
-    </>
+    <Swiper
+      effect="fade"
+      pagination={pagination}
+      modules={[Pagination, EffectFade]}
+      className="mySwiper h-[calc(100vh - 48px)] lg:h-screen"
+      draggable={true}
+      onSlideChange={handleSlideChange}
+    >
+      {products &&
+        products.map((item, index) => (
+          <SwiperSlide
+            key={index}
+            className={`relative p-2 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-36 py-12 lg:pt-24 h-full overflow-hidden place-content-start text-center place-items-center lg:place-items-stretch`}
+          >
+            <ProductSlide item={item} currentSlide={currentSlide} />
+          </SwiperSlide>
+        ))}
+      <SlidePrevButton className="hidden lg:block" />
+      <SlideNextButton className="hidden lg:block" />
+    </Swiper>
   );
-});
+};
 ProductSlider.displayName = "ProductSlider";
 ProductSlider.propTypes = {
   products: PropTypes.shape({

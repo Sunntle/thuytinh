@@ -78,7 +78,6 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Phương thức:</span>
               <span className="whitespace-nowrap font-semibold text-main">
-                {/* {orderData?.data?.payment_gateway} */}
                 Cash
               </span>
             </div>
@@ -101,7 +100,6 @@ const PaymentSuccess = () => {
               <span className="whitespace-nowrap">Ngày:</span>
               <span className="whitespace-nowrap font-semibold text-main">
                 {moment(today, "YYYYMMDDHHmmss").format("DD-MM-YYYY")}
-                {/* 28-10-2023 */}
               </span>
             </div>
           </div>
@@ -117,7 +115,6 @@ const PaymentSuccess = () => {
         </div>
         {/*  */}
         <div className="w-full px-4 mt-4 flex justify-end items-start text-sm md:text-base font-semibold">
-          {/* <Button onClick={backHome} className="border-none shadow-none text-main text-base md:text-lg underline p-2">Quay về trang chủ</Button> */}
           <div className="min-w-0 flex flex-col justify-start items-end space-y-3">
             <div className="flex justify-between items-center w-full space-x-5">
               <span className="whitespace-nowrap">Tạm tính:</span>

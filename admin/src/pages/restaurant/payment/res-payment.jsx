@@ -22,7 +22,6 @@ const ResPayment = () => {
     useEffect(() => {
         dispatch(getTotal());
     }, [total])
-    // const totalVAT = total.cartTotalAmount + (total.cartTotalAmount * 0.1);
     //Xu ly chon ban
     const chooseTable = () => {
         navigate("/employee/choosetable")
@@ -52,9 +51,6 @@ const ResPayment = () => {
     };
 
     // Xu ly update order
-    // const order_details = tablelist?.TableByOrders[0]?.order?.order_details;
-    // const totalOld = tablelist?.total;
-
     const sumitUpdateOrder = async (value) => {
         try {
             let res;
@@ -92,7 +88,6 @@ const ResPayment = () => {
                     </div>
                 ) : (
                     <div>
-                        {/* <span className='font-medium text-lg'>Bàn số: </span> */}
                         <span className='font-medium text-main text-lg'>Chưa chọn bàn</span>
                     </div>
                 )}
