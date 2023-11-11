@@ -29,9 +29,7 @@ const App = () => {
       socket && socket.off("user connect")
     }
   }, [user])
-  if (user && user.isLoading) {
-    return <Spinner />;
-  }
+  if (user && user.isLoading) return <Spinner />
   return (
     <ConfigProviderAntd
       theme={{

@@ -41,8 +41,6 @@ const HomeSlide = ({ listProduct }) => {
             </SwiperSlide>
           ))}
       </Swiper>
-      {/*<SlidePrevButton />*/}
-      {/*<SlideNextButton />*/}
     </div>
   );
 };

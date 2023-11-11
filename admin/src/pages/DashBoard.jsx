@@ -3,7 +3,7 @@ import PieChart from "../components/chart/pie-chart";
 import AreaChart from "../components/chart/area-chart";
 import { Col, Row, Badge, Typography, Segmented } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { formatGia, truncateString, formatnumber } from "../utils/format";
 import { Autoplay } from "swiper/modules";
 import { getAllProduct, getDataDashboard } from "../services/api";
@@ -12,12 +12,12 @@ import { Link } from "react-router-dom";
 import LineChart from "../components/chart/line-chart";
 import moment from "moment";
 import { weekArrText } from "../utils/constant";
-import {Helmet} from "react-helmet";
+
 const { Title } = Typography;
 import CountUp from 'react-countup';
 const DashBoard = () => {
   const [data, setData] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const currentWeek = moment().week();
   const [timeChart, setTimeChart] = useState("MONTH");
   const [week, setWeek] = useState(currentWeek);
@@ -45,6 +45,7 @@ const DashBoard = () => {
   useEffect(() => {
     fetchData()
   }, [timeChart, fetchData])
+  console.log(loading);
   if (loading) return <Spinner />
 
   const dataOpWeek = weekArrText.map((v, i) => ({ label: v, value: currentWeek - i })).reverse();
@@ -54,10 +55,6 @@ const DashBoard = () => {
   }
   return (
     <div className="w-full my-7 px-5">
-      <Helmet>
-        <title>Dashboard Admin - Thuy Tinh</title>
-        <meta name="description" content="Admin" />
-      </Helmet>
       <Row gutter={[32, 16]}>
         <Col xs={24} lg={16}>
           <div className="rounded-lg border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
