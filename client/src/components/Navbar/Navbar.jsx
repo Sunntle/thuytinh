@@ -26,18 +26,18 @@ const initialNavItem = [
   },
   {
     id: 5,
-    route: `/book-table`,
+    route: `/reservation`,
     icon: <MdOutlineTableBar className="w-6 h-6" />,
     routeName: "Đặt bàn",
-    originRouteName: "book-table",
+    originRouteName: "reservation",
   },
-  {
-    id: 10,
-    route: `/account`,
-    icon: <FiUser className="w-6 h-6" />,
-    routeName: "Tài khoản",
-    originRouteName: "account",
-  },
+  // {
+  //   id: 10,
+  //   route: `/account`,
+  //   icon: <FiUser className="w-6 h-6" />,
+  //   routeName: "Tài khoản",
+  //   originRouteName: "account",
+  // },
 ];
 const initialNavItemDesktop = [
   ...initialNavItem,
@@ -129,7 +129,7 @@ const Navbar = () => {
       checkActiveClassName = navbarRoute.find(
         (item) =>
           location.pathname.includes(item.originRouteName) ||
-          location.state?.from.includes(item.originRouteName)
+          location.state?.from?.includes(item.originRouteName)
       );
       return checkActiveClassName;
     }
