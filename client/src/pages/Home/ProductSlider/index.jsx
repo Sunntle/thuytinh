@@ -1,5 +1,5 @@
 // React
-import { memo, useState } from "react";
+import {  useState } from "react";
 import * as ReactDOMServer from "react-dom/server";
 import PropTypes from "prop-types";
 // Components
@@ -10,16 +10,12 @@ import { EffectFade, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-// import { SlidePrevButton, SlideNextButton } from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx";
+import { SlidePrevButton, SlideNextButton } from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx";
 // External Files
 import "./index.css";
 import PaginationSlider from "./PaginationSlider/index.jsx";
-import {
-  SlideNextButton,
-  SlidePrevButton,
-} from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx";
 
-const ProductSlider = memo(({ products }) => {
+const ProductSlider = ({ products }) => {
   products = products?.data?.slice(0, 4)?.map((item) => ({
     name: item.name_product,
     image:
@@ -66,13 +62,13 @@ const ProductSlider = memo(({ products }) => {
                 <ProductSlide item={item} currentSlide={currentSlide} />
               </SwiperSlide>
             ))}
-          <SlidePrevButton className="hidden lg:block" />
-          <SlideNextButton className="hidden lg:block" />
+          <SlidePrevButton className="hidden lg:block"/>
+          <SlideNextButton className="hidden lg:block"/>
         </Swiper>
       </div>
     </>
   );
-});
+};
 ProductSlider.displayName = "ProductSlider";
 ProductSlider.propTypes = {
   products: PropTypes.shape({
