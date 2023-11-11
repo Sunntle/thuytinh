@@ -20,7 +20,7 @@ const SignIn = () => {
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1 }}
-        className="h-full grid lg:grid-cols-3 border rounded-2xl shadow-md bg-white"
+        className="h-full grid lg:grid-cols-3 border rounded-2xl shadow-md bg-white overflow-hidden"
       >
         <div className="lg:col-span-1 relative flex flex-col items-center justify-between px-2 pt-20 pb-10 text-slate-500 ">
           <div className="absolute top-4 right-0 min-w-fit h-10 px-2 py-1 rounded-l-2xl bg-primary flex justify-center items-center text-white text-sm">

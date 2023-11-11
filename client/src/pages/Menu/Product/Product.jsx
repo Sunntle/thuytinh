@@ -96,7 +96,7 @@ const Product = (props) => {
       {contextHolder}
       <div className="w-full h-32 lg:h-40" onClick={showProductDetail}>
         <Image
-          loading={!imageUrl && true}
+          isLoading={!imageUrl && true}
           src={imageUrl}
           className="rounded-t-lg"
           alt={name_product}
