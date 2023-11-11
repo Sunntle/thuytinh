@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import LoginPage from "../pages/LoginPage";
-import Order from "../pages/Order/Order.jsx"
+import Order from "../pages/Order/Order.jsx";
 import Menu from "../pages/Menu/Menu.jsx";
 import Layout from "../layouts/index.jsx";
 import Service from "../pages/Service/Service.jsx";
@@ -19,6 +18,7 @@ import SignIn from "../pages/SignIn/SignIn.jsx";
 import SignUp from "../pages/SignUp/SignUp.jsx";
 import BookingTable from "../pages/BookingTable/index.jsx";
 import SelectTable from "../pages/SelectTable/index.jsx";
+import Booked from "../pages/Booked/index.jsx";
 
 const router = createBrowserRouter([
   {
@@ -46,12 +46,13 @@ const router = createBrowserRouter([
         element: <ThanksPage />,
       },
       {
-        path: "book-table",
+        path: "booking-table",
         element: <BookingTable />,
       },
+      { path: "booked", element: <Booked /> },
       {
         path: "select-table",
-        element: <SelectTable/>,
+        element: <SelectTable />,
       },
     ],
   },
@@ -71,17 +72,15 @@ const router = createBrowserRouter([
       },
       {
         path: "menu",
-        element: <Navigate to=".." state={{ from: 'menu' }} replace/>,
+        element: <Navigate to=".." state={{ from: "menu" }} replace />,
       },
-      { path: "home", 
-      element: <Navigate to="/home" state={{ from: 'home' }} replace/> },
+      {
+        path: "home",
+        element: <Navigate to="/home" state={{ from: "home" }} replace />,
+      },
       {
         path: "service",
         element: <Service />,
-      },
-      {
-        path: "login",
-        element: <LoginPage />,
       },
       {
         path: "order",
@@ -90,15 +89,15 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <AboutUs />,
-      }
+      },
     ],
   },
   { path: "/payment-loading", element: <PaymentLoading /> },
   { path: "/payment-success", element: <PaymentSuccess /> },
   { path: "/url-return", element: <PaymentSuccess /> },
   { path: "/delivery-not-supported", element: <DeliveryNotSupported /> },
-  { path: "/sign-up", element: <SignUp />},
-  { path: "/sign-in", element: <SignIn />},
+  { path: "/sign-up", element: <SignUp /> },
+  { path: "/sign-in", element: <SignIn /> },
   {
     path: "*",
     element: <PageNotFound />,
