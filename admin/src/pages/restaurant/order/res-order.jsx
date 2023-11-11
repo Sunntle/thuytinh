@@ -4,7 +4,7 @@ import { Button, Modal, Form, Radio, Drawer, Collapse, notification } from "antd
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCartUpdate, RemoveAllCart } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
-import { createPayment, getOrderByID, updateCompleteOrder, updatePayment } from '../../../services/api'
+import { createPayment, updateCompleteOrder, updatePayment } from '../../../services/api'
 import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSystem'
 import { formatGia } from '../../../utils/format'
 import moment from 'moment'
@@ -123,7 +123,6 @@ const ResOrder = ({ handleCancel, open }) => {
   const [switchTable, setSwitchTable] = useState(false)
   const [form] = Form.useForm();
   const tablelist = useSelector((state) => state.tablelist?.[0]);
-  console.log(tablelist)
   const tablebyorders = tablelist?.TableByOrders?.[0]
   const order = tablebyorders?.order;
   const order_details = order?.order_details;
@@ -133,7 +132,6 @@ const ResOrder = ({ handleCancel, open }) => {
   const handleUpdate = (index) => {
     dispatch(RemoveAllCart())
     index.TableByOrders[0].order.order_details.forEach(item => {
-      console.log(item.quantity)
       let inDb = item.quantity;
       dispatch(AddCartUpdate({ quantity: item.quantity, ...item.Product,inDb }))
     });
@@ -205,7 +203,6 @@ const ResOrder = ({ handleCancel, open }) => {
           {tablelist?.id && <ButtonComponents className='text-white bg-secondaryColor border-none'
             content="Hoàn tất đơn hàng" onClick={completeOrder} />}
         </div>}
-        // title={`Bàn số: ${tablelist ? tablelist.id : 0 }`} 
         placement="right"
         footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate}
           handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk}
@@ -219,12 +216,8 @@ const ResOrder = ({ handleCancel, open }) => {
         <div className="flex flex-col rounded-lg">
           {order_details && order_details.map((item, index) =>
             <div key={index}>
-              {/* <div className='product-remove'>
-                            <button className='float-right text-red-500' onClick={() => dispatch(RemoveCart(item))}><CloseOutlined /></button>
-                        </div> */}
               <div className='flex item-center my-3'>
                 <div className='flex-none h-16 w-15 mr-4 hover:bg-hoverColor'>
-                  {/* <img className='border-solid border-2 border-main rounded-lg h-full w-full object-contain' src={item.product.ImageProducts.url} /> */}
                 </div>
                 <div className='flex-grow'>
                   <div className='flex items-end justify-between'>
@@ -232,12 +225,8 @@ const ResOrder = ({ handleCancel, open }) => {
                     <span className='text-main mb-3'>{formatGia(item.Product.price)}</span>
                   </div>
                   <div className='flex items-center justify-between'>
-                    <span className='font-medium text-slate-500 text-lg text-sm'>Số lượng:</span>
-                    {/* <div className="flex flex-end justify-between items-center"> */}
-                    {/* <button className='border-solid border text-main' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="w-3 h-4 sm:w-4 sm:h-4 " /></button> */}
-                    <span className=" font-medium text-slate-500 text-lg text-sm"> x{item.quantity}</span>
-                    {/* <button className='border-solid border text-main' onClick={() => dispatch(AddCart(item))}><HiPlus className="w-3 h-3 sm:w-4 sm:h-4  " /></button> */}
-                    {/* </div> */}
+                    <span className='font-medium text-slate-500 text-sm'>Số lượng:</span>
+                    <span className=" font-medium text-slate-500 text-sm"> x{item.quantity}</span>
                   </div>
                 </div>
               </div>

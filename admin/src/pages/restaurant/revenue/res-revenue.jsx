@@ -21,6 +21,7 @@ import {
   formatGia,
   formatNgay,
 } from "../../../utils/format";
+import CountUp from 'react-countup';
 
 const ResRevenue = () => {
   const [revenue, setRevenue] = useState({ daily: 0, weekly: 0, monthly: 0 });
@@ -34,7 +35,6 @@ const ResRevenue = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      // const res = await getDataDashboard(timeChart);
       const [{ data }, res1, dataAdmin, res] = await Promise.all([getAllOrder(), getDataDashboard({ weekcurrent: moment().week(), type: timeChart }), getAllUser({ _like: "role_R1_not" }), getAllMaterial()])
       const daily = calculateDailyRevenue(data);
       const weekly = calculateWeeklyRevenue(data);
@@ -91,17 +91,14 @@ const ResRevenue = () => {
       {
         title: 'Khách hàng',
         dataIndex: 'name',
-        // ...getColumnSearchProps('name'),
       },
       {
         title: 'Số điện thoại',
         dataIndex: 'phone',
-        // ...getColumnSearchProps('phone'),
       },
       {
         title: 'Người phụ trách',
         dataIndex: 'employee',
-        // ...getColumnSearchProps('employee'),
       },
       {
         title: 'Số lượng',
@@ -153,6 +150,7 @@ const ResRevenue = () => {
       socket.off("update-admin-online");
     };
   }, [admin]);
+  console.log(data)
   return (
     <div className="w-full p-10">
       <div className="pt-5">
@@ -164,7 +162,16 @@ const ResRevenue = () => {
                   Tổng tháng
                 </span>
                 <p className="text-orange-400 text-2xl font-medium text-center">
-                  {formatGia(revenue.monthly)}
+                {data.montdPreAndCur?.[0]?.total ? (
+                  <CountUp
+                    end={data.montdPreAndCur?.[0]?.total}
+                    separator=","
+                  />
+                ) : (
+                  0
+                )}
+                {' '}
+                đ
                 </p>
               </div>
               <div className="w-1/3  p-4 h-full flex flex-col justify-center items gap-1">
@@ -172,7 +179,10 @@ const ResRevenue = () => {
                   Tổng tiền tuần
                 </span>
                 <p className="text-2xl font-medium text-green-500 text-center">
-                  {formatGia(revenue.weekly)}
+                  <CountUp
+                  end={revenue.weekly || 0}
+                  separator=","
+                  />{' '}đ
                 </p>
               </div>
               <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1">
@@ -180,7 +190,10 @@ const ResRevenue = () => {
                   Tổng tiền ngày
                 </span>
                 <p className="text-2xl font-medium text-red-500 text-center">
-                  {formatGia(revenue.daily)}
+                  <CountUp
+                    end={revenue.daily}
+                    separator=","
+                  />{' '}đ
                 </p>
               </div>
             </div>
