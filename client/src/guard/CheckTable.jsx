@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import SelectTable from "../pages/SelectTable/index.jsx";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner/Spinner.jsx";
@@ -36,7 +36,7 @@ function CheckTable(props) {
   }, [idTable, tokenTable])
   if (loading) return <Spinner />
   // eslint-disable-next-line react/prop-types
-  return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? (props.children) : (<SelectTable isTableExist={isTableExist} />)
+  return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? (props.children) : (<Navigate to={"/select-table"} state={{isTableExist, ...(idTable ? {prevTable: idTable}: {}) }} replace/>)
 }
 
 export default CheckTable
