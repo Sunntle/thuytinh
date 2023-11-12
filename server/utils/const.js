@@ -115,8 +115,11 @@ const bookingValidate = (params) => {
 }
 
 
-const templateSendUser = ({ createdAt, name, tableId }) => {
-    let html = ` <div> ${name} bạn vừa đặt trước bàn số ${tableId} thời gian : ${moment(createdAt).format("DD/MM/YYYY HH:mm")} </div>`;
+const templateSendUser = ({ createdAt, name, tableId, token }) => {
+    let html = `<h1>Nhà hàng hải sản thủy tinh xin chào quý kháck</h1>
+     <h3> ${name} bạn vừa đặt trước bàn số ${tableId} thời gian : ${moment(createdAt).format("DD/MM/YYYY HH:mm")} </h3>
+    <p>Bạn có thể hủy đơn hàng khi click vào đây : <a href='${process.env.CLIENT_URL}/cancel-booking/${token}'>Cancel</a></p>
+     `;
     return html
 }
 
@@ -124,23 +127,26 @@ const templateSendUser = ({ createdAt, name, tableId }) => {
 
 
 const checkBooking = async (time, tableId, dining_option = "eat-in", params = "subtract", limit = 135) => {
-    const isEatIn = await TableByOrder.findAll({
-        include: {
-            model: Order, where: {
-                status: {
-                    [Op.lte]: 4,
-                    [Op.ne]: 0
+    let query = {}
+    if (dining_option === "eat-in") {
+        query = {
+            include: {
+                model: Order, where: {
+                    status: {
+                        [Op.lte]: 4,
+                        [Op.ne]: 0
+                    }
                 }
-            }
-        },
-        where: {
-            dining_option: dining_option,
-            status: "confirmed",
-            createdAt: { [Op[dining_option === "eat-in" ? "gte" : "lte"]]: moment(time)[params](limit, 'minutes') },
-            tableId: { [Op.in]: tableId }
+            },
         }
-    })
-    console.log(isEatIn)
+    }
+    query.where = {
+        dining_option: dining_option,
+        status: { [Op[dining_option === "eat-in" ? 'ne' : "eq"]]: "confirmed" },
+        createdAt: { [Op[dining_option === "eat-in" ? "gte" : "lte"]]: moment(time)[params](limit, 'minutes') },
+        tableId: Array.isArray(tableId) ? { [Op.in]: tableId } : tableId
+    }
+    const isEatIn = await TableByOrder.findAll(query);
     return isEatIn.length > 0;
 }
 module.exports = { isEmpty, checkBooking, templateSendUser, bookingValidate, currentYear, tinhWeek, bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };

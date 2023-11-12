@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { parseQueryString } from "../../utils/format.js";
-import {Form} from "antd";
+import moment from "moment";
 
 const Booked = () => {
   const location = useLocation();
   const parsedQueryParams = parseQueryString(location.search);
-  const [timeLeft, setTimeLeft] = useState(5 * 60); // Đếm ngược từ 5 phút (5 * 60 giây)
+  const [timeLeft, setTimeLeft] = useState(5 * 60);
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -49,55 +49,55 @@ const Booked = () => {
           </div>
           <div className="flex justify-between items-center border-b pb-1">
             <span>Số người: </span>
-            <span>{parsedQueryParams?.adult}</span>
+            <span>{parsedQueryParams?.party_size}</span>
           </div>
           <div className="flex justify-between items-center border-b pb-1">
             <span>Thời gian: </span>
-            <span>{parsedQueryParams?.date}, {parsedQueryParams?.time}</span>
+            <span>{moment(parsedQueryParams.createdAt, "DD/MM/YYYY HH:mm").format("DD/MM/YYYY HH:mm ")}</span>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 mt-12">
           <div className="w-full flex flex-col">
             <label htmlFor="name">Họ tên</label>
             <input
-                id="name"
-                name="name"
-                type="text"
-                className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
+              id="name"
+              name="name"
+              type="text"
+              className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
             />
           </div>
           <div className="w-full flex flex-col">
             <label htmlFor="email">Email</label>
             <input
-                id="email"
-                name="email"
-                type="email"
-                className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
+              id="email"
+              name="email"
+              type="email"
+              className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
             />
           </div>
           <div className="w-full flex flex-col">
             <label htmlFor="phone">Số điện thoại</label>
             <input
-                id="phone"
-                name="phone"
-                type="text"
-                className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
+              id="phone"
+              name="phone"
+              type="text"
+              className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
             />
           </div>
           <div className="w-full flex flex-col">
             <label htmlFor="phone">Đề xuất với nhà hàng (không bắt buộc )</label>
             <textarea
-                rows={5}
-                id="phone"
-                name="phone"
-                className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
+              rows={5}
+              id="phone"
+              name="note"
+              className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
             />
           </div>
           <div className="w-full h-full tracking-wide">
             <button
-                type={"submit"}
-                // onClick={fetchTable}
-                className="flex justify-center items-center whitespace-nowrap w-full h-full tracking-wide bg-primary rounded py-2 md:text-sm text-white font-medium"
+              type={"submit"}
+              // onClick={fetchTable}
+              className="flex justify-center items-center whitespace-nowrap w-full h-full tracking-wide bg-primary rounded py-2 md:text-sm text-white font-medium"
             >
               Đặt bàn
             </button>

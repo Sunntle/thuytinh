@@ -26,6 +26,9 @@ const TableByOrder = db.sequelize.define(
         },
         dining_time: {
             type: DataTypes.DATE()
+        },
+        note: {
+            type: DataTypes.STRING()
         }
     },
     { timestamps: true }

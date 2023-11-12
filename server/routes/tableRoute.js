@@ -1,18 +1,25 @@
 const { getAll, create, update, del, getId, updateStatusAndToken, checkCurrentTable,
-    switchTables, bookingTables, checkTableBooking, getBooking, activeBooking } = require('../controller/tableController');
+    switchTables, bookingTables, checkTableBooking, deleteBooking,
+    getBooking, activeBooking, updateBooking, getListBooking } = require('../controller/tableController');
 const express = require("express");
 const router = express.Router();
 router.get("/", getAll);
+router.get("/get-booking", getListBooking);
 router.get("/current-table", checkCurrentTable);
 router.get("/check-booking", checkTableBooking);
-router.get("/:id", getId);
+router.get("/booking", getBooking);
+
 router.post("/", create);
 router.put("/", update);
 router.put("/token", updateStatusAndToken);
+router.get("/:id", getId);
+router.put("/booking", updateBooking);
+
+router.delete("/booking/:id", deleteBooking);
 router.delete("/:id", del);
 router.post("/switch-tables", switchTables);
 
-router.get("/booking", getBooking);
+
 router.post("/booking", bookingTables);
 router.post("/active-booking", activeBooking);
 module.exports = router;

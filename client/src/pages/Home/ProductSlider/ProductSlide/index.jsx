@@ -11,13 +11,13 @@ const ProductSlide = React.memo(({ item, currentSlide }) => {
         Giao hàng tận nơi: 1900 1080
       </span>
       <div className="absolute inset-0 -z-40 overflow-hidden">
-        <Image
+        {/* <Image
           isLoading={!item || false}
           src={
             "https://res.cloudinary.com/dw6jih4yt/image/upload/v1699337766/NhaHangThuyTinh/fpp0tssuolblxhbygpjx.webp"
           }
           alt={"anh"}
-        />
+        /> */}
       </div>
       <div className="w-full h-full lg:h-auto flex justify-center lg:justify-end items-center overflow-hidden">
         <motion.div
