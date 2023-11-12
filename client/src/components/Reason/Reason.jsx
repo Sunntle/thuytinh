@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 const AboutUs = () => {
   return (
-    <div className="h-screen bg-white flex justify-center items-center">
+    <div className="min-h-screen bg-white flex justify-center items-center">
       <div className="lg:px-16 my-12 px-6 lg:pt-12">
         <h2 className="text-4xl font-bold text-primary pb-4">
           Tại sao bạn chọn chúng tôi
