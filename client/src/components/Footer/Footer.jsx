@@ -1,4 +1,5 @@
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import logo3 from "../../assets/images/logo3.svg";
 
 const Footer = () => {
   return (
@@ -6,7 +7,9 @@ const Footer = () => {
       <div className="max-w-screen-3xl">
         <div className="grid grid-cols-12 content-stretch">
           <div className="col-span-5 h-full flex flex-col justify-between space-y-40">
-            <span className="text-2xl font-semibold">Logo Here</span>
+            <div className="w-32 h-32">
+              <img src={logo3} alt="logo" />
+            </div>
             <span className="text-[#BEB7B5]">
               © 2023 Thuy Tinh. All rights reserved
             </span>

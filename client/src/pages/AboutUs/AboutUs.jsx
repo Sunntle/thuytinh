@@ -27,7 +27,7 @@ const AboutUs = () => {
   }, [sendRequest]);
 
   return (
-    <div className="pb-24">
+    <div className="py-24">
       <ScrollToTop />
       <section className="relative mt-[-20px] h-96 w-full bg-cover bg-center bg-gray-300 bg-[url('https://i.pinimg.com/564x/c2/7a/c8/c27ac8fc11dcec58f09e8a6c72306b12.jpg')]">
         <div className="flex flex-col items-center justify-center absolute inset-0 bg-black bg-opacity-40">
