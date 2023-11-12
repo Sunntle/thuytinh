@@ -1,5 +1,5 @@
 import { useCallback, useState, useLayoutEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import {Link, NavLink, useLocation} from "react-router-dom";
 import { FiUser } from "react-icons/fi";
 import OrderListDesktop from "./OrderListDesktop/OrderListDesktop.jsx";
 import { useSelector } from "react-redux";
@@ -21,7 +21,8 @@ const NavbarDesktop = ({ headerRef, checkRoute, categories, idTable, navbarList 
   const handleMenuMouseLeave = useCallback(() => {
     setIsMenuHovered(false);
   }, []);
-  const [logoPath, setLogoPath] = useState(logo);
+  const location = useLocation()
+  const [logoPath, setLogoPath] = useState(location.pathname !== '/home' ? logo3 : logo);
 
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -198,10 +199,10 @@ const NavbarDesktop = ({ headerRef, checkRoute, categories, idTable, navbarList 
 NavbarDesktop.propTypes = {
   headerRef: PropTypes.object,
   checkRoute: PropTypes.bool,
-  idTable: PropTypes.number,
+  idTable: PropTypes.string,
   categories: PropTypes.array,
   navbarList: PropTypes.array
-  
+
 };
 
 export default NavbarDesktop;
