@@ -1,6 +1,6 @@
 .swiper {
     width: 100%;
-    height: auto;
+    height: 100%;
     position: relative;
 }
 
@@ -9,7 +9,7 @@
 }
 
 .swiper-slide img {
-    @apply w-full h-full block object-cover;
+    @apply w-full h-full object-cover;
 }
 
 .swiper-pagination-bullet {
