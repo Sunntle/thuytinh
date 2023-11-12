@@ -2,7 +2,7 @@ import { AiOutlineShop } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { NavLink, useLocation } from "react-router-dom";
-import {  useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { MdOutlineRoomService, MdOutlineTableBar } from "react-icons/md";
 import { useSelector } from "react-redux";
@@ -53,13 +53,15 @@ const initialNavItemDesktop = [
     routeName: "Về chúng tôi",
     originRouteName: "about",
   },
-]
-const handleNavLink = (arrayNavLink, navItemAdded, idTable)=>{
-  if(idTable){
-     return [...arrayNavLink, ...navItemAdded].filter(el=> !(el.id == 5 || el.id == 7) )?.sort((a, b) => a.id - b.id)
+];
+const handleNavLink = (arrayNavLink, navItemAdded, idTable) => {
+  if (idTable) {
+    return [...arrayNavLink, ...navItemAdded]
+      .filter((el) => !(el.id == 5 || el.id == 7))
+      ?.sort((a, b) => a.id - b.id);
   }
-  return arrayNavLink
-}
+  return arrayNavLink;
+};
 const Navbar = () => {
   const location = useLocation();
   const headerRef = useRef();
@@ -97,7 +99,7 @@ const Navbar = () => {
       },
     ];
     return handleNavLink(initialNavItem, navItem, idTable);
-  }, [ idTable]);
+  }, [idTable]);
 
   const navbarRouteDesktop = useMemo(() => {
     const navItem = [

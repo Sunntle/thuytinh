@@ -1,5 +1,11 @@
-import { useCallback, useState, useLayoutEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import {
+  useCallback,
+  useState,
+  useLayoutEffect,
+  useMemo,
+  useEffect,
+} from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { FiUser } from "react-icons/fi";
 import OrderListDesktop from "./OrderListDesktop/OrderListDesktop.jsx";
 import { useSelector } from "react-redux";
@@ -10,7 +16,13 @@ import "./index.css";
 import logo from "../../../assets/images/logo.svg";
 import logo3 from "../../../assets/images/logo3.svg";
 
-const NavbarDesktop = ({ headerRef, checkRoute, categories, idTable, navbarList }) => {
+const NavbarDesktop = ({
+  headerRef,
+  checkRoute,
+  categories,
+  idTable,
+  navbarList,
+}) => {
   const { order: orders } = useSelector((state) => state.order);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
   const [isOrderDesktop, setIsOrderDesktop] = useState(false);
@@ -21,20 +33,30 @@ const NavbarDesktop = ({ headerRef, checkRoute, categories, idTable, navbarList 
   const handleMenuMouseLeave = useCallback(() => {
     setIsMenuHovered(false);
   }, []);
+  const location = useLocation();
   const [logoPath, setLogoPath] = useState(logo);
+  const checkHome = useMemo(() => {
+    return location.pathname == "/" || location.pathname == "/home";
+  }, [location.pathname]);
+
+  useEffect(() => {
+    setLogoPath(checkHome ? logo : logo3);
+  }, [checkHome]);
 
   useLayoutEffect(() => {
     const handleScroll = () => {
-      const { scrollY } = window;
-      if (scrollY > 500) {
-        setLogoPath(logo3);
-      } else {
-        setLogoPath(logo);
+      if (checkHome) {
+        const { scrollY } = window;
+        if (scrollY > 500) {
+          setLogoPath(logo3);
+        } else {
+          setLogoPath(logo);
+        }
       }
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [checkHome]);
 
   return (
     <div
@@ -47,59 +69,60 @@ const NavbarDesktop = ({ headerRef, checkRoute, categories, idTable, navbarList 
         <img src={logoPath} alt="logo" />
       </div>
       <nav className="lg:flex lg:space-x-6">
-        {navbarList?.map((navItem, index) =>{
-          if(navItem.id == 3){
-            return <div
-            key={index}
-            onMouseEnter={handleMenuMouseEnter}
-            onMouseLeave={handleMenuMouseLeave}
-            className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded navbar`}
-          >
+        {navbarList?.map((navItem, index) => {
+          if (navItem.id == 3) {
+            return (
+              <div
+                key={index}
+                onMouseEnter={handleMenuMouseEnter}
+                onMouseLeave={handleMenuMouseLeave}
+                className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded navbar`}
+              >
+                <NavLink to={navItem.route} className="font-normal text-base">
+                  {navItem.routeName}
+                </NavLink>
+                {categories?.length > 0 && (
+                  <HiOutlineChevronRight
+                    size={20}
+                    className={`transition-transform ml-1 duration-200 ${
+                      isMenuHovered ? "rotate-90" : "rotate-0"
+                    }`}
+                  />
+                )}
+                <AnimatePresence>
+                  {isMenuHovered && categories?.length > 0 && (
+                    <motion.ul
+                      initial={{ opacity: 0, x: "-10px" }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: "-100px" }}
+                      transition={{ duration: 0.1, ease: "linear" }}
+                      className="z-40 absolute w-40 top-12 left-0 space-y-2 bg-white border rounded border-gray-200 py-2 px-3 transition-all duration-300"
+                    >
+                      {categories?.map((category, index) => (
+                        <li key={index}>
+                          <Link
+                            to={`?category=${category.id}`}
+                            className="relative block w-full hover:text-primary hover:translate-x-4 drop-shadow text-slate-800 whitespace-nowrap transition-all duration-200"
+                          >
+                            Món {category.name_category}
+                          </Link>
+                        </li>
+                      ))}
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          }
+          return (
             <NavLink
+              key={index}
               to={navItem.route}
-              className="font-normal text-base"
+              className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
             >
               {navItem.routeName}
             </NavLink>
-            {categories?.length > 0 && (
-              <HiOutlineChevronRight
-                size={20}
-                className={`transition-transform ml-1 duration-200 ${
-                  isMenuHovered ? "rotate-90" : "rotate-0"
-                }`}
-              />
-            )}
-            <AnimatePresence>
-              {isMenuHovered && categories?.length > 0 && (
-                <motion.ul
-                  initial={{ opacity: 0, x: "-10px" }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: "-100px" }}
-                  transition={{ duration: 0.1, ease: "linear" }}
-                  className="z-40 absolute w-40 top-12 left-0 space-y-2 bg-white border rounded border-gray-200 py-2 px-3 transition-all duration-300"
-                >
-                  {categories?.map((category, index) => (
-                    <li key={index}>
-                      <Link
-                        to={`?category=${category.id}`}
-                        className="relative block w-full hover:text-primary hover:translate-x-4 drop-shadow text-slate-800 whitespace-nowrap transition-all duration-200"
-                      >
-                        Món {category.name_category}
-                      </Link>
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-          }
-          return <NavLink
-          key={index}
-          to={navItem.route}
-          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
-        >
-          {navItem.routeName}
-        </NavLink>
+          );
         })}
         {/* <NavLink
           to="/home"
@@ -186,10 +209,12 @@ const NavbarDesktop = ({ headerRef, checkRoute, categories, idTable, navbarList 
             {orders.length || 0}
           </div>
         </div>
-        {idTable && <OrderListDesktop
-          isOrderDesktop={isOrderDesktop}
-          setIsOrderDesktop={setIsOrderDesktop}
-        />}
+        {idTable && (
+          <OrderListDesktop
+            isOrderDesktop={isOrderDesktop}
+            setIsOrderDesktop={setIsOrderDesktop}
+          />
+        )}
       </div>
     </div>
   );
@@ -198,10 +223,9 @@ const NavbarDesktop = ({ headerRef, checkRoute, categories, idTable, navbarList 
 NavbarDesktop.propTypes = {
   headerRef: PropTypes.object,
   checkRoute: PropTypes.bool,
-  idTable: PropTypes.number,
+  idTable: PropTypes.string,
   categories: PropTypes.array,
-  navbarList: PropTypes.array
-  
+  navbarList: PropTypes.array,
 };
 
 export default NavbarDesktop;
