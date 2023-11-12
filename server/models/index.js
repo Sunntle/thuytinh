@@ -104,8 +104,8 @@ async function synchronizeModels() {
   try {
     await sequelize.sync();
     User.findOrCreate({
-      where: {email: "admin@gmail.com"},
-      defaults:{
+      where: { email: "admin@gmail.com" },
+      defaults: {
         name: "Admin",
         password: "12345",
         email: "admin@gmail.com",
@@ -119,6 +119,8 @@ async function synchronizeModels() {
     console.error("Error synchronizing models:", error);
   }
 }
+
+synchronizeModels();
 module.exports = {
   Warehouse,
   TableByOrder,

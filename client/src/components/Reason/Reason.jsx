@@ -16,17 +16,17 @@ const AboutUs = () => {
           cho khách hàng thân yêu của chúng tôi.
         </p>
         <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1.5, when: "afterChildren" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 1.5, when: "afterChildren" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-8"
         >
           <motion.div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
             <div className="overflow-hidden rounded-t-xl h-[220px]">
               <img
-                  className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
-                  src="https://i.pinimg.com/564x/c2/7a/c8/c27ac8fc11dcec58f09e8a6c72306b12.jpg"
-                  alt=""
+                className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
+                src="https://i.pinimg.com/564x/c2/7a/c8/c27ac8fc11dcec58f09e8a6c72306b12.jpg"
+                alt=""
               />
             </div>
             <div className="p-6 flex flex-col">
@@ -40,8 +40,8 @@ const AboutUs = () => {
               </div>
               <p className="py-4 text-sm text-gray-500">
                 {truncateString(
-                    "Nếu bạn muốn có sự chuẩn bị tốt nhất cho một cuộc hẹn, bạn không thể thiếu sự chuẩn bị trước cho việc đặt bàn tại nhà hàng của chúng tôi.",
-                    130,
+                  "Nếu bạn muốn có sự chuẩn bị tốt nhất cho một cuộc hẹn, bạn không thể thiếu sự chuẩn bị trước cho việc đặt bàn tại nhà hàng của chúng tôi.",
+                  130,
                 )}
               </p>
               <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
@@ -52,9 +52,9 @@ const AboutUs = () => {
           <motion.div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
             <div className="overflow-hidden rounded-t-xl h-[220px]">
               <img
-                  className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
-                  src="https://i.pinimg.com/564x/05/c6/c8/05c6c85f82792c133c3b11f90981a608.jpg"
-                  alt=""
+                className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
+                src="https://i.pinimg.com/564x/05/c6/c8/05c6c85f82792c133c3b11f90981a608.jpg"
+                alt=""
               />
             </div>
             <div className="p-6 flex flex-col">
@@ -68,8 +68,8 @@ const AboutUs = () => {
               </div>
               <p className="py-4 text-sm text-gray-500">
                 {truncateString(
-                    "Bạn không cần phải tốn công đến nhà hàng để đặt món, nhà hàng Thuỷ Tinh sẽ cung cấp dịch vụ giao hàng tận nơi đến cho quý khách hàng.",
-                    130,
+                  "Bạn không cần phải tốn công đến nhà hàng để đặt món, nhà hàng Thuỷ Tinh sẽ cung cấp dịch vụ giao hàng tận nơi đến cho quý khách hàng.",
+                  130,
                 )}
               </p>
               <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
@@ -80,9 +80,9 @@ const AboutUs = () => {
           <motion.div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
             <div className="overflow-hidden rounded-t-xl h-[220px]">
               <img
-                  className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
-                  src="https://i.pinimg.com/564x/59/ec/57/59ec57e404a50d019f367f2c3124b90e.jpg"
-                  alt=""
+                className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
+                src="https://i.pinimg.com/564x/59/ec/57/59ec57e404a50d019f367f2c3124b90e.jpg"
+                alt=""
               />
             </div>
             <div className="p-6 flex flex-col">
@@ -96,8 +96,8 @@ const AboutUs = () => {
               </div>
               <p className="py-4 text-sm text-gray-500 ">
                 {truncateString(
-                    "Nhà hàng Thuỷ Tinh luôn đặt khách hàng trong tim. Chúng tôi khẳng định sẽ tận tâm, lắng nghe và phục vụ khách hàng bằng những gì mình có.",
-                    130,
+                  "Nhà hàng Thuỷ Tinh luôn đặt khách hàng trong tim. Chúng tôi khẳng định sẽ tận tâm, lắng nghe và phục vụ khách hàng bằng những gì mình có.",
+                  130,
                 )}
               </p>
               <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
