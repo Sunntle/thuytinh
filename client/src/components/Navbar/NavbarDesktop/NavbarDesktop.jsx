@@ -33,7 +33,6 @@ const NavbarDesktop = ({
   const handleMenuMouseLeave = useCallback(() => {
     setIsMenuHovered(false);
   }, []);
-
   const location = useLocation();
   const [logoPath, setLogoPath] = useState(logo);
   const checkHome = useMemo(() => {
@@ -224,7 +223,7 @@ const NavbarDesktop = ({
 NavbarDesktop.propTypes = {
   headerRef: PropTypes.object,
   checkRoute: PropTypes.bool,
-  idTable: PropTypes.number,
+  idTable: PropTypes.string,
   categories: PropTypes.array,
   navbarList: PropTypes.array,
 };
