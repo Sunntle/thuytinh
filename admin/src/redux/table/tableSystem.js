@@ -6,7 +6,6 @@ const tableSystem = createSlice({
         AddTable:(state,action) => {
             state = action.payload
             return state
-            // state.tables.push(action.payload);
         },
         RemoveTable:(state) =>{
             state = [];
