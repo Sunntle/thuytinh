@@ -1,15 +1,16 @@
 const moment = require("moment");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const Recipes = require("../models/recipeModel");
 const Materials = require("../models/materialsModel");
 const TableByOrder = require("../models/tableByOrder");
 const OrderDetail = require("../models/orderDetailModel");
 const Product = require("../models/productModel");
 const ImageProduct = require("../models/imageModel");
+const Order = require("../models/orderModel");
 const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
 const apiQueryRest = (params) => {
     const { _offset, _limit, _sort, _order, q, title, _noQuery, ...rest } = params;
-    let query = {distinct: true};
+    let query = { distinct: true };
     if (_noQuery === 1) return query.raw = true;
     if (_limit) query.limit = +_limit;
     if (_offset) query.offset = +_offset;
@@ -84,6 +85,7 @@ const bien = {
 
 function tinhWeek(weekNumber) {
     const allDaysInWeek = [];
+    moment.locale('vi');
     const year = moment().year();
     const startDate = moment().year(year).isoWeek(weekNumber).startOf('isoWeek');
     const endDate = moment().year(year).isoWeek(weekNumber).endOf('isoWeek');
@@ -100,5 +102,51 @@ function currentYear(pa = "startOf") {
     const date = moment()[pa]("year");
     return date.format("YYYY-MM-DD");
 }
+function isEmpty(value) {
+    return (
+        (value == null) ||
+        (value.hasOwnProperty('length') && value.length === 0) ||
+        (value.constructor === Object && Object.keys(value).length === 0) ||
+        (+value === 0)
+    )
+}
+const bookingValidate = (params) => {
+    return Object.values(params).every(value => !isEmpty(value));
+}
 
-module.exports = { currentYear, tinhWeek, bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };
+
+const templateSendUser = ({ createdAt, name, tableId, token }) => {
+    let html = `<h1>Nhà hàng hải sản thủy tinh xin chào quý kháck</h1>
+     <h3> ${name} bạn vừa đặt trước bàn số ${tableId} thời gian : ${moment(createdAt).format("DD/MM/YYYY HH:mm")} </h3>
+    <p>Bạn có thể hủy đơn hàng khi click vào đây : <a href='${process.env.CLIENT_URL}/cancel-booking/${token}'>Cancel</a></p>
+     `;
+    return html
+}
+
+
+
+
+const checkBooking = async (time, tableId, dining_option = "eat-in", params = "subtract", limit = 135) => {
+    let query = {}
+    if (dining_option === "eat-in") {
+        query = {
+            include: {
+                model: Order, where: {
+                    status: {
+                        [Op.lte]: 4,
+                        [Op.ne]: 0
+                    }
+                }
+            },
+        }
+    }
+    query.where = {
+        dining_option: dining_option,
+        status: { [Op[dining_option === "eat-in" ? 'ne' : "eq"]]: "confirmed" },
+        createdAt: { [Op[dining_option === "eat-in" ? "gte" : "lte"]]: moment(time)[params](limit, 'minutes') },
+        tableId: Array.isArray(tableId) ? { [Op.in]: tableId } : tableId
+    }
+    const isEatIn = await TableByOrder.findAll(query);
+    return isEatIn.length > 0;
+}
+module.exports = { isEmpty, checkBooking, templateSendUser, bookingValidate, currentYear, tinhWeek, bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct };

@@ -105,7 +105,7 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     const matchingItemB = adminOnline.find((itemB) => itemB.id === itemA.dataValues.id);
     if (matchingItemB) {
       itemA.dataValues.status = true;
-    }else{
+    } else {
       itemA.dataValues.status = false
     }
   })

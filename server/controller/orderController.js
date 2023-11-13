@@ -3,7 +3,7 @@ const {
   apiQueryRest,
   checkQtyMaterials,
   getQtyMaterialByProduct,
-  bien, currentYear, tinhWeek
+  bien, currentYear, tinhWeek, checkBooking
 } = require("../utils/const");
 const asyncHandler = require("express-async-handler");
 const {
@@ -32,13 +32,12 @@ exports.createOrder = asyncHandler(async (req, res) => {
       data: "Validate !",
     });
   const arrTable = table;
+  const checkStatus = await Tables.prototype.checkStatus(arrTable, 0, token);
 
-  if (await Tables.prototype.checkStatus(arrTable, 0, token))
+  if (checkStatus)
     return res.status(200).json({
-      success: false,
-      data: "Bàn đã có người đặt",
+      success: false
     });
-
   const { approve, over } =
     await Materials.prototype.checkAmountByProduct(orders);
   if (approve.length === 0)
@@ -51,7 +50,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
     id_employee,
   });
   let dataTable = await TableByOrder.bulkCreate(
-    arrTable.map((item) => ({ tableId: item, orderId: order_result.id })),
+    arrTable.map((item) => ({ tableId: item, orderId: order_result.id, dining_option: "eat-in" })),
   );
   if (id_employee) await Tables.prototype.updateStatusTable({ status_table: 1 }, arrTable);
   let tableData = await TableByOrder.findAll({
@@ -201,6 +200,7 @@ exports.completeOrder = asyncHandler(async (req, res) => {
       token: null
     }, [tableId])
     await Order.update({ status: 4 }, { where: { id: orderId } });
+
     res.status(200).json({ success: true, data: "Update thành công" });
   } else {
     res
@@ -218,9 +218,6 @@ exports.dashBoard = asyncHandler(async (req, res) => {
   const info = type === "MONTH" ? "T/" : "Năm : ";
 
   let dateInWeek = tinhWeek(weekcurrent);
-
-
-
   previousMonth.setMonth(previousMonth.getMonth() - 1);
   previousMonth.setDate(1);
   data.costMaterial = await Warehouse.findOne({
@@ -280,6 +277,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
       }
     },
     group: [fn('date', col('createdAt'))],
+    order: [["createdAt", "asc"]],
     raw: true
   });
 

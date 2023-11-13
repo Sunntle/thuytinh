@@ -44,7 +44,7 @@ const positions = [
   },
 ];
 
-const adults = [
+const party_sizes = [
   {
     label: "2 người",
     value: "2",
@@ -71,23 +71,23 @@ const BookingTable = () => {
   const { sendRequest } = useHttp();
   const [form] = Form.useForm();
   const [result, setResult] = useState(null);
-  const [tables, setTables] = useState(null);
+  const [tables, setTables] = useState([]);
   const navigate = useNavigate();
-  const fetchTable = async (position) => {
+  const fetchTable = async ({ position, createdAt, party_size }) => {
+    console.log(position, createdAt, party_size)
     const request = {
       method: "get",
-      url: `/table?_position=eq_${position}&_status_table=eq_0`,
+      url: `/table/check-booking?position=${position}&createdAt=${createdAt}&party_size=${party_size}`,
     };
     await sendRequest(request, setTables, false);
   };
 
   const onSubmitFetchTable = async (values) => {
-    values = {
-      ...values,
-      date: moment(values.date).format("DD/MM/YYYY"),
-      time: moment(values.time["$d"]).format("HH:mm"),
-    };
-    await fetchTable(values.position);
+    let date = moment(values.date).format("DD/MM/YYYY");
+    let time = moment(values.time["$d"]).format("HH:mm");
+    const createdAt = moment(date + time, "DD/MM/YYYY HH:mm").format("DD/MM/YYYY-HH:mm:ss")
+    values = { party_size: values.party_size, position: values.position, createdAt };
+    await fetchTable(values);
     setResult(`?${new URLSearchParams(values).toString()}`);
   };
 
@@ -119,7 +119,7 @@ const BookingTable = () => {
           <div className=" w-full col-span-1 md:col-span-2 flex flex-col place-self-center">
             <span className="ml-3 text-xs text-slate-500">Số lượng</span>
             <Form.Item
-              name="adult"
+              name="party_size"
               rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
             >
               <Select
@@ -127,7 +127,7 @@ const BookingTable = () => {
                 className="w-full"
                 bordered={false}
                 size={"middle"}
-                options={adults}
+                options={party_sizes}
               />
             </Form.Item>
           </div>
@@ -158,15 +158,15 @@ const BookingTable = () => {
               <TimePicker
                 className="w-full focus:border-primary"
                 placeholder="Chọn giờ"
-                defaultValu={moment().format("HH:mm")}
+                // defaultValue={moment().format("HH:mm")}
                 disabledTime={disabledTime}
                 bordered={false}
                 minuteStep={15}
                 size={"middle"}
                 format={"HH:mm"}
-                // onChange={(e, formatTime) =>
-                //   setInfor({ ...infor, time: formatTime })
-                // }
+              // onChange={(e, formatTime) =>
+              //   setInfor({ ...infor, time: formatTime })
+              // }
               />
             </Form.Item>
           </div>
@@ -182,21 +182,24 @@ const BookingTable = () => {
           </div>
         </Form>
       </div>
+      {tables?.time && <div className="text-center text-white">
+        {tables.message}
+      </div>}
       <div className="space-y-3">
-        {tables !== null &&
-            tables.map((table) => (
-                <div key={table.id} className="mx-auto w-11/12 md:w-9/12 lg:w-8/12 xl:w-6/12 min-h-fit bg-white rounded py-1 px-2">
-                  <div key={table.id} className="flex justify-between items-center">
-                    <span>{table.name_table}</span>
-                    <span
-                        className="cursor-pointer bg-primary py-2 px-3 rounded text-white"
-                        onClick={() => navigate(`/booked${result}&tables=2`)}
-                    >
-                {parseQueryString(result).time}
-              </span>
-                  </div>
-                </div>
-            ))}
+        {tables?.data?.length &&
+          tables?.data?.map((table) => (
+            <div key={table.id} className="mx-auto w-11/12 md:w-9/12 lg:w-8/12 xl:w-6/12 min-h-fit bg-white rounded py-1 px-2">
+              <div key={table.id} className="flex justify-between items-center">
+                <span>{table.name_table}</span>
+                <span
+                  className="cursor-pointer bg-primary py-2 px-3 rounded text-white"
+                  onClick={() => navigate(`/booked${result}&tables=${table.id}`)}
+                >
+                  {moment(tables.time).format("HH:mm")}
+                </span>
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   );

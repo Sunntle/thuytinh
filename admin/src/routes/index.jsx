@@ -19,6 +19,7 @@ import UserPage from "../pages/user";
 import TablePage from "../pages/table";
 import ResSelectTable from "../pages/restaurant/choosetable/res-selectTable";
 import PaymentSuccess from "../pages/restaurant/order/res-orderSuccess";
+import TestTemplate from "../pages/test";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <LoginPage />,
+  },
+  {
+    path: "/booking/token",
+    element: <TestTemplate />,
   },
   {
     path: "/register",

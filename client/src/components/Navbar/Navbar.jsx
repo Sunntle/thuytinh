@@ -9,7 +9,59 @@ import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
 import NavbarDesktop from "./NavbarDesktop/NavbarDesktop.jsx";
 const regex = /^\/tables-\d+$/;
-
+const initialNavItem = [
+  {
+    id: 1,
+    route: `/home`,
+    icon: <AiOutlineShop className="w-6 h-6" />,
+    routeName: "Trang chủ",
+    originRouteName: "home",
+  },
+  {
+    id: 7,
+    route: `/select-table`,
+    icon: <MdOutlineTableBar className="w-6 h-6" />,
+    routeName: "Chọn bàn",
+    originRouteName: "select-table",
+  },
+  {
+    id: 5,
+    route: `/reservation`,
+    icon: <MdOutlineTableBar className="w-6 h-6" />,
+    routeName: "Đặt bàn",
+    originRouteName: "reservation",
+  },
+  // {
+  //   id: 10,
+  //   route: `/account`,
+  //   icon: <FiUser className="w-6 h-6" />,
+  //   routeName: "Tài khoản",
+  //   originRouteName: "account",
+  // },
+];
+const initialNavItemDesktop = [
+  ...initialNavItem,
+  {
+    id: 8,
+    route: `/contact`,
+    routeName: "Liên hệ",
+    originRouteName: "contact",
+  },
+  {
+    id: 9,
+    route: `/about`,
+    routeName: "Về chúng tôi",
+    originRouteName: "about",
+  },
+];
+const handleNavLink = (arrayNavLink, navItemAdded, idTable) => {
+  if (idTable) {
+    return [...arrayNavLink, ...navItemAdded]
+      .filter((el) => !(el.id == 5 || el.id == 7))
+      ?.sort((a, b) => a.id - b.id);
+  }
+  return arrayNavLink;
+};
 const Navbar = () => {
   const location = useLocation();
   const headerRef = useRef();
@@ -23,65 +75,50 @@ const Navbar = () => {
   const idTable = useMemo(() => customerName.tables[0], [customerName.tables]);
 
   const navbarRoute = useMemo(() => {
-    const initialNavItem = [
+    const navItem = [
       {
-        id: 1,
-        route: `/home`,
-        icon: <AiOutlineShop className="w-6 h-6" />,
-        routeName: "Trang chủ",
-        originRouteName: "home",
+        id: 2,
+        route: `/tables-${idTable}/service`,
+        icon: <MdOutlineRoomService className="w-6 h-6" />,
+        routeName: "Dịch vụ",
+        originRouteName: "service",
       },
       {
-        id: 7,
-        route: `/select-table`,
-        icon: <MdOutlineTableBar className="w-6 h-6" />,
-        routeName: "Chọn bàn",
-        originRouteName: "select-table",
+        id: 3,
+        route: `/tables-${idTable}/menu`,
+        icon: <IoRestaurantOutline className="w-6 h-6" />,
+        routeName: "Thực đơn",
+        originRouteName: "menu",
       },
       {
-        id: 5,
-        route: `/book-table`,
-        icon: <MdOutlineTableBar className="w-6 h-6" />,
-        routeName: "Đặt bàn",
-        originRouteName: "book-table",
-      },
-      {
-        id: 6,
-        route: `/account`,
-        icon: <FiUser className="w-6 h-6" />,
-        routeName: "Tài khoản",
-        originRouteName: "account",
+        id: 4,
+        route: `/tables-${idTable}/order`,
+        icon: <HiOutlineClipboardList className="w-6 h-6" />,
+        routeName: "Món đã đặt",
+        originRouteName: "order",
       },
     ];
-    if (idTable) {
-      const [a, , c] = initialNavItem;
-      return [
-        a,
-        {
-          id: 2,
-          route: `/tables-${idTable}/service`,
-          icon: <MdOutlineRoomService className="w-6 h-6" />,
-          routeName: "Dịch vụ",
-          originRouteName: "service",
-        },
-        {
-          id: 3,
-          route: `/tables-${idTable}/menu`,
-          icon: <IoRestaurantOutline className="w-6 h-6" />,
-          routeName: "Thực đơn",
-          originRouteName: "menu",
-        },
-        {
-          id: 4,
-          route: `/tables-${idTable}/order`,
-          icon: <HiOutlineClipboardList className="w-6 h-6" />,
-          routeName: "Món đã đặt",
-          originRouteName: "order",
-        },
-        c,
-      ];
-    }
-    return initialNavItem;
+    return handleNavLink(initialNavItem, navItem, idTable);
+  }, [idTable]);
+
+  const navbarRouteDesktop = useMemo(() => {
+    const navItem = [
+      {
+        id: 2,
+        route: `/tables-${idTable}/service`,
+        icon: <MdOutlineRoomService className="w-6 h-6" />,
+        routeName: "Dịch vụ",
+        originRouteName: "service",
+      },
+      {
+        id: 3,
+        route: `/tables-${idTable}/menu`,
+        icon: <IoRestaurantOutline className="w-6 h-6" />,
+        routeName: "Thực đơn",
+        originRouteName: "menu",
+      },
+    ];
+    return handleNavLink(initialNavItemDesktop, navItem, idTable);
   }, [idTable]);
 
   const activeClassname = useMemo(() => {
@@ -94,7 +131,7 @@ const Navbar = () => {
       checkActiveClassName = navbarRoute.find(
         (item) =>
           location.pathname.includes(item.originRouteName) ||
-          location.state?.from.includes(item.originRouteName)
+          location.state?.from?.includes(item.originRouteName)
       );
       return checkActiveClassName;
     }
@@ -160,6 +197,7 @@ const Navbar = () => {
         checkRoute={checkRoute}
         categories={categories}
         idTable={idTable}
+        navbarList={navbarRouteDesktop}
       />
     </div>
   );

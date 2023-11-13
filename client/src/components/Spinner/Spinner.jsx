@@ -8,7 +8,7 @@ const Spinner = ({ className }) => {
     >
       <Spin size={"large"} />
       <span className="mt-5 text-base font-semibold">
-        Quý khách vui lòng đợi trong giây lát.
+        Quý khách vui lòng đợi trong giây lát...
       </span>
     </div>
   );

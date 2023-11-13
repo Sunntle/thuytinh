@@ -10,12 +10,14 @@ import { getAllProduct, getDataDashboard } from "../services/api";
 import Spinner from "../components/spinner";
 import { Link } from "react-router-dom";
 import LineChart from "../components/chart/line-chart";
-import moment from "moment";
 import { weekArrText } from "../utils/constant";
 
 const { Title } = Typography;
 import CountUp from 'react-countup';
+import moment from "moment";
+import 'moment/dist/locale/vi';
 const DashBoard = () => {
+  moment.locale('vi');
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const currentWeek = moment().week();
@@ -45,7 +47,7 @@ const DashBoard = () => {
   useEffect(() => {
     fetchData()
   }, [timeChart, fetchData])
-  console.log(loading);
+
   if (loading) return <Spinner />
 
   const dataOpWeek = weekArrText.map((v, i) => ({ label: v, value: currentWeek - i })).reverse();
@@ -251,8 +253,8 @@ const DashBoard = () => {
                               <h6 className="text-main font-semibold  whitespace-nowrap text-lg">
                                 {el.discount > 0
                                   ? formatGia(
-                                      el.price - (el.price * el.discount) / 100
-                                    )
+                                    el.price - (el.price * el.discount) / 100
+                                  )
                                   : formatGia(el.price)}
                               </h6>
                               <p className="text-gray-400 font-semibold line-through whitespace-nowrap text-xs">

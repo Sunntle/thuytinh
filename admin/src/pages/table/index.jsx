@@ -137,7 +137,7 @@ const TablePage = () => {
 
     useEffect(() => {
         fetchData()
-    }, [fetchData])
+    }, [])
     return (
         <div className='my-7 px-5'>
 
