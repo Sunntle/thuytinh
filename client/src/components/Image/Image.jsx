@@ -15,10 +15,10 @@ const Image = ({ isLoading, src, alt, className }) => {
     />
   );
 };
-Image.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
-  src: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
-  className: PropTypes.string,
-};
+// Image.propTypes = {
+//   isLoading: PropTypes.bool.isRequired,
+//   src: PropTypes.string.isRequired,
+//   alt: PropTypes.string.isRequired,
+//   className: PropTypes.string,
+// };
 export default Image;

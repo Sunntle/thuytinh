@@ -11,7 +11,7 @@ import Image from "../../../components/Image/Image.jsx";
 import { Spinner } from "../../../components/index.js";
 import PropTypes from "prop-types";
 
-const ProductDetail = ({ openDrawer, onClose, id }) => {
+const ProductDetail = memo(({ openDrawer, onClose, id }) => {
   const [productDetail, setProductDetail] = useState({});
   const { sendRequest, isLoading } = useHttp();
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
@@ -118,10 +118,11 @@ const ProductDetail = ({ openDrawer, onClose, id }) => {
       </div>
     </Drawer>
   );
-};
+});
+ProductDetail.displayName = "ProductDetail";
 ProductDetail.propTypes = {
   openDrawer: PropTypes.bool,
   onClose: PropTypes.func,
   id: PropTypes.number,
 };
-export default memo(ProductDetail);
+export default ProductDetail;

@@ -91,7 +91,7 @@ const Product = (props) => {
     <div
       ref={scope}
       key={id}
-      className="box-border tracking-wide min-h-0 w-auto h-auto border rounded-lg shadow cursor-pointer transition-shadow duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)]"
+      className="relative box-border tracking-wide min-h-0 w-auto h-auto border rounded-lg shadow cursor-pointer transition-shadow duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)]"
     >
       {contextHolder}
       <div className="w-full h-32 lg:h-40" onClick={showProductDetail}>
