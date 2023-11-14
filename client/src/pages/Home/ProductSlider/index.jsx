@@ -50,7 +50,7 @@ const ProductSlider = ({ products }) => {
       effect="fade"
       pagination={pagination}
       modules={[Pagination, EffectFade]}
-      className="mySwiper h-[calc(100vh - 48px)] lg:h-screen"
+      className="mySwiper lg:h-screen mt-10"
       draggable={true}
       onSlideChange={handleSlideChange}
     >
@@ -76,7 +76,6 @@ ProductSlider.propTypes = {
         name_product: PropTypes.string,
         ImageProducts: PropTypes.array,
         description: PropTypes.string,
-        // Add more specific PropTypes for product properties if needed
       }),
     ),
   }),
