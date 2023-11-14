@@ -60,7 +60,7 @@ const ResMenu = () => {
             dispatch(setErr(null))
         }
     }, [dispatch, messageApi, warning]);
-    
+    console.log(product)
     return (
         <div className='w-full p-10'>
             {contextHolder}

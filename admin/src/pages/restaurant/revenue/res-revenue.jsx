@@ -150,7 +150,6 @@ const ResRevenue = () => {
       socket.off("update-admin-online");
     };
   }, [admin]);
-  console.log(data)
   return (
     <div className="w-full p-10">
       <div className="pt-5">
