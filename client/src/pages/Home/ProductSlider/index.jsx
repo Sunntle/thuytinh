@@ -50,7 +50,7 @@ const ProductSlider = ({ products }) => {
       effect="fade"
       pagination={pagination}
       modules={[Pagination, EffectFade]}
-      className="mySwiper h-[calc(100vh - 48px)] lg:h-screen"
+      className="mySwiper lg:h-screen mt-10"
       draggable={true}
       onSlideChange={handleSlideChange}
     >
@@ -58,7 +58,7 @@ const ProductSlider = ({ products }) => {
         products.map((item, index) => (
           <SwiperSlide
             key={index}
-            className={`relative p-2 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-36 py-12 lg:pt-12 h-full overflow-hidden place-content-start text-center place-items-center lg:place-items-stretch`}
+            className={`relative p-2 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-36 py-12 lg:pt-12 h-full overflow-hidden place-content-start text-center place-items-center lg:place-items-stretch bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1699337766/NhaHangThuyTinh/fpp0tssuolblxhbygpjx.webp')] bg-center bg-cover bg-no-repeat`}
           >
             <ProductSlide item={item} currentSlide={currentSlide} />
           </SwiperSlide>
@@ -76,7 +76,6 @@ ProductSlider.propTypes = {
         name_product: PropTypes.string,
         ImageProducts: PropTypes.array,
         description: PropTypes.string,
-        // Add more specific PropTypes for product properties if needed
       }),
     ),
   }),

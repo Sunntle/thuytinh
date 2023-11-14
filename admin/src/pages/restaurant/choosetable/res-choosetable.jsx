@@ -54,7 +54,7 @@ const ResChooseTable = () => {
   const [open, setOpen] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const userId = useSelector((state) => state.account.user.id)
-  
+
 
 
 
@@ -85,15 +85,15 @@ const ResChooseTable = () => {
   };
 
   const handleDetailModal = async (table) => {
-     const resTableId = await getTableId(table.id,{id_employee: userId})
-     const tableByOrders = resTableId[0].TableByOrders;
+    const resTableId = await getTableId(table.id, { id_employee: userId })
+    const tableByOrders = resTableId[0].TableByOrders;
     if (tableByOrders && tableByOrders.length === 0 || tableByOrders == undefined) {
       api.info({
         message: 'Thông báo!!!',
         description:
           'Người dùng đang đặt hàng!!!',
       });
-    } 
+    }
     else {
       dispatch(AddTableList(resTableId));
       setOpen(true)
@@ -170,7 +170,7 @@ const ResChooseTable = () => {
     <>
       <div className="w-full p-10">
         {contextHolder}
-        <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1"  animated items={items} />
+        <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1" animated items={items} />
         <ResOrder handleCancel={handleCancel} open={open} />
       </div>
     </>

@@ -3,7 +3,7 @@ const {
   apiQueryRest,
   checkQtyMaterials,
   getQtyMaterialByProduct,
-  bien, currentYear, tinhWeek
+  bien, currentYear, tinhWeek, checkBooking, handleTimeDining
 } = require("../utils/const");
 const asyncHandler = require("express-async-handler");
 const {
@@ -27,18 +27,13 @@ const { Op, Sequelize, literal, where, fn, col } = require("sequelize");
 exports.createOrder = asyncHandler(async (req, res) => {
   const { orders, customerName, total, table, id_employee, token } = req.body;
   if (!total || !customerName || table.length === 0 || orders.length === 0)
-    return res.status(200).json({
+    return res.status(404).json({
       success: false,
       data: "Validate !",
     });
   const arrTable = table;
-
-  if (await Tables.prototype.checkStatus(arrTable, 0, token))
-    return res.status(200).json({
-      success: false,
-      data: "Bàn đã có người đặt",
-    });
-
+  const checkStatus = await Tables.prototype.checkStatus(arrTable, 0, token);
+  if (checkStatus) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
   const { approve, over } =
     await Materials.prototype.checkAmountByProduct(orders);
   if (approve.length === 0)
@@ -51,7 +46,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
     id_employee,
   });
   let dataTable = await TableByOrder.bulkCreate(
-    arrTable.map((item) => ({ tableId: item, orderId: order_result.id })),
+    arrTable.map((item) => ({ tableId: item, orderId: order_result.id, dining_option: "eat-in" })),
   );
   if (id_employee) await Tables.prototype.updateStatusTable({ status_table: 1 }, arrTable);
   let tableData = await TableByOrder.findAll({
@@ -199,7 +194,10 @@ exports.completeOrder = asyncHandler(async (req, res) => {
     await Tables.prototype.updateStatusTable({
       status_table: 0,
       token: null
-    }, [tableId])
+    }, [tableId]);
+    let re = await TableByOrder.findOne({ where: { orderId, tableId } });
+    re.dining_time = handleTimeDining(re.createdAt);
+    await re.save();
     await Order.update({ status: 4 }, { where: { id: orderId } });
     res.status(200).json({ success: true, data: "Update thành công" });
   } else {
@@ -218,9 +216,6 @@ exports.dashBoard = asyncHandler(async (req, res) => {
   const info = type === "MONTH" ? "T/" : "Năm : ";
 
   let dateInWeek = tinhWeek(weekcurrent);
-
-
-
   previousMonth.setMonth(previousMonth.getMonth() - 1);
   previousMonth.setDate(1);
   data.costMaterial = await Warehouse.findOne({
@@ -280,6 +275,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
       }
     },
     group: [fn('date', col('createdAt'))],
+    order: [["createdAt", "asc"]],
     raw: true
   });
 

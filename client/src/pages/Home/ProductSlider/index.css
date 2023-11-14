@@ -16,7 +16,8 @@
     @apply hidden transition-all duration-300 bg-transparent text-white/80 opacity-100 lg:inline-block relative cursor-pointer w-48 h-56 hover:bg-white/60 rounded-none rounded-tl-[35%] rounded-br-[35%] pb-12;
 }
 
-.swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet, .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+.swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
     @apply mx-4;
 }
 
@@ -28,6 +29,7 @@
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 100;
     }

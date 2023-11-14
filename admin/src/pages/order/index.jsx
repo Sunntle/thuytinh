@@ -24,7 +24,7 @@ import moment from "moment";
 import { useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import Spinner from "../../components/spinner";
-import {socket} from "../../socket"
+import { socket } from "../../socket"
 const { Title } = Typography;
 const config = {
   rules: [
@@ -66,7 +66,7 @@ const OrderPage = () => {
     confirm();
   };
   const statusOrder = useMemo(() => {
-    let arr = [{ value: 1, label: "Đơn hàng mới" }, { value: 2, label: "Đang sử dụng" },
+    let arr = [{ value: 0, label: "Hủy đơn hàng" }, { value: 1, label: "Đơn hàng mới" }, { value: 2, label: "Đang sử dụng" },
     { value: 3, label: "Đã thanh toán" }, { value: 4, label: "Hoàn tất" }]
     return arr
   }, [])
@@ -188,10 +188,10 @@ const OrderPage = () => {
 
   });
   useEffect(() => {
-    socket.on("new message", arg=>{
-      if(arg == "order") fetchData(query)
+    socket.on("new message", arg => {
+      if (arg == "order") fetchData(query)
     })
-    return ()=>{
+    return () => {
       socket.off("new message")
     }
   }, [fetchData, query]);

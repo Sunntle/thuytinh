@@ -14,9 +14,24 @@ const TableByOrder = db.sequelize.define(
         },
         orderId: {
             type: DataTypes.INTEGER
+        },
+        party_size: {
+            type: DataTypes.INTEGER
+        },
+        status: {
+            type: DataTypes.ENUM("pending", "confirmed", "canceled")
+        },
+        dining_option: {
+            type: DataTypes.ENUM("reservation", "eat-in")
+        },
+        dining_time: {
+            type: DataTypes.STRING()
+        },
+        note: {
+            type: DataTypes.STRING()
         }
     },
     { timestamps: true }
 );
-// TableByOrder.sync()
+
 module.exports = TableByOrder;

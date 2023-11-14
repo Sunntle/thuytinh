@@ -13,6 +13,10 @@ const Order = db.sequelize.define("orders", {
     type: DataTypes.STRING,
     defaultValue: null
   },
+  email: {
+    type: DataTypes.STRING,
+    defaultValue: null
+  },
   phone: {
     type: DataTypes.INTEGER,
     defaultValue: null

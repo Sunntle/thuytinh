@@ -9,7 +9,7 @@ const HomeSlide = ({ listProduct }) => {
     <div className="relative w-auto">
       <Swiper
         // install Swiper modules
-        className="mt-6 lg:mx-16 lg:px-0 px-6 w-auto bg-white"
+        className="my-6 lg:mx-16 lg:px-0 px-6 w-auto bg-white"
         modules={[A11y]}
         spaceBetween={10}
         slidesPerView={2}

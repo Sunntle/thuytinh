@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const asyncHandler = require('express-async-handler');
-const sendEmail = asyncHandler(async (email, html) => {
+const sendEmail = async (email, subject, templateHtml) => {
     let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -10,14 +10,17 @@ const sendEmail = asyncHandler(async (email, html) => {
             pass: process.env.APP_PASSWORD,
         },
     });
+    try {
+        let info = await transporter.sendMail({
+            from: 'Thủy Tinh" <thuytinh.com>',
+            to: email,
+            subject: subject,
+            html: templateHtml,
+        });
+        return info
+    } catch (error) {
+        throw new Error(error)
+    }
 
-
-    let info = await transporter.sendMail({
-        from: '"Thủy Tinh" <thuytinh.com>',
-        to: email,
-        subject: "Forgot Password ✔",
-        html: html,
-    });
-    return info
-})
+}
 module.exports = sendEmail

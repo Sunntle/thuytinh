@@ -5,7 +5,7 @@ const initRoutes = require("./routes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const db = require("./config/connectDatabase");
-const {synchronizeModels} = require("./models/index")
+const { synchronizeModels } = require("./models/index")
 const { Server } = require("socket.io");
 const { handleNewUserConnect, handleDisconnect, handleCallStaff, handlePayInCash } = require("./utils/socketHanlers")
 require("dotenv").config();

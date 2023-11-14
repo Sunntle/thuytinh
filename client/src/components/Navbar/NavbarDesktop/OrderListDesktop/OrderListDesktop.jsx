@@ -194,7 +194,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           </div>
         )}
         <div className="w-full flex justify-between items-center text-lg font-semibold text-primary mt-10 px-2 transition-colors duration-200">
-          <span className="flex items-center font-normal cursor-pointer hover:text-primary/80">
+          <span onClick={() => setIsOrderDesktop(false)} className="flex items-center font-normal cursor-pointer hover:text-primary/80">
             Quay về
           </span>
           <div className="flex justify-between items-center space-x-1">

@@ -14,7 +14,7 @@ const ProductList = ({ foods, isLoading }) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       {foods &&
-        foods?.data?.map((item) => (
+        foods?.data?.sort((a,b) => b.amount - a.amount).map((item) => (
           <span key={item.id}>
             <Product item={item} />
           </span>
