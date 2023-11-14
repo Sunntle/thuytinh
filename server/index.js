@@ -14,19 +14,21 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL, process.env.CLIENT_URL_TEST, process.env.ADMIN_URL_TEST],
+    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL, process.env.CLIENT_URL_PRODUCTION, process.env.ADMIN_URL_PRODUCTION],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+db.connectDatabase();
+synchronizeModels();
 const server = app.listen(port, (req, res) => {
   console.log(`Connect port: ${port}`);
 });
 const io = new Server(server, {
   cors: {
-    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL, process.env.CLIENT_URL_TEST, process.env.ADMIN_URL_TEST],
+    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL, process.env.CLIENT_URL_PRODUCTION, process.env.ADMIN_URL_PRODUCTION],
     methods: ["GET", "POST"]
   }
 })
@@ -41,8 +43,7 @@ io.of("/client").on("connection", (socket) => {
   handlePayInCash(socket)
 });
 initRoutes(app);
-db.connectDatabase();
-synchronizeModels()
+
 
 
 

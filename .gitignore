@@ -12,7 +12,8 @@
 /server/dist
 /server/dist-dev
 /docker
-/server/Dockerfile
+server/Dockerfile
+server/nhahang.sql
 /production
 /.pnp
 .pnp.js
@@ -33,3 +34,4 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
