@@ -1,6 +1,6 @@
 const { getAll, create, update, del, getId, updateStatusAndToken, checkCurrentTable,
     switchTables, bookingTables, checkTableBooking, deleteBooking,
-    getBooking, activeBooking, updateBooking, getListBooking } = require('../controller/tableController');
+    getBooking, activeBooking, updateBooking, getListBooking, pendingTable } = require('../controller/tableController');
 const express = require("express");
 const router = express.Router();
 router.get("/", getAll);
@@ -20,6 +20,7 @@ router.delete("/:id", del);
 router.post("/switch-tables", switchTables);
 
 
+router.post("/pending-booking", pendingTable);
 router.post("/booking", bookingTables);
 router.post("/active-booking", activeBooking);
 module.exports = router;

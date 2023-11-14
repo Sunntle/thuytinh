@@ -1,8 +1,8 @@
+/* eslint-disable react/prop-types */
 import { Skeleton } from "antd";
 import "./index.css";
-import PropTypes from "prop-types";
 
-const Image = ({ isLoading, src, alt, className }) => {
+const Image = ({ isLoading = false, src, alt, className }) => {
   const skeletonImageStyle = { width: "100%", height: "100%" };
   return isLoading ? (
     <Skeleton.Image active={true} style={{ ...skeletonImageStyle }} />
@@ -15,10 +15,5 @@ const Image = ({ isLoading, src, alt, className }) => {
     />
   );
 };
-Image.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
-  src: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
-  className: PropTypes.string,
-};
+
 export default Image;

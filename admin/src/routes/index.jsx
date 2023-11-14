@@ -20,6 +20,7 @@ import TablePage from "../pages/table";
 import ResSelectTable from "../pages/restaurant/choosetable/res-selectTable";
 import PaymentSuccess from "../pages/restaurant/order/res-orderSuccess";
 import TestTemplate from "../pages/test";
+import { ResBooking } from "../pages/restaurant/booking/booking";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -119,6 +120,10 @@ const router = createBrowserRouter([
       {
         path: "search",
         element: <SearchPage />,
+      },
+      {
+        path: "booking",
+        element: <ResBooking />,
       },
     ],
   },

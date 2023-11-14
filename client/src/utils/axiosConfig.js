@@ -5,7 +5,7 @@ const instance = axios.create({
     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
   },
   // eslint-disable-next-line no-undef
-  baseURL: import.meta.env.VITE_APP_API_URL,
+  baseURL: import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_API_URL_PRODUCTION : import.meta.env.VITE_APP_API_URL,
   withCredentials: true,
 });
 instance.interceptors.request.use(
