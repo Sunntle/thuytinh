@@ -1,112 +1,85 @@
 import { BsBookmarkCheckFill } from "react-icons/bs";
 import { FaShippingFast } from "react-icons/fa";
 import { RiServiceFill } from "react-icons/ri";
-import { truncateString } from "../../utils/format.js";
 import { motion } from "framer-motion";
+
+const arrContent = [
+  {
+    icon: <BsBookmarkCheckFill className="text-white text-xl" />,
+    image:
+      "https://i.pinimg.com/564x/c2/7a/c8/c27ac8fc11dcec58f09e8a6c72306b12.jpg",
+    title: "Đặt bàn online",
+    content:
+      "Nếu bạn muốn có sự chuẩn bị tốt nhất cho một cuộc hẹn, bạn không thể thiếu sự chuẩn bị trước cho việc đặt bàn tại nhà hàng của chúng tôi.",
+  },
+  {
+    icon: <FaShippingFast className="text-white text-xl" />,
+    image:
+      "https://i.pinimg.com/564x/05/c6/c8/05c6c85f82792c133c3b11f90981a608.jpg",
+    title: "Giao hàng tận nơi",
+    content:
+      "Bạn không cần phải tốn công đến nhà hàng để đặt món, nhà hàng Thuỷ Tinh sẽ cung cấp dịch vụ giao hàng tận nơi đến cho quý khách hàng.",
+  },
+  {
+    icon: <RiServiceFill className="text-white text-xl" />,
+    image:
+      "https://i.pinimg.com/564x/59/ec/57/59ec57e404a50d019f367f2c3124b90e.jpg",
+    title: "Chăm sóc khách hàng",
+    content:
+      "Nhà hàng Thuỷ Tinh luôn đặt khách hàng trong tim. Chúng tôi khẳng định sẽ tận tâm, lắng nghe và phục vụ khách hàng bằng những gì mình có.",
+  },
+];
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-white flex justify-center items-center">
-      <div className="lg:px-16 my-12 px-6 lg:pt-12">
-        <h2 className="text-4xl font-bold text-primary pb-4">
-          Tại sao bạn chọn chúng tôi
-        </h2>
-        <p className="text-gray-500 text-sm lg:w-1/2 w-full">
-          Nhà hàng Thuỷ Tinh là lựa chọn tuyệt vời khi có đầy đủ các dịch vụ dành
-          cho khách hàng thân yêu của chúng tôi.
-        </p>
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1.5, when: "afterChildren" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-8"
-        >
-          <motion.div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
-            <div className="overflow-hidden rounded-t-xl h-[220px]">
-              <img
-                className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
-                src="https://i.pinimg.com/564x/c2/7a/c8/c27ac8fc11dcec58f09e8a6c72306b12.jpg"
-                alt=""
-              />
-            </div>
-            <div className="p-6 flex flex-col">
-              <div className="flex space-x-3 items-center justify-left">
-                <div className="p-2 bg-primary rounded-full flex">
-                  <BsBookmarkCheckFill className="text-white text-xl" />
-                </div>
-                <h2 className="text-xl font-semibold text-gray-800 overflow-hidden whitespace-nowrap">
-                  Đặt bàn online
-                </h2>
-              </div>
-              <p className="py-4 text-sm text-gray-500">
-                {truncateString(
-                  "Nếu bạn muốn có sự chuẩn bị tốt nhất cho một cuộc hẹn, bạn không thể thiếu sự chuẩn bị trước cho việc đặt bàn tại nhà hàng của chúng tôi.",
-                  130,
-                )}
-              </p>
-              <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
-                Xem Menu
-              </button>
-            </div>
+    <div className="h-[700px] my-12 px-6 lg:px-16 lg:pt-12 bg-white flex justify-center items-center">
+        <div>
+          <h2 className="text-4xl font-bold text-primary pb-4">
+            Tại sao bạn chọn chúng tôi
+          </h2>
+          <p className="text-gray-500 text-sm lg:w-1/2 w-full">
+            Nhà hàng Thuỷ Tinh là lựa chọn tuyệt vời khi có đầy đủ các dịch vụ
+            dành cho khách hàng thân yêu của chúng tôi.
+          </p>
+          <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 1.5, when: "afterChildren" }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-8"
+          >
+            {arrContent &&
+                arrContent.map((item, index) => (
+                    <motion.div
+                        key={index}
+                        className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border"
+                    >
+                      <div className="overflow-hidden rounded-t-xl h-[220px]">
+                        <img
+                            className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
+                            src={item.image}
+                            alt=""
+                        />
+                      </div>
+                      <div className="p-6 flex flex-col space-y-4">
+                        <div className="flex space-x-3 items-center justify-left">
+                          <div className="p-2 bg-primary rounded-full flex">
+                            {item.icon}
+                          </div>
+                          <h2 className="text-xl font-semibold text-gray-800 overflow-hidden whitespace-nowrap">
+                            {item.title}
+                          </h2>
+                        </div>
+                        <p className="text-sm text-gray-500 line-clamp-3">
+                          {item.content}
+                        </p>
+                        <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-primary/80 transition duration-300 ease-in-out hover:scale-105">
+                          Xem Menu
+                        </button>
+                      </div>
+                    </motion.div>
+                ))}
           </motion.div>
-          <motion.div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
-            <div className="overflow-hidden rounded-t-xl h-[220px]">
-              <img
-                className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
-                src="https://i.pinimg.com/564x/05/c6/c8/05c6c85f82792c133c3b11f90981a608.jpg"
-                alt=""
-              />
-            </div>
-            <div className="p-6 flex flex-col">
-              <div className="flex space-x-3 items-center justify-left">
-                <div className="p-2 bg-primary rounded-full flex">
-                  <FaShippingFast className="text-white text-xl" />
-                </div>
-                <h2 className="text-xl font-semibold text-gray-800 overflow-hidden whitespace-nowrap">
-                  Giao hàng tận nơi
-                </h2>
-              </div>
-              <p className="py-4 text-sm text-gray-500">
-                {truncateString(
-                  "Bạn không cần phải tốn công đến nhà hàng để đặt món, nhà hàng Thuỷ Tinh sẽ cung cấp dịch vụ giao hàng tận nơi đến cho quý khách hàng.",
-                  130,
-                )}
-              </p>
-              <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
-                Xem Menu
-              </button>
-            </div>
-          </motion.div>
-          <motion.div className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border">
-            <div className="overflow-hidden rounded-t-xl h-[220px]">
-              <img
-                className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
-                src="https://i.pinimg.com/564x/59/ec/57/59ec57e404a50d019f367f2c3124b90e.jpg"
-                alt=""
-              />
-            </div>
-            <div className="p-6 flex flex-col">
-              <div className="flex space-x-3 items-center justify-left">
-                <div className="p-2 bg-primary rounded-full flex">
-                  <RiServiceFill className="text-white text-xl" />
-                </div>
-                <h2 className="text-xl font-semibold text-gray-800 overflow-hidden whitespace-nowrap">
-                  Chăm sóc khách hàng
-                </h2>
-              </div>
-              <p className="py-4 text-sm text-gray-500 ">
-                {truncateString(
-                  "Nhà hàng Thuỷ Tinh luôn đặt khách hàng trong tim. Chúng tôi khẳng định sẽ tận tâm, lắng nghe và phục vụ khách hàng bằng những gì mình có.",
-                  130,
-                )}
-              </p>
-              <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-[#F0A500E5] transition duration-300 ease-in-out hover:scale-105">
-                Xem Menu
-              </button>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
+        </div>
     </div>
   );
 };
