@@ -82,13 +82,13 @@ const SignIn = () => {
             <div className="mt-4 flex justify-between items-center w-full">
               <button className="pl-3 box-border flex justify-start items-center space-x-3 border border-transparent w-full py-2 bg-[#c04f3e] rounded text-white transition-all duration-200 active:bg-white active:border active:border-[#c04f3e] active:text-[#c04f3e] hover:bg-white hover:border hover:border-[#c04f3e] hover:text-[#c04f3e]">
                 <FaGooglePlus size={20} />
-                <span>Đăng nhập bằng Google</span>
+                <span className="text-sm lg:text-base">Đăng nhập bằng Google</span>
               </button>
             </div>
             <div className="mt-4 flex justify-between items-center w-full">
               <button className="pl-3 box-border flex justify-start items-center space-x-3 border border-transparent w-full py-2 bg-[#4267B2] rounded text-white transition-all duration-200 active:bg-white active:border active:border-[#4267B2] active:text-[#4267B2] hover:bg-white hover:border hover:border-[#4267B2] hover:text-[#4267B2]">
                 <FaFacebook size={20} />
-                <span>Đăng nhập bằng Google</span>
+                <span className="text-sm lg:text-base place-self-center">Đăng nhập bằng Facebook</span>
               </button>
             </div>
 

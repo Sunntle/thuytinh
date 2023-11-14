@@ -50,10 +50,10 @@ const ProductSlide = React.memo(({ item, currentSlide }) => {
         transition={{ duration: 1 }}
         className="w-8/12 flex flex-col items-center lg:items-start justify-start lg:justify-center text-center lg:text-start space-y-6"
       >
-        <span className=" text-3xl lg:text-4xl line-clamp-2 text-[#fc8019]/80 font-bold">
+        <span className="text-3xl lg:text-4xl line-clamp-1 text-[#fc8019]/80 font-bold">
           {item.name}
         </span>
-        <p className=" text-xl line-clamp-3 text-[#BEB7B5]">
+        <p className="text-xl line-clamp-3 text-[#BEB7B5]">
           {item.description}
         </p>
         <motion.button

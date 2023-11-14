@@ -128,7 +128,9 @@ const Menu = () => {
           </span>
           <CategoryList categories={categories} activeIndex={+categoryIndex} />
         </div>
+        
         <ProductList foods={foods} isLoading={isLoading}/>
+
         {foods.data.length > 0 && (
           <Button
             loading={isProductLoading}

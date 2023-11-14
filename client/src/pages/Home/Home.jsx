@@ -81,7 +81,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      <ProductSlider products={slideProduct} />
+      {slideProduct && <ProductSlider products={slideProduct} />}
 
       <Reason />
     </div>
