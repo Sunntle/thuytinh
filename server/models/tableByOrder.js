@@ -25,7 +25,7 @@ const TableByOrder = db.sequelize.define(
             type: DataTypes.ENUM("reservation", "eat-in")
         },
         dining_time: {
-            type: DataTypes.DATE()
+            type: DataTypes.STRING()
         },
         note: {
             type: DataTypes.STRING()
