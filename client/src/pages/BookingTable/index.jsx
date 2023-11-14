@@ -85,7 +85,7 @@ const BookingTable = () => {
   const onSubmitFetchTable = async (values) => {
     let date = moment(values.date).format("DD/MM/YYYY");
     let time = moment(values.time["$d"]).format("HH:mm");
-    const createdAt = moment(date + time, "DD/MM/YYYY HH:mm").format("DD/MM/YYYY-HH:mm:ss")
+    const createdAt = moment(date + time, "DD/MM/YYYY HH:mm").format("DD/MM/YYYY HH:mm:ss")
     values = { party_size: values.party_size, position: values.position, createdAt };
     await fetchTable(values);
     setResult(`?${new URLSearchParams(values).toString()}`);
