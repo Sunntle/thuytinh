@@ -7,13 +7,14 @@ import AudioNotify from "../assets/sound/notify.mp3";
 import HeaderComponent from "../components/header";
 import { addNewMessage } from "../redux/notification/notificationSystem";
 import { socket } from "../socket";
-import { NAV_ITEMS } from "../utils/constant";
+import { NAV_ITEMS, NAV_ITEMS_ADMIN } from "../utils/constant";
 const { Content, Sider } = Layout;
 const LayoutMain = () => {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [screen, setScreen] = useState(false)
   const [api, contextHolder] = notification.useNotification();
+  const user = useSelector((state) => state.account);
   const customize = useSelector(state => state.customize)
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ const LayoutMain = () => {
               defaultSelectedKeys={pathname}
               theme={customize.darkMode ? 'dark' : 'light'}
               mode="inline"
-              items={NAV_ITEMS}
+              items={user?.user.role == "R4" ? NAV_ITEMS_ADMIN: NAV_ITEMS}
               onClick={onClick}
             />
           </Sider>

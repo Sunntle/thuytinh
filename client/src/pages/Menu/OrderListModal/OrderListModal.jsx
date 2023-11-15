@@ -131,7 +131,7 @@ const OrderListModal = ({
           onClick={submitOrderList}
         >
           Đặt món
-        </Button>,
+        </Button>
       ]}
     >
       <div className="max-h-96 overflow-y-auto space-y-3 custom-scrollbar">
@@ -145,8 +145,8 @@ const OrderListModal = ({
               {/* Image */}
               <div className="col-span-5">
                 <Image
-                  loading={!item.ImageProducts[0]?.url && true}
-                  src={item.ImageProducts[0]?.url}
+                  loading={!item.imageproducts[0]?.url && true}
+                  src={item.imageproducts[0]?.url}
                   className="rounded-tl-lg rounded-bl-lg"
                   alt={item.name_product}
                 />

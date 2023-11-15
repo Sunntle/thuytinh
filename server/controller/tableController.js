@@ -71,7 +71,7 @@ exports.getAll = asyncHandler(async (req, res) => {
     }
   };
   if (req.query._noQuery === 1) delete query.include;
-  let tables = await Tables.findAll(query);
+  const tables = await Tables.findAll(query);
   res.status(200).json(tables);
 });
 
@@ -112,6 +112,7 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ message: "Bàn bạn đã hết hạn sử dụng" });
       }
       if (decode) {
+
         const data = await Tables.findAll({
           where: { token: { [Op.substring]: token } },
         })
@@ -170,7 +171,7 @@ exports.updateStatusAndToken = asyncHandler(async (req, res) => {
       status_table: 0,
       token: null
     }, tables)
-    return res.status(200).json("Đã reset bàn ");
+    return res.status(200).json("Đặt lại bàn thành công! ");
   }
   let check = await checkBooking(new Date(), tables, "reservation", "add");
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
@@ -256,6 +257,7 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
     res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
   }
 })
+
 exports.pendingTable = asyncHandler(async (req, res) => {
   const { createdAt, tableId, party_size } = req.body;
   if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
@@ -266,6 +268,7 @@ exports.pendingTable = asyncHandler(async (req, res) => {
   const data = await TableByOrder.create({ ...req.body, status: "pending", dining_option: "reservation" });
   res.status(200).json({ success: true, data });
 })
+
 exports.bookingTables = asyncHandler(async (req, res) => {
   const { id, phone, email, name, note } = req.body;
   const checkInput = bookingValidate(req.body);
@@ -291,7 +294,7 @@ exports.bookingTables = asyncHandler(async (req, res) => {
 exports.getBooking = asyncHandler(async (req, res) => {
   const { phone, email, name, tableId } = req.query;
   if (isEmpty(phone) || isEmpty(email) || isEmpty(tableId)) {
-    return res.status(404).json({ success: false, message: "Thiếu data" });
+    return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
   }
   const data = await TableByOrder.findAll({
     include: {

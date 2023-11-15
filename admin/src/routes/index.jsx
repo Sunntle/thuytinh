@@ -21,6 +21,7 @@ import ResSelectTable from "../pages/restaurant/choosetable/res-selectTable";
 import PaymentSuccess from "../pages/restaurant/order/res-orderSuccess";
 import TestTemplate from "../pages/test";
 import { ResBooking } from "../pages/restaurant/booking/booking";
+import NotFound from "../components/notfound";
 const router = createBrowserRouter([
   {
     path: "/admin",
@@ -127,6 +128,10 @@ const router = createBrowserRouter([
         element: <ResBooking />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 export default router;

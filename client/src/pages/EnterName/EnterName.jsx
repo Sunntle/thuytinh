@@ -39,7 +39,7 @@ const EnterName = (props) => {
         </div>
         <div className="flex flex-col items-center space-y-3 lg:space-y-6">
           <span className="font-medium text-sm w-9/12 lg:text-xl text-center">
-            Vui lòng nhập tên để chúng em tiện xưng hô và phục vụ tốt nhất
+            Vui lòng nhập tên để nhà hàng tiện xưng hô và phục vụ được tốt nhất
           </span>
           <input
             onChange={handleChangeName}

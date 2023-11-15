@@ -100,7 +100,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       };
       await sendRequest(request, undefined, true);
       dispatch(emptyOrder());
-      window.location.href = `http://localhost:3000/tables-${customerName.tables[0]}/order`;
+      window.location.href = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL}/tables-${customerName.tables[0]}/order`;
     } catch (err) {
       console.error(err);
     } finally {
@@ -127,8 +127,8 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                 <div className="flex justify-between items-center space-x-6">
                   <div className="h-28 w-28">
                     <Image
-                      loading={item.ImageProducts[0]?.url && false}
-                      src={item.ImageProducts[0]?.url}
+                      loading={item.imageproducts[0]?.url && false}
+                      src={item.imageproducts[0]?.url}
                       className="rounded-full"
                       alt={item.name_product}
                     />

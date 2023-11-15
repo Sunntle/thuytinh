@@ -1,12 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import { parseQueryString } from "../../utils/format.js";
 import moment from "moment";
+import { Form, Input, Modal } from "antd";
+import { useEffect, useState } from "react";
+import useHttp from "../../hooks/useHttp.js";
+import {useLocation, useNavigate} from "react-router-dom";
+import { parseQueryString } from "../../utils/format.js";
+import { regexEmail, regexPhone } from "../../utils/regex.js";
+import { MdSubdirectoryArrowLeft } from "react-icons/md";
 
 const Booked = () => {
+  const { sendRequest } = useHttp();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
   const parsedQueryParams = parseQueryString(location.search);
-  const [timeLeft, setTimeLeft] = useState(5 * 60);
+  const [timeLeft, setTimeLeft] = useState(60);
+
+  const chooseAnotherTable = async (id) => {
+    const request = {
+      method: 'delete',
+      url: `/table/booking/${id}`
+    }
+    await sendRequest(request, undefined, true)
+    navigate('/reservation')
+  }
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -18,8 +34,12 @@ const Booked = () => {
       });
     }, 1000);
 
+    if (timeLeft === 0) {
+      chooseAnotherTable(+parsedQueryParams?.tables)
+    }
+
     return () => clearInterval(countdown);
-  }, []);
+  }, [chooseAnotherTable, parsedQueryParams?.tables, timeLeft]);
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
@@ -27,6 +47,16 @@ const Booked = () => {
     return `${minutes.toString().padStart(2, "0")}:${seconds
       .toString()
       .padStart(2, "0")}`;
+  };
+
+  const submitBookingTable = async (information) => {
+    const request = {
+      method: "post",
+      url: "/table/booking",
+      ...information,
+    };
+    const bookingSuccessData = await sendRequest(request, undefined, true);
+    console.log(bookingSuccessData);
   };
 
   return (
@@ -41,70 +71,147 @@ const Booked = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base mt-8">
           <div className="flex justify-between items-center border-b pb-1">
             <span>Số bàn: </span>
-            <span>{parsedQueryParams?.tables}</span>
+            <span>{parsedQueryParams?.tables || 0}</span>
           </div>
           <div className="flex justify-between items-center border-b pb-1">
             <span>Vị trí: </span>
-            <span>{parsedQueryParams?.position === 'in' ? 'Trong nhà' : 'Ngoài trời'}</span>
+            <span>
+              {parsedQueryParams?.position === "in"
+                ? "Trong nhà"
+                : "Ngoài trời"}
+            </span>
           </div>
           <div className="flex justify-between items-center border-b pb-1">
             <span>Số người: </span>
-            <span>{parsedQueryParams?.party_size}</span>
+            <span>{parsedQueryParams?.party_size || 0}</span>
           </div>
           <div className="flex justify-between items-center border-b pb-1">
             <span>Thời gian: </span>
-            <span>{moment(parsedQueryParams.createdAt, "DD/MM/YYYY HH:mm").format("DD/MM/YYYY HH:mm ")}</span>
+            <span>
+              {parsedQueryParams?.createdAt !== undefined
+                ? moment(
+                    parsedQueryParams?.createdAt,
+                    "DD/MM/YYYY HH:mm",
+                  ).format("DD/MM/YYYY HH:mm ")
+                : ""}
+            </span>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 mt-12">
+        <Form
+          form={form}
+          onFinish={submitBookingTable}
+          className="grid grid-cols-1 gap-4 mt-12"
+        >
           <div className="w-full flex flex-col">
             <label htmlFor="name">Họ tên</label>
-            <input
-              id="name"
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng không bỏ trống",
+                },
+                {
+                  max: 50,
+                  message: "Vui lòng nhập không quá 50 kí tự",
+                },
+              ]}
               name="name"
-              type="text"
-              className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
-            />
+            >
+              <Input
+                id="name"
+                className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
+              />
+            </Form.Item>
           </div>
           <div className="w-full flex flex-col">
             <label htmlFor="email">Email</label>
-            <input
-              id="email"
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng không bỏ trống",
+                },
+                {
+                  pattern: regexEmail,
+                  message: "Vui lòng nhập đúng định dạng email",
+                },
+              ]}
               name="email"
-              type="email"
-              className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
-            />
+            >
+              <Input
+                id="email"
+                className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
+              />
+            </Form.Item>
           </div>
           <div className="w-full flex flex-col">
             <label htmlFor="phone">Số điện thoại</label>
-            <input
-              id="phone"
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng không bỏ trống",
+                },
+                {
+                  max: 10,
+                  message: "Vui lòng nhập đúng 10 số",
+                },
+                {
+                  pattern: regexPhone,
+                  message: "Số điện thoại không tồn tại",
+                },
+                {
+                  min: 10,
+                  message: "Vui lòng nhập đúng 10 số",
+                },
+              ]}
               name="phone"
-              type="text"
-              className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
-            />
+            >
+              <Input
+                id="phone"
+                className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
+              />
+            </Form.Item>
           </div>
           <div className="w-full flex flex-col">
-            <label htmlFor="phone">Đề xuất với nhà hàng (không bắt buộc )</label>
-            <textarea
-              rows={5}
-              id="phone"
-              name="note"
-              className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
-            />
+            <label htmlFor="phone">Đề xuất với nhà hàng (không bắt buộc)</label>
+            <Form.Item name="note">
+              <Input.TextArea
+                autoSize={{
+                  minRows: 3,
+                  maxRows: 5,
+                }}
+                id="note"
+                className="mt-1 text-sm py-2 pl-1 rounded shadow-sm border focus:border-primary hover:border-primary focus:ring-2 focus:ring-primary/80 ring-offset-2 outline-none transition-all duration-200"
+              />
+            </Form.Item>
           </div>
           <div className="w-full h-full tracking-wide">
             <button
               type={"submit"}
-              // onClick={fetchTable}
               className="flex justify-center items-center whitespace-nowrap w-full h-full tracking-wide bg-primary rounded py-2 md:text-sm text-white font-medium"
             >
               Đặt bàn
             </button>
           </div>
-          <span className="cursor-pointer text-center block text-sm text-slate-500 hover:text-primary transition-colors duration-200">Chọn bàn khác</span>
-        </div>
+          <span className="cursor-pointer text-center block text-sm text-slate-500 hover:text-primary transition-colors duration-200">
+            Chọn bàn khác
+          </span>
+        </Form>
       </div>
+      {location.search === "" && (
+        <Modal open={false} closable={false} footer={false} centered={true}>
+          <div className="w-full flex flex-col justify-stretch items-center space-y-3">
+            <p className="block text-base font-medium">
+              Vui lòng chọn bàn trước
+            </p>
+            <button onClick={() => chooseAnotherTable(+parsedQueryParams?.tables)} className="w-full bg-primary py-2 text-white space-x-1 rounded flex justify-center items-center">
+              <span>Quay về trang đặt bàn</span>
+              <MdSubdirectoryArrowLeft size={16} />
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

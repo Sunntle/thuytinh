@@ -1,5 +1,5 @@
 import { Button, Collapse, Divider, Form, Modal, Radio, message } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -106,7 +106,7 @@ const Order = () => {
                         <img
                           loading={"lazy"}
                           className="w-full h-full rounded-lg object-cover"
-                          src={item?.Product?.ImageProducts[0]?.url}
+                          src={item?.Product?.imageproducts[0]?.url}
                           alt={item?.Product?.name_product}
                         />
                       </div>
@@ -116,7 +116,7 @@ const Order = () => {
                         {item?.Product?.name_product}
                       </span>
                       <span className="text-sm md:text-base font-medium">
-                        Giá: {formatCurrency(item?.Product?.price)}
+                        Giá: {formatCurrency(item?.product?.price)}
                       </span>
                       <span className="text-xs md:text-base font-medium">
                         Số lượng: {item?.quantity}
