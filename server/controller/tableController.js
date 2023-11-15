@@ -6,6 +6,9 @@ const {
   TableByOrder,
   User,
   Notification,
+  OrderDetail,
+  Product,
+  ImageProduct,
 } = require("../models");
 
 
@@ -29,6 +32,15 @@ const findTables = async (tables) => {
               { [Op.lte]: 3 },
               { [Op.ne]: 0 }
             ]
+          }
+        },
+        include: {
+          model: OrderDetail,
+          include: {
+            model: Product,
+            include: {
+              model: ImageProduct,
+            }
           }
         }
       }

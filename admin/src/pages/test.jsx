@@ -1,11 +1,15 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { delBooking } from '../services/api';
 
 const TestTemplate = () => {
-    const { token } = useParams()
-    return (
-        <div>{token}</div>
-    )
-}
+    const { token } = useParams();
 
-export default TestTemplate
+    return (
+        <div>
+            ergrgerg
+        </div>
+    );
+};
+
+export default TestTemplate;

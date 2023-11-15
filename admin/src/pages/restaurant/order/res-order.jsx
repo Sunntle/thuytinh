@@ -220,7 +220,7 @@ const ResOrder = ({ handleCancel, open }) => {
                 </div>
                 <div className='flex-grow'>
                   <div className='flex items-end justify-between'>
-                    <span className={`text-lg ${customize ? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.Product.name_product}</span>
+                    <span className={`text-lg ${customize ? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.product.name_product}</span>
                     <span className='text-main mb-3'>{formatGia(item.product.price)}</span>
                   </div>
                   <div className='flex items-center justify-between'>
