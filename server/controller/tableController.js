@@ -245,6 +245,7 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
     res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
   }
 })
+
 exports.pendingTable = asyncHandler(async (req, res) => {
   const { createdAt, tableId, party_size } = req.body;
   if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
@@ -255,6 +256,7 @@ exports.pendingTable = asyncHandler(async (req, res) => {
   const data = await TableByOrder.create({ ...req.body, status: "pending", dining_option: "reservation" });
   res.status(200).json({ success: true, data });
 })
+
 exports.bookingTables = asyncHandler(async (req, res) => {
   const { id, phone, email, name, note } = req.body;
   const checkInput = bookingValidate(req.body);
@@ -280,7 +282,7 @@ exports.bookingTables = asyncHandler(async (req, res) => {
 exports.getBooking = asyncHandler(async (req, res) => {
   const { phone, email, name, tableId } = req.query;
   if (isEmpty(phone) || isEmpty(email) || isEmpty(tableId)) {
-    return res.status(404).json({ success: false, message: "Thiếu data" });
+    return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
   }
   const data = await TableByOrder.findAll({
     include: {
