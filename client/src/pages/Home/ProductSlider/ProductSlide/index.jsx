@@ -2,8 +2,6 @@ import img from "../../../../assets/images/sub-buzz-1009-1646440684-8-removebg-p
 import { motion } from "framer-motion";
 import React from "react";
 import PropTypes from "prop-types";
-import Image from "../../../../components/Image/Image.jsx";
-
 const ProductSlide = React.memo(({ item, currentSlide }) => {
   return (
     <>

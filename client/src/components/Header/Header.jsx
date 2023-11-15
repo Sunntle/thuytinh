@@ -27,7 +27,7 @@ const Header = () => {
       ) : (
         <>
           <span className="font-bold text-base lg:text-xl">
-            Vui lòng quét mã để đặt món
+            Vui lòng quét mã hoặc chọn vào phần chọn bàn để đặt món
           </span>
         </>
       )}

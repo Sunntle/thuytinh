@@ -22,14 +22,11 @@ import {
   getAllOrder,
   getAllTable,
   getAllUser,
-  updateOrder,
   updateOrderAdmin,
 } from "../../services/api";
 import { formatNgay, formatGia } from "../../utils/format";
 import ConfirmComponent from "../../components/confirm";
 import moment from "moment";
-import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 import Spinner from "../../components/spinner";
 import { socket } from "../../socket";
 const { Title } = Typography;
@@ -99,7 +96,7 @@ const OrderPage = () => {
           phone: item.phone,
           user: item.name,
           total: item.total,
-          table: item?.TableByOrders?.map((i) => i.tableId).join(", "),
+          table: item?.tablebyorders?.map((i) => i.tableId).join(", "),
           employee: item?.User?.name,
           id_employee: item.id_employee,
           status: status.label,
@@ -108,7 +105,7 @@ const OrderPage = () => {
           quantity: item?.order_details.reduce((a, b) => a + b?.quantity, 0),
           meta: {
             ...item,
-            table: item?.TableByOrders?.map((i) => i.tableId.toString()),
+            table: item?.tablebyorders?.map((i) => i.tableId.toString()),
           },
         };
         return data;
@@ -392,14 +389,14 @@ const OrderPage = () => {
                 <div className="flex justify-around">
                   <div className="w-1/6">
                     <img
-                      src={item.Product.ImageProducts[0].url}
+                      src={item.product.imageproducts[0].url}
                       className="w-full"
                     />
                   </div>
                   <div className="w-3/6">
                     <div className="w-full h-full flex flex-col justify-evenly">
-                      <div>{item.Product.name_product}</div>
-                      <div>{formatGia(item.Product.price)}</div>
+                      <div>{item.product.name_product}</div>
+                      <div>{formatGia(item.product.price)}</div>
                     </div>
                   </div>
                   <div className="w-1/6">

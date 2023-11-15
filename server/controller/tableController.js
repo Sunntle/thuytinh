@@ -59,7 +59,7 @@ exports.getAll = asyncHandler(async (req, res) => {
     }
   };
   if (req.query._noQuery === 1) delete query.include;
-  let tables = await Tables.findAll(query);
+  const tables = await Tables.findAll(query);
   res.status(200).json(tables);
 });
 
@@ -101,7 +101,7 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ message: "Bàn bạn đã hết hạn sử dụng" });
       }
       if (decode) {
-        let check = await checkBooking(new Date(), id, "reservation", "add");
+        let check = await checkBooking(new Date(), decode.tables, "reservation", "add");
         if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
         const data = await Tables.findAll({
           where: { token: { [Op.substring]: token } },
