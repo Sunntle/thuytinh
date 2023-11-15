@@ -51,6 +51,7 @@ export const ButtonTable = () => {
               : 'bg-[#D1D5DB] text-white'
               } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
           >
+
             <FiUsers className="w-6 h-6 mb-2" />
             Bàn {table.id}
             {table.status_table === 0 && (

@@ -66,7 +66,6 @@ exports.getAll = asyncHandler(async (req, res) => {
 exports.getId = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const { token, id_employee } = req.query;
-
   let check = await checkBooking(new Date(), id, "reservation", "add");
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
   if (token) {
@@ -101,8 +100,7 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ message: "Bàn bạn đã hết hạn sử dụng" });
       }
       if (decode) {
-        let check = await checkBooking(new Date(), decode.tables, "reservation", "add");
-        if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
+
         const data = await Tables.findAll({
           where: { token: { [Op.substring]: token } },
         })
@@ -155,7 +153,14 @@ exports.update = asyncHandler(async (req, res) => {
 
 
 exports.updateStatusAndToken = asyncHandler(async (req, res) => {
-  const { tables } = req.body;
+  const { tables, reset } = req.body;
+  if (tables && reset) {
+    await Tables.prototype.updateStatusTable({
+      status_table: 0,
+      token: null
+    }, tables)
+    return res.status(200).json("Đã reset bàn ");
+  }
   let check = await checkBooking(new Date(), tables, "reservation", "add");
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
   let token = generateTable(JSON.stringify(req.body));
@@ -254,7 +259,7 @@ exports.bookingTables = asyncHandler(async (req, res) => {
   const { id, phone, email, name, note } = req.body;
   const checkInput = bookingValidate(req.body);
   if (checkInput == false) return res.status(404).json({ success: false, message: "Err Data" });
-  const { createdAt, tableId } = await TableByOrder.findByPk(id, { raw: true });
+  const { createdAt, tableId } = await TableByOrder.findByPk(id, { raw: true }); s
   const dataOrder = await Order.create({ name, email, phone, status: 0 });
   let data = { createdAt, name, email, tableId, orderId: dataOrder.id };
   data = { ...data, token: await generateHash(data) };

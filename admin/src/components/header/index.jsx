@@ -47,6 +47,7 @@ import Clock from "../clock/Clock";
 import logo3 from "../../assets/images/logo3.svg";
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
+import logo from "../../assets/logo.svg";
 
 function HeaderComponent({ collapsed, setCollapsed }) {
   const [messageApi, contextHolder] = message.useMessage();
@@ -192,11 +193,10 @@ function HeaderComponent({ collapsed, setCollapsed }) {
   const customContent = () => {
     return (
       <div
-        className={` ${
-          customize.darkMode
-            ? "bg-darkModeBg border-gray-600"
-            : "bg-white border-gray-300"
-        } rounded-lg px-5 py-3 shadow-md border border-solid  border-t-0`}
+        className={` ${customize.darkMode
+          ? "bg-darkModeBg border-gray-600"
+          : "bg-white border-gray-300"
+          } rounded-lg px-5 py-3 shadow-md border border-solid  border-t-0`}
       >
         <Typography.Title level={5}>Tìm kiếm gần đây</Typography.Title>
         <Swiper
@@ -321,6 +321,9 @@ function HeaderComponent({ collapsed, setCollapsed }) {
             }
             onClick={() => setCollapsed(!collapsed)}
           />
+          {/* <div>
+            <img src={logo} className="w-10 object-cover" alt="" />
+          </div> */}
         </div>
 
         <div className="hidden sm:block flex-1 text-center mx-3">
