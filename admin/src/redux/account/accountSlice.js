@@ -33,7 +33,7 @@ export const accountSlide = createSlice({
             state.isAuthenticated = true;
             state.user = action.payload;
         },
-        doLogoutAction: (state) => {
+        doLogoutAction: () => {
             localStorage.removeItem('access_token');
             return initialState
         }

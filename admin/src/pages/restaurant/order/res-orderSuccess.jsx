@@ -15,18 +15,18 @@ const PaymentSuccess = () => {
   const [order, setOrder] = useState([]);
   const { id } = useParams();
 
-  const fetchData = async () => {
-    const resCa = await getOrderByID(id);
-    setOrder(resCa);
-  };
   useEffect(() => {
+    const fetchData = async () => {
+      const resCa = await getOrderByID(id);
+      setOrder(resCa);
+    };
     fetchData();
-  }, []);
+  }, [id]);
   
   const columns = [
     {
       title: "Tên món ăn",
-      dataIndex: "Product.name_product",
+      dataIndex: "product.name_product",
       key: "name",
       render: (_, record) => <span>{record?.Product?.name_product}</span>,
     },
@@ -37,7 +37,7 @@ const PaymentSuccess = () => {
     },
     {
       title: "Giá",
-      dataIndex: "Product.price",
+      dataIndex: "product.price",
       key: "price",
       render: (_, record) => <span>{formatGia(record?.Product?.price)}</span>,
     },
@@ -84,7 +84,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Số bàn:</span>
               <span className="whitespace-nowrap font-semibold text-main">
-                {order?.data?.TableByOrders?.[0]?.tableId}
+                {order?.data?.tablebyorders?.[0]?.tableId}
               </span>
             </div>
           </div>

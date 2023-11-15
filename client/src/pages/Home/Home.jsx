@@ -30,22 +30,27 @@ const Home = () => {
 
   return (
     <div className="tracking-wide pb-12 lg:pb-0">
-      <Banner />
-      <div className="flex items-center justify-center mt-12 px-6 gap-x-6 lg:mx-16">
-        <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
-        <h2 className="text-3xl font-bold text-primary pb-2">
-          Món ăn bán nhiều nhất
-        </h2>
-        <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
-      </div>
 
-      <HomeSlide listProduct={slideProduct} />
+      <Banner />
+
+      {slideProduct && (
+        <>
+          <div className="flex items-center justify-center mt-12 px-6 gap-x-6 lg:mx-16">
+            <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
+            <h2 className="text-3xl font-bold text-primary pb-2">
+              Món ăn bán nhiều nhất
+            </h2>
+            <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
+          </div>
+          <HomeSlide listProduct={slideProduct} />
+        </>
+      )}
 
       <motion.section
         initial={{ opacity: 0, translateY: "30px" }}
         whileInView={{ opacity: 1, translateY: 0 }}
         transition={{ duration: 0.75 }}
-        className="relative my-12 px-6 lg:px-16 flex flex-col lg:flex-row items-center justify-between"
+        className="relative min-h-0 my-12 px-6 lg:px-16 flex flex-col lg:flex-row items-center justify-between"
       >
         <div className="hidden lg:flex z-30 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-between text-white">
           <span className="w-24 h-px bg-white"></span>

@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
 const Reviews = db.sequelize.define(
-  "Reviews",
+  "reviews",
   {
     // Model attributes are defined here
     id: {

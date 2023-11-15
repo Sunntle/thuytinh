@@ -27,11 +27,14 @@ export const updateCompleteOrder = (data) => {
 export const getAllTable = (params) => {
   return axios.get(`/api/table`, { params });
 }
-export const getTableId = (id_order,params) => {
-  return axios.get(`/api/table/${id_order}`,{params});
+export const getTableId = (id_order, params) => {
+  return axios.get(`/api/table/${id_order}`, { params });
 }
 export const updateTables = (data) => {
   return axios.put(`/api/table`, data);
+}
+export const resetTableApi = (data) => {
+  return axios.put(`/api/table/token`, data);
 }
 export const delTables = (id) => {
   return axios.delete(`/api/table/` + id);
@@ -41,6 +44,12 @@ export const createTables = (body) => {
 }
 export const switchTables = (body) => {
   return axios.post(`/api/table/switch-tables`, body);
+}
+export const getAllBooking = (params) => {
+  return axios.get(`/api/table/get-booking`, { params });
+}
+export const delBooking = (id) => {
+  return axios.delete(`/api/table/booking/` + id);
 }
 
 // product //

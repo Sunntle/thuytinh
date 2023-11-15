@@ -241,7 +241,7 @@ const DashBoard = () => {
                             <img
                               className="w-full"
                               style={{ maxWidth: "130px" }}
-                              src={el?.ImageProducts[0]?.url}
+                              src={el?.imageproducts[0]?.url}
                               alt=""
                             />
                           </div>

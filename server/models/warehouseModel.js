@@ -2,7 +2,7 @@ const { DataTypes, Op } = require("sequelize");
 const db = require("../config/connectDatabase");
 
 const Warehouse = db.sequelize.define(
-  "Warehouse",
+  "warehouses",
   {
     id: {
       type: DataTypes.INTEGER,

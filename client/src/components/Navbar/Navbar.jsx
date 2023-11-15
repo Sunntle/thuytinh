@@ -1,6 +1,5 @@
 import { AiOutlineShop } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
-import { FiUser } from "react-icons/fi";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { IoRestaurantOutline } from "react-icons/io5";

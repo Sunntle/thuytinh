@@ -27,10 +27,10 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
       ];
       form.setFieldsValue({
         name_material: data.name_material,
-        price: data.Warehouses?.[0]?.price_import,
+        price: data.warehouses?.[0]?.price_import,
         Image: data.Image,
         unit: data.unit,
-        id_warehouse: data.Warehouses?.[0]?.id
+        id_warehouse: data.warehouses?.[0]?.id
       });
     }
   }, [form, data]);
@@ -156,7 +156,7 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
           key: '2',
           label: 'Đơn hàng nhập gần đây',
           children: <div className="h-[50vh] overflow-y-auto flex flex-col">
-            {data?.Warehouses.map((item) => (
+            {data?.warehouses.map((item) => (
               <div key={item.id} className="border_bottom p-2">
                 <Avatar shape="square" src={data.image} className="mr-2" size={40} />
                 <Text>{`Nhập ngày ${formatNgay(item.createdAt)} với số lượng ${item.amount_import} giá mua vào : ${formatGia(item.price_import)}`} </Text>

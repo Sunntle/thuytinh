@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AddTable } from '../../../redux/table/tableSystem';
 import { getAllTable } from '../../../services/api';
 import { Modal } from 'antd';
-import { useNavigate } from 'react-router-dom';
 import ResOrder from '../order/res-order';
 
 export const ButtonTable = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [tableData, setTableData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,6 +51,7 @@ export const ButtonTable = () => {
               : 'bg-[#D1D5DB] text-white'
               } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
           >
+
             <FiUsers className="w-6 h-6 mb-2" />
             Bàn {table.id}
             {table.status_table === 0 && (

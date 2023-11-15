@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
 const TableByOrder = db.sequelize.define(
-    "TableByOrder",
+    "tablebyorders",
     {
         id: {
             type: DataTypes.INTEGER,

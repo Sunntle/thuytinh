@@ -21,7 +21,7 @@ import PropTypes from "prop-types";
 const Product = (props) => {
   const { id, name_product, price, amount, discount } = props.item;
   const imageUrl = useMemo(
-    () => props.item.imageUrls || props.item.ImageProducts?.[0]?.url,
+    () => props.item.imageUrls || props.item.imageproducts?.[0]?.url,
     [props.item],
   );
   const [messageApi, contextHolder] = message.useMessage();

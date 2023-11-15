@@ -1,4 +1,4 @@
-import {DatePicker, Form, Select, TimePicker} from "antd";
+import { DatePicker, Form, Select, TimePicker } from "antd";
 import moment from "moment";
 import "./index.css";
 import {useState} from "react";
@@ -10,6 +10,7 @@ import {parseQueryString} from "../../utils/format.js";
 const disabledDate = (cur) => {
     return cur && cur < moment().subtract(1, "day").endOf("day");
 };
+
 const positions = [
     {
         label: "Trong nhà",

@@ -27,14 +27,14 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
     handleCancel();
   },[data?.id, handleCancel, handleFinish]);
 
-  const fileList = useMemo(()=>data?.ImageProducts.map((el) => {
+  const fileList = useMemo(()=>data?.imageproducts.map((el) => {
     return {
       uid: el.id,
       name: el.url?.split("/").at(-1).split(".")[0],
       status: "done",
       url: el.url,
     };
-  }),[data?.ImageProducts]);
+  }),[data?.imageproducts]);
   useEffect(() => {
     if (data) {
       const setFormValue = async () => {
@@ -47,11 +47,11 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
           createdAt: data.createdAt,
           id_category: data.id_category,
           Image: data.Image,
-          recipe: data.Recipes.map((el) => ({
+          recipe: data.recipes.map((el) => ({
             quantity: el.quantity,
-            materials: el.Material.id,
+            materials: el.material.id,
           })),
-          descriptionRecipe: data.Recipes[0]?.descriptionRecipe,
+          descriptionRecipe: data.recipes[0]?.descriptionRecipe,
           discount: data.discount
         });
       };

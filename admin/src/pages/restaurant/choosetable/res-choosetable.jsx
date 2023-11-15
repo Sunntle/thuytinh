@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Tabs, notification } from 'antd';
+import { Button, Tabs, notification, Dropdown } from 'antd';
 import { FiUsers } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { AddTable } from '../../../redux/table/tableSystem';
-import { getAllTable, getTableId } from '../../../services/api';
+import { getAllTable, getTableId, resetTableApi } from '../../../services/api';
 import { useNavigate } from 'react-router-dom';
 import ResOrder from '../order/res-order';
 import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSystem';
 import { socket } from '../../../socket';
-const ButtonTable = ({ table, handleTableClick, handleDetailModal }) => (
+const ButtonTable = ({ table, handleTableClick, handleDetailModal, resetTable }) => (
   <div key={table.id}>
     <span
       className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
@@ -17,6 +17,26 @@ const ButtonTable = ({ table, handleTableClick, handleDetailModal }) => (
         : 'bg-[#D1D5DB] text-white'
         } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
     >
+      {table.status_table === 1 && (
+        <div className='w-full flex justify-end cursor-pointer'>
+          <Dropdown
+            menu={{
+              items: [{
+                key: '1',
+                label: (
+                  <div className='p-2' onClick={() => resetTable(table)} >Hủy đặt bàn</div>
+                ),
+              }]
+            }}
+            placement="top"
+            trigger={["click"]}
+            arrow
+          >
+            <MdOutlineRestaurantMenu />
+          </Dropdown>
+        </div>
+      )}
+
       <FiUsers className="w-6 h-6 mb-2" />
       Bàn {table.id}
       {table.status_table === 0 && (
@@ -50,13 +70,9 @@ const ResChooseTable = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tableData = useSelector((state) => state.table);
-  const tableListData = useSelector((state) => state.tablelist);
   const [open, setOpen] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const userId = useSelector((state) => state.account.user.id)
-
-
-
 
   useEffect(() => {
     socket.on("new message", arg => {
@@ -70,23 +86,34 @@ const ResChooseTable = () => {
     return () => {
       socket.off("new message")
     }
-  }, [socket])
-  const fetchData = async () => {
+  }, [])
+  const fetchData = useCallback(async () => {
     const resTable = await getAllTable();
     dispatch(AddTable(resTable));
-  };
+  }, []);
   useEffect(() => {
     fetchData();
-  }, [dispatch]);
+  }, [fetchData]);
 
-  const handleTableClick = (index) => {
+  const handleTableClick = async (index) => {
+    const resTableId = await getTableId(index.id, { id_employee: userId });
+    if (resTableId.success === false) {
+      api.info({
+        message: 'Thông báo!!!',
+        description:
+          resTableId.data
+      });
+      return
+    }
     dispatch(AddTableList(index));
     navigate('/employee/menu/');
   };
 
   const handleDetailModal = async (table) => {
-    const resTableId = await getTableId(table.id, { id_employee: userId })
+
+    const resTableId = await getTableId(table.id, { id_employee: userId });
     const tableByOrders = resTableId[0].TableByOrders;
+
     if (tableByOrders && tableByOrders.length === 0 || tableByOrders == undefined) {
       api.info({
         message: 'Thông báo!!!',
@@ -105,6 +132,13 @@ const ResChooseTable = () => {
     setOpen(false);
   };
 
+  const resetTable = async ({ id }) => {
+    const res = await resetTableApi({ tables: [id], reset: true });
+    api.success({
+      message: 'Thông báo!!!',
+      description: res
+    });
+  }
   const items = [
     {
       key: '1',
@@ -117,6 +151,7 @@ const ResChooseTable = () => {
               table={table}
               handleTableClick={handleTableClick}
               handleDetailModal={handleDetailModal}
+              resetTable={resetTable}
             />
           ))}
         </div>

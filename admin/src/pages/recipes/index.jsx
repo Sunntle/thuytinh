@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   Table,
-  message,
   Button,
   Modal,
   Form,
@@ -54,12 +53,13 @@ const RecipePage = () => {
     }));
     const conProduct = productResponse.data
       .filter((item) => {
-        return !data?.some((pro) => pro.product.id === item.id);
+        return !data?.some((pro) => pro.product?.id === item.id);
       })
       .map((item) => ({
         value: item.id,
         label: item.name_product,
       }));
+    console.log(data)
     setData(data);
     setOptionsMaterial(con);
     setOptionsProduct(conProduct);
@@ -157,7 +157,7 @@ const RecipePage = () => {
               title: "Ảnh sản phẩm",
               key: "thumbnail",
               render: (_, record) => (
-                <img src={record.product.ImageProducts?.[0]?.url} width={100} />
+                <img src={record.product.imageproducts?.[0]?.url} width={100} />
               ),
             },
             {
@@ -170,6 +170,7 @@ const RecipePage = () => {
               key: "materials",
               width: "30%",
               render: (_, record) =>
+
                 record.materials.map((item) => (
                   <div key={Math.random()} className="flex gap-2">
                     <div className=" font-medium text-base">
@@ -204,7 +205,7 @@ const RecipePage = () => {
             },
           ]}
           dataSource={data}
-          rowKey={(data) => data.product.id}
+          rowKey={(data) => data.product?.id}
         />
         <Modal
           footer={null}
@@ -233,7 +234,6 @@ const RecipePage = () => {
                   <div>
                     {fields.map(({ key, name, ...restField }) => (
                       <div className="flex flex-col items-center" key={key}>
-                        {console.log(key, name, restField)}
                         <Form.Item
                           {...restField}
                           name={[name, "id_product"]}

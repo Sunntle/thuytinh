@@ -12,7 +12,7 @@ const hashUserPassword = async (user) => {
   }
 };
 
-const User = db.sequelize.define("Users", {
+const User = db.sequelize.define("users", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
