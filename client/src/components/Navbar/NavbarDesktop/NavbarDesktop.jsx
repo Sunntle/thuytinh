@@ -61,9 +61,8 @@ const NavbarDesktop = ({
   return (
     <div
       ref={headerRef}
-      className={`tracking-wide hidden ease-in-out duration-200 lg:flex lg:justify-between lg:items-center lg:fixed z-30 ${
-        checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
-      } top-0 w-full h-20 px-16 py-2 drop-shadow-md`}
+      className={`tracking-wide hidden ease-in-out duration-200 lg:flex lg:justify-between lg:items-center lg:fixed z-30 ${checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
+        } top-0 w-full h-20 px-16 py-2 drop-shadow-md`}
     >
       <div className="w-20 h-20">
         <img src={logoPath} alt="logo" />
@@ -84,9 +83,8 @@ const NavbarDesktop = ({
                 {categories?.length > 0 && (
                   <HiOutlineChevronRight
                     size={20}
-                    className={`transition-transform ml-1 duration-200 ${
-                      isMenuHovered ? "rotate-90" : "rotate-0"
-                    }`}
+                    className={`transition-transform ml-1 duration-200 ${isMenuHovered ? "rotate-90" : "rotate-0"
+                      }`}
                   />
                 )}
                 <AnimatePresence>
@@ -206,7 +204,7 @@ const NavbarDesktop = ({
           <span className="font-medium">Món đã chọn</span>
           {/*<HiOutlineClipboardList size={24} className="group-hover:text-primary text-white transition-colors duration-300" />*/}
           <div className="p-3 w-5 h-5 text-sm font-medium bg-white text-primary rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-            {orders.length || 0}
+            {orders?.length || 0}
           </div>
         </div>
         {idTable && (

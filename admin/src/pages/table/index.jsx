@@ -147,7 +147,7 @@ const TablePage = () => {
             ) : (<>
                 <Row justify="space-between" align="center" className="mb-4">
                     <Col xs={6}>
-                        <Title level={3}>Danh sách món ăn</Title>
+                        <Title level={3}>Quản lí bàn</Title>
                     </Col>
                     <Col xs={6} style={{ textAlign: "-webkit-right" }}>
                         <ButtonComponents

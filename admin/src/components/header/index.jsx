@@ -46,8 +46,9 @@ import { DarkSvg } from "../../utils/constant";
 import Clock from "../clock/Clock";
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
+import logo from "../../assets/logo.svg";
 
-function HeaderComponent({collapsed, setCollapsed}) {
+function HeaderComponent({ collapsed, setCollapsed }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
@@ -117,7 +118,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
     searchArr.splice(index, 1);
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
-  },[]);
+  }, []);
 
   const handleSearch = useCallback((keyword) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
@@ -133,7 +134,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
         _sort: "sold",
         _order: "DESC",
         _limit: 8,
-      }),getAllCate()]);
+      }), getAllCate()]);
       setCategories(dataCate);
       setData(dataProducts);
     };
@@ -175,14 +176,13 @@ function HeaderComponent({collapsed, setCollapsed}) {
   const customContent = () => {
     return (
       <div
-        className={` ${
-          customize.darkMode
-            ? "bg-darkModeBg border-gray-600"
-            : "bg-white border-gray-300"
-        } rounded-lg px-5 py-3 shadow-md border border-solid  border-t-0`}
+        className={` ${customize.darkMode
+          ? "bg-darkModeBg border-gray-600"
+          : "bg-white border-gray-300"
+          } rounded-lg px-5 py-3 shadow-md border border-solid  border-t-0`}
       >
         <Typography.Title level={5}>Tìm kiếm gần đây</Typography.Title>
-       <Swiper
+        <Swiper
           speed={1000}
           slidesPerView={7}
           spaceBetween={15}
@@ -217,7 +217,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
             <p className="text-gray-500">Không có tìm kiếm nào!</p>
           )}
         </Swiper>
-        
+
         {categories.length > 0 && (
           <>
             <Typography.Title level={5}>Danh mục</Typography.Title>
@@ -231,7 +231,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
                 {categories?.map((el) => (
                   <SwiperSlide key={el.id} className="my-5">
                     <Link
- 
+
                       to={`/employee/menu?category=${el.id}`}
                       className="w-full py-1 flex justify-center whitespace-nowrap items-center border rounded-full border-gray-300 border-solid transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
                     >
@@ -285,26 +285,25 @@ function HeaderComponent({collapsed, setCollapsed}) {
   return (
     <>
       {contextHolder}
-      <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
-        <div className="flex items-center justify-between">
-          <div>
-            <img src="Logo" className="max-w-md object-cover" alt="" />
-            Logo here
-          </div>
+      <div className="flex items-center justify-between px-5 bg-main py-5 w-full">
+        <div className="flex items-center justify-between gap-4">
           <Button
-          type="text"
-          size="large"
-          icon={
-            collapsed ? (
-              <MenuUnfoldOutlined style={{ color: "white" }} />
-            ) : (
-              <MenuFoldOutlined style={{ color: "white" }} />
-            )
-          }
-          onClick={() => setCollapsed(!collapsed)}
+            type="text"
+            size="large"
+            icon={
+              collapsed ? (
+                <MenuUnfoldOutlined style={{ color: "white" }} />
+              ) : (
+                <MenuFoldOutlined style={{ color: "white" }} />
+              )
+            }
+            onClick={() => setCollapsed(!collapsed)}
           />
+          <div>
+            <img src={logo} className="w-10 object-cover" alt="" />
+          </div>
         </div>
-        
+
         <div className="hidden sm:block flex-1 text-center mx-3">
           <SearchComponent
             className="bg-secondaryColor w-full max-w-2xl "
@@ -315,8 +314,8 @@ function HeaderComponent({collapsed, setCollapsed}) {
           />
         </div>
         <div className="flex items-center justify-center gap-x-4">
-          <Clock/>
-          <Tooltip title={customize.darkMode ? 'Chế độ sáng': 'Chế độ tối'}>
+          <Clock />
+          <Tooltip title={customize.darkMode ? 'Chế độ sáng' : 'Chế độ tối'}>
             <Button
               size="large"
               type="text"

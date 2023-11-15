@@ -144,7 +144,7 @@ const checkBooking = async (time, tableId, dining_option = "eat-in", params = "s
     }
     query.where = {
         dining_option: dining_option,
-        status: { [Op[dining_option === "eat-in" ? 'ne' : "eq"]]: "confirmed" },
+        status: { [Op[dining_option === "eat-in" ? "notIn" : "in"]]: ["pending", "confirmed"] },
         createdAt: {
             [Op.and]: {
                 [Op[dining_option === "eat-in" ? "gte" : "lte"]]: moment(time)[params](limit, 'minutes'),
