@@ -122,72 +122,6 @@ const NavbarDesktop = ({
             </NavLink>
           );
         })}
-        {/* <NavLink
-          to="/home"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
-        >
-          Trang chủ
-        </NavLink>
-        <NavLink
-          to={`/tables-${idTable}/service`}
-          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
-        >
-          Dịch vụ
-        </NavLink>
-        <div
-          onMouseEnter={handleMenuMouseEnter}
-          onMouseLeave={handleMenuMouseLeave}
-          className={`box-border relative cursor-pointer flex items-center transition-colors duration-200 p-2 rounded navbar`}
-        >
-          <NavLink
-            to={`/tables-${idTable}/menu`}
-            className="font-normal text-base"
-          >
-            Thực đơn
-          </NavLink>
-          {categories?.length > 0 && (
-            <HiOutlineChevronRight
-              size={20}
-              className={`transition-transform ml-1 duration-200 ${
-                isMenuHovered ? "rotate-90" : "rotate-0"
-              }`}
-            />
-          )}
-          <AnimatePresence>
-            {isMenuHovered && categories?.length > 0 && (
-              <motion.ul
-                initial={{ opacity: 0, x: "-10px" }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: "-100px" }}
-                transition={{ duration: 0.1, ease: "linear" }}
-                className="z-40 absolute w-40 top-12 left-0 space-y-2 bg-white border rounded border-gray-200 py-2 px-3 transition-all duration-300"
-              >
-                {categories?.map((category, index) => (
-                  <li key={index}>
-                    <Link
-                      to={`?category=${category.id}`}
-                      className="relative block w-full hover:text-primary hover:translate-x-4 drop-shadow text-slate-800 whitespace-nowrap transition-all duration-200"
-                    >
-                      Món {category.name_category}
-                    </Link>
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </div>
-        <NavLink
-          to="/contact"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
-        >
-          Liên hệ
-        </NavLink>
-        <NavLink
-          to="/about"
-          className="box-border font-normal text-base transition-colors duration-300 p-2 navbar rounded"
-        >
-          Về chúng tôi
-        </NavLink> */}
       </nav>
       <div className="flex justify-between items-center space-x-3">
         <div className="cursor-pointer flex items-center space-x-2 relative"></div>
@@ -221,7 +155,7 @@ const NavbarDesktop = ({
 NavbarDesktop.propTypes = {
   headerRef: PropTypes.object,
   checkRoute: PropTypes.bool,
-  idTable: PropTypes.string,
+  idTable: PropTypes.number,
   categories: PropTypes.array,
   navbarList: PropTypes.array,
 };

@@ -28,10 +28,11 @@ export const NAV_ITEMS = [
   getItem("Nhà hàng", null, <ShopOutlined />, [
     getItem("Chọn bàn", "/employee/choosetable"),
     getItem("Thực đơn món ăn", "/employee/menu"),
+    getItem("Danh sách đặt bàn", "/employee/booking"),
     getItem("Doanh thu", "/employee/renvenue")
   ]),
 ];
-export const url = import.meta.env.VITE_APP_CLIENT_URL + '/ban-';
+export const url = import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL;;
 
 export const DarkSvg = () => (
   <svg

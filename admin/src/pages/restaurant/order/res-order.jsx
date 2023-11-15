@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import "../payment/res-payment.css"
 import { Button, Modal, Form, Radio, Drawer, Collapse, notification } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,7 +9,6 @@ import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSys
 import { formatGia } from '../../../utils/format'
 import moment from 'moment'
 import ButtonComponents from '../../../components/button'
-const img = 'https://img.freepik.com/free-photo/thinly-sliced-pepperoni-is-popular-pizza-topping-american-style-pizzerias-isolated-white-background-still-life_639032-229.jpg?w=2000'
 
 const RenderFooter = ({
   tablelist,
@@ -32,7 +31,7 @@ const RenderFooter = ({
     </div>
     <div className='total mt-2'>
       <span className={`font-medium text-lg ${customize ? "text-white" : "text-black"}`}>Tổng tiền:</span>
-      <span className='float-right text-lg text-main'>{formatGia(tablelist?.TableByOrders[0]?.order?.total || 0)}</span>
+      <span className='float-right text-lg text-main'>{formatGia(tablelist?.tablebyorders[0]?.order?.total || 0)}</span>
     </div>
     <div className='grid grid-cols-4 mt-12'>
       <div className='flex justify-center font-semibold col-span-2 m-1'>
@@ -123,7 +122,7 @@ const ResOrder = ({ handleCancel, open }) => {
   const [switchTable, setSwitchTable] = useState(false)
   const [form] = Form.useForm();
   const tablelist = useSelector((state) => state.tablelist?.[0]);
-  const tablebyorders = tablelist?.TableByOrders?.[0]
+  const tablebyorders = tablelist?.tablebyorders?.[0]
   const order = tablebyorders?.order;
   const order_details = order?.order_details;
   const customize = useSelector((state) => state.customize.darkMode)
@@ -172,13 +171,13 @@ const ResOrder = ({ handleCancel, open }) => {
 
   //xu ly chuyen ban
   const openSwithTable = (index) => {
-    navigate('/employee/select-table/' + tablelist.id + "/" + tablelist.TableByOrders[0].orderId);
+    navigate('/employee/select-table/' + tablelist.id + "/" + tablelist.tablebyorders[0].orderId);
   }
   const closeSwithTable = () => {
     setSwitchTable(false)
   }
   const completeOrder = async () => {
-    const { orderId, tableId } = tablelist.TableByOrders[0];
+    const { orderId, tableId } = tablelist.tablebyorders[0];
     const { success, data } = await updateCompleteOrder({ orderId, tableId })
     if (success) {
       api.success({
@@ -222,7 +221,7 @@ const ResOrder = ({ handleCancel, open }) => {
                 <div className='flex-grow'>
                   <div className='flex items-end justify-between'>
                     <span className={`text-lg ${customize ? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.Product.name_product}</span>
-                    <span className='text-main mb-3'>{formatGia(item.Product.price)}</span>
+                    <span className='text-main mb-3'>{formatGia(item.product.price)}</span>
                   </div>
                   <div className='flex items-center justify-between'>
                     <span className='font-medium text-slate-500 text-sm'>Số lượng:</span>

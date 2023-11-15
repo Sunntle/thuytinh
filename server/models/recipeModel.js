@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
 const Materials = require("./materialsModel");
 const Recipes = db.sequelize.define(
-  "Recipes",
+  "recipes",
   {
     // Model attributes are defined here
     id: {

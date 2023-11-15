@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
 const { destroyImg } = require("../utils/cloud");
 const Category = db.sequelize.define(
-  "Category",
+  "categories",
   {
     id: {
       type: DataTypes.INTEGER,

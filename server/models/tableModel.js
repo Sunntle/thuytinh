@@ -1,7 +1,7 @@
 const { DataTypes, Op } = require("sequelize");
 const db = require("../config/connectDatabase");
 const Tables = db.sequelize.define(
-    "Tables",
+    "tables",
     {
         id: {
             type: DataTypes.INTEGER,

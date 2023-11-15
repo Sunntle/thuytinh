@@ -45,6 +45,12 @@ export const createTables = (body) => {
 export const switchTables = (body) => {
   return axios.post(`/api/table/switch-tables`, body);
 }
+export const getAllBooking = (params) => {
+  return axios.get(`/api/table/get-booking`, { params });
+}
+export const delBooking = (id) => {
+  return axios.delete(`/api/table/booking/` + id);
+}
 
 // product //
 export const getAllProduct = (params) => {

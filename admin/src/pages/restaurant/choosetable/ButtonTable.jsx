@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AddTable } from '../../../redux/table/tableSystem';
 import { getAllTable } from '../../../services/api';
 import { Modal } from 'antd';
-import { useNavigate } from 'react-router-dom';
 import ResOrder from '../order/res-order';
 
 export const ButtonTable = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [tableData, setTableData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -70,7 +70,6 @@ const ResChooseTable = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tableData = useSelector((state) => state.table);
-  const tableListData = useSelector((state) => state.tablelist);
   const [open, setOpen] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const userId = useSelector((state) => state.account.user.id)
@@ -87,14 +86,14 @@ const ResChooseTable = () => {
     return () => {
       socket.off("new message")
     }
-  }, [socket])
-  const fetchData = async () => {
+  }, [])
+  const fetchData = useCallback(async () => {
     const resTable = await getAllTable();
     dispatch(AddTable(resTable));
-  };
+  }, []);
   useEffect(() => {
     fetchData();
-  }, [dispatch]);
+  }, [fetchData]);
 
   const handleTableClick = async (index) => {
     const resTableId = await getTableId(index.id, { id_employee: userId });

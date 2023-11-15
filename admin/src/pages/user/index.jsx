@@ -59,7 +59,6 @@ function UserPage() {
       switch (role) {
         case "admin": {
           const dataAdmin = await getAllUser({ _like: "role_R1_not" });
-          console.log(dataAdmin);
           dataAdmin.success && setAdmin(dataAdmin);
           break;
         }

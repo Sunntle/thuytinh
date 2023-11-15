@@ -11,9 +11,9 @@ exports.list = async (req, res) => {
 
   let recipes = await Recipes.findAll(query);
   const result = recipes.reduce((con, cur) => {
-    const { Product, quantity, id, Material, descriptionRecipe } = cur.toJSON()
-    const existingProduct = con.find((item) => item.product.id === Product.id);
-    const mate = { quantity, id_recipe: id, ...Material, descriptionRecipe: descriptionRecipe };
+    const { product, quantity, id, material, descriptionRecipe } = cur.toJSON()
+    const existingProduct = con.find((item) => item.product.id === product.id);
+    const mate = { quantity, id_recipe: id, ...material, descriptionRecipe: descriptionRecipe };
 
     if (existingProduct) {
       existingProduct.quantity += quantity;

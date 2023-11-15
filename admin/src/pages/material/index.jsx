@@ -277,7 +277,7 @@ function MaterialPage() {
             <div className="h-[28vh] overflow-y-auto flex flex-col  rounded-sm drop-shadow-sm">
               {listImportMaterial.map((item) => (
                 <div key={item.id} className="border_bottom py-2">
-                  <Text><span className="text-main">{formatNgay(item.createdAt)}</span>: {item.Material.name_material} - {item.amount_import}{item.Material.unit} với giá : <span className="font-semibold">{formatGia(item.price_import)}/1{item.Material.unit}</span></Text>
+                  <Text><span className="text-main">{formatNgay(item.createdAt)}</span>: {item.material.name_material} - {item.amount_import}{item.material.unit} với giá : <span className="font-semibold">{formatGia(item.price_import)}/1{item.material.unit}</span></Text>
                 </div>
               ))}
             </div>
@@ -402,6 +402,7 @@ function MaterialPage() {
 
           </Form>
         </Drawer>
+        {console.log(materials.data)}
         <Table
           columns={columns}
           dataSource={materials.data}
