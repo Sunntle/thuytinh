@@ -73,9 +73,9 @@ const PaymentSuccess = () => {
     () => [
       {
         title: "Tên món ăn",
-        dataIndex: "Product.name_product",
+        dataIndex: "product.name_product",
         key: "name",
-        render: (_, record) => <span>{record?.Product?.name_product}</span>,
+        render: (_, record) => <span>{record?.product?.name_product}</span>,
       },
       {
         title: "Số lượng",
@@ -84,10 +84,10 @@ const PaymentSuccess = () => {
       },
       {
         title: "Giá",
-        dataIndex: "Product.price",
+        dataIndex: "product.price",
         key: "price",
         render: (_, record) => (
-          <span>{formatCurrency(record?.Product?.price)}</span>
+          <span>{formatCurrency(record?.product?.price)}</span>
         ),
       },
       {
@@ -96,7 +96,7 @@ const PaymentSuccess = () => {
         key: "total",
         render: (_, record) => (
           <span>
-            {formatCurrency(record?.Product?.price * record?.quantity)}
+            {formatCurrency(record?.product?.price * record?.quantity)}
           </span>
         ),
       },
@@ -157,7 +157,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Số bàn:</span>
               <span className="whitespace-nowrap font-semibold text-primary">
-                {orderData?.data?.TableByOrders[0].id}
+                {orderData?.data?.tablebyorders[0].id}
               </span>
             </div>
           </div>

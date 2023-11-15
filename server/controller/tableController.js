@@ -59,7 +59,7 @@ exports.getAll = asyncHandler(async (req, res) => {
     }
   };
   if (req.query._noQuery === 1) delete query.include;
-  let tables = await Tables.findAll(query);
+  const tables = await Tables.findAll(query);
   res.status(200).json(tables);
 });
 
@@ -100,6 +100,7 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ message: "Bàn bạn đã hết hạn sử dụng" });
       }
       if (decode) {
+
         const data = await Tables.findAll({
           where: { token: { [Op.substring]: token } },
         })

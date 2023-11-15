@@ -28,8 +28,6 @@ const ProductDetail = memo(({ openDrawer, onClose, id }) => {
     };
   }, [id, sendRequest]);
 
-  console.log(productDetail);
-
   if (isLargeScreen) {
     return null;
   }
@@ -68,7 +66,7 @@ const ProductDetail = memo(({ openDrawer, onClose, id }) => {
           <Image
             className="rounded"
             src={
-              productDetail?.imageUrls || productDetail?.ImageProducts?.[0]?.url
+              productDetail?.imageUrls || productDetail?.imageproducts?.[0]?.url
             }
             alt={productDetail?.name_product}
           />

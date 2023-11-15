@@ -18,7 +18,7 @@ const PaymentLoading = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dataResponse = parseQueryString(location.search);
-  const { idOrder, idTable } = useSelector((state) => state.order);
+  const { idOrder } = useSelector((state) => state.order);
 
   const paymentResponse = useMemo(
     () => ({
