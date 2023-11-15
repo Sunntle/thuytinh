@@ -133,7 +133,7 @@ function SearchPage() {
               <div className="shadow-xl border-solid border border-gray-300 rounded-lg min-h-[250px] w-auto">
                 <img
                   className="h-full w-full rounded-t-lg"
-                  src={el?.ImageProducts[0]?.url}
+                  src={el?.imageproducts[0]?.url}
                 />
   
                 <div className="p-4 flex flex-col">
@@ -211,7 +211,7 @@ function SearchPage() {
                 <p className="text-gray-500  my-2">
                   Số lượng: {el.amount} {el.unit}
                 </p>
-                <p className="text-main text-lg">{formatGia(el.Warehouses[0]?.price_import)}</p>
+                <p className="text-main text-lg">{formatGia(el.warehouses[0]?.price_import)}</p>
               </div>
             </div>
           ))}

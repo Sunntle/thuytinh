@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Tabs, notification } from 'antd';
 import { FiUsers } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -50,7 +50,6 @@ const ResChooseTable = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tableData = useSelector((state) => state.table);
-  const tableListData = useSelector((state) => state.tablelist);
   const [open, setOpen] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const userId = useSelector((state) => state.account.user.id)
@@ -70,14 +69,14 @@ const ResChooseTable = () => {
     return () => {
       socket.off("new message")
     }
-  }, [socket])
-  const fetchData = async () => {
+  }, [])
+  const fetchData = useCallback(async () => {
     const resTable = await getAllTable();
     dispatch(AddTable(resTable));
-  };
+  },[]);
   useEffect(() => {
     fetchData();
-  }, [dispatch]);
+  }, [fetchData]);
 
   const handleTableClick = (index) => {
     dispatch(AddTableList(index));
@@ -86,7 +85,7 @@ const ResChooseTable = () => {
 
   const handleDetailModal = async (table) => {
     const resTableId = await getTableId(table.id, { id_employee: userId })
-    const tableByOrders = resTableId[0].TableByOrders;
+    const tableByOrders = resTableId[0].tablebyorders;
     if (tableByOrders && tableByOrders.length === 0 || tableByOrders == undefined) {
       api.info({
         message: 'Thông báo!!!',

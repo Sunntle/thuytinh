@@ -94,7 +94,7 @@ const ResMenu = () => {
                                     {product.discount > 0 ? (
                                         <Badge.Ribbon text={`${product.discount}%`} color='red'>
                                             <div className='shadow-xl border-solid border border-gray-300 rounded-lg min-h-[230px] w-auto' >
-                                                <img className='h-full w-full rounded-t-lg' src={product?.ImageProducts[0]?.url} />
+                                                <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
                                                 <div className='p-4 flex flex-col'>
                                                     <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
                                                     <div className='text-xs mt-2 text-slate-500'>Số lượng : {product.amount}</div>

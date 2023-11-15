@@ -56,7 +56,7 @@ const ResPayment = () => {
             let res;
 
             const body = {
-                id_order: tablelist.TableByOrders[0].order.id,
+                id_order: tablelist.tablebyorders[0].order.id,
                 carts: carts,
                 id_table: tablelist.id,
                 total: total.cartTotalAmount
@@ -96,7 +96,7 @@ const ResPayment = () => {
                     <div key={index}>
                         <div className='flex items-center my-3'>
                             <div className='flex items-center h-16 w-15 mr-1 hover:bg-hoverColor'>
-                                <img className=' rounded-lg  h-full w-full  object-contain ' src={item?.ImageProducts[0]?.url} />
+                                <img className=' rounded-lg  h-full w-full  object-contain ' src={item?.imageproducts[0]?.url} />
                             </div>
                             <div className='flex-grow'>
                                 <div className='flex justify-between'>

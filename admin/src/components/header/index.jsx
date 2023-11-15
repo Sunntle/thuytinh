@@ -276,7 +276,7 @@ function HeaderComponent({ collapsed, setCollapsed }) {
                         <div className="p-2 h-[167px] border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
                           <img
                             className="w-full mb-3 "
-                            src={product?.ImageProducts[0]?.url}
+                            src={product?.imageproducts[0]?.url}
                             alt=""
                           />
                           <h6 className="font-semibold text-gray-500">
@@ -304,10 +304,10 @@ function HeaderComponent({ collapsed, setCollapsed }) {
   return (
     <>
       {contextHolder}
-      <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
+      <div className="flex items-center justify-between px-11 bg-main py-3 w-full">
         <div className="flex items-center justify-between">
           <div className="w-20 h-20">
-            <img src={logo3} className="max-w-md object-cover" alt="logo" />
+            <img src={logo3} className="w-full object-cover" alt="logo" />
           </div>
           <Button
             type="text"

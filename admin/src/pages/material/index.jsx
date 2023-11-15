@@ -402,6 +402,7 @@ function MaterialPage() {
 
           </Form>
         </Drawer>
+        {console.log(materials.data)}
         <Table
           columns={columns}
           dataSource={materials.data}

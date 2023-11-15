@@ -49,13 +49,13 @@ const ResRevenue = () => {
           phone: item.phone,
           user: item.name,
           total: item.total,
-          table: item?.TableByOrders?.map(i => i.tableId).join(", "),
+          table: item?.tablebyorders?.map(i => i.tableId).join(", "),
           employee: item?.User?.name,
           id_employee: item.id_employee,
           payment: item.payment,
           createdAt: formatNgay(item.createdAt),
           quantity: item?.order_details.reduce((a, b) => a + b?.quantity, 0),
-          meta: { ...item, table: item?.TableByOrders?.map(i => i.tableId.toString()) },
+          meta: { ...item, table: item?.tablebyorders?.map(i => i.tableId.toString()) },
         };
         return data;
       });

@@ -1,22 +1,22 @@
 import { Table, Typography, message } from 'antd';
-import { React, useCallback, useEffect, useMemo, useState } from 'react'
+import {useCallback, useEffect, useMemo, useState } from 'react'
 import { delBooking, getAllBooking } from '../../../services/api';
 import ConfirmComponent from '../../../components/confirm';
 import { formatNgay } from '../../../utils/format';
 const { Title } = Typography;
 export const ResBooking = () => {
     const [booking, setBooking] = useState({})
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const resBooking = await getAllBooking()
             setBooking(resBooking)
         } catch (err) {
             console.log(err)
         }
-    }
+    },[])
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
     const handleDeleteBooking = useCallback(
         async (id) => {
           const res = await delBooking(id);
