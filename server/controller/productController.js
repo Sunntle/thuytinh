@@ -57,15 +57,15 @@ exports.list = async (req, res) => {
     const { count, rows } = await Product.findAndCountAll(query);
     rows.length > 0 &&
       rows.forEach((product) => {
-        const { Recipes } = product;
-        if (Recipes.length == 0) return (product.dataValues.amount = 0);
+        const { recipes } = product;
+        if (recipes.length == 0) return (product.dataValues.amount = 0);
         const arrCount = [];
-        for (const recipe of Recipes) {
-          const { Material } = recipe;
+        for (const recipe of recipes) {
+          const { material } = recipe;
           const countProduct =
-            Material.amount > 0 &&
+          material.amount > 0 &&
             recipe.quantity > 0 &&
-            Math.floor(Material.amount / recipe.quantity);
+            Math.floor(material.amount / recipe.quantity);
           if (countProduct < 1 || countProduct == false) {
             arrCount.push(0);
             break;
@@ -108,15 +108,15 @@ exports.getDetail = async (req, res) => {
     if (!response) {
       return res.status(404).json({ error: "Product not found" });
     }
-    const { Recipes: recipes } = response;
+    const { recipes } = response;
     if (recipes.length !== 0) {
       const arrCount = [];
       for (const recipe of recipes) {
-        const { Material } = recipe;
+        const { material } = recipe;
         const countProduct =
-          Material.amount > 0 &&
+        material.amount > 0 &&
           recipe.quantity > 0 &&
-          Math.floor(Material.amount / recipe.quantity);
+          Math.floor(material.amount / recipe.quantity);
         if (countProduct < 1 || countProduct == false) {
           arrCount.push(0);
           break;
@@ -150,12 +150,12 @@ exports.getByCategory = async (req, res) => {
     });
     if(count == 0)  res.status(200).json({ data: rows, total: count, success: true });
     rows.forEach((product) => {
-      const { Recipes } = product;
-      if (Recipes.length == 0) return
+      const { recipes } = product;
+      if (recipes.length == 0) return
       const arrCount = [];
-      for (const recipe of Recipes) {
-        const { Material } = recipe;
-        const countProduct = Material.amount > 0 && recipe.quantity > 0 && Math.floor(Material.amount / recipe.quantity);
+      for (const recipe of recipes) {
+        const { material } = recipe;
+        const countProduct = material.amount > 0 && recipe.quantity > 0 && Math.floor(material.amount / recipe.quantity);
         if (countProduct < 1 || countProduct == false) {
           arrCount.push(0)
           break;

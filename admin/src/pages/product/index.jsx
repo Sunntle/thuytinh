@@ -71,12 +71,12 @@ function ProductPage() {
     () => [
       {
         title: "Hình ảnh",
-        dataIndex: "ImageProducts",
+        dataIndex: "imageproducts",
         render: (_, record) => (
           <img
             className="w-full"
             style={{ maxWidth: "150px" }}
-            src={record?.ImageProducts?.[0]?.url}
+            src={record?.imageproducts?.[0]?.url}
             alt=""
           />
         ),
@@ -110,7 +110,7 @@ function ProductPage() {
       },
       {
         title: "Loại",
-        dataIndex: "Category.name_category",
+        dataIndex: "category.name_category",
         filters: categories?.map((el) => {
           return {
             text: el.name_category,
@@ -120,8 +120,8 @@ function ProductPage() {
         filterMode: "tree",
         filterSearch: true,
         onFilter: (value, record) =>
-          record.Category?.name_category.startsWith(value),
-        render: (_, record) => <p>{record.Category?.name_category}</p>,
+          record.category?.name_category.startsWith(value),
+        render: (_, record) => <p>{record.category?.name_category}</p>,
       },
       {
         title: "Giá",

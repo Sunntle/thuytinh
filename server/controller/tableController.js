@@ -139,7 +139,6 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
   const { id, qr_code, name_table } = req.body;
-  console.log(req.body)
   const is = await Tables.findOne({
     where: {
       [Op.and]: [
@@ -244,7 +243,7 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
 exports.pendingTable = asyncHandler(async (req, res) => {
   const { createdAt, tableId, party_size } = req.body;
   if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
-    return res.status(404).json({ success: false, message: "Thiếu data" });
+    return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
   }
   const isBooking = await handCheckBooking(createdAt, tableId);
   if (isBooking) return res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });

@@ -194,7 +194,6 @@ function SearchPage() {
           {material?.data.map((el, index) => (
             <div key={index} className="flex items-center gap-5 pb-4">
               <div>
-                {console.log(el)}
                 <img
                   className="w-full"
                   style={{ maxWidth: "180px" }}
