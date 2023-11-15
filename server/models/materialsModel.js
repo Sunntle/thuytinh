@@ -5,7 +5,7 @@ const { unitMasterial, checkQtyMaterials, handleTotalQty, getQtyMaterialByProduc
 const Recipes = require("./recipeModel");
 const Product = require("./productModel");
 const Materials = db.sequelize.define(
-  "Materials",
+  "materials",
   {
     id: {
       type: DataTypes.INTEGER,

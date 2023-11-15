@@ -1,5 +1,4 @@
 const { Category, Product } = require("../models");
-const { Op } = require("sequelize");
 const { apiQueryRest } = require('../utils/const')
 exports.list = async (req, res) => {
   try {

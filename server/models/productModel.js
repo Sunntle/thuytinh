@@ -4,7 +4,7 @@ const ImageProduct = require("./imageModel");
 const Category = require("./categoryModel");
 const cloudinary = require("cloudinary").v2;
 const Product = db.sequelize.define(
-  "Product",
+  "products",
   {
     id: {
       type: DataTypes.INTEGER,

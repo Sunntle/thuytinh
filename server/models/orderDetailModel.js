@@ -1,11 +1,9 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const db = require("../config/connectDatabase");
 const Product = require("./productModel");
-const Recipes = require("./recipeModel");
-const Materials = require("./materialsModel");
 require("dotenv").config();
 
-const OrderDetail = db.sequelize.define("order_detail", {
+const OrderDetail = db.sequelize.define("order_details", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
