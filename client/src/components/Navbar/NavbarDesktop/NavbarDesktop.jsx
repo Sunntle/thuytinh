@@ -157,7 +157,7 @@ const NavbarDesktop = ({
 NavbarDesktop.propTypes = {
   headerRef: PropTypes.object,
   checkRoute: PropTypes.bool,
-  idTable: PropTypes.number,
+  idTable: PropTypes.number || PropTypes.string,
   categories: PropTypes.array,
   navbarList: PropTypes.array,
 };
