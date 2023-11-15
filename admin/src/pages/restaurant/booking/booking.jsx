@@ -67,7 +67,7 @@ export const ResBooking = () => {
                 render: (_,data) =>(
                     <span>{formatNgay(data.updatedAt,'HH:MM DD/MM/YYYY')}</span>
                 ),
-                sorter: (a, b) => a.formatNgay(updatedAt).localeCompare(b.formatNgay(updatedAt))
+                sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt)
             },
             {
                 title: 'Ngày nhận',
