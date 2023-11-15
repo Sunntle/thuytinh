@@ -36,7 +36,7 @@ exports.createPaymentUrl = asyncHandler(async (req, res) => {
   let tmnCode = process.env.VNP_TMNCODE;
   let secretKey = process.env.VNP_HASHSECRET;
   let vnpUrl = process.env.VNP_URL;
-  let returnUrl = process.env.VNP_RETURNURL;
+  let returnUrl = process.env.NODE_ENV == 'production' ? (process.env.CLIENT_URL_PRODUCTION + process.env.VNP_RETURNURL) : (process.env.CLIENT_URL + process.env.VNP_RETURNURL);
   let orderId = moment(date).format("DDHHmmss");
   let amount = req.body.amount
   let bankCode = req.body.bankCode;
