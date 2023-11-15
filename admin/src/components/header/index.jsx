@@ -44,10 +44,11 @@ import { roleRext, truncateString } from "../../utils/format";
 import NotificationsComponent from "../notification";
 import { DarkSvg } from "../../utils/constant";
 import Clock from "../clock/Clock";
+import logo3 from "../../assets/images/logo3.svg";
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
 
-function HeaderComponent({collapsed, setCollapsed}) {
+function HeaderComponent({ collapsed, setCollapsed }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [form1] = Form.useForm();
@@ -67,22 +68,25 @@ function HeaderComponent({collapsed, setCollapsed}) {
   const customize = useSelector((state) => state.customize);
   const dispatch = useDispatch();
 
-  const items = useMemo(() => ([
-    {
-      label: <span className="font-semibold">{user?.user.name}</span>,
-      key: "3",
-    },
-    {
-      label: "Thông tin",
-      key: "1",
-      icon: <FileSearchOutlined />,
-    },
-    {
-      label: "Thoát",
-      key: "2",
-      icon: <LogoutOutlined />,
-    },
-  ]), [user?.user.name]);
+  const items = useMemo(
+    () => [
+      {
+        label: <span className="font-semibold">{user?.user.name}</span>,
+        key: "3",
+      },
+      {
+        label: "Thông tin",
+        key: "1",
+        icon: <FileSearchOutlined />,
+      },
+      {
+        label: "Thoát",
+        key: "2",
+        icon: <LogoutOutlined />,
+      },
+    ],
+    [user?.user.name]
+  );
 
   const handleMenuClick = useCallback(
     async (e) => {
@@ -109,68 +113,81 @@ function HeaderComponent({collapsed, setCollapsed}) {
         };
         form.setFieldsValue(data);
       }
-
-    }, [dispatch, form, user.user]);
+    },
+    [dispatch, form, user.user]
+  );
 
   const handleRemoveKeyWord = useCallback((index) => {
     const searchArr = JSON.parse(localStorage.getItem("searchKeyWord"));
     searchArr.splice(index, 1);
     localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
     setSearchKw(searchArr);
-  },[]);
+  }, []);
 
-  const handleSearch = useCallback((keyword) => {
-    const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
-    searchArr.unshift(keyword);
-    localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
-    setSearchKw(searchArr);
-    navigate(`/employee/search?keyword=${searchArr[0]}`);
-  }, [navigate]);
+  const handleSearch = useCallback(
+    (keyword) => {
+      const searchArr = JSON.parse(localStorage.getItem("searchKeyWord")) || [];
+      searchArr.unshift(keyword);
+      localStorage.setItem("searchKeyWord", JSON.stringify(searchArr));
+      setSearchKw(searchArr);
+      navigate(`/employee/search?keyword=${searchArr[0]}`);
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
-      const [dataProducts, dataCate] = await Promise.all([getAllProduct({
-        _sort: "sold",
-        _order: "DESC",
-        _limit: 8,
-      }),getAllCate()]);
+      const [dataProducts, dataCate] = await Promise.all([
+        getAllProduct({
+          _sort: "sold",
+          _order: "DESC",
+          _limit: 8,
+        }),
+        getAllCate(),
+      ]);
       setCategories(dataCate);
       setData(dataProducts);
     };
     fetchData();
   }, []);
 
-  const onFinish = useCallback(async (values) => {
-    const formData = new FormData();
-    const { avatar, role, ...rest } = values;
-    const val = { ...rest, role: roleRext(role) };
-    if (avatar[0]?.originFileObj) {
-      val.avatar = avatar[0].originFileObj;
-    }
-    for (const item of Object.entries(val)) {
-      formData.append(item[0], item[1]);
-    }
-    const res = await callUpdateAccount(formData);
-    dispatch(fetchAccount());
-    messageApi.open({
-      type: "success",
-      content: res.message,
-    });
-    setOpenModalProfile(false);
-    form.resetFields();
-  }, [dispatch, form, messageApi]);
-
-  const submitResetPass = useCallback(async (values) => {
-    let res = await callUpdatePassword(values);
-    messageApi.open({
-      type: res.success ? "success" : "error",
-      content: res.message,
-    });
-    if (res.success === true) {
+  const onFinish = useCallback(
+    async (values) => {
+      const formData = new FormData();
+      const { avatar, role, ...rest } = values;
+      const val = { ...rest, role: roleRext(role) };
+      if (avatar[0]?.originFileObj) {
+        val.avatar = avatar[0].originFileObj;
+      }
+      for (const item of Object.entries(val)) {
+        formData.append(item[0], item[1]);
+      }
+      const res = await callUpdateAccount(formData);
+      dispatch(fetchAccount());
+      messageApi.open({
+        type: "success",
+        content: res.message,
+      });
       setOpenModalProfile(false);
       form.resetFields();
-    }
-  }, [form, messageApi]);
+    },
+    [dispatch, form, messageApi]
+  );
+
+  const submitResetPass = useCallback(
+    async (values) => {
+      let res = await callUpdatePassword(values);
+      messageApi.open({
+        type: res.success ? "success" : "error",
+        content: res.message,
+      });
+      if (res.success === true) {
+        setOpenModalProfile(false);
+        form.resetFields();
+      }
+    },
+    [form, messageApi]
+  );
 
   const customContent = () => {
     return (
@@ -182,7 +199,7 @@ function HeaderComponent({collapsed, setCollapsed}) {
         } rounded-lg px-5 py-3 shadow-md border border-solid  border-t-0`}
       >
         <Typography.Title level={5}>Tìm kiếm gần đây</Typography.Title>
-       <Swiper
+        <Swiper
           speed={1000}
           slidesPerView={7}
           spaceBetween={15}
@@ -217,11 +234,11 @@ function HeaderComponent({collapsed, setCollapsed}) {
             <p className="text-gray-500">Không có tìm kiếm nào!</p>
           )}
         </Swiper>
-        
+
         {categories.length > 0 && (
           <>
             <Typography.Title level={5}>Danh mục</Typography.Title>
-            <div >
+            <div>
               <Swiper
                 speed={1000}
                 slidesPerView={6}
@@ -231,7 +248,6 @@ function HeaderComponent({collapsed, setCollapsed}) {
                 {categories?.map((el) => (
                   <SwiperSlide key={el.id} className="my-5">
                     <Link
- 
                       to={`/employee/menu?category=${el.id}`}
                       className="w-full py-1 flex justify-center whitespace-nowrap items-center border rounded-full border-gray-300 border-solid transition-all duration-500 text-gray-500 hover:text-white hover:border-secondaryColor hover:bg-main me-2"
                     >
@@ -278,33 +294,35 @@ function HeaderComponent({collapsed, setCollapsed}) {
       </div>
     );
   };
-  const menuProps = useMemo(() => ({
-    items,
-    onClick: handleMenuClick,
-  }), [handleMenuClick, items])
+  const menuProps = useMemo(
+    () => ({
+      items,
+      onClick: handleMenuClick,
+    }),
+    [handleMenuClick, items]
+  );
   return (
     <>
       {contextHolder}
       <div className="flex items-center justify-between px-11 bg-main py-5 w-full">
         <div className="flex items-center justify-between">
-          <div>
-            <img src="Logo" className="max-w-md object-cover" alt="" />
-            Logo here
+          <div className="w-20 h-20">
+            <img src={logo3} className="max-w-md object-cover" alt="logo" />
           </div>
           <Button
-          type="text"
-          size="large"
-          icon={
-            collapsed ? (
-              <MenuUnfoldOutlined style={{ color: "white" }} />
-            ) : (
-              <MenuFoldOutlined style={{ color: "white" }} />
-            )
-          }
-          onClick={() => setCollapsed(!collapsed)}
+            type="text"
+            size="large"
+            icon={
+              collapsed ? (
+                <MenuUnfoldOutlined style={{ color: "white" }} />
+              ) : (
+                <MenuFoldOutlined style={{ color: "white" }} />
+              )
+            }
+            onClick={() => setCollapsed(!collapsed)}
           />
         </div>
-        
+
         <div className="hidden sm:block flex-1 text-center mx-3">
           <SearchComponent
             className="bg-secondaryColor w-full max-w-2xl "
@@ -315,8 +333,8 @@ function HeaderComponent({collapsed, setCollapsed}) {
           />
         </div>
         <div className="flex items-center justify-center gap-x-4">
-          <Clock/>
-          <Tooltip title={customize.darkMode ? 'Chế độ sáng': 'Chế độ tối'}>
+          <Clock />
+          <Tooltip title={customize.darkMode ? "Chế độ sáng" : "Chế độ tối"}>
             <Button
               size="large"
               type="text"
