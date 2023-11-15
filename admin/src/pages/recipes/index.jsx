@@ -53,12 +53,13 @@ const RecipePage = () => {
     }));
     const conProduct = productResponse.data
       .filter((item) => {
-        return !data?.some((pro) => pro.product.id === item.id);
+        return !data?.some((pro) => pro.product?.id === item.id);
       })
       .map((item) => ({
         value: item.id,
         label: item.name_product,
       }));
+    console.log(data)
     setData(data);
     setOptionsMaterial(con);
     setOptionsProduct(conProduct);
@@ -169,7 +170,7 @@ const RecipePage = () => {
               key: "materials",
               width: "30%",
               render: (_, record) =>
-                
+
                 record.materials.map((item) => (
                   <div key={Math.random()} className="flex gap-2">
                     <div className=" font-medium text-base">
@@ -204,7 +205,7 @@ const RecipePage = () => {
             },
           ]}
           dataSource={data}
-          rowKey={(data) => data.product.id}
+          rowKey={(data) => data.product?.id}
         />
         <Modal
           footer={null}

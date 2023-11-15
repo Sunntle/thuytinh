@@ -321,9 +321,9 @@ function HeaderComponent({ collapsed, setCollapsed }) {
             }
             onClick={() => setCollapsed(!collapsed)}
           />
-          <div>
+          {/* <div>
             <img src={logo} className="w-10 object-cover" alt="" />
-          </div>
+          </div> */}
         </div>
 
         <div className="hidden sm:block flex-1 text-center mx-3">
