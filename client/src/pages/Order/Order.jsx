@@ -74,7 +74,7 @@ const Order = () => {
   };
 
   const handlePayInCash = () => {
-    socket.emit("pay-in-cash", { tables: tables[0] })
+    socket.emit("pay-in-cash", tables[0])
     messageApi.open({
       type: "info",
       content: "Vui lòng đợi trong giây lát, nhân viên sẽ đến thanh toán",
