@@ -82,10 +82,6 @@ function SelectTable() {
   };
  
   if (isTableExist == "Không tồn tại bàn này!") return <h2 className="py-5 mt-[80px] text-center">{isTableExist}</h2>
-  if(isTableExist.includes("Bạn đang sử dụng bàn khác")) {
-    handleSelectTable(isTableExist[isTableExist.length - 1])
-    return
-  }
   if (isLoading) return <Spinner />;
 
   return (

@@ -50,7 +50,7 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
           content={"Quay lại"}
         />,
         <ButtonComponents
-          className="border-borderSecondaryColor bg-secondaryColor"
+          className="me-2 bg-borderSecondaryColor text-white"
           content={"Tạo mới"}
           key="submit"
           htmlType="submit"

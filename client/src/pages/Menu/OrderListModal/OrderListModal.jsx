@@ -40,11 +40,11 @@ const OrderListModal = ({
   const dispatch = useDispatch();
   // Calculate Total Bill
   const totalOrder = useMemo(() => (
-      orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
+    orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
   ), [orders]);
 
   const submitOrderList = useCallback(async () => {
-    if(customerName.tables.length == 0) return //navigate to select tables
+    if (customerName.tables.length == 0) return //navigate to select tables
     const body = {
       orders: orders,
       total: totalOrder,
@@ -105,7 +105,6 @@ const OrderListModal = ({
       setIsOrderModalOpen(false);
     }
   };
-
   return (
     <Modal
       className="lg:hidden"
@@ -119,7 +118,7 @@ const OrderListModal = ({
         <Button
           key={1}
           onClick={handleUpdateOrder}
-          disabled={orders?.length === 0 || orders.some((i) => i.inDb && false) || !orders.every((i) => i.inDb)}
+          disabled={orders?.length === 0 || orders.some((i) => i.inDb && false)}
         >
           Cập nhật
         </Button>,

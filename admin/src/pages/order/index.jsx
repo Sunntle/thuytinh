@@ -267,11 +267,7 @@ const OrderPage = () => {
       dataIndex: "table",
       width: 150,
     },
-    {
-      title: "Trạng thánh đơn hàng",
-      dataIndex: "status",
-      width: 150,
-    },
+
     {
       title: "Thanh toán",
       dataIndex: "payment",
@@ -455,12 +451,12 @@ const OrderPage = () => {
                       <Form.Item
                         label="Số điện thoại"
                         name="phone"
-                        // rules={[
-                        //   {
-                        //     required: true,
-                        //     message: "Vui lòng nhập số điện thoại !",
-                        //   },
-                        // ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: "Vui lòng nhập số điện thoại !",
+                      //   },
+                      // ]}
                       >
                         <Input />
                       </Form.Item>
@@ -484,7 +480,7 @@ const OrderPage = () => {
                           <Form.Item
                             label="Người phục vụ"
                             name="id_employee"
-                            // rules={[{ required: true }]}
+                          // rules={[{ required: true }]}
                           >
                             <Select
                               placeholder="Nhân viên"

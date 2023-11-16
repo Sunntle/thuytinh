@@ -22,7 +22,7 @@ import * as apiService from "../../services/api.js";
 
 // Extenal Files
 import "./index.css";
-const limit = 15;
+const limit = 20;
 const Menu = () => {
   const [foods, setFoods] = useState({ total: 0, data: []});
   const [isProductLoading, setIsProductLoading] = useState(false);
@@ -51,7 +51,6 @@ const Menu = () => {
       setIsProductLoading(false)
     }
   }, []);
-
   useEffect(() => {
     const checkCate = async() =>{
       const response = await sendRequest(apiService.fetchCategories(), undefined, true);

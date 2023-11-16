@@ -75,13 +75,14 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/booking/:token",
+    element: <TestTemplate />,
+  },
+  {
     path: "/",
     element: <LoginPage />,
   },
-  {
-    path: "/booking/token",
-    element: <TestTemplate />,
-  },
+
   {
     path: "/register",
     element: <RegisterPage />,
