@@ -195,7 +195,7 @@ const Navbar = () => {
         headerRef={headerRef}
         checkRoute={checkRoute}
         categories={categories}
-        idTable={idTable}
+        idTable={+idTable}
         navbarList={navbarRouteDesktop}
       />
     </div>

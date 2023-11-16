@@ -273,7 +273,7 @@ exports.bookingTables = asyncHandler(async (req, res) => {
   const { id, phone, email, name, note } = req.body;
   const checkInput = bookingValidate(req.body);
   if (checkInput == false) return res.status(404).json({ success: false, message: "Err Data" });
-  const { createdAt, tableId } = await TableByOrder.findByPk(id, { raw: true }); s
+  const { createdAt, tableId } = await TableByOrder.findByPk(id, { raw: true });
   const dataOrder = await Order.create({ name, email, phone, status: 0 });
   let data = { createdAt, name, email, tableId, orderId: dataOrder.id };
   data = { ...data, token: await generateHash(data) };
@@ -333,11 +333,13 @@ exports.updateBooking = asyncHandler(async (req, res) => {
   if (orderId) await Order.update({ status: status_order }, { where: { id: orderId } });
   return res.status(200).json("Cập nhật thành công");
 });
+
 //trong vong 5 phút thì chạy vào xóa luôn recode
 exports.deleteBooking = asyncHandler(async (req, res) => {
   await TableByOrder.destroy({ where: { id: req.params.id } });
   return res.status(200).json("Đã xóa đặt bàn")
 })
+
 exports.getListBooking = asyncHandler(async (req, res) => {
   const data = await TableByOrder.findAndCountAll({
     include: { model: Order },

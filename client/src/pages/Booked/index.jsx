@@ -1,28 +1,42 @@
 import moment from "moment";
 import { Form, Input, Modal } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import { parseQueryString } from "../../utils/format.js";
 import { regexEmail, regexPhone } from "../../utils/regex.js";
 import { MdSubdirectoryArrowLeft } from "react-icons/md";
+import { Spinner } from "../../components/index.js";
 
 const Booked = () => {
-  const { sendRequest } = useHttp();
+  const { sendRequest, isLoading } = useHttp();
+  const [idTableByOrder, setIdTableByOrder] = useState(null);
   const location = useLocation();
+  // const { id: idTableByOrder } = location.state;
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const parsedQueryParams = parseQueryString(location.search);
   const [timeLeft, setTimeLeft] = useState(60);
 
-  const chooseAnotherTable = async (id) => {
-    const request = {
-      method: 'delete',
-      url: `/table/booking/${id}`
+  useEffect(() => {
+    if (location.state === null) {
+      navigate("/reservation");
+    } else {
+      setIdTableByOrder(location.state.id);
     }
-    await sendRequest(request, undefined, true)
-    navigate('/reservation')
-  }
+  }, [location.state, navigate]);
+
+  const chooseAnotherTable = useCallback(
+    async (id) => {
+      const request = {
+        method: "delete",
+        url: `/table/booking/${id}`,
+      };
+      await sendRequest(request, undefined, true);
+      navigate("/reservation");
+    },
+    [navigate, sendRequest],
+  );
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -35,11 +49,11 @@ const Booked = () => {
     }, 1000);
 
     if (timeLeft === 0) {
-      chooseAnotherTable(+parsedQueryParams?.tables)
+      chooseAnotherTable(idTableByOrder);
     }
 
     return () => clearInterval(countdown);
-  }, [chooseAnotherTable, parsedQueryParams?.tables, timeLeft]);
+  }, [chooseAnotherTable, idTableByOrder, timeLeft]);
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
@@ -50,14 +64,25 @@ const Booked = () => {
   };
 
   const submitBookingTable = async (information) => {
+    const body = {
+      ...information,
+      id: idTableByOrder,
+    };
     const request = {
       method: "post",
       url: "/table/booking",
-      ...information,
+      ...body,
     };
     const bookingSuccessData = await sendRequest(request, undefined, true);
-    console.log(bookingSuccessData);
+    if (bookingSuccessData) {
+      alert(
+        "Xin cảm ơn quý khách đã đặt bàn và mong quý khách đến đúng giờ đã đặt!",
+      );
+      navigate("/home");
+    }
   };
+
+  if (isLoading) return <Spinner />;
 
   return (
     <div className="py-24 text-slate-500 tracking-wide max-w-full w-screen min-h-screen bg-[url('https://images.unsplash.com/photo-1699148689335-16a572d22c22?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-no-repeat bg-cover bg-center">
@@ -205,7 +230,10 @@ const Booked = () => {
             <p className="block text-base font-medium">
               Vui lòng chọn bàn trước
             </p>
-            <button onClick={() => chooseAnotherTable(+parsedQueryParams?.tables)} className="w-full bg-primary py-2 text-white space-x-1 rounded flex justify-center items-center">
+            <button
+              onClick={() => chooseAnotherTable(idTableByOrder)}
+              className="w-full bg-primary py-2 text-white space-x-1 rounded flex justify-center items-center"
+            >
               <span>Quay về trang đặt bàn</span>
               <MdSubdirectoryArrowLeft size={16} />
             </button>

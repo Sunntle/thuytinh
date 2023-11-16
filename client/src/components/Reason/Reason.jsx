@@ -32,7 +32,7 @@ const arrContent = [
 
 const AboutUs = () => {
   return (
-    <div className="h-[700px] my-12 px-6 lg:px-16 lg:pt-12 bg-white flex justify-center items-center">
+    <div className="min-h-[700px] my-12 px-6 lg:px-16 lg:pt-12 bg-white flex justify-center items-center">
         <div>
           <h2 className="text-4xl font-bold text-primary pb-4">
             Tại sao bạn chọn chúng tôi
