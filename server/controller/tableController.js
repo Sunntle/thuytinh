@@ -261,7 +261,7 @@ exports.bookingTables = asyncHandler(async (req, res) => {
   const { id, phone, email, name, note } = req.body;
   const checkInput = bookingValidate(req.body);
   if (checkInput == false) return res.status(404).json({ success: false, message: "Err Data" });
-  const { createdAt, tableId } = await TableByOrder.findByPk(id, { raw: true }); s
+  const { createdAt, tableId } = await TableByOrder.findByPk(id, { raw: true });
   const dataOrder = await Order.create({ name, email, phone, status: 0 });
   let data = { createdAt, name, email, tableId, orderId: dataOrder.id };
   data = { ...data, token: await generateHash(data) };

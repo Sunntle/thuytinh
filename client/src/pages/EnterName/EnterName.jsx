@@ -32,7 +32,7 @@ const EnterName = (props) => {
   if (customerNameState?.name?.length > 0) return props.children
 
   return (
-    <div className="h-screen w-screen flex items-center">
+    <div className="overflow-hidden h-screen max-w-screen flex items-center">
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">
         <div className="w-6/12 lg:w-6/12 m-auto">
           <img className="w-full h-full" loading={"lazy"} src={serviceImg} alt="" />

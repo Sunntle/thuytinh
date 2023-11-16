@@ -54,29 +54,28 @@ const BookingTable = () => {
   const disabledTime = () => {
     return {
       disabledHours: () => {
-        const hours = [];
-        if (watchedDate > moment().date()) {
+        const hours = [0, 1, 2, 3, 4, 5, 6];
+        if (watchedDate?.["$D"] > moment().date()) {
           return hours;
         }
         const currentHour = moment().hour();
-        for (let i = 0; i < currentHour; i++) {
+        for (let i = 7; i <= currentHour; i++) {
           hours.push(i);
         }
+        hours.push(23);
         return hours;
       },
-      disabledMinutes: () => {
+      disabledMinutes: (selectedHour) => {
         const minutes = [];
         const currentMinute = moment().minute();
         const currentHour = moment().hour();
-
         if (
-          watchedDate > moment().date() ||
+          watchedDate?.["$D"] > moment().date() ||
           currentMinute > 45 ||
-          watchedTime?.["$H"] > currentHour
+          selectedHour > currentHour
         ) {
           return minutes;
         }
-
         for (let i = 0; i < currentMinute; i += 15) {
           minutes.push(i);
         }
