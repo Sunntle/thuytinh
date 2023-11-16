@@ -1,4 +1,4 @@
-import { AiOutlineShop } from "react-icons/ai";
+import  { AiOutlineShop } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -7,7 +7,14 @@ import { MdOutlineRoomService, MdOutlineTableBar } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
 import NavbarDesktop from "./NavbarDesktop/NavbarDesktop.jsx";
+import { TablesSvg } from "../../utils/constant.jsx";
+import Icon from "@ant-design/icons";
+
 const regex = /^\/tables-\d+$/;
+let styleIconTable = {
+  color: '#FC8019'
+}
+const TablesIcon = (props) => <Icon component={TablesSvg} {...props} />;
 const initialNavItem = [
   {
     id: 1,
@@ -26,7 +33,7 @@ const initialNavItem = [
   {
     id: 5,
     route: `/reservation`,
-    icon: <MdOutlineTableBar className="w-6 h-6" />,
+    icon: <TablesIcon style={{...styleIconTable}} />,
     routeName: "Đặt bàn",
     originRouteName: "reservation",
   },
@@ -53,6 +60,7 @@ const initialNavItemDesktop = [
     originRouteName: "about",
   },
 ];
+
 const handleNavLink = (arrayNavLink, navItemAdded, idTable) => {
   if (idTable) {
     return [...arrayNavLink, ...navItemAdded]

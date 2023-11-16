@@ -4,9 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
 import { Tabs } from "antd";
 import "./index.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
 import PropTypes from 'prop-types';
+import { clearCustomer } from "../../redux/CustomerName/customerNameSlice.js";
 function showError(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
@@ -31,18 +32,17 @@ function SelectTable() {
   const { sendRequest, isLoading } = useHttp();
   const location = useLocation()
   const customerName = useSelector(state => state.customerName)
-  const isTableExist = location.state?.isTableExist
-  const idTable = location.state?.prevTable
-
+  const isTableExist = location.state?.isTableExist//ban dang duoc su dung
+  const idTable = location.state?.prevTable//1
   const handleSelectTable = useCallback(async (id) => {
     navigate(`/tables-${id}`, { state: { from: 'menu' } });
   }, [navigate]);
 
   useEffect(() => {
-    if (customerName.name.length > 0 && customerName.tables.length > 0) {
+    if (customerName.name.length > 0 && customerName.tables.length > 0 && isTableExist !== "Bàn đã được sử dụng") {
       handleSelectTable(customerName.tables[0]);
     }
-  }, [customerName.name.length, customerName.tables, handleSelectTable]);
+  }, [customerName.name.length, customerName.tables, handleSelectTable, isTableExist]);
 
   useEffect(() => {
     const position1 = {
@@ -85,8 +85,8 @@ function SelectTable() {
 
   return (
     <div className="pb-24 mt-[80px]">
-      {idTable && isTableExist == "Bàn đã được sử dụng" &&
-        idTable !== customerName.tables?.at(1) &&
+      {idTable && isTableExist == "Bàn đã được sử dụng" &&// 1 == 1
+        +idTable !== customerName.tables?.at(1) &&
         (<p className="py-3 text-center">Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!</p>)}
       <div className="w-full h-12 uppercase font-semibold text-lg text-white bg-primary flex justify-center items-center">
         Chọn bàn
