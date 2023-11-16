@@ -32,10 +32,10 @@ const ResMenu = () => {
         if (selectedCategory) {
             query = { _id_category: `eq_${selectedCategory}`, ...query }
         }
-        const [resCa, resProduct] = await Promise.all([getAllCate(),getAllProduct(query)]);
+        const [resCa, resProduct] = await Promise.all([getAllCate(), getAllProduct(query)]);
         setCategories(resCa);
         setProduct(resProduct);
-    },[selectedCategory])
+    }, [selectedCategory])
 
     useEffect(() => {
         fetchData(page, 12);
@@ -46,13 +46,13 @@ const ResMenu = () => {
         setPage(e)
     }
 
-    const title = useMemo(()=>{
-        if(selectedCategory && categories.length > 0){
+    const title = useMemo(() => {
+        if (selectedCategory && categories.length > 0) {
             const result = categories.find(i => i.id == selectedCategory);
             return result.name_category;
         }
         return 'Tất cả sản phẩm'
-    },[categories, selectedCategory])
+    }, [categories, selectedCategory])
 
     useEffect(() => {
         if (warning) {
@@ -86,9 +86,15 @@ const ResMenu = () => {
                         </Swiper>
                     </div>
                     <div className='recent_order w-full   mt-4'>
+<<<<<<< HEAD
                             <div className='flex justify-center py-1'>
                                 <Divider><span className='font-medium text-main text-lg'>{title}</span></Divider>
                             </div>
+=======
+                        <div className='flex justify-center py-3'>
+                            <Divider><span className='font-medium text-main text-lg'>{title}</span></Divider>
+                        </div>
+>>>>>>> main
                         <Row gutter={[32, 24, 16, 8]}>
                             {product?.data?.length > 0 && product?.data?.map((product, index) => (
                                 <Col lg={8} md={8} sm={12} xs={12} className='rounded-lg' key={index}>
@@ -100,9 +106,9 @@ const ResMenu = () => {
                                                     <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
                                                     <div className='text-xs mt-2 text-slate-500'>Số lượng : {product.amount}</div>
                                                     <div className='flex justify-between items-center mt-2'>
-                                                        <div className='product-price flex lg:flex-col xl:flex-row xl:justify-between xl:items-center'>                                                       
+                                                        <div className='product-price flex lg:flex-col xl:flex-row xl:justify-between xl:items-center'>
                                                             <p className=' font-medium text-main text-lg mr-1 lg:order-2 xl:order-none'> {(formatGia(product.price - (product.price * product.discount / 100)))}</p>
-                                                            <p className=' font-medium text-slate-300 line-through text-xs lg:order-1 xl:order-none'> {(formatGia(product.price))}</p>  
+                                                            <p className=' font-medium text-slate-300 line-through text-xs lg:order-1 xl:order-none'> {(formatGia(product.price))}</p>
                                                         </div>
                                                         <PlusOutlined onClick={() => dispatch(AddCart({...product,price: product.price - (product.price * product.discount / 100)}))} size={30} className='p-1 bg-main rounded-full text-white' />
                                                     </div>
@@ -125,8 +131,13 @@ const ResMenu = () => {
 
                             ))}
                         </Row>
+<<<<<<< HEAD
                         <PaginationMenu className='mt-2 float-right' current={page} defaultPageSize={12}
                         onChange={handleChangePage} total={product.total || 0} />
+=======
+                        <PaginationMenu className='mt-2' current={page} defaultPageSize={12}
+                            onChange={handleChangePage} total={product.total || 0} />
+>>>>>>> main
                     </div>
                 </Col>
                 <Col xs={24} lg={8} className='flex flex-col gap-y-4'>

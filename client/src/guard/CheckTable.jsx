@@ -1,5 +1,4 @@
 import { Navigate, useLocation } from "react-router-dom";
-import SelectTable from "../pages/SelectTable/index.jsx";
 import { useEffect, useState } from "react";
 import Spinner from "../components/Spinner/Spinner.jsx";
 import axios from "../utils/axiosConfig.js";
@@ -15,16 +14,17 @@ function CheckTable(props) {
       setLoading(true)
       try {
         if (idTable) {
-          const response = await axios.get(`/table?_id=eq_${idTable}`)
+          const response = await Promise.all(await axios.get(`/table?_id=eq_${idTable}`)) 
+
           if (response.length == 0) {
             setTableExist("Không tồn tại bàn này!")
             return
           }
-          if (response[0].token == tokenTable) {
+          if (response[0].token == tokenTable && tokenTable) {
             setTableExist("Đúng")
             return
           }
-          response[0].token == null || response[0]?.token == '' ? setTableExist("Bàn đang trống") : setTableExist("Bàn đã được sử dụng")
+          (response[0].token == null || response[0]?.token == '') && response[0].status_table == 0 ? setTableExist("Bàn đang trống") : setTableExist("Bàn đã được sử dụng")
         }
       } catch (err) {
         console.log(err);
@@ -35,7 +35,7 @@ function CheckTable(props) {
     checkTableExist()
   }, [idTable, tokenTable])
   if (loading) return <Spinner />
-  // eslint-disable-next-line react/prop-types
+    // eslint-disable-next-line react/prop-types
   return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? (props.children) : (<Navigate to={"/select-table"} state={{isTableExist, ...(idTable ? {prevTable: idTable}: {}) }} replace/>)
 }
 

@@ -6,7 +6,7 @@ const NotFound = () => {
         <Result
             status="404"
             title="Yêu cầu tài khoản đăng nhập"
-            subTitle="Xin lỗi bạn không đủ đẳng cấp"
+            subTitle="Xin lỗi bạn phải đăng nhập để sử dụng"
             extra={<Link to='/'><Button type="primary">Back Login</Button></Link>}
         />
     )

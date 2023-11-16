@@ -47,7 +47,6 @@ import Clock from "../clock/Clock";
 import logo3 from "../../assets/images/logo3.svg";
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
-import logo from "../../assets/logo.svg";
 
 function HeaderComponent({ collapsed, setCollapsed }) {
   const [messageApi, contextHolder] = message.useMessage();

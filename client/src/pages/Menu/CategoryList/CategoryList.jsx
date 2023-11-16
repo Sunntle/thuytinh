@@ -29,7 +29,7 @@ const CategoryList = ({ categories, activeIndex }) => {
         className={`box-border h-8 px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-300 hover:bg-white hover:border-primary hover:text-primary ${
           isCategoryExist
             ? "text-white bg-primary shadow"
-            : "text-slate-800 bg-white"
+            : "text-slate-800"
         }`}
       >
         Tất cả
@@ -44,7 +44,7 @@ const CategoryList = ({ categories, activeIndex }) => {
             className={`box-border px-6 flex items-center justify-center border rounded-full whitespace-nowrap transition-colors duration-300 hover:bg-white hover:border-primary hover:text-primary ${
               isCategoryActive(category)
                 ? "text-white bg-primary shadow"
-                : "text-slate-800 bg-white"
+                : "text-slate-800"
             }`}
           >
             {category.name_category}

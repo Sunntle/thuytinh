@@ -129,9 +129,9 @@ const ResOrder = ({ handleCancel, open }) => {
   //them mon moi
   const handleUpdate = (index) => {
     dispatch(RemoveAllCart())
-    index.TableByOrders[0].order.order_details.forEach(item => {
+    index.tablebyorders[0].order.order_details.forEach(item => {
       let inDb = item.quantity;
-      dispatch(AddCartUpdate({ quantity: item.quantity, ...item.Product, inDb }))
+      dispatch(AddCartUpdate({ quantity: item.quantity, ...item.product, inDb }))
     });
     dispatch(AddTableList(index))
     navigate('/employee/menu/');
@@ -219,7 +219,7 @@ const ResOrder = ({ handleCancel, open }) => {
                 </div>
                 <div className='flex-grow'>
                   <div className='flex items-end justify-between'>
-                    <span className={`text-lg ${customize ? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.Product.name_product}</span>
+                    <span className={`text-lg ${customize ? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.product.name_product}</span>
                     <span className='text-main mb-3'>{formatGia(item.product.price)}</span>
                   </div>
                   <div className='flex items-center justify-between'>

@@ -1,7 +1,7 @@
 // React
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import {  useSearchParams } from "react-router-dom";
 // React-icons
 import { FiSearch } from "react-icons/fi";
 import { BiFoodMenu } from "react-icons/bi";
@@ -22,7 +22,7 @@ import * as apiService from "../../services/api.js";
 
 // Extenal Files
 import "./index.css";
-const limit = 15;
+const limit = 20;
 const Menu = () => {
   const [foods, setFoods] = useState({ total: 0, data: []});
   const [isProductLoading, setIsProductLoading] = useState(false);
@@ -51,7 +51,6 @@ const Menu = () => {
       setIsProductLoading(false)
     }
   }, []);
-
   useEffect(() => {
     const checkCate = async() =>{
       const response = await sendRequest(apiService.fetchCategories(), undefined, true);
@@ -92,7 +91,6 @@ const Menu = () => {
   const handleCancel = () => {
     setIsOrderModalOpen(false);
   };
-
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 text-slate-800 lg:px-16 px-6">

@@ -267,11 +267,7 @@ const OrderPage = () => {
       dataIndex: "table",
       width: 150,
     },
-    {
-      title: "Trạng thánh đơn hàng",
-      dataIndex: "status",
-      width: 150,
-    },
+
     {
       title: "Thanh toán",
       dataIndex: "payment",
@@ -358,7 +354,7 @@ const OrderPage = () => {
         <div className="px-5">
           <Row justify="space-between" align="center" className="mb-4 px-4">
             <Col xs={6}>
-              <Title level={3}>Danh sách đơn hàng</Title>
+              <Title level={3}>Danh sách hóa đơn</Title>
             </Col>
             <Col
               xs={6}
@@ -389,7 +385,7 @@ const OrderPage = () => {
                 <div className="flex justify-around">
                   <div className="w-1/6">
                     <img
-                      src={item.product.imageproducts[0].url}
+                      src={item.product?.imageproducts[0].url}
                       className="w-full"
                     />
                   </div>
@@ -455,12 +451,12 @@ const OrderPage = () => {
                       <Form.Item
                         label="Số điện thoại"
                         name="phone"
-                        // rules={[
-                        //   {
-                        //     required: true,
-                        //     message: "Vui lòng nhập số điện thoại !",
-                        //   },
-                        // ]}
+                      // rules={[
+                      //   {
+                      //     required: true,
+                      //     message: "Vui lòng nhập số điện thoại !",
+                      //   },
+                      // ]}
                       >
                         <Input />
                       </Form.Item>
@@ -484,7 +480,7 @@ const OrderPage = () => {
                           <Form.Item
                             label="Người phục vụ"
                             name="id_employee"
-                            // rules={[{ required: true }]}
+                          // rules={[{ required: true }]}
                           >
                             <Select
                               placeholder="Nhân viên"
@@ -538,20 +534,20 @@ const OrderPage = () => {
                   key: "2",
                   label: `Chi tiết`,
                   children: (
-                    <div className="h-40">
+                    <div className="h-full">
                       {openModalUpdate?.data?.order_details?.map((item) => (
                         <div className="p-2 border-2" key={item.id}>
                           <div className="flex justify-around">
                             <div className="w-1/6">
                               <img
-                                src={item.Product.ImageProducts[0].url}
+                                src={item.product.imageproducts[0].url}
                                 className="w-full"
                               />
                             </div>
                             <div className="w-3/6">
                               <div className="w-full h-full flex flex-col justify-evenly">
-                                <div>{item.Product.name_product}</div>
-                                <div>{formatGia(item.Product.price)}</div>
+                                <div>{item.product.name_product}</div>
+                                <div>{formatGia(item.product.price)}</div>
                               </div>
                             </div>
                             <div className="w-1/6">

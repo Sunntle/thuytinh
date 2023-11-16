@@ -6,6 +6,9 @@ const {
   TableByOrder,
   User,
   Notification,
+  OrderDetail,
+  Product,
+  ImageProduct,
 } = require("../models");
 
 
@@ -29,6 +32,15 @@ const findTables = async (tables) => {
               { [Op.lte]: 3 },
               { [Op.ne]: 0 }
             ]
+          }
+        },
+        include: {
+          model: OrderDetail,
+          include: {
+            model: Product,
+            include: {
+              model: ImageProduct,
+            }
           }
         }
       }
@@ -159,7 +171,7 @@ exports.updateStatusAndToken = asyncHandler(async (req, res) => {
       status_table: 0,
       token: null
     }, tables)
-    return res.status(200).json("Đã reset bàn ");
+    return res.status(200).json("Đặt lại bàn thành công! ");
   }
   let check = await checkBooking(new Date(), tables, "reservation", "add");
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
@@ -245,6 +257,7 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
     res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
   }
 })
+
 exports.pendingTable = asyncHandler(async (req, res) => {
   const { createdAt, tableId, party_size } = req.body;
   if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
@@ -255,11 +268,12 @@ exports.pendingTable = asyncHandler(async (req, res) => {
   const data = await TableByOrder.create({ ...req.body, status: "pending", dining_option: "reservation" });
   res.status(200).json({ success: true, data });
 })
+
 exports.bookingTables = asyncHandler(async (req, res) => {
   const { id, phone, email, name, note } = req.body;
   const checkInput = bookingValidate(req.body);
   if (checkInput == false) return res.status(404).json({ success: false, message: "Err Data" });
-  const { createdAt, tableId } = await TableByOrder.findByPk(id, { raw: true }); s
+  const { createdAt, tableId } = await TableByOrder.findByPk(id, { raw: true });
   const dataOrder = await Order.create({ name, email, phone, status: 0 });
   let data = { createdAt, name, email, tableId, orderId: dataOrder.id };
   data = { ...data, token: await generateHash(data) };
@@ -280,7 +294,7 @@ exports.bookingTables = asyncHandler(async (req, res) => {
 exports.getBooking = asyncHandler(async (req, res) => {
   const { phone, email, name, tableId } = req.query;
   if (isEmpty(phone) || isEmpty(email) || isEmpty(tableId)) {
-    return res.status(404).json({ success: false, message: "Thiếu data" });
+    return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
   }
   const data = await TableByOrder.findAll({
     include: {
@@ -319,11 +333,13 @@ exports.updateBooking = asyncHandler(async (req, res) => {
   if (orderId) await Order.update({ status: status_order }, { where: { id: orderId } });
   return res.status(200).json("Cập nhật thành công");
 });
+
 //trong vong 5 phút thì chạy vào xóa luôn recode
 exports.deleteBooking = asyncHandler(async (req, res) => {
   await TableByOrder.destroy({ where: { id: req.params.id } });
   return res.status(200).json("Đã xóa đặt bàn")
 })
+
 exports.getListBooking = asyncHandler(async (req, res) => {
   const data = await TableByOrder.findAndCountAll({
     include: { model: Order },

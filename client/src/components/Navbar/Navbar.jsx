@@ -105,16 +105,20 @@ const Navbar = () => {
       {
         id: 2,
         route: `/tables-${idTable}/service`,
-        icon: <MdOutlineRoomService className="w-6 h-6" />,
         routeName: "Dịch vụ",
         originRouteName: "service",
       },
       {
         id: 3,
         route: `/tables-${idTable}/menu`,
-        icon: <IoRestaurantOutline className="w-6 h-6" />,
         routeName: "Thực đơn",
         originRouteName: "menu",
+      },
+      {
+        id: 4,
+        route: `/tables-${idTable}/order`,
+        routeName: "Món đã đặt",
+        originRouteName: "order",
       },
     ];
     return handleNavLink(initialNavItemDesktop, navItem, idTable);
@@ -195,7 +199,7 @@ const Navbar = () => {
         headerRef={headerRef}
         checkRoute={checkRoute}
         categories={categories}
-        idTable={idTable}
+        idTable={+idTable}
         navbarList={navbarRouteDesktop}
       />
     </div>
