@@ -33,12 +33,14 @@ function SelectTable() {
   const customerName = useSelector(state => state.customerName)
   const isTableExist = location.state?.isTableExist
   const idTable = location.state?.prevTable
+
   const handleSelectTable = useCallback(async (id) => {
     navigate(`/tables-${id}`, { state: { from: 'menu' } });
   }, [navigate]);
 
   useEffect(() => {
     if (customerName.name.length > 0 && customerName.tables.length > 0) {
+      console.log(customerName.tables[0]);
       handleSelectTable(customerName.tables[0]);
     }
   }, [customerName.name.length, customerName.tables, handleSelectTable]);
@@ -80,7 +82,10 @@ function SelectTable() {
   };
  
   if (isTableExist == "Không tồn tại bàn này!") return <h2 className="py-5 mt-[80px] text-center">{isTableExist}</h2>
-
+  if(isTableExist.includes("Bạn đang sử dụng bàn khác")) {
+    handleSelectTable(isTableExist[isTableExist.length - 1])
+    return
+  }
   if (isLoading) return <Spinner />;
 
   return (

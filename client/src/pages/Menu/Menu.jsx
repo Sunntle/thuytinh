@@ -1,7 +1,7 @@
 // React
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import {  useSearchParams } from "react-router-dom";
 // React-icons
 import { FiSearch } from "react-icons/fi";
 import { BiFoodMenu } from "react-icons/bi";
@@ -92,7 +92,6 @@ const Menu = () => {
   const handleCancel = () => {
     setIsOrderModalOpen(false);
   };
-
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
