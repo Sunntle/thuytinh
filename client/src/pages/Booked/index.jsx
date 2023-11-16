@@ -2,7 +2,7 @@ import moment from "moment";
 import { Form, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { parseQueryString } from "../../utils/format.js";
 import { regexEmail, regexPhone } from "../../utils/regex.js";
 import { MdSubdirectoryArrowLeft } from "react-icons/md";
@@ -90,9 +90,9 @@ const Booked = () => {
             <span>
               {parsedQueryParams?.createdAt !== undefined
                 ? moment(
-                    parsedQueryParams?.createdAt,
-                    "DD/MM/YYYY HH:mm",
-                  ).format("DD/MM/YYYY HH:mm ")
+                  parsedQueryParams?.createdAt,
+                  "DD/MM/YYYY HH:mm",
+                ).format("DD/MM/YYYY HH:mm ")
                 : ""}
             </span>
           </div>

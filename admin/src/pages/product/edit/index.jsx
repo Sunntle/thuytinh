@@ -21,20 +21,20 @@ const optionsStatus = [
 function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
   const [form] = Form.useForm();
   const [statusForm, setStatusForm] = useState("1");
-  
+
   const handleEditProduct = useCallback((dataForm) => {
     handleFinish({ ...dataForm, formName: "product", id: data?.id });
     handleCancel();
-  },[data?.id, handleCancel, handleFinish]);
+  }, [data?.id, handleCancel, handleFinish]);
 
-  const fileList = useMemo(()=>data?.imageproducts.map((el) => {
+  const fileList = useMemo(() => data?.imageproducts.map((el) => {
     return {
       uid: el.id,
       name: el.url?.split("/").at(-1).split(".")[0],
       status: "done",
       url: el.url,
     };
-  }),[data?.imageproducts]);
+  }), [data?.imageproducts]);
   useEffect(() => {
     if (data) {
       const setFormValue = async () => {
@@ -77,33 +77,33 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
             <Input placeholder="Ví dụ: Cua rang me..." />
           </Form.Item>
           <div className="grid grid-cols-2 gap-4">
-          <Form.Item label="Giá">
-            <Form.Item name="price" noStyle>
-              <InputNumber min={0} />
+            <Form.Item label="Giá">
+              <Form.Item name="price" noStyle>
+                <InputNumber min={0} />
+              </Form.Item>
+              <span
+                className="ant-form-text"
+                style={{
+                  marginLeft: 8,
+                }}
+              >
+                vnđ
+              </span>
             </Form.Item>
-            <span
-              className="ant-form-text"
-              style={{
-                marginLeft: 8,
-              }}
-            >
-              vnđ
-            </span>
-          </Form.Item>
-          <Form.Item label="Giảm giá">
-          <Form.Item name="discount" noStyle>
-              <InputNumber min={0} />
+            <Form.Item label="Giảm giá">
+              <Form.Item name="discount" noStyle>
+                <InputNumber min={0} />
+              </Form.Item>
+              <span
+                className="ant-form-text"
+                style={{
+                  marginLeft: 8,
+                }}
+              >
+                %
+              </span>
             </Form.Item>
-            <span
-              className="ant-form-text"
-              style={{
-                marginLeft: 8,
-              }}
-            >
-              %
-            </span>
-          </Form.Item>
-        </div>
+          </div>
           <Form.Item
             name="id_category"
             label="Loại món ăn"
@@ -145,7 +145,7 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
               content={"Tạo mới"}
               key="submit"
               htmlType="submit"
-              className="border-borderSecondaryColor bg-secondaryColor"
+              className="me-2 bg-borderSecondaryColor text-white"
             />
           </div>
         </Form>
