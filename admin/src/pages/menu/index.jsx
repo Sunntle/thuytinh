@@ -142,7 +142,7 @@ function MenuPage() {
                   <div className="mb-3">
                     <img
                       className="w-full"
-                      src={product.imageUrls?.split(";")[0]}
+                      src={product.imageproducts[0]}
                       alt=""
                     />
                   </div>
@@ -210,7 +210,7 @@ function MenuPage() {
                         <img
                           className="w-full"
                           style={{ maxWidth: "130px" }}
-                          src={el.imageUrls?.split(";")[0]}
+                          src={el.imageproducts[0]}
                           alt=""
                         />
                       </div>

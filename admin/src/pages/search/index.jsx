@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Spinner from "../../components/spinner";
 import { AddCart } from "../../redux/cartsystem/cartSystem";
 import { getAllCate, getAllMaterial, getAllProduct } from "../../services/api";
-import { formatGia } from "../../utils/format";
+import { formatGia, truncateString } from "../../utils/format";
 import { PlusOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
@@ -120,8 +120,6 @@ function SearchPage() {
       return (
         <h4 className=" text-gray-600  pb-3">Không có sản phẩm phù hợp</h4>
       );
-
-      //comment something
     return (
       <div className="my-3">
         <Title level={4} className="font-semibol">
@@ -136,8 +134,8 @@ function SearchPage() {
                   src={el?.imageproducts[0]?.url}
                 />
   
-                <div className="p-4 flex flex-col">
-                  <Link to={`/employee/menu?product=${category.id}`} className="font-medium text-xl hover:text-main">{el.name_product}</Link>
+                <div className="p-4 flex flex-col ">
+                  <Link to={`/employee/menu?product=${category.id}`} className="font-medium text-xl hover:text-main">{truncateString(el.name_product, 15)}</Link>
                   <div className="text-xs mt-2 text-slate-500">
                     Số lượng : {el.amount}
                   </div>

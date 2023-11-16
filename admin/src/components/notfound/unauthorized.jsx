@@ -8,7 +8,7 @@ const Unauthorized = () => {
             status="404"
             title="Bạn không có quyền truy cập"
             subTitle="Cần quyền admin để vào đường dẫn này"
-            extra={<Button type="primary" onClick={() => navigate(-1)}>Back Login</Button>}
+            extra={<><Button type="primary" onClick={() => navigate(-1)}>Quay lại</Button> <Button type="primary" onClick={() => navigate("/")}>Đăng nhập</Button></>}
         />
     )
 }
