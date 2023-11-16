@@ -29,7 +29,7 @@ const findTables = async (tables) => {
         where: {
           status: {
             [Op.and]: [
-              { [Op.lt]: 3 },
+              { [Op.lt]: 4 },
               { [Op.ne]: 0 }
             ]
           }

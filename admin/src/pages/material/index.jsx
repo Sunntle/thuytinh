@@ -41,7 +41,7 @@ function MaterialPage() {
     const res = await getAllMaterial();
     setMaterials({
       ...res,
-      data: res.data.map((el) => ({ ...el, key: el.id, price: el.Warehouses?.[0]?.price_import || 0 })),
+      data: res.data.map((el) => ({ ...el, key: el.id, price: el.warehouses?.[0]?.price_import || 0 })),
     });
     setListImportMaterial(res.listImport);
     const convert = res.dataChart.map(i => {
