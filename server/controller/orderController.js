@@ -76,7 +76,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
   if (!id_employee) {
     await Notification.create(
-      { type: "order", description: `Bàn -${table[0]} vừa đặt món`, content: order_result.id },
+      { type: "order", description: `Bàn - ${table[0]} vừa đặt món`, content: order_result.id },
       { raw: true },
     );
     _io.of("/client").emit("status order", { ...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3" });// check correct order

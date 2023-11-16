@@ -1,7 +1,8 @@
-import { Col, Row, Typography, message } from "antd";
+import { Col, Row, Typography, message, Input, Button, Space } from "antd";
 import ButtonComponents from "../../components/button";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import ConfirmComponent from "../../components/confirm";
 import {
   addNewProduct,
@@ -16,6 +17,7 @@ import {
 import AddNewProduct from "./add";
 import EditProduct from "./edit";
 import Spinner from "../../components/spinner";
+import { useRef } from "react";
 const { Title } = Typography;
 function ProductPage() {
   const [open, setOpen] = useState(false);
@@ -25,7 +27,7 @@ function ProductPage() {
   const [products, setProducts] = useState(null);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
-
+  const searchInput = useRef(null);
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
@@ -66,7 +68,108 @@ function ProductPage() {
     setData(res);
     setOpenModelEdit(true);
   }, []);
-
+  const handleSearch = (selectedKeys, confirm, ) => {
+    confirm();
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+  };
+  const handleSearchData = useCallback((string) =>{
+    if(string.includes("_")){
+      const arr = string.split("_")
+      const newArr = arr.map(el=>el[0].toUpperCase() + el.slice(1))
+      return newArr.join(" ")
+    }
+    return string[0].toUpperCase() + string.slice(1)
+  },[])
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${handleSearchData(dataIndex)}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Tìm kiếm
+          </Button>
+          <Button
+            onClick={()=> clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Đặt lại
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+            }}
+          >
+            Lọc
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Đóng
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1677ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+    record[dataIndex]
+    ?.toString()
+    ?.toLowerCase()
+    ?.includes(value?.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => text,
+  });
   const columns = useMemo(
     () => [
       {
@@ -89,39 +192,13 @@ function ProductPage() {
       {
         title: "Tên",
         dataIndex: "name_product",
-        filters: [
-          {
-            text: "Cá",
-            value: "Cá",
-          },
-          {
-            text: "Rau",
-            value: "Rau",
-          },
-          {
-            text: "Thịt",
-            value: "Thịt",
-          },
-        ],
-        filterMode: "tree",
-        filterSearch: true,
-        onFilter: (value, record) => record.name_product.startsWith(value),
+        ...getColumnSearchProps("name_product")
         // width: "20%",
       },
       {
         title: "Loại",
-        dataIndex: "category.name_category",
-        filters: categories?.map((el) => {
-          return {
-            text: el.name_category,
-            value: el.name_category,
-          };
-        }),
-        filterMode: "tree",
-        filterSearch: true,
-        onFilter: (value, record) =>
-          record.category?.name_category.startsWith(value),
-        render: (_, record) => <p>{record.category?.name_category}</p>,
+        dataIndex: ["category","name_category"],
+        // ...getColumnSearchProps("category","name_category"),
       },
       {
         title: "Giá",

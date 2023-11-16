@@ -284,7 +284,7 @@ exports.bookingTables = asyncHandler(async (req, res) => {
   }, { where: { id: id } });
   const result = await Order.findOne({ where: { id: dataOrder.id }, include: TableByOrder });
   await Notification.create(
-    { type: "table", description: `Khách hàng đặt trước bàn số ${tableId} lúc ${moment(createdAt).format("HH:mm DD/MM")}`, content: tableId },
+    { type: "table", description: `Bàn số ${tableId} được đặt lúc ${moment(createdAt).format("HH:mm DD/MM")}`, content: tableId },
     { raw: true },
   );
   await sendEmail(email, "Thông báo", templateSendUser(data));
