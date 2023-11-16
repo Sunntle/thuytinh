@@ -1,10 +1,11 @@
 import { DatePicker, Form, Select, TimePicker } from "antd";
 import moment from "moment";
 import "./index.css";
-import {useState} from "react";
+import { Children, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
-import {useNavigate} from "react-router-dom";
-import {parseQueryString} from "../../utils/format.js";
+import { useNavigate } from "react-router-dom";
+import { parseQueryString } from "../../utils/format.js";
+import { useEffect } from "react";
 
 
 const disabledDate = (cur) => {
@@ -44,46 +45,41 @@ const party_sizes = [
     },
 ];
 const BookingTable = () => {
-    const {sendRequest} = useHttp();
+    const { sendRequest } = useHttp();
     const [form] = Form.useForm();
     const [result, setResult] = useState(null);
     const [tables, setTables] = useState([]);
     const navigate = useNavigate();
     const watchedDate = Form.useWatch('date', form);
-    const watchedTime = Form.useWatch('time', form);
-
     const disabledTime = () => {
         return {
             disabledHours: () => {
-                const hours = [];
-                if (watchedDate > moment().date()) {
+                const hours = [0, 1, 2, 3, 4, 5, 6];
+                if (watchedDate?.["$D"] > moment().date()) {
                     return hours
                 }
                 const currentHour = moment().hour();
-                for (let i = 0; i < currentHour; i++) {
+                for (let i = 7; i <= currentHour; i++) {
                     hours.push(i);
                 }
+                hours.push(23);
                 return hours;
             },
-            disabledMinutes: () => {
+            disabledMinutes: (selectedHour, selectedMinute) => {
                 const minutes = [];
                 const currentMinute = moment().minute();
                 const currentHour = moment().hour();
-
-                if (watchedDate > moment().date() || currentMinute > 45 || watchedTime?.["$H"] > currentHour) {
+                if (watchedDate?.["$D"] > moment().date() || currentMinute > 45 || selectedHour > currentHour) {
                     return minutes
                 }
-
                 for (let i = 0; i < currentMinute; i += 15) {
                     minutes.push(i);
                 }
                 return minutes;
             }
-            ,
         };
     };
-
-    const fetchTable = async ({position, createdAt, party_size}) => {
+    const fetchTable = async ({ position, createdAt, party_size }) => {
         console.log(position, createdAt, party_size);
         const request = {
             method: "get",
@@ -120,7 +116,7 @@ const BookingTable = () => {
                         <span className="ml-3 text-xs text-slate-500">Vị trí</span>
                         <Form.Item
                             name="position"
-                            rules={[{required: true, message: "Vui lòng không bỏ trống"}]}
+                            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
                         >
                             <Select
                                 placeholder="Chọn vị trí"
@@ -136,7 +132,7 @@ const BookingTable = () => {
                         <span className="ml-3 text-xs text-slate-500">Số lượng</span>
                         <Form.Item
                             name="party_size"
-                            rules={[{required: true, message: "Vui lòng không bỏ trống"}]}
+                            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
                         >
                             <Select
                                 placeholder="Chọn số lượng"
@@ -152,7 +148,7 @@ const BookingTable = () => {
                         <span className="ml-3 text-xs text-slate-500">Ngày</span>
                         <Form.Item
                             name="date"
-                            rules={[{required: true, message: "Vui lòng không bỏ trống"}]}
+                            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
                         >
                             <DatePicker
                                 placeholder="Chọn ngày"
@@ -169,12 +165,11 @@ const BookingTable = () => {
                         <span className="ml-3 text-xs text-slate-500">Giờ</span>
                         <Form.Item
                             name="time"
-                            rules={[{required: true, message: "Vui lòng không bỏ trống"}]}
+                            rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
                         >
                             <TimePicker
                                 className="w-full focus:border-primary"
                                 placeholder="Chọn giờ"
-                                // defaultValue={moment().format("HH:mm")}
                                 disabledTime={disabledTime}
                                 bordered={false}
                                 minuteStep={15}
@@ -216,7 +211,7 @@ const BookingTable = () => {
                                         navigate(`/booked${result}&tables=${table.id}`)
                                     }
                                 >
-                                  {moment(tables.time).format("HH:mm")}
+                                    {moment(tables.time).format("HH:mm")}
                                 </span>
                             </div>
                         </div>
