@@ -249,7 +249,6 @@ const findTablesByBooking = async (time, where) => {
 exports.checkTableBooking = asyncHandler(async (req, res) => {
   const { createdAt: time, position, party_size } = req.query;
   const createdAt = moment(time, "DD-MM-YYYY HH:mm:ss");
-
   const arrBooking = await findTablesByBooking(moment(createdAt), { position: position });
   if (arrBooking.length > 0) {
     res.status(200).json({ success: true, time: createdAt, message: `Có bàn vào lúc ${moment(createdAt).format('HH:mm, DD/MM/YYYY')}, cho ${party_size} người lớn.`, data: arrBooking });
@@ -259,7 +258,9 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
 })
 
 exports.pendingTable = asyncHandler(async (req, res) => {
+
   const { createdAt, tableId, party_size } = req.body;
+  console.log(moment(createdAt).format("HH:mm DD/MM/YYYY"))
   if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
     return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
   }
@@ -343,7 +344,7 @@ exports.deleteBooking = asyncHandler(async (req, res) => {
 exports.getListBooking = asyncHandler(async (req, res) => {
   const data = await TableByOrder.findAndCountAll({
     include: { model: Order },
-    where: { status: "confirmed", createdAt: { [Op.gte]: moment(new Date()).subtract(30, "minutes") } },
+    where: { status: "confirmed" },
     order: [["createdAt", "ASC"]]
   });
   return res.status(200).json(data);

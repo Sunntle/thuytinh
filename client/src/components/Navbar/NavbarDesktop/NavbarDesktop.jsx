@@ -145,7 +145,7 @@ const NavbarDesktop = ({
           className="group cursor-pointer flex justify-between items-center border-2 border-white rounded-full space-x-2 py-2 px-4 transition-colors duration-300 hover:text-primary hover:bg-white"
         >
           <span className="font-medium">Món đã chọn</span>
-          {/*<HiOutlineClipboardList size={24} className="group-hover:text-primary text-white transition-colors duration-300" />*/}
+
           <div className="p-3 w-5 h-5 text-sm font-medium bg-white text-primary rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">
             {orders?.length || 0}
           </div>

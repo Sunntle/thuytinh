@@ -94,8 +94,8 @@ const BookingTable = () => {
   };
 
   const onSubmitFetchTable = async (values) => {
-    let date = moment(values.date).format("DD/MM/YYYY");
-    let time = moment(values.time["$d"]).format("HH:mm");
+    let date = moment(values.date['$d']).format("DD/MM/YYYY");
+    let time = moment(values.time['$d']).format("HH:mm");
     const createdAt = moment(date + time, "DD/MM/YYYY HH:mm").format(
       "DD/MM/YYYY HH:mm:ss",
     );
