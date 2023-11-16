@@ -110,7 +110,7 @@ const ResMenu = () => {
                                         </Badge.Ribbon>
                                     ) : (
                                         <div className='shadow-xl border-solid border border-gray-300 rounded-lg min-h-[230px] h-auto w-auto'>
-                                            <img className='h-full w-full rounded-t-lg' src={product?.ImageProducts[0]?.url} />
+                                            <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
                                             <div className='p-4 flex lg:min-h-[124px] xl:min-h-0 flex-col'>
                                                 <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
                                                 <div className='text-xs text-slate-500 mt-2'>Số lượng : {product.amount}</div>

@@ -159,7 +159,7 @@ exports.updateStatusAndToken = asyncHandler(async (req, res) => {
       status_table: 0,
       token: null
     }, tables)
-    return res.status(200).json("Đã reset bàn ");
+    return res.status(200).json("Đặt lại bàn thành công! ");
   }
   let check = await checkBooking(new Date(), tables, "reservation", "add");
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });

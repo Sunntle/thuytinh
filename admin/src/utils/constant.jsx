@@ -14,17 +14,6 @@ export const days = [
 ];
 export const desc = ["Rất tệ", "Tệ", "Bình thường", "Ngon", "Tuyệt vời"];
 export const NAV_ITEMS = [
-  getItem("Quản lí", null, <BiCategory />, [
-    getItem("Dashboard", "/admin"),
-    getItem("Quản lí bàn", "/admin/table"),
-    getItem("Món ăn", "/admin/product"),
-    getItem("Nguyên liệu", "/admin/material"),
-    getItem("Danh mục", "/admin/category"),
-    getItem("Công thức", "/admin/recipe"),
-    getItem("Hóa đơn ", "/admin/order"),
-    getItem("Đánh giá", "/admin/reviews"),
-    getItem("Tài khoản", "/admin/user"),
-  ]),
   getItem("Nhà hàng", null, <ShopOutlined />, [
     getItem("Chọn bàn", "/employee/choosetable"),
     getItem("Thực đơn món ăn", "/employee/menu"),
@@ -32,6 +21,17 @@ export const NAV_ITEMS = [
     getItem("Doanh thu", "/employee/renvenue")
   ]),
 ];
+export const NAV_ITEMS_ADMIN= [ getItem("Quản lí", null, <BiCategory />, [
+  getItem("Dashboard", "/admin"),
+  getItem("Quản lí bàn", "/admin/table"),
+  getItem("Món ăn", "/admin/product"),
+  getItem("Nguyên liệu", "/admin/material"),
+  getItem("Danh mục", "/admin/category"),
+  getItem("Công thức", "/admin/recipe"),
+  getItem("Hóa đơn ", "/admin/order"),
+  getItem("Đánh giá", "/admin/reviews"),
+  getItem("Tài khoản", "/admin/user"),
+]), ...NAV_ITEMS]
 export const url = import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL;;
 
 export const DarkSvg = () => (
