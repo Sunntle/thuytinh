@@ -10,19 +10,27 @@ const cartSystem = createSlice({
     reducers: {
         AddCart: (state, action) => {
             const find = state.carts.findIndex(item => item.id === action.payload.id);
-
+            console.log(action.payload.recipes.length)
             if (find >= 0) {
-                if (action.payload.amount === 0 || action.payload.amount === state.carts[find].quantity) {
-                    state.err = "Sản phẩm hết hàng !";
-                } else {
+                if(action.payload.recipes.length > 0) {
+                    if (action.payload.amount === 0 || action.payload.amount === state.carts[find].quantity) {
+                        state.err = "Sản phẩm hết hàng !";
+                    } else {
+                        state.carts[find].quantity += 1;
+                    }
+                } else{
                     state.carts[find].quantity += 1;
                 }
             } else {
-                if (action.payload.amount === 0) {
-                    // alert('Sản phẩm hết hàng!');
-                    state.err = "Sản phẩm hết hàng !";
-                }
-                else {
+                if(action.payload.recipes.length > 0){
+                    if (action.payload.amount === 0 || action.payload.recipes.length > 0) {
+                        state.err = "Sản phẩm hết hàng !";
+                    }
+                    else {
+                        const newProduct = { ...action.payload, quantity: 1 };
+                        state.carts.push(newProduct);
+                    }
+                } else{
                     const newProduct = { ...action.payload, quantity: 1 };
                     state.carts.push(newProduct);
                 }

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 export function truncateString(text, maxLength) {
+  if(!text) return 
   if (text.length <= maxLength) {
     return text;
   }

@@ -22,6 +22,13 @@ import {
   formatNgay,
 } from "../../../utils/format";
 import CountUp from 'react-countup';
+const renderTextPay = (params) => {
+  if (params === "cash" || !params) {
+    return "Thanh toán tiền mặt";
+  } else {
+    return params;
+  }
+};
 
 const ResRevenue = () => {
   const [revenue, setRevenue] = useState({ daily: 0, weekly: 0, monthly: 0 });
@@ -52,7 +59,7 @@ const ResRevenue = () => {
           table: item?.tablebyorders?.map(i => i.tableId).join(", "),
           employee: item?.User?.name,
           id_employee: item.id_employee,
-          payment: item.payment,
+          payment: renderTextPay(item.payment),
           createdAt: formatNgay(item.createdAt),
           quantity: item?.order_details.reduce((a, b) => a + b?.quantity, 0),
           meta: { ...item, table: item?.tablebyorders?.map(i => i.tableId.toString()) },
@@ -73,12 +80,11 @@ const ResRevenue = () => {
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }, [timeChart]);
 
   useEffect(() => {
     fetchData();
   }, [timeChart, fetchData]);
-
   const columns = useMemo(
     () => [
       {
@@ -98,7 +104,7 @@ const ResRevenue = () => {
       },
       {
         title: 'Người phụ trách',
-        dataIndex: 'employee',
+        dataIndex: ['meta' , 'name'],
       },
       {
         title: 'Số lượng',

@@ -126,7 +126,6 @@ const ResOrder = ({ handleCancel, open }) => {
   const order = tablebyorders?.order;
   const order_details = order?.order_details;
   const customize = useSelector((state) => state.customize.darkMode)
-
   //them mon moi
   const handleUpdate = (index) => {
     dispatch(RemoveAllCart())

@@ -10,12 +10,12 @@ const ProductList = ({ foods, isLoading }) => {
           Không có dữ liệu
         </span>
       );
-
+    //sort product out of stock: foods?.data.sort((a,b)=> b.amount - a.amount)
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       {foods &&
-        foods?.data?.sort((a,b) => b.amount - a.amount).map((item) => (
-          <span key={item.id}>
+        foods?.data.map((item,index) => (
+          <span key={index}>
             <Product item={item} />
           </span>
         ))}

@@ -28,7 +28,6 @@ import Image from "../../../Image/Image.jsx";
 import PropTypes from "prop-types";
 
 const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
-  const [newOrder, setNewOrder] = useState(null);
   const { order: orders, idOrder } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const [messageApi, contextHolder] = message.useMessage();
@@ -36,9 +35,10 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
   const dispatch = useDispatch();
 
   // Calculate Total Bill
-  const totalOrder = useMemo(() => (
-      orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
-  ), [orders]);
+  const totalOrder = useMemo(
+    () => orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0),
+    [orders],
+  );
 
   const submitOrderList = useCallback(async () => {
     const body = {
@@ -49,11 +49,11 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       token: localStorage.getItem("tableToken"),
     };
     try {
-      const response = await sendRequest(addOrder(body), setNewOrder, true);
+      const response = await sendRequest(addOrder(body), undefined, true);
       if (response?.success) {
         dispatch(
           addIdOrderTable({
-            idOrder: newOrder?.data?.orders?.id,
+            idOrder: response?.data?.orders?.id,
             idTable: customerName?.tables[0],
           }),
         );
@@ -62,7 +62,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           type: "success",
           content: "Đặt món thành công",
         });
-        window.location.href = `http://localhost:3000/tables-${customerName.tables[0]}/order`;
+        window.location.href = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL}/tables-${customerName.tables[0]}/order`;
       } else {
         messageApi.open({
           type: "error",
@@ -79,7 +79,6 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     customerName.tables,
     dispatch,
     messageApi,
-    newOrder?.data?.orders?.id,
     orders,
     sendRequest,
     setIsOrderDesktop,
@@ -100,7 +99,11 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       };
       await sendRequest(request, undefined, true);
       dispatch(emptyOrder());
-      window.location.href = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL}/tables-${customerName.tables[0]}/order`;
+      window.location.href = `${
+        import.meta.env.MODE === "production"
+          ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION
+          : import.meta.env.VITE_APP_CLIENT_URL
+      }/tables-${customerName.tables[0]}/order`;
     } catch (err) {
       console.error(err);
     } finally {
@@ -133,7 +136,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                       alt={item.name_product}
                     />
                   </div>
-                  <span className="text-lg text-slate-800 font-medium">
+                  <span className="text-lg text-slate-800 font-medium line-clamp-1">
                     {item.name_product}
                   </span>
                 </div>
@@ -164,7 +167,9 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                       +
                     </span>
                   </div>
-                  <span>{formatCurrency(item.price)}</span>
+                  <span className="min-w-[70px] block text-end">
+                    {formatCurrency(item.price)}
+                  </span>
                   <span className="cursor-pointer group">
                     <Popconfirm
                       title={"Bạn có muốn xóa món ăn này"}
@@ -194,7 +199,10 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           </div>
         )}
         <div className="w-full flex justify-between items-center text-lg font-semibold text-primary mt-10 px-2 transition-colors duration-200">
-          <span onClick={() => setIsOrderDesktop(false)} className="flex items-center font-normal cursor-pointer hover:text-primary/80">
+          <span
+            onClick={() => setIsOrderDesktop(false)}
+            className="flex items-center font-normal cursor-pointer hover:text-primary/80"
+          >
             Quay về
           </span>
           <div className="flex justify-between items-center space-x-1">

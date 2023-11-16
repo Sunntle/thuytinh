@@ -34,6 +34,7 @@ const orderSlice = createSlice({
     },
     addIdOrderTable: (state, action) => {
       const { idTable, idOrder } = action.payload;
+      console.log(idTable, idOrder);
       state.idOrder = idOrder;
       state.idTable = idTable;
     },

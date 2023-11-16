@@ -17,7 +17,6 @@ const apiQueryRest = (params) => {
     if (_offset) query.offset = +_offset;
     if (q) query.where = { [title]: { [Op.substring]: q } };
     if (_sort) query.order = [[_sort, _order]];
-
     if (Object.keys(rest).length > 0) {
         const whereConditions = {};
         for (let [index, value] of Object.entries(rest)) {

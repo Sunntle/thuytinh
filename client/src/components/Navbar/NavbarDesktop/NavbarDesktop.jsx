@@ -15,7 +15,7 @@ import PropTypes from "prop-types";
 import "./index.css";
 import logo from "../../../assets/images/logo.svg";
 import logo3 from "../../../assets/images/logo3.svg";
-
+import { message } from "antd";
 const NavbarDesktop = ({
   headerRef,
   checkRoute,
@@ -26,6 +26,8 @@ const NavbarDesktop = ({
   const { order: orders } = useSelector((state) => state.order);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
   const [isOrderDesktop, setIsOrderDesktop] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+
   const handleMenuMouseEnter = useCallback(() => {
     setIsMenuHovered(true);
   }, []);
@@ -57,13 +59,20 @@ const NavbarDesktop = ({
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [checkHome]);
-
+  const handleDetailOrder = () => {
+    if (!idTable) {
+      messageApi.info("Bạn phải chọn bàn để xem mục này!");
+      return;
+    }
+    setIsOrderDesktop(true);
+  };
   return (
     <div
       ref={headerRef}
       className={`tracking-wide hidden ease-in-out duration-200 lg:flex lg:justify-between lg:items-center lg:fixed z-30 ${checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
         } top-0 w-full h-20 px-16 py-2 drop-shadow-md`}
     >
+      {contextHolder}
       <div className="w-20 h-20">
         <img src={logoPath} alt="logo" />
       </div>
@@ -132,7 +141,7 @@ const NavbarDesktop = ({
           />
         </div>
         <div
-          onClick={() => setIsOrderDesktop(true)}
+          onClick={handleDetailOrder}
           className="group cursor-pointer flex justify-between items-center border-2 border-white rounded-full space-x-2 py-2 px-4 transition-colors duration-300 hover:text-primary hover:bg-white"
         >
           <span className="font-medium">Món đã chọn</span>
@@ -155,7 +164,7 @@ const NavbarDesktop = ({
 NavbarDesktop.propTypes = {
   headerRef: PropTypes.object,
   checkRoute: PropTypes.bool,
-  idTable: PropTypes.number || PropTypes.string,
+  idTable: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   categories: PropTypes.array,
   navbarList: PropTypes.array,
 };

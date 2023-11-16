@@ -3,7 +3,7 @@ import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
-import {ScrollToTop} from "../../utils/format.js";
+import {ScrollToTop, truncateString} from "../../utils/format.js";
 import avtDefault from "../../assets/images/avtDefault.png";
 import Reason from "../../components/Reason/Reason.jsx";
 import { Rate } from "antd";
@@ -69,7 +69,7 @@ const AboutUs = () => {
               </p>
               <button
                 type="submit"
-                className="mt-6 hover:bg-[#F0A500E5] transition-colors duration-300 w-24 py-2 text-base bg-orange-500 text-white rounded-xl focus:outline-none focus:ring focus:ring-orange-500"
+                className="mt-6 hover:bg-[#F0A500E5] transition-colors duration-300 w-24 py-2 text-base bg-orange-500 text-white rounded-md focus:outline-none focus:ring focus:ring-orange-500"
               >
                 Đặt món
               </button>
@@ -110,7 +110,7 @@ const AboutUs = () => {
               </p>
               <button
                 type="submit"
-                className="mt-6 hover:bg-[#F0A500E5] transition-colors duration-300 w-24 py-2 text-base bg-orange-500 text-white rounded-xl focus:outline-none focus:ring focus:ring-orange-500"
+                className="mt-6 hover:bg-[#F0A500E5] transition-colors duration-300 w-24 py-2 text-base bg-orange-500 text-white rounded-md focus:outline-none focus:ring focus:ring-orange-500"
               >
                 Đặt món
               </button>
@@ -164,7 +164,7 @@ const AboutUs = () => {
                         <span className="whitespace-nowrap text-xs py-2">
                           <Rate value={rating.rate} />
                         </span>
-                        <span className="text-xs line-clamp-1">{rating.description}</span>
+                        <div className="h-[50px] max-h-[50px]"> <span className="text-xs line-clamp-1">{truncateString(rating.description, 50)}</span></div>
                       </div>
                     </div>
                   </SwiperSlide>
