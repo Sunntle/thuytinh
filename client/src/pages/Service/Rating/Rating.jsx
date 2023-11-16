@@ -55,7 +55,7 @@ const Rating = ({ ratingModal, setRatingModal }) => {
       onCancel={handleCloseRatingModal}
       footer={false}
     >
-      <div className="lg:w-1/2 w-full space-y-4 px-4 p-4 bg-white rounded-md shadow-md">
+      <div className="w-full space-y-4 px-4 p-4 bg-white rounded-md shadow-md">
         <h1 className="mb-2 text-center text-xl font-medium text-primary">
           Đánh giá của bạn
         </h1>
@@ -84,12 +84,12 @@ const Rating = ({ ratingModal, setRatingModal }) => {
             <button
               type="submit"
               disabled={idOrder === 0 || customerName.name.length == 0}
-              className="w-full rounded-md bg-primary py-2 font-medium text-white disabled:bg-slate-200 hover:bg-[#F0A500E5]"
+              className="mt-3 w-full rounded-md bg-primary py-2 font-medium text-white disabled:bg-slate-200 hover:bg-[#F0A500E5]"
             >
               Gửi đánh giá
             </button>
           </Form.Item>
-          <span className="block text-red-600">{idOrder === 0 && 'Vui lòng đặt món để được đánh giá'}</span>
+          <span className="block text-red-500 mt-3 text-center">{idOrder === 0 && 'Vui lòng đặt món để được đánh giá'}</span>
         </Form>
         <Modal
           title="Đánh giá đã được gửi"
