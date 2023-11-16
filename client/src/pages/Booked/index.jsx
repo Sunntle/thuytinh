@@ -1,8 +1,8 @@
 import moment from "moment";
 import { Form, Input, Modal } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { parseQueryString } from "../../utils/format.js";
 import { regexEmail, regexPhone } from "../../utils/regex.js";
 import { MdSubdirectoryArrowLeft } from "react-icons/md";
@@ -10,19 +10,23 @@ import { MdSubdirectoryArrowLeft } from "react-icons/md";
 const Booked = () => {
   const { sendRequest } = useHttp();
   const location = useLocation();
+  const { idTableByOrder } = location.state;
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const parsedQueryParams = parseQueryString(location.search);
   const [timeLeft, setTimeLeft] = useState(60);
 
-  const chooseAnotherTable = async (id) => {
-    const request = {
-      method: 'delete',
-      url: `/table/booking/${id}`
-    }
-    await sendRequest(request, undefined, true)
-    navigate('/reservation')
-  }
+  const chooseAnotherTable = useCallback(
+    async (id) => {
+      const request = {
+        method: "delete",
+        url: `/table/booking/${id}`,
+      };
+      await sendRequest(request, undefined, true);
+      navigate("/reservation");
+    },
+    [navigate, sendRequest],
+  );
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -35,11 +39,11 @@ const Booked = () => {
     }, 1000);
 
     if (timeLeft === 0) {
-      chooseAnotherTable(+parsedQueryParams?.tables)
+      chooseAnotherTable(idTableByOrder);
     }
 
     return () => clearInterval(countdown);
-  }, [chooseAnotherTable, parsedQueryParams?.tables, timeLeft]);
+  }, [chooseAnotherTable, idTableByOrder, timeLeft]);
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
@@ -205,7 +209,10 @@ const Booked = () => {
             <p className="block text-base font-medium">
               Vui lòng chọn bàn trước
             </p>
-            <button onClick={() => chooseAnotherTable(+parsedQueryParams?.tables)} className="w-full bg-primary py-2 text-white space-x-1 rounded flex justify-center items-center">
+            <button
+              onClick={() => chooseAnotherTable(idTableByOrder)}
+              className="w-full bg-primary py-2 text-white space-x-1 rounded flex justify-center items-center"
+            >
               <span>Quay về trang đặt bàn</span>
               <MdSubdirectoryArrowLeft size={16} />
             </button>

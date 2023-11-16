@@ -321,11 +321,13 @@ exports.updateBooking = asyncHandler(async (req, res) => {
   if (orderId) await Order.update({ status: status_order }, { where: { id: orderId } });
   return res.status(200).json("Cập nhật thành công");
 });
+
 //trong vong 5 phút thì chạy vào xóa luôn recode
 exports.deleteBooking = asyncHandler(async (req, res) => {
   await TableByOrder.destroy({ where: { id: req.params.id } });
   return res.status(200).json("Đã xóa đặt bàn")
 })
+
 exports.getListBooking = asyncHandler(async (req, res) => {
   const data = await TableByOrder.findAndCountAll({
     include: { model: Order },
