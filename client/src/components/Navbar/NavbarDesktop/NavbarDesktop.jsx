@@ -150,12 +150,12 @@ const NavbarDesktop = ({
             {orders?.length || 0}
           </div>
         </div>
-        {idTable && (
+        {idTable ? (
           <OrderListDesktop
             isOrderDesktop={isOrderDesktop}
             setIsOrderDesktop={setIsOrderDesktop}
           />
-        )}
+        ): ''}
       </div>
     </div>
   );
