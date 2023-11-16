@@ -60,6 +60,7 @@ const ResMenu = () => {
             dispatch(setErr(null))
         }
     }, [dispatch, messageApi, warning]);
+    console.log(product)
     return (
         <div className='w-full p-10'>
             {contextHolder}
@@ -85,14 +86,14 @@ const ResMenu = () => {
                         </Swiper>
                     </div>
                     <div className='recent_order w-full   mt-4'>
-                            <div className='flex justify-center py-3'>
+                            <div className='flex justify-center py-1'>
                                 <Divider><span className='font-medium text-main text-lg'>{title}</span></Divider>
                             </div>
                         <Row gutter={[32, 24, 16, 8]}>
                             {product?.data?.length > 0 && product?.data?.map((product, index) => (
                                 <Col lg={8} md={8} sm={12} xs={12} className='rounded-lg' key={index}>
                                     {product.discount > 0 ? (
-                                        <Badge.Ribbon text={`${product.discount}%`} color='red'>
+                                        <Badge.Ribbon text={`${product.discount}%`} color='rgb(239 68 68)'>
                                             <div className='shadow-xl border-solid border border-gray-300 rounded-lg min-h-[230px] w-auto' >
                                                 <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
                                                 <div className='p-4 flex flex-col'>
@@ -103,14 +104,14 @@ const ResMenu = () => {
                                                             <p className=' font-medium text-main text-lg mr-1 lg:order-2 xl:order-none'> {(formatGia(product.price - (product.price * product.discount / 100)))}</p>
                                                             <p className=' font-medium text-slate-300 line-through text-xs lg:order-1 xl:order-none'> {(formatGia(product.price))}</p>  
                                                         </div>
-                                                        <PlusOutlined onClick={() => dispatch(AddCart(product))} size={30} className='p-1 bg-main rounded-full text-white' />
+                                                        <PlusOutlined onClick={() => dispatch(AddCart({...product,price: product.price - (product.price * product.discount / 100)}))} size={30} className='p-1 bg-main rounded-full text-white' />
                                                     </div>
                                                 </div>
                                             </div>
                                         </Badge.Ribbon>
                                     ) : (
                                         <div className='shadow-xl border-solid border border-gray-300 rounded-lg min-h-[230px] h-auto w-auto'>
-                                            <img className='h-full w-full rounded-t-lg' src={product?.ImageProducts[0]?.url} />
+                                            <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
                                             <div className='p-4 flex lg:min-h-[124px] xl:min-h-0 flex-col'>
                                                 <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
                                                 <div className='text-xs text-slate-500 mt-2'>Số lượng : {product.amount}</div>
@@ -124,7 +125,7 @@ const ResMenu = () => {
 
                             ))}
                         </Row>
-                        <PaginationMenu className='mt-2' current={page} defaultPageSize={12}
+                        <PaginationMenu className='mt-2 float-right' current={page} defaultPageSize={12}
                         onChange={handleChangePage} total={product.total || 0} />
                     </div>
                 </Col>
