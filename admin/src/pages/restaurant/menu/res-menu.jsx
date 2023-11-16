@@ -113,7 +113,7 @@ const ResMenu = () => {
                                             <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
                                             <div className='p-4 flex lg:min-h-[124px] xl:min-h-0 flex-col'>
                                                 <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
-                                                <div className='text-xs text-slate-500 mt-2'>Số lượng : {product.amount}</div>
+                                                <div className='text-xs text-slate-500 mt-2'>{product.amount >= 1 ? ('Số lượng : '+ product.amount) : (product.amount === 0.5 ? null : ('Sản phẩm hết hàng!'))  }</div>
                                                 <div className='flex justify-between items-center'>
                                                     <p className=' font-medium text-main text-lg mt-1'> {(formatGia(product.price))}</p>
                                                     <PlusOutlined onClick={() => dispatch(AddCart(product))} size={30} className='p-1 bg-main rounded-full text-white' />
