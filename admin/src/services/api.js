@@ -51,6 +51,9 @@ export const getAllBooking = (params) => {
 export const delBooking = (id) => {
   return axios.delete(`/api/table/booking/` + id);
 }
+export const updateBooking = (data) => {
+  return axios.put(`/api/table/booking`, data);
+}
 
 // product //
 export const getAllProduct = (params) => {
