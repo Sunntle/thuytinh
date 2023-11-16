@@ -224,6 +224,7 @@ exports.queryDr = asyncHandler(async (req, res) => {
 });
 
 exports.updateTransactionOrder = asyncHandler(async (req, res) => {
+  
   const { transaction_id, transaction_date, idOrder, payment_gateway } =
     req.body;
 

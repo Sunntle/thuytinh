@@ -81,7 +81,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
     );
     _io.of("/client").emit("status order", { ...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3" });// check correct order
   }
-
   res.status(200).json({ success: true, data: result });
 });
 

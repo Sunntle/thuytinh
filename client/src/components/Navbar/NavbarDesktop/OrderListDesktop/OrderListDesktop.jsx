@@ -28,7 +28,6 @@ import Image from "../../../Image/Image.jsx";
 import PropTypes from "prop-types";
 
 const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
-  const [newOrder, setNewOrder] = useState(null);
   const { order: orders, idOrder } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const [messageApi, contextHolder] = message.useMessage();
@@ -50,11 +49,11 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       token: localStorage.getItem("tableToken"),
     };
     try {
-      const response = await sendRequest(addOrder(body), setNewOrder, true);
+      const response = await sendRequest(addOrder(body), undefined, true);
       if (response?.success) {
         dispatch(
           addIdOrderTable({
-            idOrder: newOrder?.data?.orders?.id,
+            idOrder: response?.data?.orders?.id,
             idTable: customerName?.tables[0],
           }),
         );
@@ -63,7 +62,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           type: "success",
           content: "Đặt món thành công",
         });
-        window.location.href = `http://localhost:3000/tables-${customerName.tables[0]}/order`;
+        window.location.href = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL}/tables-${customerName.tables[0]}/order`;
       } else {
         messageApi.open({
           type: "error",
@@ -80,7 +79,6 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     customerName.tables,
     dispatch,
     messageApi,
-    newOrder?.data?.orders?.id,
     orders,
     sendRequest,
     setIsOrderDesktop,

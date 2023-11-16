@@ -60,7 +60,7 @@ const PaymentLoading = () => {
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center">
       <span className="mt-5 text-base font-semibold">
-        Quý khách vui lòng đợi trong giây lát.
+        Quý khách vui lòng đợi trong giây lát...
       </span>
       <Modal title="Thông báo" open={isModalOpen} footer={false}>
         <span className="block text-red-600 text-lg">{errorMessage}</span>
