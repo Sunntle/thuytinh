@@ -115,9 +115,9 @@ const Booked = () => {
             <span>
               {parsedQueryParams?.createdAt !== undefined
                 ? moment(
-                    parsedQueryParams?.createdAt,
-                    "DD/MM/YYYY HH:mm",
-                  ).format("DD/MM/YYYY HH:mm ")
+                  parsedQueryParams?.createdAt,
+                  "DD/MM/YYYY HH:mm",
+                ).format("DD/MM/YYYY HH:mm ")
                 : ""}
             </span>
           </div>

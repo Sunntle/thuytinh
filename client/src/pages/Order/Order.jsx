@@ -29,7 +29,7 @@ const Order = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const order = data[0]?.TableByOrders?.[0]?.order || [];
+  const order = data[0]?.tablebyorders?.[0]?.order || [];
   const totalOrder = calculateTotalWithVAT(order?.total, 10)
 
   useEffect(() => {
@@ -50,13 +50,14 @@ const Order = () => {
 
   const handleAddNewOrder = async () => {
     const dataPrevious = order?.order_details?.map((item) => {
-      const { Product, quantity } = item;
-      return { ...Product, quantity, inDb: quantity };
+
+      const { product, quantity } = item;
+      return { ...product, quantity, inDb: quantity };
     });
     dispatch(addOrderDetailUpdate(dataPrevious));
     navigate(`/tables-${tables[0]}/menu`)
   };
-  
+
   const onFinish = async (values) => {
     values = { ...values, amount: totalOrder };
     const request = {
@@ -67,14 +68,14 @@ const Order = () => {
     const response = await sendRequest(request, undefined, true);
     dispatch(emptyOrder());
     form.resetFields();
-    if(response !== null) {
+    if (response !== null) {
       setIsModalOpen(false)
       window.location.href = String(response);
     }
   };
 
-  const handlePayInCash = ()=>{
-    socket.emit("pay-in-cash", {tables: tables[0]})
+  const handlePayInCash = () => {
+    socket.emit("pay-in-cash", { tables: tables[0] })
     messageApi.open({
       type: "info",
       content: "Vui lòng đợi trong giây lát, nhân viên sẽ đến thanh toán",
@@ -106,14 +107,14 @@ const Order = () => {
                         <img
                           loading={"lazy"}
                           className="w-full h-full rounded-lg object-cover"
-                          src={item?.Product?.imageproducts[0]?.url}
-                          alt={item?.Product?.name_product}
+                          src={item?.product?.imageproducts[0]?.url}
+                          alt={item?.product?.name_product}
                         />
                       </div>
                     </div>
                     <div className="col-span-7 md:col-span-8 flex flex-col text-slate-500 mt-1 space-y-1">
                       <span className="font-bold text-base md:text-lg text-slate-800">
-                        {item?.Product?.name_product}
+                        {item?.product?.name_product}
                       </span>
                       <span className="text-sm md:text-base font-medium">
                         Giá: {formatCurrency(item?.product?.price)}
