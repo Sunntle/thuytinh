@@ -19,6 +19,7 @@ import SignUp from "../pages/SignUp/SignUp.jsx";
 import BookingTable from "../pages/BookingTable/index.jsx";
 import SelectTable from "../pages/SelectTable/index.jsx";
 import Booked from "../pages/Booked/index.jsx";
+import ActiveBooking from "../pages/ActiveBooking/index.jsx";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
         path: "select-table",
         element: <SelectTable />,
       },
+      { path: "active-booking", element: <ActiveBooking /> },
     ],
   },
   {
