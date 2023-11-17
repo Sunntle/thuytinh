@@ -42,7 +42,7 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
           name_product: data.name_product,
           price: data.price,
           description: data.description,
-          status: data.status,
+          status: data.amout == 0 ? 1 : 0,
           sold: data.sold,
           createdAt: data.createdAt,
           id_category: data.id_category,
@@ -123,7 +123,7 @@ function EditProduct({ open, handleCancel, handleFinish, cate, data }) {
             </Select>
           </Form.Item>
           <Form.Item name="status" label="Trạng thái">
-            <Select placeholder="Chọn trạng thái món ăn">
+            <Select placeholder="Chọn trạng thái món ăn" disabled>
               {optionsStatus.map((el, index) => (
                 <Option key={index} value={el.value}>
                   {el.label}

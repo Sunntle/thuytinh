@@ -61,14 +61,12 @@ const OrderPage = () => {
   const [tableAndEmployee, setTableAndEmployee] = useState(null);
   const [openModalUpdate, setOpenModalUpdate] = useState(initData);
   const [openOrderDetail, setOpenOrderDetail] = useState(initData);
+
   const [query, setQuery] = useState({
     _sort: "createdAt",
     _order: "DESC",
   });
 
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-  };
   const statusOrder = useMemo(() => {
     let arr = [
       { value: 0, label: "Hủy đơn hàng" },
@@ -79,11 +77,7 @@ const OrderPage = () => {
     ];
     return arr;
   }, []);
-
-  const handleReset = () => {
-    searchInput.current = null;
-    window.location.href = "/admin/order";
-  };
+  
   const fetchData = useCallback(async (query) => {
     const { data, total } = await getAllOrder(query);
     const avl =
@@ -135,6 +129,12 @@ const OrderPage = () => {
   useEffect(() => {
     fetchDataEmployeeAndTable();
   }, []);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+  };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -153,13 +153,11 @@ const OrderPage = () => {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: "block",
+            display: 'block',
           }}
         />
         <Space>
@@ -175,7 +173,7 @@ const OrderPage = () => {
             Search
           </Button>
           <Button
-            onClick={handleReset}
+            onClick={()=> clearFilters && handleReset(clearFilters)}
             size="small"
             style={{
               width: 90,
@@ -187,10 +185,21 @@ const OrderPage = () => {
             type="link"
             size="small"
             onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
               close();
             }}
           >
-            close
+            Close
           </Button>
         </Space>
       </div>

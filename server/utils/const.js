@@ -126,7 +126,7 @@ const templateSendUser = ({ createdAt, name, tableId, token }) => {
 
 const timeLimit = 75
 
-const checkBooking = async (time, tableId, dining_option = "eat-in", params = "subtract", limit = 75) => {
+const checkBooking = async ({ time, tableId, dining_option = "eat-in", params = "subtract", limit = 75, isActive }) => {
     let query = {};
     if (dining_option === "eat-in") {
         query = {
@@ -153,6 +153,7 @@ const checkBooking = async (time, tableId, dining_option = "eat-in", params = "s
         tableId: Array.isArray(tableId) ? { [Op.in]: tableId } : tableId
     }
     const isEatIn = await TableByOrder.findAll(query);
+    if (isActive == true) return isEatIn[0].dataValues.createdAt;
     return isEatIn.length > 0;
 }
 

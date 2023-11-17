@@ -29,6 +29,11 @@ const customerNameSlice = createSlice({
       state.tables = action.payload.tables;
       state.timestamp = action.payload.timestamp;
     },
+    clearCustomer: (state)=>{
+      state.name = initialState.name
+      state.tables = initialState.tables;
+      state.timestamp = initialState.timestamp;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -48,5 +53,5 @@ const customerNameSlice = createSlice({
   },
 });
 
-export const { getCustomerName } = customerNameSlice.actions;
+export const { getCustomerName, clearCustomer } = customerNameSlice.actions;
 export const customerNameReducer = customerNameSlice.reducer;

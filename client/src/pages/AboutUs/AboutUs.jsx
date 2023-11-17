@@ -13,11 +13,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { useNavigate } from "react-router-dom";
 
 const AboutUs = () => {
   const [slideProduct, setSlideRating] = useState(null);
   const { sendRequest } = useHttp();
-
+  const navigate = useNavigate()
   useEffect(() => {
     const request = {
       method: "get",
@@ -42,6 +43,7 @@ const AboutUs = () => {
           </div>
           <div className="w-full flex flex-col justify-center items-center mt-6">
             <button
+              onClick={()=> navigate("/select-table")}
               type="submit"
               className="hover:bg-[#F0A500E5] transition-colors duration-300 w-1/4 md:w-24 py-2 text-base bg-orange-500 text-white rounded-md focus:outline-none focus:ring focus:ring-orange-500"
             >
@@ -68,6 +70,7 @@ const AboutUs = () => {
                 lồng nuôi.
               </p>
               <button
+               onClick={()=> navigate("/select-table")}
                 type="submit"
                 className="mt-6 hover:bg-[#F0A500E5] transition-colors duration-300 w-24 py-2 text-base bg-orange-500 text-white rounded-md focus:outline-none focus:ring focus:ring-orange-500"
               >
@@ -109,6 +112,7 @@ const AboutUs = () => {
                 dùng vào việc trình bày và dàn trang
               </p>
               <button
+               onClick={()=> navigate("/select-table")}
                 type="submit"
                 className="mt-6 hover:bg-[#F0A500E5] transition-colors duration-300 w-24 py-2 text-base bg-orange-500 text-white rounded-md focus:outline-none focus:ring focus:ring-orange-500"
               >

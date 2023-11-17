@@ -70,6 +70,7 @@ exports.getAll = asyncHandler(async (req, res) => {
       }
     }
   };
+
   if (req.query._noQuery === 1) delete query.include;
   const tables = await Tables.findAll(query);
   res.status(200).json(tables);
@@ -78,8 +79,8 @@ exports.getAll = asyncHandler(async (req, res) => {
 exports.getId = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const { token, id_employee } = req.query;
-  const check = await checkBooking(new Date(), id, "reservation", "add");
-  if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
+  const check = await checkBooking({ time: new Date(), tableId: id, dining_option: "reservation", params: "add", isActive: true });
+  if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước", time: moment(check).format("HH:mm:ss") });
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
@@ -173,7 +174,7 @@ exports.updateStatusAndToken = asyncHandler(async (req, res) => {
     }, tables)
     return res.status(200).json("Đặt lại bàn thành công! ");
   }
-  let check = await checkBooking(new Date(), tables, "reservation", "add");
+  let check = await checkBooking({ time: new Date(), tableId: tables, dining_option: "reservation", params: "add" });
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
   let token = generateTable(JSON.stringify(req.body));
   await Tables.prototype.updateStatusTable({
@@ -192,7 +193,7 @@ exports.del = asyncHandler(async (req, res) => {
 });
 exports.switchTables = asyncHandler(async (req, res) => {
   const { newTable, currentTable, idOrder } = req.body;
-  let check = await checkBooking(new Date(), newTable, "reservation", "add");
+  let check = await checkBooking({ time: new Date(), tableId: newTable, dining_option: "reservation", params: "add" });
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
   if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json({ success: false, data: "Bàn đang được sử dụng" });
   await TableByOrder.update({ tableId: newTable }, { where: { tableId: currentTable, orderId: idOrder } });
@@ -223,7 +224,7 @@ const handCheckBooking = async (time, tableId) => {
     },
     raw: true
   });
-  const bookEatIn = await checkBooking(time, tableId);
+  const bookEatIn = await checkBooking({ time, tableId });
   const result = checkTimeTable ? true : false && bookEatIn;
   return result
 }
@@ -260,7 +261,6 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
 exports.pendingTable = asyncHandler(async (req, res) => {
 
   const { createdAt, tableId, party_size } = req.body;
-  console.log(moment(createdAt).format("HH:mm DD/MM/YYYY"))
   if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
     return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
   }
@@ -285,7 +285,7 @@ exports.bookingTables = asyncHandler(async (req, res) => {
   }, { where: { id: id } });
   const result = await Order.findOne({ where: { id: dataOrder.id }, include: TableByOrder });
   await Notification.create(
-    { type: "table", description: `Khách hàng đặt trước bàn số ${tableId} lúc ${moment(createdAt).format("HH:mm DD/MM")}`, content: tableId },
+    { type: "table", description: `Bàn số ${tableId} được đặt lúc ${moment(createdAt).format("HH:mm DD/MM")}`, content: tableId },
     { raw: true },
   );
   await sendEmail(email, "Thông báo", templateSendUser(data));
