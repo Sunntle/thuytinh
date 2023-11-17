@@ -9,6 +9,7 @@ function CheckTable(props) {
   const [loading, setLoading] = useState(true)
   const tokenTable = localStorage.getItem("tableToken")
   const idTable = !location.pathname.includes("undefined") ? location.pathname.split("/")[1].split("-")[1] : undefined
+
   useEffect(() => {
     const checkTableExist = async () => {
       setLoading(true)
