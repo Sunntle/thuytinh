@@ -104,7 +104,7 @@ const ResMenu = () => {
                                                             <p className=' font-medium text-main text-lg mr-1 lg:order-2 xl:order-none'> {(formatGia(product.price - (product.price * product.discount / 100)))}</p>
                                                             <p className=' font-medium text-slate-300 line-through text-xs lg:order-1 xl:order-none'> {(formatGia(product.price))}</p>
                                                         </div>
-                                                        <PlusOutlined onClick={() => dispatch(AddCart({...product,price: product.price - (product.price * product.discount / 100)}))} size={30} className='p-1 bg-main rounded-full text-white' />
+                                                        <PlusOutlined onClick={() => dispatch(AddCart({ ...product, price: product.price - (product.price * product.discount / 100) }))} size={30} className='p-1 bg-main rounded-full text-white' />
                                                     </div>
                                                 </div>
                                             </div>

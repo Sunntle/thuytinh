@@ -16,7 +16,7 @@ const Booked = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const parsedQueryParams = parseQueryString(location.search);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(300);
 
   useEffect(() => {
     if (location.state === null) {

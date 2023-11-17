@@ -3,7 +3,7 @@ import { Button, Tabs } from 'antd';
 import { FiUsers } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { AddTable} from '../../../redux/table/tableSystem';
+import { AddTable } from '../../../redux/table/tableSystem';
 import { getAllTable, switchTables } from '../../../services/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import ResOrder from '../order/res-order';
@@ -13,8 +13,8 @@ const ButtonTable = ({ table, switchTable, handleDetailModal }) => (
   <div key={table.id}>
     <span
       className={`w-full flex flex-col h-[200px] items-center justify-center p-4 rounded-lg shadow-md ${table.status_table
-          ? 'bg-main text-white border-yellow-400 border-3px border-solid'
-          : 'bg-[#D1D5DB] text-white'
+        ? 'bg-main text-white border-yellow-400 border-3px border-solid'
+        : 'bg-[#D1D5DB] text-white'
         } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
     >
       <FiUsers className="w-6 h-6 mb-2" />
@@ -51,7 +51,7 @@ const ResSelectTable = () => {
   const dispatch = useDispatch();
   const tableData = useSelector((state) => state.table);
   const [open, setOpen] = useState(false);
-  const {id, idOrder} = useParams();
+  const { id, idOrder } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,7 +68,7 @@ const ResSelectTable = () => {
     }
   }, [socket])
   const switchTable = async (newTable) => {
-    const data = {currentTable:id, newTable : newTable, idOrder};
+    const data = { currentTable: id, newTable: newTable, idOrder };
     await switchTables(data);
     dispatch(RemoveTableList())
     navigate('/employee/choosetable/');

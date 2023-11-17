@@ -22,13 +22,13 @@ const PaymentSuccess = () => {
     };
     fetchData();
   }, [id]);
-  
+
   const columns = [
     {
       title: "Tên món ăn",
       dataIndex: "product.name_product",
       key: "name",
-      render: (_, record) => <span>{record?.Product?.name_product}</span>,
+      render: (_, record) => <span>{record?.product?.name_product}</span>,
     },
     {
       title: "Số lượng",
@@ -39,7 +39,7 @@ const PaymentSuccess = () => {
       title: "Giá",
       dataIndex: "product.price",
       key: "price",
-      render: (_, record) => <span>{formatGia(record?.Product?.price)}</span>,
+      render: (_, record) => <span>{formatGia(record?.product?.price)}</span>,
     },
     {
       title: "Tổng cộng",

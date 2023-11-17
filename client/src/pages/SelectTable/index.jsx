@@ -8,19 +8,19 @@ import { useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
 import PropTypes from 'prop-types';
 function showError(error) {
-  switch(error.code) {
+  switch (error.code) {
     case error.PERMISSION_DENIED:
       return "User denied the request for Geolocation."
-      
+
     case error.POSITION_UNAVAILABLE:
       return "Location information is unavailable."
-      
+
     case error.TIMEOUT:
       return "The request to get user location timed out."
-      
+
     case error.UNKNOWN_ERROR:
       return "An unknown error occurred."
-      
+
   }
 }
 function SelectTable() {
@@ -78,7 +78,7 @@ function SelectTable() {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
- 
+
   if (isTableExist == "Không tồn tại bàn này!") return <h2 className="py-5 mt-[80px] text-center">{isTableExist}</h2>
   if (isLoading) return <Spinner />;
 
