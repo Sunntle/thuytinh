@@ -109,6 +109,7 @@ function SelectTable() {
                         onClick={() => handleSelectTable(table.id)}
                         className="cursor-pointer w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center"
                       >
+
                         {table.name_table}
                       </div>
                     ))}
@@ -117,6 +118,7 @@ function SelectTable() {
               ),
             };
           })}
+
         />
       </div>
     </div>
