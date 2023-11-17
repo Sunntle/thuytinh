@@ -18,6 +18,7 @@ const { generateTable, generateHash } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
 const moment = require("moment");
 const sendEmail = require("../utils/mail");
+const { json } = require("body-parser");
 
 const findTables = async (tables) => {
   const re = await Tables.findAll({
@@ -79,8 +80,15 @@ exports.getAll = asyncHandler(async (req, res) => {
 exports.getId = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const { token, id_employee } = req.query;
+  const result = await Tables.findOne({ where: { id } });
+  if (!result) {
+    return res.status(404).json({ success: false, message: "Invalid" })
+  }
   const check = await checkBooking({ time: new Date(), tableId: id, dining_option: "reservation", params: "add", isActive: true });
-  if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước", time: moment(check).format("HH:mm:ss") });
+  if (check) return res.status(404).json({
+    success: false, data: "Bàn đã được đặt trước",
+    prevTime: moment(check).subtract(30, "minutes"), nextTime: moment(check).add(30, "minutes")
+  });
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
@@ -88,7 +96,8 @@ exports.getId = asyncHandler(async (req, res, next) => {
       if (data) return res.status(200).json(data);
       return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
     })
-  } else {
+  }
+  if (id_employee) {
     const employee = await User.findOne({
       where: {
         id: id_employee,
@@ -102,6 +111,8 @@ exports.getId = asyncHandler(async (req, res, next) => {
       res.status(404).json("Phải phải nhân viên !");
     }
   }
+
+  res.status(200).json({ success: true, ...result });
 });
 
 exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
@@ -193,6 +204,7 @@ exports.del = asyncHandler(async (req, res) => {
 });
 exports.switchTables = asyncHandler(async (req, res) => {
   const { newTable, currentTable, idOrder } = req.body;
+  if (!newTable || !currentTable || !idOrder) return res.status(404).json({ success: false, data: "Invalied" })
   let check = await checkBooking({ time: new Date(), tableId: newTable, dining_option: "reservation", params: "add" });
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
   if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json({ success: false, data: "Bàn đang được sử dụng" });
@@ -200,7 +212,7 @@ exports.switchTables = asyncHandler(async (req, res) => {
   let getCurrent = await Tables.findOne({ where: { id: currentTable }, raw: true });
   await Tables.prototype.updateStatusTable({ token: getCurrent.token, status_table: 1 }, [newTable]);
   await Tables.prototype.updateStatusTable({ token: null, status_table: 0 }, [currentTable]);
-  res.status(200).json("Chuyển thành bàn thành công");
+  res.status(200).json({ success: true, data: "Chuyển thành bàn thành công" });
 });
 
 const handCheckBooking = async (time, tableId) => {
@@ -308,14 +320,13 @@ exports.getBooking = asyncHandler(async (req, res) => {
       dining_option: "reservation",
       status: "confirmed",
       createdAt: {
-        [Op.lte]: moment(new Date()).add(timeLimit, 'minutes'),
+        [Op.lte]: moment(new Date()).add(30, 'minutes'),
         [Op.gte]: moment(new Date()).subtract(30, 'minutes')
       },
       tableId: tableId,
     },
     nest: true
   })
-  console.log(data)
   res.status(200).json(data);
 });
 
@@ -329,7 +340,8 @@ exports.activeBooking = asyncHandler(async (req, res) => {
     await dataOrder.save()
     const token = generateTable(JSON.stringify(data));
     await Tables.prototype.updateStatusTable({ token: token, status_table: 1 }, [tableId]);
-    return res.status(200).json({ success: true, message: "Kích hoạt thành công", token, data });
+    const order = await Order.findOne({ where: { id: orderId }, ...bien.include })
+    return res.status(200).json({ success: true, message: "Kích hoạt thành công", token, data, order });
   }
   res.status(404).json({ success: false, message: "Bàn đã trước đó được hoạt động" });
 });
