@@ -23,6 +23,7 @@
     }
 }
 
+
 :where(.css-dev-only-do-not-override-byeoj0).ant-tabs > .ant-tabs-nav .ant-tabs-nav-operations, :where(.css-dev-only-do-not-override-byeoj0).ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-operations {
     display: none;
 }

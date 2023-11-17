@@ -92,12 +92,9 @@ const ActiveBooking = () => {
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng không bỏ trống",
-                },
-                {
-                  pattern: regexEmail,
+                  type: "email",
                   message: "Vui lòng nhập đúng định dạng email",
-                },
+                }
               ]}
               name="email"
             >

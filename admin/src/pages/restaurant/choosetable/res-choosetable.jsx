@@ -97,6 +97,7 @@ const ResChooseTable = () => {
 
   const handleTableClick = async (index) => {
     const resTableId = await getTableId(index.id, { id_employee: userId });
+    console.log(resTableId)
     if (resTableId.success === false) {
       api.info({
         message: 'Thông báo!!!',

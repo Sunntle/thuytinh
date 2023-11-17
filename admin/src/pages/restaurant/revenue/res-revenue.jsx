@@ -22,13 +22,7 @@ import {
   formatNgay,
 } from "../../../utils/format";
 import CountUp from 'react-countup';
-const renderTextPay = (params) => {
-  if (params === "cash" || !params) {
-    return "Thanh toán tiền mặt";
-  } else {
-    return params;
-  }
-};
+
 
 const ResRevenue = () => {
   const [revenue, setRevenue] = useState({ daily: 0, weekly: 0, monthly: 0 });
@@ -37,7 +31,14 @@ const ResRevenue = () => {
   const customize = useSelector(state => state.customize)
   const [admin, setAdmin] = useState(null);
   const [dataOrder, setDataOrder] = useState([]);
-  const [dataChart, setDataChart] = useState([])
+  const [dataChart, setDataChart] = useState([]);
+  const renderTextPay = (params) => {
+    if (params === "Cash" || !params) {
+      return "Thanh toán tiền mặt";
+    } else {
+      return params;
+    }
+  };
 
 
   const fetchData = useCallback(async () => {
@@ -48,6 +49,7 @@ const ResRevenue = () => {
       const monthly = calculateMonthlyRevenue(data)
       dataAdmin.success && setAdmin(dataAdmin);
       setRevenue({ data, daily, weekly, monthly });
+      console.log(data)
       setData(res1);
       const avl = data?.map((item) => {
         let data = {
@@ -57,9 +59,9 @@ const ResRevenue = () => {
           user: item.name,
           total: item.total,
           table: item?.tablebyorders?.map(i => i.tableId).join(", "),
-          employee: item?.User?.name,
+          employee: item?.user?.name,
           id_employee: item.id_employee,
-          payment: renderTextPay(item.payment),
+          payment: renderTextPay(item.payment_gateway),
           createdAt: formatNgay(item.createdAt),
           quantity: item?.order_details.reduce((a, b) => a + b?.quantity, 0),
           meta: { ...item, table: item?.tablebyorders?.map(i => i.tableId.toString()) },
@@ -104,7 +106,7 @@ const ResRevenue = () => {
       },
       {
         title: 'Người phụ trách',
-        dataIndex: ['meta' , 'name'],
+        dataIndex: 'employee',
       },
       {
         title: 'Số lượng',
