@@ -7,6 +7,7 @@ import "./index.css";
 import { useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
 import PropTypes from 'prop-types';
+import { AndroidOutlined, AppleOutlined } from '@ant-design/icons';
 function showError(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
@@ -110,6 +111,7 @@ function SelectTable() {
                         onClick={() => handleSelectTable(table.id)}
                         className="cursor-pointer w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center"
                       >
+
                         {table.name_table}
                       </div>
                     ))}
@@ -118,6 +120,7 @@ function SelectTable() {
               ),
             };
           })}
+
         />
       </div>
     </div>

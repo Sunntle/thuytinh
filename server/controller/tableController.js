@@ -78,7 +78,7 @@ exports.getAll = asyncHandler(async (req, res) => {
 exports.getId = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const { token, id_employee } = req.query;
-  let check = await checkBooking(new Date(), id, "reservation", "add");
+  const check = await checkBooking(new Date(), id, "reservation", "add");
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
@@ -194,7 +194,7 @@ exports.switchTables = asyncHandler(async (req, res) => {
   const { newTable, currentTable, idOrder } = req.body;
   let check = await checkBooking(new Date(), newTable, "reservation", "add");
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
-  if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json("Bàn đang được sử dụng");
+  if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json({ success: false, data: "Bàn đang được sử dụng" });
   await TableByOrder.update({ tableId: newTable }, { where: { tableId: currentTable, orderId: idOrder } });
   let getCurrent = await Tables.findOne({ where: { id: currentTable }, raw: true });
   await Tables.prototype.updateStatusTable({ token: getCurrent.token, status_table: 1 }, [newTable]);
