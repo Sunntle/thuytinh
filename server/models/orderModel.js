@@ -18,7 +18,7 @@ const Order = db.sequelize.define("orders", {
     defaultValue: null
   },
   phone: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     defaultValue: null
   },
   payment_gateway: {

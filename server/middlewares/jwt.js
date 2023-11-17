@@ -10,8 +10,8 @@ const generateTable = (body) => {
     return jwt.sign(body, process.env.JWT_INFO_TABLE)
 }
 
-function generateHash(body) {
-    return jwt.sign({ ...body }, process.env.JWT_SECRET_EMAIL, { expiresIn: "1h" })
+function generateHash(body, expiresIn = "1h") {
+    return jwt.sign({ ...body }, process.env.JWT_SECRET_EMAIL, { expiresIn: expiresIn })
 }
 
 

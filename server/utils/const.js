@@ -162,7 +162,9 @@ function handleTimeDining(inputTime) {
     const formattedTime = `${remainingTime.hours()}:${remainingTime.minutes()}:${remainingTime.seconds()}`;
     return moment(formattedTime, "HH:mm:ss").format("HH:mm:ss");
 }
+const timeLimit = 135
 module.exports = {
+    timeLimit,
     handleTimeDining, isEmpty, checkBooking,
     templateSendUser, bookingValidate, currentYear, tinhWeek,
     bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct
