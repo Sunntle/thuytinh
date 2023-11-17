@@ -11,7 +11,7 @@ const EnterName = (props) => {
   const dispatch = useDispatch();
   const customerNameState = useSelector(state => state.customerName)
   const idTable = location.pathname.split("/")[1].split("-")[1]
-
+  const isTableTokenExist = localStorage.getItem("tableToken")
   const handleChangeName = useCallback((e) => {
     setCustomerName(e.target.value);
   }, []);
@@ -29,7 +29,7 @@ const EnterName = (props) => {
 
   if (customerNameState.isLoading) return <Spinner/>
   
-  if (customerNameState?.name?.length > 0) return props.children
+  if (customerNameState?.name?.length > 0 && isTableTokenExist) return props.children
 
   return (
     <div className="overflow-hidden h-screen max-w-screen flex items-center">
