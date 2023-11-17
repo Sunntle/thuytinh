@@ -192,14 +192,17 @@ exports.del = asyncHandler(async (req, res) => {
 });
 exports.switchTables = asyncHandler(async (req, res) => {
   const { newTable, currentTable, idOrder } = req.body;
-  let check = await checkBooking(new Date(), newTable, "reservation", "add");
+  console.log(req.body)
+  if (!newTable || !currentTable || !idOrder) return res.status(404).json({ success: false, data: "Invalied" })
+  let check = await checkBooking({ time: new Date(), tableId: newTable, dining_option: "reservation", params: "add" });
+  console.log(check)
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
-  if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json("Bàn đang được sử dụng");
+  if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json({ success: false, data: "Bàn đang được sử dụng" });
   await TableByOrder.update({ tableId: newTable }, { where: { tableId: currentTable, orderId: idOrder } });
   let getCurrent = await Tables.findOne({ where: { id: currentTable }, raw: true });
   await Tables.prototype.updateStatusTable({ token: getCurrent.token, status_table: 1 }, [newTable]);
   await Tables.prototype.updateStatusTable({ token: null, status_table: 0 }, [currentTable]);
-  res.status(200).json("Chuyển thành bàn thành công");
+  res.status(200).json({ success: true, data: "Chuyển thành bàn thành công" });
 });
 
 const handCheckBooking = async (time, tableId) => {
