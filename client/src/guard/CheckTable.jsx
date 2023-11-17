@@ -14,9 +14,7 @@ function CheckTable(props) {
       setLoading(true)
       try {
         if (idTable) {
-       
-          const response = await Promise.all(await axios.get(`/table?_id=eq_${idTable}`)) 
-          console.log(response, idTable, tokenTable);// 2, 2, null
+          const response = await Promise.all(await axios.get(`/table?_id=eq_${idTable}`)) // 7
           if (response.length == 0) {
             setTableExist("Không tồn tại bàn này!")
             return

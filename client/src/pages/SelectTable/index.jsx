@@ -4,10 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
 import { Tabs } from "antd";
 import "./index.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
 import PropTypes from 'prop-types';
-import { clearCustomer } from "../../redux/CustomerName/customerNameSlice.js";
 function showError(error) {
   switch(error.code) {
     case error.PERMISSION_DENIED:
@@ -88,7 +87,7 @@ function SelectTable() {
       {idTable && isTableExist == "Bàn đã được sử dụng" &&// 1 == 1
         +idTable !== customerName.tables?.at(1) &&
         (<p className="py-3 text-center">Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!</p>)}
-      <div className="w-full h-12 uppercase font-semibold text-lg text-white bg-primary flex justify-center items-center">
+      <div className="w-full h-12 uppercase font-semibold pt-3 text-xl text-primary flex justify-center items-center">
         Chọn bàn
       </div>
       <div className="bg-white px-6 xl:px-12">
