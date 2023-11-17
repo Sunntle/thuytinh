@@ -116,17 +116,17 @@ const bookingValidate = (params) => {
 
 
 const templateSendUser = ({ createdAt, name, tableId, token }) => {
-    let html = `<h1>Nhà hàng hải sản thủy tinh xin chào quý kháck</h1>
+    let html = `<h1>Nhà hàng hải sản thủy tinh xin chào quý khách</h1>
      <h3> ${name} bạn vừa đặt trước bàn số ${tableId} thời gian : ${moment(createdAt).format("DD/MM/YYYY HH:mm")} </h3>
-    <p>Bạn có thể hủy đơn hàng khi click vào đây : <a href='${process.env.CLIENT_URL}/cancel-booking/${token}'>Cancel</a></p>
+    <p>Bạn có thể hủy đơn hàng khi click vào đây : <a href='${process.env.NODE_ENV == 'production' ? process.env.CLIENT_URL_PRODUCTION : process.env.CLIENT_URL}/cancel-booking/${token}'>Cancel</a></p>
      `;
     return html
 }
 
 
+const timeLimit = 75
 
-
-const checkBooking = async (time, tableId, dining_option = "eat-in", params = "subtract", limit = 135) => {
+const checkBooking = async ({ time, tableId, dining_option = "eat-in", params = "subtract", limit = 75, isActive }) => {
     let query = {};
     if (dining_option === "eat-in") {
         query = {
@@ -153,6 +153,7 @@ const checkBooking = async (time, tableId, dining_option = "eat-in", params = "s
         tableId: Array.isArray(tableId) ? { [Op.in]: tableId } : tableId
     }
     const isEatIn = await TableByOrder.findAll(query);
+    if (isActive == true) return isEatIn[0].dataValues.createdAt;
     return isEatIn.length > 0;
 }
 
@@ -162,7 +163,7 @@ function handleTimeDining(inputTime) {
     const formattedTime = `${remainingTime.hours()}:${remainingTime.minutes()}:${remainingTime.seconds()}`;
     return moment(formattedTime, "HH:mm:ss").format("HH:mm:ss");
 }
-const timeLimit = 135
+
 module.exports = {
     timeLimit,
     handleTimeDining, isEmpty, checkBooking,
