@@ -14,7 +14,6 @@ function CheckTable(props) {
       setLoading(true)
       try {
         if (idTable) {
-       
           const response = await Promise.all(await axios.get(`/table?_id=eq_${idTable}`)) 
           console.log(response, idTable, tokenTable);// 2, 2, null
           if (response.length == 0) {
@@ -36,9 +35,10 @@ function CheckTable(props) {
     checkTableExist()
   }, [idTable, tokenTable])
   if (loading) return <Spinner />
-  console.log(isTableExist);
+
     // eslint-disable-next-line react/prop-types
   return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? (props.children) : (<Navigate to={"/select-table"} state={{isTableExist, ...(idTable ? {prevTable: idTable}: {}) }} replace/>)
+
 }
 
 export default CheckTable

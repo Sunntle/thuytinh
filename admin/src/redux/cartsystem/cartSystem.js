@@ -10,27 +10,19 @@ const cartSystem = createSlice({
     reducers: {
         AddCart: (state, action) => {
             const find = state.carts.findIndex(item => item.id === action.payload.id);
-            console.log(action.payload.recipes.length)
+
             if (find >= 0) {
-                if(action.payload.recipes.length > 0) {
-                    if (action.payload.amount === 0 || action.payload.amount === state.carts[find].quantity) {
-                        state.err = "Sản phẩm hết hàng !";
-                    } else {
-                        state.carts[find].quantity += 1;
-                    }
-                } else{
+
+                if (action.payload.amount === 0 || action.payload.amount === state.carts[find].quantity) {
+                    state.err = "Sản phẩm hết hàng !";
+                } else {
                     state.carts[find].quantity += 1;
                 }
             } else {
-                if(action.payload.recipes.length > 0){
-                    if (action.payload.amount === 0 || action.payload.recipes.length > 0) {
-                        state.err = "Sản phẩm hết hàng !";
-                    }
-                    else {
-                        const newProduct = { ...action.payload, quantity: 1 };
-                        state.carts.push(newProduct);
-                    }
-                } else{
+                if (action.payload?.amount === 0) {
+                    state.err = "Sản phẩm hết hàng !";
+                }
+                else {
                     const newProduct = { ...action.payload, quantity: 1 };
                     state.carts.push(newProduct);
                 }
@@ -49,20 +41,20 @@ const cartSystem = createSlice({
             const itemIndex = state.carts.findIndex(
                 (cartItem) => cartItem.id === action.payload.id
             );
-            if(state.carts[itemIndex].inDb){
+            if (state.carts[itemIndex].inDb) {
                 state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
-            }else{
+            } else {
                 state.carts.splice(itemIndex, 1);
             }
-            
+
         },
-        RemoveAllCart: (state ,action) => {
-            if(state.carts.some((item)=>(item.inDb && true)) && action.payload == false){
+        RemoveAllCart: (state, action) => {
+            if (state.carts.some((item) => (item.inDb && true)) && action.payload == false) {
                 state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
-            }else{
+            } else {
                 state.carts = [];
             }
-            
+
         },
         RemoveReduxCart: (state) => {
             state.carts = [];
@@ -72,16 +64,16 @@ const cartSystem = createSlice({
                 (cartItem) => cartItem.id === action.payload.id
             );
             if (state.carts[itemIndex].quantity >= 1) {
-                if(state.carts[itemIndex].inDb && state.carts[itemIndex].inDb === state.carts[itemIndex].quantity){
+                if (state.carts[itemIndex].inDb && state.carts[itemIndex].inDb === state.carts[itemIndex].quantity) {
                     state.carts[itemIndex].quantiy = state.carts[itemIndex].inDb;
                     state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
-                }else if(state.carts[itemIndex].quantity === 1){
+                } else if (state.carts[itemIndex].quantity === 1) {
                     state.carts[itemIndex].quantity = 1
-                   
-                }else{
-                    state.carts[itemIndex].quantity -= 1; 
+
+                } else {
+                    state.carts[itemIndex].quantity -= 1;
                 }
-                
+
             }
         },
         getTotal: (state) => {
@@ -107,5 +99,5 @@ const cartSystem = createSlice({
     }
 })
 
-export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart,RemoveReduxCart, DecreaseCart, getTotal, setErr } = cartSystem.actions;
+export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart, RemoveReduxCart, DecreaseCart, getTotal, setErr } = cartSystem.actions;
 export default cartSystem.reducer;

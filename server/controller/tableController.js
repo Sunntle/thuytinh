@@ -12,7 +12,7 @@ const {
 } = require("../models");
 
 
-const { apiQueryRest, bien, bookingValidate, templateSendUser, checkBooking, isEmpty, handleTimeDining } = require('../utils/const');
+const { apiQueryRest, bien, bookingValidate, templateSendUser, checkBooking, isEmpty, handleTimeDining, timeLimit } = require('../utils/const');
 const { Op } = require('sequelize');
 const { generateTable, generateHash } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
@@ -29,7 +29,7 @@ const findTables = async (tables) => {
         where: {
           status: {
             [Op.and]: [
-              { [Op.lt]: 3 },
+              { [Op.lt]: 4 },
               { [Op.ne]: 0 }
             ]
           }
@@ -214,8 +214,8 @@ const handCheckBooking = async (time, tableId) => {
         },
         {
           createdAt: {
-            [Op.gte]: moment(time).subtract(135, 'minutes'),
-            [Op.lte]: moment(time).add(135, 'minutes')
+            [Op.gte]: moment(time).subtract(timeLimit, 'minutes'),
+            [Op.lte]: moment(time).add(timeLimit, 'minutes')
           }
         },
         { tableId: tableId }
@@ -237,7 +237,7 @@ const findTablesByBooking = async (time, where) => {
     raw: true
   });
   for (const item of checkTimeTable) {
-    const tableIdEating = moment(item.updatedAt).isAfter(moment(time).subtract(135, 'minutes'));
+    const tableIdEating = moment(item.updatedAt).isAfter(moment(time).subtract(timeLimit, 'minutes'));
     if (item.status_table === 1 && tableIdEating) continue;
     const check = await handCheckBooking(time, item.id);
     if (!check) {
@@ -249,7 +249,6 @@ const findTablesByBooking = async (time, where) => {
 exports.checkTableBooking = asyncHandler(async (req, res) => {
   const { createdAt: time, position, party_size } = req.query;
   const createdAt = moment(time, "DD-MM-YYYY HH:mm:ss");
-
   const arrBooking = await findTablesByBooking(moment(createdAt), { position: position });
   if (arrBooking.length > 0) {
     res.status(200).json({ success: true, time: createdAt, message: `Có bàn vào lúc ${moment(createdAt).format('HH:mm, DD/MM/YYYY')}, cho ${party_size} người lớn.`, data: arrBooking });
@@ -259,7 +258,9 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
 })
 
 exports.pendingTable = asyncHandler(async (req, res) => {
+
   const { createdAt, tableId, party_size } = req.body;
+  console.log(moment(createdAt).format("HH:mm DD/MM/YYYY"))
   if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
     return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
   }
@@ -299,19 +300,22 @@ exports.getBooking = asyncHandler(async (req, res) => {
   const data = await TableByOrder.findAll({
     include: {
       model: Order, where: {
-        [Op.or]: [{ name: name }, { phone: phone }, { email: email }]
+        [Op.or]: [{ name: name }, { phone: phone }, { email: email }],
+        status: 0
       }
     },
     where: {
       dining_option: "reservation",
       status: "confirmed",
       createdAt: {
+        [Op.lte]: moment(new Date()).add(timeLimit, 'minutes'),
         [Op.gte]: moment(new Date()).subtract(30, 'minutes')
       },
       tableId: tableId,
     },
     nest: true
   })
+  console.log(data)
   res.status(200).json(data);
 });
 
@@ -319,9 +323,13 @@ exports.activeBooking = asyncHandler(async (req, res) => {
   const { orderId, tableId } = req.body;
   const findtable = await Tables.findByPk(tableId, { raw: true });
   if (+findtable.status_table === 0) {
-    await Order.update({ status: 1 }, { where: { id: orderId } });
-    await Tables.prototype.updateStatusTable({ token: null, status_table: 1 }, [tableId]);
-    return res.status(200).json({ success: true, message: "Kích hoạt thành công" });
+    const dataOrder = await Order.findByPk(orderId);
+    const data = { tables: [tableId], name: dataOrder.name, timestamp: new Date().valueOf() };
+    dataOrder.status = 1;
+    await dataOrder.save()
+    const token = generateTable(JSON.stringify(data));
+    await Tables.prototype.updateStatusTable({ token: token, status_table: 1 }, [tableId]);
+    return res.status(200).json({ success: true, message: "Kích hoạt thành công", token, data });
   }
   res.status(404).json({ success: false, message: "Bàn đã trước đó được hoạt động" });
 });
@@ -343,7 +351,7 @@ exports.deleteBooking = asyncHandler(async (req, res) => {
 exports.getListBooking = asyncHandler(async (req, res) => {
   const data = await TableByOrder.findAndCountAll({
     include: { model: Order },
-    where: { status: "confirmed", createdAt: { [Op.gte]: moment(new Date()).subtract(30, "minutes") } },
+    where: { status: "confirmed" },
     order: [["createdAt", "ASC"]]
   });
   return res.status(200).json(data);
