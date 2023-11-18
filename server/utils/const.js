@@ -126,7 +126,10 @@ const templateSendUser = ({ createdAt, name, tableId, token }) => {
 
 const timeLimit = 75
 
-const checkBooking = async ({ time, tableId, dining_option = "eat-in", params = "subtract", limit = 75, isActive }) => {
+const checkBooking = async ({ time, tableId, dining_option, params, limit , isActive }) => {
+    if(!dining_option) dining_option = "eat-in"
+    if(!params) params = "subtract"
+    if(!limit) limit = 75
     let query = {};
     if (dining_option === "eat-in") {
         query = {
@@ -147,14 +150,18 @@ const checkBooking = async ({ time, tableId, dining_option = "eat-in", params = 
         createdAt: {
             [Op.and]: {
                 [Op[dining_option === "eat-in" ? "gte" : "lte"]]: moment(time)[params](limit, 'minutes'),
-                [Op.gte]: moment(new Date()),
+                [Op.gte]: moment(new Date()).subtract(30, "minutes"),
+                // [Op.lte]: moment(new Date()).add(30, "minutes")
             }
         },
         tableId: Array.isArray(tableId) ? { [Op.in]: tableId } : tableId
     }
     const isEatIn = await TableByOrder.findAll(query);
-    if (isActive == true) return isEatIn[0].dataValues.createdAt;
-    return isEatIn.length > 0;
+    if (isActive == true) {
+        if(!(isEatIn.length > 0)) return false
+        return isEatIn[0].dataValues.createdAt;
+    }
+    return isEatIn.length > 0; 
 }
 
 function handleTimeDining(inputTime) {
