@@ -18,7 +18,6 @@ const { generateTable, generateHash } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
 const moment = require("moment");
 const sendEmail = require("../utils/mail");
-const { json } = require("body-parser");
 
 const findTables = async (tables) => {
   const re = await Tables.findAll({
@@ -73,7 +72,8 @@ exports.getAll = asyncHandler(async (req, res) => {
   };
 
   if (req.query._noQuery === 1) delete query.include;
-  const tables = await Tables.findAll(query);
+  const rowTable = await Tables.findAll(query);
+  const tables = rowTable.filter(async (item) => !await checkBooking(({ time: new Date(), tableId: item.id, dining_option: "reservation", params: "add" })))
   res.status(200).json(tables);
 });
 
@@ -91,10 +91,12 @@ exports.getId = asyncHandler(async (req, res, next) => {
   });
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
+
       if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+      console.log("2", err, decode)
       const data = await findTables([id]);
       if (data) return res.status(200).json(data);
-      return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+      else return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
     })
   }
   if (id_employee) {
@@ -110,9 +112,10 @@ exports.getId = asyncHandler(async (req, res, next) => {
     } else {
       res.status(404).json("Phải phải nhân viên !");
     }
+  } else {
+    res.status(200).json({ success: true, ...result.toJSON() });
   }
 
-  res.status(200).json({ success: true, ...result });
 });
 
 exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
