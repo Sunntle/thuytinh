@@ -122,7 +122,7 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) {
-        return res.status(404).json({ message: "Bàn bạn đã hết hạn sử dụng" });
+        return res.status(200).json({ message: "Bàn bạn đã hết hạn sử dụng" });
       }
       if (decode) {
 
@@ -132,13 +132,13 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
         if (data && data.length > 0) {
           res.status(200).json({ ...decode, tables: data.map(i => i.id) });
         }
-        else res.status(404).json({ message: "Không tìm thấy bàn!" });
+        else res.status(200).json({ message: "Không tìm thấy bàn!" });
       } else {
-        return res.status(404).json({ message: "Không tìm thấy bàn!" });
+        return res.status(200).json({ message: "Không tìm thấy bàn!" });
       }
     });
   } else {
-    res.status(404).json("......");
+    res.status(200).json({success: false, message: "Invalid token"});
   }
 });
 

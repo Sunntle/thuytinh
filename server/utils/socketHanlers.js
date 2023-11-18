@@ -56,3 +56,15 @@ exports.handlePayInCash = (socket) => {
     }
   });
 };
+exports.handleUserDisconnect = (socket)=>{
+  socket.on("disconnect", () => {
+    try {
+      const index = callStaff.findIndex((el) => el.socketId == socket.id);
+      if (index !== -1) {
+        callStaff.splice(index, 1);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
+}

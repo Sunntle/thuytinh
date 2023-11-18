@@ -20,6 +20,7 @@ import BookingTable from "../pages/BookingTable/index.jsx";
 import SelectTable from "../pages/SelectTable/index.jsx";
 import Booked from "../pages/Booked/index.jsx";
 import ActiveBooking from "../pages/ActiveBooking/index.jsx";
+import CancelBooking from "../pages/BookingTable/CancelBooking/index.jsx";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
         element: <SelectTable />,
       },
       { path: "active-booking", element: <ActiveBooking /> },
+      { path: "cancel-booking", element: <CancelBooking /> },
     ],
   },
   {
