@@ -24,6 +24,15 @@
     @apply bg-primary/10
 }
 
+:where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary:disabled, :where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary.ant-btn-disabled {
+    @apply text-slate-800;
+    background-color: #f3f3f3 !important;
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary {
+    @apply text-white bg-primary;
+}
+
 /* Select */
 .ant-select-focused:where(.css-dev-only-do-not-override-byeoj0).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
     border-color: #fc8019;
@@ -47,4 +56,14 @@
 
 :where(.css-dev-only-do-not-override-byeoj0).ant-btn.ant-btn-sm {
     @apply bg-primary
+}
+
+/*Date Picker*/
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+    border: 1px solid #fc8019;
+}
+
+:where(.css-dev-only-do-not-override-byeoj0).ant-picker-dropdown .ant-picker-today-btn {
+    color: #fc8019;
 }

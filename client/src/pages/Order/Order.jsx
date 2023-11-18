@@ -35,7 +35,7 @@ const Order = () => {
   const totalOrder = calculateTotalWithVAT(order?.total, 10);
 
   useEffect(() => {
-    sendRequest(fetchTableById(tables[0], tableToken), setData);
+    sendRequest(fetchTableById(tables[0], tableToken), setData,false);
   }, [sendRequest, tableToken, tables]);
 
   const showModal = () => {
