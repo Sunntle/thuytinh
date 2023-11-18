@@ -1,15 +1,18 @@
 import moment from "moment";
 import { Form, Input, Modal } from "antd";
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import { useLocation, useNavigate } from "react-router-dom";
-import { parseQueryString } from "../../utils/format.js";
+import { parseQueryString, ScrollToTop } from "../../utils/format.js";
 import { regexEmail, regexPhone } from "../../utils/regex.js";
 import { MdSubdirectoryArrowLeft } from "react-icons/md";
 import { Spinner } from "../../components/index.js";
+import { Helmet } from "react-helmet";
+import Image from "../../components/Image/Image.jsx";
 
 const Booked = () => {
   const { sendRequest, isLoading } = useHttp();
+  const [isReservationConfirmed, setIsReservationConfirmed] = useState(false);
   const [idTableByOrder, setIdTableByOrder] = useState(null);
   const location = useLocation();
   // const { id: idTableByOrder } = location.state;
@@ -75,17 +78,21 @@ const Booked = () => {
     };
     const bookingSuccessData = await sendRequest(request, undefined, true);
     if (bookingSuccessData) {
-      alert(
-        "Xin cảm ơn quý khách đã đặt bàn và mong quý khách đến đúng giờ đã đặt!",
-      );
-      navigate("/home");
+      setIsReservationConfirmed(true);
     }
   };
 
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="py-24 text-slate-500 tracking-wide max-w-full w-screen min-h-screen bg-[url('https://images.unsplash.com/photo-1699148689335-16a572d22c22?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-no-repeat bg-cover bg-center">
+    <div className="py-24 text-slate-500 tracking-wide max-w-full w-screen min-h-screen bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287118/NhaHangThuyTinh/bxjvz96etxtbyzsiz1ty.webp')] bg-no-repeat bg-cover bg-center">
+      <ScrollToTop />
+
+      <Helmet>
+        <title>Xác nhận thông tin</title>
+        <meta name="booked" content="booked" />
+      </Helmet>
+
       <div className="mx-auto w-11/12 md:w-9/12 lg:w-8/12 xl:w-6/12 min-h-fit bg-white rounded p-4">
         <span className="block text-center text-xl font-medium text-primary uppercase">
           Xin vui lòng kiểm tra thông tin
@@ -115,9 +122,9 @@ const Booked = () => {
             <span>
               {parsedQueryParams?.createdAt !== undefined
                 ? moment(
-                  parsedQueryParams?.createdAt,
-                  "DD/MM/YYYY HH:mm",
-                ).format("DD/MM/YYYY HH:mm ")
+                    parsedQueryParams?.createdAt,
+                    "DD/MM/YYYY HH:mm",
+                  ).format("DD/MM/YYYY HH:mm ")
                 : ""}
             </span>
           </div>
@@ -154,9 +161,12 @@ const Booked = () => {
               rules={[
                 {
                   required: true,
-                  type: "email",
+                  message: "Vui lòng không bỏ trống",
+                },
+                {
+                  pattern: regexEmail,
                   message: "Vui lòng nhập đúng định dạng email",
-                }
+                },
               ]}
               name="email"
             >
@@ -216,11 +226,39 @@ const Booked = () => {
               Đặt bàn
             </button>
           </div>
-          <span className="cursor-pointer text-center block text-sm text-slate-500 hover:text-primary transition-colors duration-200">
+          <span
+            onClick={() => chooseAnotherTable(idTableByOrder)}
+            className="cursor-pointer text-center block text-sm text-slate-500 hover:text-primary transition-colors duration-200"
+          >
             Chọn bàn khác
           </span>
         </Form>
       </div>
+      {isReservationConfirmed && (
+        <Modal
+          open={isReservationConfirmed}
+          closable={false}
+          footer={false}
+          centered={true}
+        >
+          <div className="w-full flex flex-col justify-stretch items-center space-y-3">
+            <Image src="https://res.cloudinary.com/dw6jih4yt/image/upload/w_400,h_300/v1700285718/NhaHangThuyTinh/vs5y5bjdebolhbjgg3f0.webp" alt="Ảnh" />
+            <p className="block text-lg text-primary font-medium text-center">
+              Xin cảm ơn quý khách đã đặt bàn <br />{" "}
+              <span className="text-sm">
+                Mong quý khách đến đúng giờ đã đặt!
+              </span>
+            </p>
+            <button
+              onClick={() => navigate("/home")}
+              className="w-full bg-primary py-2 text-white space-x-1 rounded flex justify-center items-center"
+            >
+              <span>Quay về trang chủ</span>
+              <MdSubdirectoryArrowLeft size={16} />
+            </button>
+          </div>
+        </Modal>
+      )}
       {location.search === "" && (
         <Modal open={false} closable={false} footer={false} centered={true}>
           <div className="w-full flex flex-col justify-stretch items-center space-y-3">
@@ -228,7 +266,7 @@ const Booked = () => {
               Vui lòng chọn bàn trước
             </p>
             <button
-              onClick={() => chooseAnotherTable(idTableByOrder)}
+              onClick={() => navigate("/reservation")}
               className="w-full bg-primary py-2 text-white space-x-1 rounded flex justify-center items-center"
             >
               <span>Quay về trang đặt bàn</span>

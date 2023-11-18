@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import HomeSlide from "./HomeSlide/index.jsx";
 import Banner from "./Banner/Banner.jsx";
 import Reason from "../../components/Reason/Reason.jsx";
+import Image from "../../components/Image/Image.jsx";
 // Service
 import { fetchProductByLimit } from "../../services/api.js";
 // Hooks
@@ -12,10 +13,8 @@ import useHttp from "../../hooks/useHttp.js";
 // Framer Motion
 import { motion } from "framer-motion";
 // External File
-import image1 from "../../assets/images/image1.png";
-import image4 from "../../assets/images/image4.png";
-import image2 from "../../assets/images/image2.png";
 import ProductSlider from "./ProductSlider/index.jsx";
+import {Helmet} from "react-helmet";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
@@ -30,6 +29,11 @@ const Home = () => {
 
   return (
     <div className="tracking-wide pb-12 lg:pb-0">
+
+      <Helmet>
+        <title>Trang chủ</title>
+        <meta name="home" content="Home" />
+      </Helmet>
 
       <Banner />
 
@@ -62,26 +66,29 @@ const Home = () => {
           </Link>
           <span className="w-24 h-px bg-white"></span>
         </div>
+
         <div className="w-full lg:w-1/3 group overflow-hidden rounded-t-lg lg:rounded-none lg:rounded-l-lg h-44 lg:h-60">
-          <img
-            src={image1}
-            className="h-full w-full group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all object-cover"
-            alt="anh"
+          <Image
+              className="group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all"
+              src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700286603/NhaHangThuyTinh/lbb88datzhiomznphpbs.webp"
+              alt="anh"
           />
         </div>
+
         <div className="w-full lg:w-1/3 group relative overflow-hidden h-44 lg:h-60">
           <div className="absolute w-full z-10 h-72 bg-black bg-opacity-40"></div>
-          <img
-            src={image4}
-            className="h-full w-full group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all object-cover"
-            alt="anh"
+          <Image
+              className="group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all"
+              src="https://res.cloudinary.com/dw6jih4yt/image/upload/w_400,h_300/v1700286706/NhaHangThuyTinh/x5wrroqsgx3yvi8aw8dn.webp"
+              alt="anh"
           />
         </div>
+
         <div className="w-full lg:w-1/3 group overflow-hidden rounded-b lg:rounded-none lg:rounded-r-lg h-44 lg:h-60">
-          <img
-            src={image2}
-            className="h-full w-full group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all object-cover"
-            alt="anh"
+          <Image
+              className="group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all"
+              src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700286654/NhaHangThuyTinh/vxeoyjkpypumsxpwbmtq.webp"
+              alt="anh"
           />
         </div>
       </motion.section>

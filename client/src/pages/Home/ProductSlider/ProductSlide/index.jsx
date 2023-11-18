@@ -1,7 +1,8 @@
-import img from "../../../../assets/images/sub-buzz-1009-1646440684-8-removebg-preview.png";
 import { motion } from "framer-motion";
 import React from "react";
 import PropTypes from "prop-types";
+import Image from "../../../../components/Image/Image.jsx";
+
 const ProductSlide = React.memo(({ item, currentSlide }) => {
   return (
     <>
@@ -35,7 +36,10 @@ const ProductSlide = React.memo(({ item, currentSlide }) => {
           }}
           className="h-[250px] w-[250px] lg:h-[300px] lg:w-[300px] xl:h-[350px] xl:w-[350px]"
         >
-          <img className="w-full h-full object-cover" src={img} alt="" />
+          <Image
+            alt="anh"
+            src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700289119/NhaHangThuyTinh/ep96fcdyntguk3tbc2vv.webp"
+          />
         </motion.div>
       </div>
       <motion.div

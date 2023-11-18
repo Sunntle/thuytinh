@@ -10,6 +10,7 @@ import { Button, Modal } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
 import { checkErrorCode } from "../../utils/payment.js";
+import {Helmet} from "react-helmet";
 
 const PaymentLoading = () => {
   const location = useLocation();
@@ -59,6 +60,12 @@ const PaymentLoading = () => {
 
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center">
+
+      <Helmet>
+        <title>Đang xử lí thanh toán</title>
+        <meta name="payment-loading" content="Payment loading" />
+      </Helmet>
+
       <span className="mt-5 text-base font-semibold">
         Quý khách vui lòng đợi trong giây lát...
       </span>

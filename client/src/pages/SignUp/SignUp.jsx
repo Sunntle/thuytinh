@@ -1,10 +1,17 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import {Helmet} from "react-helmet";
 
 const SignIn = () => {
   const navigate = useNavigate();
   return (
     <motion.div className="relative max-w-full w-screen h-screen mx-auto p-6 lg:p-16">
+
+      <Helmet>
+        <title>Đăng ký</title>
+        <meta name="sign-up" content="Sign up" />
+      </Helmet>
+
       <div className="absolute inset-0 w-full h-full -z-10">
         <img
           className="w-full h-full object-cover"

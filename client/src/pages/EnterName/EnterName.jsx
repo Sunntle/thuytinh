@@ -1,10 +1,11 @@
 import { useCallback, useState } from "react";
 import PropTypes from 'prop-types';
-import serviceImg from "../../assets/images/Service 24_7-pana.png";
 import { useDispatch, useSelector } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
 import useHttp from "../../hooks/useHttp.js";
 import Spinner from "../../components/Spinner/Spinner.jsx";
+import {Helmet} from "react-helmet";
+import Image from "../../components/Image/Image.jsx";
 const EnterName = (props) => {
   const [customerName, setCustomerName] = useState("");
   const { sendRequest } = useHttp();
@@ -33,9 +34,15 @@ const EnterName = (props) => {
 
   return (
     <div className="overflow-hidden h-screen max-w-screen flex items-center">
+
+      <Helmet>
+        <title>Nhập tên</title>
+        <meta name="enter-name" content="enter-name" />
+      </Helmet>
+
       <div className="pb-24 lg:pb-0 lg:px-36 lg:py-24 flex flex-col lg:flex-row justify-center items-center space-y-3">
         <div className="w-6/12 lg:w-6/12 m-auto">
-          <img className="w-full h-full" loading={"lazy"} src={serviceImg} alt="" />
+          <Image src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700285866/NhaHangThuyTinh/lrwdetzbjqm4ccgqlxab.webp" alt="service-picture"/>
         </div>
         <div className="flex flex-col items-center space-y-3 lg:space-y-6">
           <span className="font-medium text-sm w-9/12 lg:text-xl text-center">

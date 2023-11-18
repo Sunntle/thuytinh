@@ -1,6 +1,5 @@
 import { memo } from "react";
 import Image from "../../../../components/Image/Image.jsx";
-import img from "../../../../assets/images/sub-buzz-1009-1646440684-8-removebg-preview.png";
 import PropTypes from "prop-types";
 
 const PaginationSlider = memo(({ className, index, products }) => {
@@ -18,7 +17,7 @@ const PaginationSlider = memo(({ className, index, products }) => {
             }`}
         >
           <Image
-            src={img}
+            src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700289119/NhaHangThuyTinh/ep96fcdyntguk3tbc2vv.webp"
             alt={"img"}
             isLoading={!products}
             className={"rounded-full"}
