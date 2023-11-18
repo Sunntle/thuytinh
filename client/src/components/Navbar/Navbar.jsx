@@ -1,5 +1,6 @@
 import  { AiOutlineShop } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
+import { BsCalendar3 } from "react-icons/bs";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { IoRestaurantOutline } from "react-icons/io5";
@@ -7,14 +8,10 @@ import { MdOutlineRoomService, MdOutlineTableBar } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp";
 import NavbarDesktop from "./NavbarDesktop/NavbarDesktop.jsx";
-import { TablesSvg } from "../../utils/constant.jsx";
-import Icon from "@ant-design/icons";
+
 
 const regex = /^\/tables-\d+$/;
-let styleIconTable = {
-  color: '#FC8019'
-}
-const TablesIcon = (props) => <Icon component={TablesSvg} {...props} />;
+
 const initialNavItem = [
   {
     id: 1,
@@ -33,7 +30,7 @@ const initialNavItem = [
   {
     id: 5,
     route: `/reservation`,
-    icon: <TablesIcon style={{...styleIconTable}} />,
+    icon: <BsCalendar3 className="w-6 h-6"/>,
     routeName: "Đặt bàn",
     originRouteName: "reservation",
   },
@@ -140,9 +137,8 @@ const Navbar = () => {
       return (checkActiveClassName = navbarRoute[0]);
     else {
       checkActiveClassName = navbarRoute.find(
-        (item) =>
-          location.pathname.includes(item.originRouteName) ||
-          location.state?.from?.includes(item.originRouteName)
+        (item) =>location.pathname.includes(item.originRouteName) ||
+        location.state?.from?.includes(item.originRouteName)
       );
       return checkActiveClassName;
     }
