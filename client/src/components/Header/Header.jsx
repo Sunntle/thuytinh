@@ -21,7 +21,7 @@ const Header = () => {
             </span>
           </div>
           <div className="w-12 h-12 border-2 rounded-full border-white">
-            <Image src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287461/NhaHangThuyTinh/yvunsalh6buihbg9ocbp.webp" alt"avatar"/>
+            <Image src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287461/NhaHangThuyTinh/yvunsalh6buihbg9ocbp.webp" alt="avatar"/>
           </div>
         </>
       ) : (
