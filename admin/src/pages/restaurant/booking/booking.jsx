@@ -37,6 +37,7 @@ export const ResBooking = () => {
         setIsModalOpenUpdate(true);
         setDataUpdate(data);
     }, []);
+
     const columns = useMemo(
         () => [
             {
@@ -90,12 +91,12 @@ export const ResBooking = () => {
                 key: "action",
                 render: (_, record) => (
                     <div className="h-10 flex items-center cursor-pointer">
-                        <span
+                        {/* <span
                             className="bg-orange-500 px-4 rounded-md py-2 text-white"
                             onClick={() => handleEditBooking(record)}
                         >
                             Sửa
-                        </span>
+                        </span> */}
                         <ConfirmComponent
                             title="Xác nhận xóa đơn hàng này này?"
                             confirm={() => handleDeleteBooking(record.id)}
