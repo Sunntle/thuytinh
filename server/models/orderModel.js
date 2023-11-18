@@ -35,7 +35,7 @@ const Order = db.sequelize.define("orders", {
     type: DataTypes.INTEGER,
   },
   status: {
-    type: DataTypes.TINYINT(1),
+    type: DataTypes.INTEGER,
     defaultValue: 1
   },
   id_employee: {

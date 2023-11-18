@@ -43,7 +43,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
   const order_result = await Order.create({
     total,
     name: customerName,
-    id_employee,
+    id_employee
   });
   let dataTable = await TableByOrder.bulkCreate(
     arrTable.map((item) => ({ tableId: item, orderId: order_result.id, dining_option: "eat-in" })),

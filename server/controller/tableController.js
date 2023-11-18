@@ -52,6 +52,34 @@ const findTables = async (tables) => {
 };
 
 
+const handTimeTable = (idTableByOrder = null) => {
+  const timeoutId = setTimeout(async () => {
+    await TableByOrder.destroy({ where: { id: idTableByOrder } });
+    console.log(`xóa id ${idTableByOrder} `);
+  }, 1 * 60000);
+  return timeoutId;
+};
+let containerPending = []
+// var block = { id: null, check: false };
+// var timeoutId;
+
+// if (block.check === true) {
+//   timeoutId = handTimeTable(block.id);
+// }
+
+exports.pendingTable = asyncHandler(async (req, res) => {
+
+  const { createdAt, tableId, party_size } = req.body;
+  if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
+    return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
+  }
+  const isBooking = await handCheckBooking(createdAt, tableId);
+  if (isBooking) return res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
+  const data = await TableByOrder.create({ ...req.body, status: "pending", dining_option: "reservation" });
+  containerPending.push({ id: data.dataValues.id, check: true })
+  timeoutId = handTimeTable(block.id);
+  res.status(200).json({ success: true, data });
+})
 exports.getAll = asyncHandler(async (req, res) => {
   let query = {
     ...apiQueryRest(req.query), nest: true,
@@ -280,21 +308,12 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
   }
 })
 
-exports.pendingTable = asyncHandler(async (req, res) => {
 
-  const { createdAt, tableId, party_size } = req.body;
-  if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
-    return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
-  }
-  const isBooking = await handCheckBooking(createdAt, tableId);
-  if (isBooking) return res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
-  const data = await TableByOrder.create({ ...req.body, status: "pending", dining_option: "reservation" });
-  res.status(200).json({ success: true, data });
-})
 
 exports.bookingTables = asyncHandler(async (req, res) => {
   const { id, phone, email, name, note } = req.body;
   const checkInput = bookingValidate(req.body);
+  block = { id: null, check: false };
   if (checkInput == false) return res.status(404).json({ success: false, message: "Err Data" });
   const { createdAt, tableId } = await TableByOrder.findByPk(id, { raw: true });
   const dataOrder = await Order.create({ name, email, phone, status: 0 });
@@ -343,6 +362,7 @@ exports.getBooking = asyncHandler(async (req, res) => {
 exports.activeBooking = asyncHandler(async (req, res) => {
   const { orderId, tableId } = req.body;
   const findtable = await Tables.findByPk(tableId, { raw: true });
+
   if (+findtable.status_table === 0) {
     const dataOrder = await Order.findByPk(orderId);
     const data = { tables: [tableId], name: dataOrder.name, timestamp: new Date().valueOf() };
@@ -351,6 +371,8 @@ exports.activeBooking = asyncHandler(async (req, res) => {
     const token = generateTable(JSON.stringify(data));
     await Tables.prototype.updateStatusTable({ token: token, status_table: 1 }, [tableId]);
     const order = await Order.findOne({ where: { id: orderId }, ...bien });
+    block = { id: null, check: false };
+    clearTimeout(timeoutId);
     return res.status(200).json({ success: true, message: "Kích hoạt thành công", token, data, order });
   }
   res.status(404).json({ success: false, message: "Bàn đã trước đó được hoạt động" });
