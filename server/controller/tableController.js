@@ -138,17 +138,16 @@ exports.getId = asyncHandler(async (req, res, next) => {
       res.status(404).json("Phải phải nhân viên !");
     }
   } else {
-    res.status(200).json({ success: true, ...result.toJSON() });
-  }
-  if (token) {
-    await jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
-      if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-      const data = await findTables([id]);
-      if (data) return res.status(200).json(data);
-      else return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-    })
-  } else {
-    res.status(200).json({ success: true, ...result.toJSON() });
+    if (token) {
+      await jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
+        if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+        const data = await findTables([id]);
+        if (data) return res.status(200).json(data);
+        else return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+      })
+    } else {
+      res.status(200).json({ success: true, ...result.toJSON() });
+    }
   }
 });
 
