@@ -76,15 +76,14 @@ const ResSelectTable = () => {
         message: 'Thông báo',
         description: data
       });
+      dispatch(RemoveTableList())
+      navigate('/employee/choosetable/');
     } else {
-      api.success({
+      api.info({
         message: 'Thông báo',
         description: data
       });
-    }
-    dispatch(RemoveTableList())
-    navigate('/employee/choosetable/');
-      
+    }      
   };
 
   const handleDetailModal = (index) => {
