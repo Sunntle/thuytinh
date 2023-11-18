@@ -12,7 +12,7 @@ import {
 } from "../../redux/notification/notificationSystem";
 // import InfiniteScroll from 'react-infinite-scroll-component';
 /* eslint-disable react-refresh/only-export-components */
-
+import defaultAvatar from "../../assets/images/defaultAvatar.png"
 function NotificationsComponent({
   notifications,
   openPopover,
@@ -100,7 +100,7 @@ function NotificationsComponent({
                 <div className="max-w-[50px]">
                   <img
                     className="w-full  rounded-md "
-                    src="https://t4.ftcdn.net/jpg/05/86/91/55/360_F_586915596_gPqgxPdgdJ4OXjv6GCcDWNxTjKDWZ3JD.jpg"
+                    src={defaultAvatar}
                   />
                 </div>
                 <div className={el.status == 1 ? "text-gray-500" : " pe-2"}>
