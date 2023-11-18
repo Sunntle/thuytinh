@@ -220,7 +220,7 @@ const BookingTable = () => {
           <div className="w-full h-full tracking-wide col-span-2 md:col-span-1 pt-6 md:pt-0">
             <button
               type={"submit"}
-              className="md:p-6 md:flex justify-center items-center whitespace-nowrap w-full h-full tracking-wide bg-primary rounded-b-lg md:rounded-bl-none md:rounded-br-lg md:rounded-r-lg md:text-sm text-white font-medium"
+              className="md:p-6 md:flex justify-center items-center w-full h-full tracking-wide bg-primary rounded-b-lg md:rounded-bl-none md:rounded-br-lg md:rounded-r-lg md:text-sm text-white font-medium"
             >
               Tìm kiếm
             </button>

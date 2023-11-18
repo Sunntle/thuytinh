@@ -4,12 +4,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
 import { Tabs } from "antd";
 import "./index.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
 import PropTypes from "prop-types";
 import { clearCustomer } from "../../redux/CustomerName/customerNameSlice.js";
 import { Helmet } from "react-helmet";
-
 function showError(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
@@ -100,7 +99,6 @@ function SelectTable() {
 
   return (
     <div className="pb-24 mt-[80px]">
-
       <Helmet>
         <title>Chọn bàn</title>
         <meta name="select-table" content="Select table" />
