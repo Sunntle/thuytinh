@@ -1,10 +1,8 @@
-import product from "../../assets/images/product.png";
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import {ScrollToTop, truncateString} from "../../utils/format.js";
-import avtDefault from "../../assets/images/avtDefault.png";
 import Reason from "../../components/Reason/Reason.jsx";
 import { Rate } from "antd";
 
@@ -14,6 +12,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useNavigate } from "react-router-dom";
+import {Helmet} from "react-helmet";
 
 const AboutUs = () => {
   const [slideProduct, setSlideRating] = useState(null);
@@ -29,8 +28,15 @@ const AboutUs = () => {
 
   return (
     <div className="py-24">
+
+      <Helmet>
+        <title>Về chúng tôi</title>
+        <meta name="about-us" content="About us" />
+      </Helmet>
+
       <ScrollToTop />
-      <section className="relative mt-[-20px] h-96 w-full bg-cover bg-center bg-gray-300 bg-[url('https://i.pinimg.com/564x/c2/7a/c8/c27ac8fc11dcec58f09e8a6c72306b12.jpg')]">
+
+      <section className="relative mt-[-20px] h-96 w-full bg-cover bg-center bg-gray-300 bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287265/NhaHangThuyTinh/uwrwxltugznhpakhhyry.webp')]">
         <div className="flex flex-col items-center justify-center absolute inset-0 bg-black bg-opacity-40">
           <div className="text-center text-gray-200 w-2/3 lg:w-1/3">
             <h1 className=" text-4xl md:text-5xl font-semibold text-gray-200">
@@ -79,7 +85,7 @@ const AboutUs = () => {
             </div>
             <div className="flex-1 relative hidden lg:block ">
               <img
-                src={product}
+                src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287341/NhaHangThuyTinh/hrvf8gusemwv3lyirnah.webp"
                 alt=""
                 className="z-10 w-[380px] h-[320px] rounded absolute right-0"
               />
@@ -94,7 +100,7 @@ const AboutUs = () => {
           <div className="mt-10 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0">
             <div className="flex-1 hidden lg:flex p-6 border-2 border-[#F0A500E5] justify-center items-center mr-0 lg:mr-20">
               <img
-                src="https://i.pinimg.com/564x/59/ec/57/59ec57e404a50d019f367f2c3124b90e.jpg"
+                src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287388/NhaHangThuyTinh/nnmewv644b1utmu2l3et.webp"
                 alt=""
                 className="z-10 w-[420px] h-[320px] rounded-full"
               />
@@ -159,7 +165,7 @@ const AboutUs = () => {
                       <div className="w-24 h-20">
                         <img
                           className="w-24 h-20 rounded-full"
-                          src={avtDefault}
+                          src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287461/NhaHangThuyTinh/yvunsalh6buihbg9ocbp.webp"
                           alt=""
                         />
                       </div>

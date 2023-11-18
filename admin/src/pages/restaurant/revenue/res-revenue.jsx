@@ -103,10 +103,16 @@ const ResRevenue = () => {
       {
         title: 'Số điện thoại',
         dataIndex: 'phone',
+        render: (_, data) => (
+          <span>{data.phone ? "0"+data.phone : "Không có số điện thoại"}</span>
+      )
       },
       {
         title: 'Người phụ trách',
         dataIndex: 'employee',
+        render: (_, data) => (
+          <span>{data.employee ? data.employee : "Khách hàng"}</span>
+      )
       },
       {
         title: 'Số lượng',

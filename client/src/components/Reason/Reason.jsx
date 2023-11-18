@@ -2,12 +2,13 @@ import { BsBookmarkCheckFill } from "react-icons/bs";
 import { FaShippingFast } from "react-icons/fa";
 import { RiServiceFill } from "react-icons/ri";
 import { motion } from "framer-motion";
+import Image from "../../components/Image/Image.jsx";
 
 const arrContent = [
   {
     icon: <BsBookmarkCheckFill className="text-white text-xl" />,
     image:
-      "https://i.pinimg.com/564x/c2/7a/c8/c27ac8fc11dcec58f09e8a6c72306b12.jpg",
+      "https://res.cloudinary.com/dw6jih4yt/image/upload/w_400,h_300/v1700287265/NhaHangThuyTinh/uwrwxltugznhpakhhyry.webp",
     title: "Đặt bàn online",
     content:
       "Nếu bạn muốn có sự chuẩn bị tốt nhất cho một cuộc hẹn, bạn không thể thiếu sự chuẩn bị trước cho việc đặt bàn tại nhà hàng của chúng tôi.",
@@ -15,7 +16,7 @@ const arrContent = [
   {
     icon: <FaShippingFast className="text-white text-xl" />,
     image:
-      "https://i.pinimg.com/564x/05/c6/c8/05c6c85f82792c133c3b11f90981a608.jpg",
+      "https://res.cloudinary.com/dw6jih4yt/image/upload/v1700288208/NhaHangThuyTinh/ypva1ljhu7vl29xgfwh7.webp",
     title: "Giao hàng tận nơi",
     content:
       "Bạn không cần phải tốn công đến nhà hàng để đặt món, nhà hàng Thuỷ Tinh sẽ cung cấp dịch vụ giao hàng tận nơi đến cho quý khách hàng.",
@@ -23,7 +24,7 @@ const arrContent = [
   {
     icon: <RiServiceFill className="text-white text-xl" />,
     image:
-      "https://i.pinimg.com/564x/59/ec/57/59ec57e404a50d019f367f2c3124b90e.jpg",
+      "https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287388/NhaHangThuyTinh/nnmewv644b1utmu2l3et.webp",
     title: "Chăm sóc khách hàng",
     content:
       "Nhà hàng Thuỷ Tinh luôn đặt khách hàng trong tim. Chúng tôi khẳng định sẽ tận tâm, lắng nghe và phục vụ khách hàng bằng những gì mình có.",
@@ -54,10 +55,10 @@ const AboutUs = () => {
                         className="bg-white transform transition duration-300 hover:shadow-lg rounded-xl border"
                     >
                       <div className="overflow-hidden rounded-t-xl h-[220px]">
-                        <img
-                            className="w-full h-full object-cover transform transition duration-300 hover:scale-105"
+                        <Image
+                            className="transform transition duration-300 hover:scale-105"
                             src={item.image}
-                            alt=""
+                            alt="anh"
                         />
                       </div>
                       <div className="p-6 flex flex-col space-y-4">

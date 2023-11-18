@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Tabs } from 'antd';
+import { Button, Tabs, notification } from 'antd';
 import { FiUsers } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -52,6 +52,7 @@ const ResSelectTable = () => {
   const tableData = useSelector((state) => state.table);
   const [open, setOpen] = useState(false);
   const { id, idOrder } = useParams();
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,10 +69,21 @@ const ResSelectTable = () => {
     }
   }, [socket])
   const switchTable = async (newTable) => {
-    const data = { currentTable: id, newTable: newTable, idOrder };
-    await switchTables(data);
-    dispatch(RemoveTableList())
-    navigate('/employee/choosetable/');
+    const res = { currentTable: +id, newTable: newTable, idOrder: +idOrder };
+    const {success , data} = await switchTables(res);
+    if (success) {
+      api.success({
+        message: 'Thông báo',
+        description: data
+      });
+      dispatch(RemoveTableList())
+      navigate('/employee/choosetable/');
+    } else {
+      api.info({
+        message: 'Thông báo',
+        description: data
+      });
+    }      
   };
 
   const handleDetailModal = (index) => {
@@ -146,6 +158,7 @@ const ResSelectTable = () => {
   return (
     <>
       <div className="w-full p-10">
+        {contextHolder}
         <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1" items={items} />
         <ResOrder handleCancel={handleCancel} open={open} />
       </div>

@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
+import {Helmet} from "react-helmet";
+import {ScrollToTop} from "../../utils/format.js";
 const ActiveBooking = () => {
   const { sendRequest } = useHttp();
   const navigate = useNavigate();
@@ -38,6 +40,7 @@ const ActiveBooking = () => {
       tableId: tableActive?.tableId,
       orderId: tableActive?.orderId
     }
+
     const request = {
       method: "post",
       url: "/table/active-booking",
@@ -56,6 +59,14 @@ const ActiveBooking = () => {
   return (
     <div className="py-24 text-slate-500 tracking-wide max-w-full w-screen min-h-screen bg-[url('https://images.unsplash.com/photo-1699148689335-16a572d22c22?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-no-repeat bg-cover bg-center">
       {contextHolder}
+
+      <ScrollToTop />
+
+      <Helmet>
+        <title>Kích hoạt bàn</title>
+        <meta name="active-booking" content="Active Booking" />
+      </Helmet>
+
       <div className="mx-auto w-11/12 md:w-9/12 lg:w-8/12 xl:w-6/12 min-h-fit bg-white rounded p-4">
         <span className="block text-center text-xl font-medium text-primary uppercase">
           Kích hoạt bàn
@@ -92,8 +103,11 @@ const ActiveBooking = () => {
               rules={[
                 {
                   required: true,
-                  type: "email",
-                  message: "Vui lòng nhập đúng định dạng email",
+                  message: "Vui lòng không bỏ trống",
+                },
+                {
+                  pattern: regexEmail,
+                  message: "Vui lòng nhập đúng định dạng email"
                 }
               ]}
               name="email"

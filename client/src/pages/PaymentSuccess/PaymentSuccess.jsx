@@ -1,19 +1,15 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import { fetchOrderById } from "../../services/api.js";
 import { Table } from "antd";
-import logo2 from "../../assets/images/logo2.png";
 import moment from "moment";
 import { calculateTotalWithVAT, formatCurrency } from "../../utils/format.js";
 import "./index.css";
 import { Link, useLocation } from "react-router-dom";
-import {Spinner} from "../../components/index.js";
+import { Spinner } from "../../components/index.js";
 import PageNotFound from "../PageNotFound/PageNotFound.jsx";
+import { Helmet } from "react-helmet";
+import Image from "../../components/Image/Image.jsx";
 
 const PaymentSuccess = () => {
   // const { idOrder, idTable } = useSelector((state) => state.order);
@@ -104,20 +100,25 @@ const PaymentSuccess = () => {
     [],
   );
 
-  if (isLoading) return <Spinner />
+  if (isLoading) return <Spinner />;
   if (!idOrder) return <PageNotFound />;
 
   return (
     <div className="lg:bg-slate-100 lg:py-2 min-h-screen max-w-full">
+      <Helmet>
+        <title>Thanh toán thành công</title>
+        <meta name="payment-success" content="Payment success" />
+      </Helmet>
+
       <div className="relative h-screen w-screen bg-white max-w-full lg:max-w-3xl mx-auto lg:shadow-2xl text-slate-800">
         {/* Logo */}
         <div className="flex justify-start p-4">
           <div className="flex justify-between items-center">
             <div className="w-12 h-12 lg:w-16 lg:h-16">
-              <img
-                className="w-full h-full object-cover rounded-full"
-                src={logo2}
-                alt=""
+              <Image
+                src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287744/NhaHangThuyTinh/tziu6xi6mg75j8sgd0xh.webp"
+                alt="logo"
+                className="rounded-full"
               />
             </div>
             <div className="flex flex-col items-start justify-center -space-y-1">

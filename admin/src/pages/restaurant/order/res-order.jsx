@@ -215,8 +215,6 @@ const ResOrder = ({ handleCancel, open }) => {
           {order_details && order_details.map((item, index) =>
             <div key={index}>
               <div className='flex item-center my-3'>
-                <div className='flex-none h-16 w-15 mr-4 hover:bg-hoverColor'>
-                </div>
                 <div className='flex-grow'>
                   <div className='flex items-end justify-between'>
                     <span className={`text-lg ${customize ? "text-white" : "text-black"} overflow-hidden text-ellipsis whitespace-nowrap mb-1`}>{item.product.name_product}</span>

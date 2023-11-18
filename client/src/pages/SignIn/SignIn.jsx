@@ -2,12 +2,19 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FaGooglePlus } from "react-icons/fa6";
 import { FaFacebook } from "react-icons/fa";
+import {Helmet} from "react-helmet";
 
 const SignIn = () => {
   const navigate = useNavigate();
 
   return (
     <motion.div className="relative max-w-full w-screen h-screen mx-auto p-6 lg:p-16">
+
+      <Helmet>
+        <title>Đăng nhập</title>
+        <meta name="sign-in" content="Sign in" />
+      </Helmet>
+
       <div className="absolute inset-0 w-full h-full -z-10">
         <img
           className="w-full h-full object-cover"

@@ -2,7 +2,6 @@ import { Typography } from "antd";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import bannerBg from '../../../assets/images/Banner1.png'
 
 const variantsWrapperBanner = {
   open: {
@@ -47,9 +46,10 @@ const Banner = () => {
         <div
           className="h-full w-full "
           style={{
-            backgroundImage: `url(${bannerBg})`,
+            backgroundImage: `url("https://res.cloudinary.com/dw6jih4yt/image/upload/v1700286846/NhaHangThuyTinh/lwkwc4xdtjn8hnskla5d.webp")`,
             filter: "brightness(50%)",
             backgroundPosition: "center",
+            backgroundRepeat: "no-repeat"
           }}
         ></div>
         <motion.div

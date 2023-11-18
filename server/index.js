@@ -11,6 +11,7 @@ const {
   handleDisconnect,
   handleCallStaff,
   handlePayInCash,
+  handleUserDisconnect,
 } = require("./utils/socketHanlers");
 require("dotenv").config();
 const port = process.env.PORT || 8000;
@@ -54,5 +55,6 @@ io.of("/admin").on("connection", (socket) => {
 io.of("/client").on("connection", (socket) => {
   handleCallStaff(socket);
   handlePayInCash(socket);
+  handleUserDisconnect(socket)
 });
 initRoutes(app);

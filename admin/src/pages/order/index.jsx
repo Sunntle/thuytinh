@@ -45,7 +45,7 @@ const initData = {
   data: [],
 };
 const renderTextPay = (params) => {
-  if (params === "cash" || !params) {
+  if (params === "Cash" || !params) {
     return "Thanh toán tiền mặt";
   } else {
     return params;
@@ -91,10 +91,10 @@ const OrderPage = () => {
           user: item.name,
           total: item.total,
           table: item?.tablebyorders?.map((i) => i.tableId).join(", "),
-          employee: item?.User?.name,
+          employee: item?.user?.name,
           id_employee: item.id_employee,
           status: status.label,
-          payment: renderTextPay(item.payment),
+          payment: renderTextPay(item.payment_gateway),
           createdAt: formatNgay(item.createdAt),
           quantity: item?.order_details.reduce((a, b) => a + b?.quantity, 0),
           meta: {
@@ -258,12 +258,18 @@ const OrderPage = () => {
       dataIndex: "phone",
       width: 150,
       ...getColumnSearchProps("phone"),
+      render: (_, data) => (
+        <span>{data.phone ? "0"+data.phone : "Không có số điện thoại"}</span>
+    )
     },
     {
       title: "Nhân viên",
       dataIndex: "employee",
       width: 150,
       ...getColumnSearchProps("employee"),
+      render: (_, data) => (
+        <span>{data.employee ? data.employee : "Khách hàng"}</span>
+    )
     },
     {
       title: "Số lượng",

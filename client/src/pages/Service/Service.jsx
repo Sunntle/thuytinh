@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import Rating from "./Rating/Rating.jsx";
 import {CallStaff} from "../../components/index.js";
+import {Helmet} from "react-helmet";
 
 const Service = () => {
   const navigate = useNavigate();
@@ -15,12 +16,18 @@ const Service = () => {
 
   return (
     <div className="relative text-slate-800 pb-24 mt-24 lg:mt-0 pt-1 px-6 lg:px-16">
+
+      <Helmet>
+        <title>Dịch vụ</title>
+        <meta name="service" content="Service" />
+      </Helmet>
+
       <ScrollToTop />
       {/* Header */}
       <div className="flex flex-col mt-8 space-y-6">
         <div className="w-full min-h-fit rounded-2xl bg-[#8a3617]">
           <img
-            className="w-full h-full  max-h-[450px] object-contain"
+            className="w-full h-full max-h-[450px] object-contain"
             src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1699338283/NhaHangThuyTinh/qoj52hlvylu0hybn1em0.webp"
             alt=""
           />
