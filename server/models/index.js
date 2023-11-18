@@ -103,17 +103,17 @@ Warehouse.belongsTo(Materials, {
 async function synchronizeModels() {
   try {
     await sequelize.sync();
-    User.findOrCreate({
-      where: { email: "admin@gmail.com" },
-      defaults: {
-        name: "Admin",
-        password: "12345",
-        email: "admin@gmail.com",
-        phone: "0335898646",
-        black_list: 0,
-        role: "R4"
-      }
-    })
+    // User.findOrCreate({
+    //   where: { email: "admin@gmail.com" },
+    //   defaults: {
+    //     name: "Admin",
+    //     password: "12345",
+    //     email: "admin@gmail.com",
+    //     phone: "0335898646",
+    //     black_list: 0,
+    //     role: "R4"
+    //   }
+    // })
     console.log("Models synchronized successfully.");
   } catch (error) {
     console.error("Error synchronizing models:", error);
