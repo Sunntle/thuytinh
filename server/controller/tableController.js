@@ -10,7 +10,7 @@ const {
   Product,
   ImageProduct,
 } = require("../models");
-
+const validator = require("validator");
 
 const { apiQueryRest, bien, bookingValidate, templateSendUser, checkBooking, isEmpty, handleTimeDining, timeLimit } = require('../utils/const');
 const { Op } = require('sequelize');
@@ -73,7 +73,14 @@ exports.getAll = asyncHandler(async (req, res) => {
 
   if (req.query._noQuery === 1) delete query.include;
   const rowTable = await Tables.findAll(query);
-  const tables = rowTable.filter(async (item) => !await checkBooking(({ time: new Date(), tableId: item.id, dining_option: "reservation", params: "add" })))
+  const tables = [];
+  for (const item of rowTable) {
+    const { id } = item.toJSON();
+    const isEeservation = await checkBooking(({ time: new Date(), tableId: id, dining_option: "reservation", params: "add" }));
+    if (!isEeservation) {
+      tables.push(item)
+    }
+  }
   res.status(200).json(tables);
 });
 
@@ -304,7 +311,7 @@ exports.bookingTables = asyncHandler(async (req, res) => {
     { raw: true },
   );
   await sendEmail(email, "Thông báo", templateSendUser(data));
-  res.status(200).json(result);
+  res.status(200).json({ success: true, data: result });
 });
 
 exports.getBooking = asyncHandler(async (req, res) => {
@@ -343,7 +350,7 @@ exports.activeBooking = asyncHandler(async (req, res) => {
     await dataOrder.save()
     const token = generateTable(JSON.stringify(data));
     await Tables.prototype.updateStatusTable({ token: token, status_table: 1 }, [tableId]);
-    const order = await Order.findOne({ where: { id: orderId }, ...bien.include })
+    const order = await Order.findOne({ where: { id: orderId }, ...bien });
     return res.status(200).json({ success: true, message: "Kích hoạt thành công", token, data, order });
   }
   res.status(404).json({ success: false, message: "Bàn đã trước đó được hoạt động" });
@@ -356,6 +363,26 @@ exports.updateBooking = asyncHandler(async (req, res) => {
   if (orderId) await Order.update({ status: status_order }, { where: { id: orderId } });
   return res.status(200).json("Cập nhật thành công");
 });
+
+exports.cancelBooking = asyncHandler(async (req, res) => {
+  const token = req.body.token;
+  if (!token || !validator.isJWT(token)) {
+    res.status(404).json({ success: false, data: "Không đúng dịnh dạng" });
+  } else {
+    jwt.verify(token, process.env.JWT_SECRET_EMAIL, async (err, decode) => {
+      if (err) return res.status(404).json({
+        success: false,
+        data: "Lỗi access token"
+      })
+      const { tableId, orderId, createdAt } = decode;
+      await TableByOrder.update({ status: "canceled" }, { where: { tableId, orderId } });
+      res.status(200).json({
+        success: true,
+        data: `Đã hủy đặt bàn số ${tableId} lúc ${moment(createdAt).format("HH:mm DD/MM")}`
+      })
+    })
+  }
+})
 
 //trong vong 5 phút thì chạy vào xóa luôn recode
 exports.deleteBooking = asyncHandler(async (req, res) => {
