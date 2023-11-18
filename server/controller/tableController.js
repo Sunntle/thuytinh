@@ -280,8 +280,18 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
   }
 })
 
-exports.pendingTable = asyncHandler(async (req, res) => {
+// const  checkPending = []
+// const handTimeTable = ({id, check}) => {
+//   setTimeout(async () => {
+//     if(check){
+//       await TableByOrder.destroy({ where: { id: id } });
+//     }
+//     const index  = checkPending.findIndex(el => el.id == id)
+//     checkPending.splice(index, 1)
+//   }, 5 * 60000);
+// };
 
+exports.pendingTable = asyncHandler(async (req, res) => {
   const { createdAt, tableId, party_size } = req.body;
   if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
     return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
@@ -289,6 +299,8 @@ exports.pendingTable = asyncHandler(async (req, res) => {
   const isBooking = await handCheckBooking(createdAt, tableId);
   if (isBooking) return res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
   const data = await TableByOrder.create({ ...req.body, status: "pending", dining_option: "reservation" });
+  // checkPending.push({ id: data.dataValues.id, check: true })
+  // handTimeTable({id: data.dataValues.id, check: true});
   res.status(200).json({ success: true, data });
 })
 
@@ -311,6 +323,9 @@ exports.bookingTables = asyncHandler(async (req, res) => {
     { raw: true },
   );
   await sendEmail(email, "Thông báo", templateSendUser(data));
+  // checkPending.length > 0 && checkPending.forEach(el => {
+  //   if(el.id == id) el.check = false
+  // })
   res.status(200).json({ success: true, data: result });
 });
 
@@ -367,18 +382,18 @@ exports.updateBooking = asyncHandler(async (req, res) => {
 exports.cancelBooking = asyncHandler(async (req, res) => {
   const token = req.body.token;
   if (!token || !validator.isJWT(token)) {
-    res.status(404).json({ success: false, data: "Không đúng dịnh dạng" });
+    res.status(200).json({ success: false, message: "Không đúng dịnh dạng" });
   } else {
     jwt.verify(token, process.env.JWT_SECRET_EMAIL, async (err, decode) => {
-      if (err) return res.status(404).json({
+      if (err) return res.status(200).json({
         success: false,
-        data: "Lỗi access token"
+        message: "Không đúng mã code"
       })
       const { tableId, orderId, createdAt } = decode;
       await TableByOrder.update({ status: "canceled" }, { where: { tableId, orderId } });
       res.status(200).json({
         success: true,
-        data: `Đã hủy đặt bàn số ${tableId} lúc ${moment(createdAt).format("HH:mm DD/MM")}`
+        message: `Đã hủy đặt bàn số ${tableId} lúc ${moment(createdAt).format("HH:mm DD/MM")}`
       })
     })
   }

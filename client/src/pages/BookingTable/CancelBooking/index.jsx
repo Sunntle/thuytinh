@@ -17,7 +17,7 @@ function CancelBooking() {
         try{
             if(getToken){
                 const request = {token: getToken}
-                const response = await sendRequest({url: `/table/cancel-booking`, method: 'put', request}, undefined, true)
+                const response = await sendRequest({url: `/table/cancel-booking`, method: 'put', ...request}, undefined, true)
                 setMessage(response)
             }else{
                 setMessage({success: false, message: "Invalid token"})
@@ -37,6 +37,7 @@ function CancelBooking() {
     <div className="mt-[80px] h-[50vh] flex items-end justify-center">
       <div className="text-center ">
         <Typography.Title level={3}>{message.message}</Typography.Title>
+        <Typography.Paragraph level={4}>Chúc bạn một ngày tốt lành!</Typography.Paragraph>
         <Button
             size="large"
           onClick={() => navigate("/")}
