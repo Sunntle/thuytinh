@@ -82,7 +82,12 @@ function AddNewProduct({ open, handleCancel, cate, handleFinish }) {
         </Form.Item>
         <div className="grid grid-cols-2 gap-4">
           <Form.Item label="Giá">
-            <Form.Item name="price" noStyle>
+            <Form.Item name="price"  rules={[
+            {
+              required: true,
+              message:  "Bạn phải điền giá",
+            },
+          ]} noStyle>
               <InputNumber min={0} />
             </Form.Item>
             <span
