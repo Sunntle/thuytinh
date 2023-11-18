@@ -35,6 +35,7 @@ const RegisterPage = ({handleFinish}) => {
             name="email"
             rules={[
               {
+                required: true,
                 type: "email",
                 message: "Vui lòng nhập đúng định dạng E-mail!",
               },

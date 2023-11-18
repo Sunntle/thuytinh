@@ -316,12 +316,12 @@ const OrderPage = () => {
       width: 150,
       render: (_, record) => (
         <div className="h-10 flex items-center cursor-pointer">
-          <span
+          {/* <span
             className="bg-orange-500 px-4 rounded-md py-2 text-white"
             onClick={() => showModalUpdate(record)}
           >
             Sửa
-          </span>
+          </span> */}
           <ConfirmComponent
             title="Xác nhận xóa đơn hàng"
             confirm={() => handDeleteOrder(record.id)}
