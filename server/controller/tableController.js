@@ -205,6 +205,7 @@ exports.del = asyncHandler(async (req, res) => {
 });
 exports.switchTables = asyncHandler(async (req, res) => {
   const { newTable, currentTable, idOrder } = req.body;
+  console.log(req.body)
   if (!newTable || !currentTable || !idOrder) return res.status(404).json({ success: false, data: "Invalied" })
   let check = await checkBooking({ time: new Date(), tableId: newTable, dining_option: "reservation", params: "add" });
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
