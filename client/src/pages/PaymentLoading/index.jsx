@@ -50,11 +50,12 @@ const PaymentLoading = () => {
   }, [idOrder, navigate, paymentResponse, sendRequest]);
 
   useEffect(() => {
-    if (checkErrorCode(dataResponse?.vnp_ResponseCode) === true) {
+    if (checkErrorCode(dataResponse?.vnp_ResponseCode) === false) {
       handleNavigate();
     } else {
       const { message } = checkErrorCode(dataResponse?.vnp_ResponseCode);
       setErrorMessage(message);
+      setIsModalOpen(true)
     }
   }, [dataResponse?.vnp_ResponseCode, handleNavigate]);
 
@@ -69,6 +70,7 @@ const PaymentLoading = () => {
       <span className="mt-5 text-base font-semibold">
         Quý khách vui lòng đợi trong giây lát...
       </span>
+
       <Modal title="Thông báo" open={isModalOpen} footer={false}>
         <span className="block text-red-600 text-lg">{errorMessage}</span>
         <Button
