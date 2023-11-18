@@ -22,6 +22,7 @@ import * as apiService from "../../services/api.js";
 
 // Extenal Files
 import "./index.css";
+import {Helmet} from "react-helmet";
 const limit = 20;
 const Menu = () => {
   const [foods, setFoods] = useState({ total: 0, data: []});
@@ -94,6 +95,12 @@ const Menu = () => {
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
+
+      <Helmet>
+        <title>Thực đơn</title>
+        <meta name="menu" content="Menu" />
+      </Helmet>
+
       <ScrollToTop />
       <div className="flex flex-col mt-8 space-y-8 lg:mt-24">
         <div className="lg:hidden grid grid-cols-12 gap-4 text-slate-500 ">

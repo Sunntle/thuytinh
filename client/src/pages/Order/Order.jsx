@@ -17,6 +17,8 @@ import {
 } from "../../utils/format.js";
 import "./index.css";
 import { socket } from "../../services/socket.js";
+import { Helmet } from "react-helmet";
+import Image from "../../components/Image/Image.jsx";
 
 const Order = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,7 +32,7 @@ const Order = () => {
   const navigate = useNavigate();
 
   const order = data[0]?.tablebyorders?.[0]?.order || [];
-  const totalOrder = calculateTotalWithVAT(order?.total, 10)
+  const totalOrder = calculateTotalWithVAT(order?.total, 10);
 
   useEffect(() => {
     sendRequest(fetchTableById(tables[0], tableToken), setData);
@@ -54,7 +56,7 @@ const Order = () => {
       return { ...product, quantity, inDb: quantity };
     });
     dispatch(addOrderDetailUpdate(dataPrevious));
-    navigate(`/tables-${tables[0]}/menu`)
+    navigate(`/tables-${tables[0]}/menu`);
   };
 
   const onFinish = async (values) => {
@@ -68,30 +70,38 @@ const Order = () => {
     dispatch(emptyOrder());
     form.resetFields();
     if (response !== null) {
-      setIsModalOpen(false)
+      setIsModalOpen(false);
       window.location.href = String(response);
     }
   };
 
   const handlePayInCash = () => {
-    socket.emit("pay-in-cash", tables[0])
+    socket.emit("pay-in-cash", tables[0]);
     messageApi.open({
       type: "info",
       content: "Vui lòng đợi trong giây lát, nhân viên sẽ đến thanh toán",
     });
-  }
+  };
 
   if (isLoading) return <Spinner />;
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 lg:pt-12">
-      <ScrollToTop />
       {contextHolder}
+
+      <ScrollToTop />
+
+      <Helmet>
+        <title>Món đã đặt</title>
+        <meta name="order" content="Order" />
+      </Helmet>
+
       <div className="bg-white px-6 xl:px-12">
         <h1 className="mb-5 text-center text-2xl font-bold text-primary">
           Món đã đặt
         </h1>
-        <div className="">
+
+        <div className="relative">
           <div className="w-full min-h-0 grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Main */}
             <div className="w-full overflow-hidden border md:col-span-7 p-2 rounded-lg space-y-3 shadow-sm">
@@ -103,9 +113,8 @@ const Order = () => {
                   >
                     <div className="col-span-5 md:col-span-4 h-28 xl:h-36">
                       <div className="w-full h-full rounded-lg">
-                        <img
-                          loading={"lazy"}
-                          className="w-full h-full rounded-lg object-cover"
+                        <Image
+                          className="object-cover"
                           src={item?.product?.imageproducts[0]?.url}
                           alt={item?.product?.name_product}
                         />
@@ -134,6 +143,7 @@ const Order = () => {
                 </div>
               )}
             </div>
+
             {/* Aside */}
             <div className="relative w-full md:col-span-5 text-slate-500 overflow-hidden">
               <div className="sticky top-0 border p-5 shadow-sm rounded-lg">
@@ -143,19 +153,23 @@ const Order = () => {
                   </span>
                   <span>{formatCurrency(order?.total || 0)}</span>
                 </div>
+
                 <div className="w-full flex justify-between items-center">
                   <span className="text-lg font-medium text-slate-800">
                     VAT
                   </span>
                   <span>{0.1 * 100}%</span>
                 </div>
+
                 <Divider />
+
                 <div className="w-full flex justify-between items-center text-slate-800">
                   <span className="text-lg font-bold">Thành tiền</span>
                   <span className="font-bold text-lg">
                     {formatCurrency(totalOrder)}
                   </span>
                 </div>
+
                 <Button
                   onClick={handleAddNewOrder}
                   size="large"
@@ -164,6 +178,7 @@ const Order = () => {
                 >
                   Thêm món mới
                 </Button>
+
                 <Button
                   disabled={
                     order?.order_details?.length === 0 || order.length === 0
@@ -177,6 +192,7 @@ const Order = () => {
               </div>
             </div>
           </div>
+
           <Modal
             title="Phương thức thanh toán"
             centered
@@ -212,7 +228,7 @@ const Order = () => {
                           <Button
                             type={"primary"}
                             htmlType={"submit"}
-                            className="bg-primary"
+                            className="bg-primary w-full"
                           >
                             Thanh toán
                           </Button>

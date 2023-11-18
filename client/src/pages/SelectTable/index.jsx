@@ -6,43 +6,57 @@ import { Tabs } from "antd";
 import "./index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { clearCustomer } from "../../redux/CustomerName/customerNameSlice.js";
+import { Helmet } from "react-helmet";
+
 function showError(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
-      return "User denied the request for Geolocation."
+      return "User denied the request for Geolocation.";
 
     case error.POSITION_UNAVAILABLE:
-      return "Location information is unavailable."
+      return "Location information is unavailable.";
 
     case error.TIMEOUT:
-      return "The request to get user location timed out."
+      return "The request to get user location timed out.";
 
     case error.UNKNOWN_ERROR:
-      return "An unknown error occurred."
-
+      return "An unknown error occurred.";
   }
 }
+
 function SelectTable() {
   //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
   const { sendRequest, isLoading } = useHttp();
-  const location = useLocation()
-  const customerName = useSelector(state => state.customerName)
-  const isTableExist = location.state?.isTableExist//ban dang duoc su dung
-  const idTable = location.state?.prevTable//1
-  const handleSelectTable = useCallback(async (id) => {
-    navigate(`/tables-${id}`, { state: { from: 'menu' } });
-  }, [navigate]);
+  const location = useLocation();
+  const customerName = useSelector((state) => state.customerName);
+  const isTableExist = location.state?.isTableExist; //ban dang duoc su dung
+  const idTable = location.state?.prevTable; //1
+  const handleSelectTable = useCallback(
+    async (id) => {
+      navigate(`/tables-${id}`, { state: { from: "menu" } });
+    },
+    [navigate],
+  );
 
   useEffect(() => {
-    if (customerName.name.length > 0 && customerName.tables.length > 0 && isTableExist !== "Bàn đã được sử dụng") {
+    if (
+      customerName.name.length > 0 &&
+      customerName.tables.length > 0 &&
+      isTableExist !== "Bàn đã được sử dụng"
+    ) {
       handleSelectTable(customerName.tables[0]);
     }
-  }, [customerName.name.length, customerName.tables, handleSelectTable, isTableExist]);
+  }, [
+    customerName.name.length,
+    customerName.tables,
+    handleSelectTable,
+    isTableExist,
+  ]);
 
   useEffect(() => {
     const position1 = {
@@ -59,7 +73,7 @@ function SelectTable() {
         // if(distance > 1000 ) return navigate("/book-table")
         await sendRequest(
           { method: "get", url: "/table?_status_table=eq_0" },
-          setTables
+          setTables,
         );
       }, showError);
     } else {
@@ -80,14 +94,25 @@ function SelectTable() {
     setTableByPosition(filteredValue);
   };
 
-  if (isTableExist == "Không tồn tại bàn này!") return <h2 className="py-5 mt-[80px] text-center">{isTableExist}</h2>
+  if (isTableExist == "Không tồn tại bàn này!")
+    return <h2 className="py-5 mt-[80px] text-center">{isTableExist}</h2>;
   if (isLoading) return <Spinner />;
 
   return (
     <div className="pb-24 mt-[80px]">
-      {idTable && isTableExist == "Bàn đã được sử dụng" &&// 1 == 1
-        +idTable !== customerName.tables?.at(1) &&
-        (<p className="py-3 text-center">Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!</p>)}
+
+      <Helmet>
+        <title>Chọn bàn</title>
+        <meta name="select-table" content="Select table" />
+      </Helmet>
+
+      {idTable &&
+        isTableExist == "Bàn đã được sử dụng" && // 1 == 1
+        +idTable !== customerName.tables?.at(1) && (
+          <p className="py-3 text-center">
+            Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!
+          </p>
+        )}
       <div className="w-full h-12 uppercase font-semibold text-lg text-white bg-primary flex justify-center items-center">
         Chọn bàn
       </div>
@@ -110,7 +135,6 @@ function SelectTable() {
                         onClick={() => handleSelectTable(table.id)}
                         className="cursor-pointer w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center"
                       >
-
                         {table.name_table}
                       </div>
                     ))}
@@ -119,13 +143,13 @@ function SelectTable() {
               ),
             };
           })}
-
         />
       </div>
     </div>
   );
 }
+
 SelectTable.propTypes = {
-  isTableExist: PropTypes.string
-}
+  isTableExist: PropTypes.string,
+};
 export default SelectTable;

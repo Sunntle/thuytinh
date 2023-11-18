@@ -4,8 +4,10 @@ import "./index.css";
 import { Children, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import { useNavigate } from "react-router-dom";
-import { parseQueryString } from "../../utils/format.js";
+import {parseQueryString, ScrollToTop} from "../../utils/format.js";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
+
 const disabledDate = (cur) => {
   return cur && cur < moment().subtract(1, "day").endOf("day");
 };
@@ -59,7 +61,7 @@ const BookingTable = () => {
           return hours;
         }
         const currentHour = moment().hour();
-        for (let i = 7; i <= currentHour; i++) {
+        for (let i = 7; i <= currentHour + 2; i++) {
           hours.push(i);
         }
         hours.push(23);
@@ -94,8 +96,8 @@ const BookingTable = () => {
   };
 
   const onSubmitFetchTable = async (values) => {
-    let date = moment(values.date['$d']).format("DD/MM/YYYY");
-    let time = moment(values.time['$d']).format("HH:mm");
+    let date = moment(values.date["$d"]).format("DD/MM/YYYY");
+    let time = moment(values.time["$d"]).format("HH:mm");
     const createdAt = moment(date + time, "DD/MM/YYYY HH:mm").format(
       "DD/MM/YYYY HH:mm:ss",
     );
@@ -132,7 +134,15 @@ const BookingTable = () => {
     }
   };
   return (
-    <div className="tracking-wide space-y-10 pt-32 max-w-full w-screen min-h-screen bg-[url('https://images.unsplash.com/photo-1699148689335-16a572d22c22?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-no-repeat bg-cover bg-center">
+    <div className="tracking-wide space-y-10 pt-32 max-w-full w-screen min-h-screen bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287118/NhaHangThuyTinh/bxjvz96etxtbyzsiz1ty.webp')] bg-no-repeat bg-cover bg-center">
+
+      <ScrollToTop />
+
+      <Helmet>
+        <title>Đặt bàn</title>
+        <meta name="booking-table" content="Booking Table" />
+      </Helmet>
+
       <div className="mx-auto w-11/12 md:w-9/12 lg:w-8/12 xl:w-6/12 min-h-fit bg-white rounded-lg">
         <Form
           form={form}
@@ -195,6 +205,7 @@ const BookingTable = () => {
               rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
             >
               <TimePicker
+                showNow={false}
                 className="w-full focus:border-primary"
                 placeholder="Chọn giờ"
                 // defaultValue={moment().format("HH:mm")}

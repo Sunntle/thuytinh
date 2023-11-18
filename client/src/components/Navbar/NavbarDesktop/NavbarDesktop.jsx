@@ -13,9 +13,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { HiOutlineChevronRight } from "react-icons/hi2";
 import PropTypes from "prop-types";
 import "./index.css";
-import logo from "../../../assets/images/logo.svg";
-import logo3 from "../../../assets/images/logo3.svg";
 import { message } from "antd";
+
+const whiteLogo = "https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287585/NhaHangThuyTinh/msmn9zmjne9fkkakyn5k.webp"
+const colorLogo = "https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287744/NhaHangThuyTinh/tziu6xi6mg75j8sgd0xh.webp"
+
 const NavbarDesktop = ({
   headerRef,
   checkRoute,
@@ -36,13 +38,13 @@ const NavbarDesktop = ({
     setIsMenuHovered(false);
   }, []);
   const location = useLocation();
-  const [logoPath, setLogoPath] = useState(logo);
+  const [logoPath, setLogoPath] = useState(colorLogo);
   const checkHome = useMemo(() => {
     return location.pathname == "/" || location.pathname == "/home";
   }, [location.pathname]);
 
   useEffect(() => {
-    setLogoPath(checkHome ? logo : logo3);
+    setLogoPath(checkHome ? colorLogo : whiteLogo);
   }, [checkHome]);
 
   useLayoutEffect(() => {
@@ -50,9 +52,9 @@ const NavbarDesktop = ({
       if (checkHome) {
         const { scrollY } = window;
         if (scrollY > 500) {
-          setLogoPath(logo3);
+          setLogoPath(whiteLogo);
         } else {
-          setLogoPath(logo);
+          setLogoPath(colorLogo);
         }
       }
     };
