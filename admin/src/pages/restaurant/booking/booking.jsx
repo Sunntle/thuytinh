@@ -14,6 +14,7 @@ export const ResBooking = () => {
         try {
             const resBooking = await getAllBooking()
             setBooking(resBooking)
+            console.log(resBooking)
         } catch (err) {
             console.log(err)
         }
@@ -74,7 +75,7 @@ export const ResBooking = () => {
                 title: 'Ngày đặt',
                 dataIndex: 'updatedAt',
                 render: (_, data) => (
-                    <span>{formatNgay(data.updatedAt, 'HH:MM DD/MM/YYYY')}</span>
+                    <span>{formatNgay(data.updatedAt, 'HH:mm DD/MM/YYYY')}</span>
                 ),
                 sorter: (a, b) => a.updatedAt.localeCompare(b.updatedAt)
             },
@@ -82,7 +83,7 @@ export const ResBooking = () => {
                 title: 'Ngày nhận',
                 dataIndex: 'createdAt',
                 render: (_, data) => (
-                    <span>{formatNgay(data.createdAt, 'HH:MM DD/MM/YYYY')}</span>
+                    <span>{formatNgay(data.createdAt, 'HH:mm DD/MM/YYYY')}</span>
                 ),
                 sorter: (a, b) => a.createdAt.localeCompare(b.createdAt)
             },

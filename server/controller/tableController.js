@@ -18,6 +18,7 @@ const { generateTable, generateHash } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
 const moment = require("moment");
 const sendEmail = require("../utils/mail");
+const { json } = require("body-parser");
 
 const findTables = async (tables) => {
   const re = await Tables.findAll({
@@ -70,6 +71,7 @@ exports.getAll = asyncHandler(async (req, res) => {
       }
     }
   };
+
   if (req.query._noQuery === 1) delete query.include;
   const tables = await Tables.findAll(query);
   res.status(200).json(tables);
@@ -78,8 +80,15 @@ exports.getAll = asyncHandler(async (req, res) => {
 exports.getId = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const { token, id_employee } = req.query;
-  let check = await checkBooking(new Date(), id, "reservation", "add");
-  if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
+  const result = await Tables.findOne({ where: { id } });
+  if (!result) {
+    return res.status(404).json({ success: false, message: "Invalid" })
+  }
+  const check = await checkBooking({ time: new Date(), tableId: id, dining_option: "reservation", params: "add", isActive: true });
+  if (check) return res.status(404).json({
+    success: false, data: "Bàn đã được đặt trước",
+    prevTime: moment(check).subtract(30, "minutes"), nextTime: moment(check).add(30, "minutes")
+  });
   if (token) {
     jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
       if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
@@ -87,7 +96,8 @@ exports.getId = asyncHandler(async (req, res, next) => {
       if (data) return res.status(200).json(data);
       return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
     })
-  } else {
+  }
+  if (id_employee) {
     const employee = await User.findOne({
       where: {
         id: id_employee,
@@ -101,6 +111,8 @@ exports.getId = asyncHandler(async (req, res, next) => {
       res.status(404).json("Phải phải nhân viên !");
     }
   }
+
+  res.status(200).json({ success: true, ...result });
 });
 
 exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
@@ -173,7 +185,7 @@ exports.updateStatusAndToken = asyncHandler(async (req, res) => {
     }, tables)
     return res.status(200).json("Đặt lại bàn thành công! ");
   }
-  let check = await checkBooking(new Date(), tables, "reservation", "add");
+  let check = await checkBooking({ time: new Date(), tableId: tables, dining_option: "reservation", params: "add" });
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
   let token = generateTable(JSON.stringify(req.body));
   await Tables.prototype.updateStatusTable({
@@ -192,10 +204,8 @@ exports.del = asyncHandler(async (req, res) => {
 });
 exports.switchTables = asyncHandler(async (req, res) => {
   const { newTable, currentTable, idOrder } = req.body;
-  console.log(req.body)
   if (!newTable || !currentTable || !idOrder) return res.status(404).json({ success: false, data: "Invalied" })
   let check = await checkBooking({ time: new Date(), tableId: newTable, dining_option: "reservation", params: "add" });
-  console.log(check)
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
   if (await Tables.prototype.checkStatus([newTable], 0)) return res.status(404).json({ success: false, data: "Bàn đang được sử dụng" });
   await TableByOrder.update({ tableId: newTable }, { where: { tableId: currentTable, orderId: idOrder } });
@@ -226,7 +236,7 @@ const handCheckBooking = async (time, tableId) => {
     },
     raw: true
   });
-  const bookEatIn = await checkBooking(time, tableId);
+  const bookEatIn = await checkBooking({ time, tableId });
   const result = checkTimeTable ? true : false && bookEatIn;
   return result
 }
@@ -263,7 +273,6 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
 exports.pendingTable = asyncHandler(async (req, res) => {
 
   const { createdAt, tableId, party_size } = req.body;
-  console.log(moment(createdAt).format("HH:mm DD/MM/YYYY"))
   if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
     return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
   }
@@ -311,14 +320,13 @@ exports.getBooking = asyncHandler(async (req, res) => {
       dining_option: "reservation",
       status: "confirmed",
       createdAt: {
-        [Op.lte]: moment(new Date()).add(timeLimit, 'minutes'),
+        [Op.lte]: moment(new Date()).add(30, 'minutes'),
         [Op.gte]: moment(new Date()).subtract(30, 'minutes')
       },
       tableId: tableId,
     },
     nest: true
   })
-  console.log(data)
   res.status(200).json(data);
 });
 
@@ -332,7 +340,8 @@ exports.activeBooking = asyncHandler(async (req, res) => {
     await dataOrder.save()
     const token = generateTable(JSON.stringify(data));
     await Tables.prototype.updateStatusTable({ token: token, status_table: 1 }, [tableId]);
-    return res.status(200).json({ success: true, message: "Kích hoạt thành công", token, data });
+    const order = await Order.findOne({ where: { id: orderId }, ...bien.include })
+    return res.status(200).json({ success: true, message: "Kích hoạt thành công", token, data, order });
   }
   res.status(404).json({ success: false, message: "Bàn đã trước đó được hoạt động" });
 });
