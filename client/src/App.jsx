@@ -4,11 +4,17 @@ import { useEffect } from "react";
 import { initTable } from "./redux/CustomerName/customerNameSlice";
 import { useDispatch } from "react-redux";
 import { ConfigProvider as ConfigProviderAntd } from "antd";
+import { socket } from "./services/socket";
 
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(initTable());
+  }, [dispatch]);
+  useEffect(() => {
+    socket.on("complete-payment", (arg) => {
+      console.log(arg)
+    })
   }, [dispatch]);
 
   return (
@@ -16,8 +22,8 @@ const App = () => {
       theme={{
         components: {
           Form: {
-              itemMarginBottom: 0,
-              algorithm: true
+            itemMarginBottom: 0,
+            algorithm: true
           }
         },
       }}

@@ -9,6 +9,7 @@ import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSys
 import { formatGia } from '../../../utils/format'
 import moment from 'moment'
 import ButtonComponents from '../../../components/button'
+import { socket } from '../../../socket'
 
 const RenderFooter = ({
   tablelist,
@@ -22,7 +23,7 @@ const RenderFooter = ({
   showModal,
   openSwithTable,
   submitPayment,
-  customize
+  customize, isPay, completeOrder
 }) => (
   <> <div className=' dark:bg-darkModeBgBox Order-total border rounded-md'>
     <div className={`tax ${customize ? "text-white" : "text-black"}`}>
@@ -46,9 +47,11 @@ const RenderFooter = ({
         <button className='bg-indigo-500 text-white' onClick={() => openSwithTable(tablelist)}>Chuyển bàn</button>
       </div>
       <div className='flex justify-center col-span-2 m-1'>
-        <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
+        {console.log(isPay)}
+        {!isPay ? <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
           Thanh Toán
-        </Button>
+        </Button> : <ButtonComponents className='text-white bg-secondaryColor border-none'
+          content="Hoàn tất đơn hàng" onClick={completeOrder} />}
         <Modal
           title="Phương thức thanh toán"
           centered
@@ -183,7 +186,8 @@ const ResOrder = ({ handleCancel, open }) => {
         message: 'Thông báo',
         description: data
       });
-      handleCancel()
+      handleCancel();
+
     } else {
       api.info({
         message: 'Thông báo',
@@ -192,24 +196,29 @@ const ResOrder = ({ handleCancel, open }) => {
     }
 
   }
+  console.log(tablelist)
   return (
     <>
       {contextHolder}
       <Drawer
         title={<div className='flex justify-between items-center' >
           <span>{`Bàn số: ${tablelist ? tablelist.id : 0}`}</span>
-          {tablelist?.id && <ButtonComponents className='text-white bg-secondaryColor border-none'
-            content="Hoàn tất đơn hàng" onClick={completeOrder} />}
+          {/* {tablelist?.id && <ButtonComponents className='text-white bg-secondaryColor border-none'
+            content="Hoàn tất đơn hàng" onClick={completeOrder} />} */}
         </div>}
         placement="right"
         footer={<RenderFooter tablelist={tablelist} handleUpdate={handleUpdate}
           handleCancel={handleCancel} handleCancel2={handleCancel2} handleOk={handleOk}
           isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal}
           switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable}
-          submitPayment={submitPayment} customize={customize} />}
+          submitPayment={submitPayment} customize={customize}
+          isPay={tablelist?.tablebyorders?.[0].order.status == 3}
+          completeOrder={completeOrder}
+        />}
         closable={false}
         onClose={handleCancel}
         open={open}
+        í
       >
         <div className="flex flex-col rounded-lg">
           {order_details && order_details.map((item, index) =>

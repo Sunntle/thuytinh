@@ -28,25 +28,29 @@ const PaymentSuccess = () => {
       title: "Tên món ăn",
       dataIndex: "product.name_product",
       key: "name",
+      align: 'center',
       render: (_, record) => <span>{record?.product?.name_product}</span>,
     },
     {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
+      align: 'center',
     },
     {
       title: "Giá",
       dataIndex: "product.price",
       key: "price",
+      align: 'center',
       render: (_, record) => <span>{formatGia(record?.product?.price)}</span>,
     },
     {
       title: "Tổng cộng",
       dataIndex: "total",
       key: "total",
+      align: 'center',
       render: (_, record) => (
-        <span>{formatGia(record?.Product?.price * record?.quantity)}</span>
+        <span>{formatGia(record?.product?.price * record?.quantity)}</span>
       ),
     },
   ];

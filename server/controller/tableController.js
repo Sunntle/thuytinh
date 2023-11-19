@@ -52,34 +52,6 @@ const findTables = async (tables) => {
 };
 
 
-const handTimeTable = (idTableByOrder = null) => {
-  const timeoutId = setTimeout(async () => {
-    await TableByOrder.destroy({ where: { id: idTableByOrder } });
-    console.log(`xóa id ${idTableByOrder} `);
-  }, 1 * 60000);
-  return timeoutId;
-};
-let containerPending = []
-// var block = { id: null, check: false };
-// var timeoutId;
-
-// if (block.check === true) {
-//   timeoutId = handTimeTable(block.id);
-// }
-
-exports.pendingTable = asyncHandler(async (req, res) => {
-
-  const { createdAt, tableId, party_size } = req.body;
-  if (isEmpty(createdAt) || isEmpty(tableId) || isEmpty(party_size)) {
-    return res.status(404).json({ success: false, message: "Thiếu dữ liệu" });
-  }
-  const isBooking = await handCheckBooking(createdAt, tableId);
-  if (isBooking) return res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
-  const data = await TableByOrder.create({ ...req.body, status: "pending", dining_option: "reservation" });
-  // containerPending.push({ id: data.dataValues.id, check: true })
-  // timeoutId = handTimeTable(block.id);
-  res.status(200).json({ success: true, data });
-})
 exports.getAll = asyncHandler(async (req, res) => {
   let query = {
     ...apiQueryRest(req.query), nest: true,
@@ -241,7 +213,6 @@ exports.del = asyncHandler(async (req, res) => {
 });
 exports.switchTables = asyncHandler(async (req, res) => {
   const { newTable, currentTable, idOrder } = req.body;
-  console.log(req.body)
   if (!newTable || !currentTable || !idOrder) return res.status(404).json({ success: false, data: "Invalied" })
   let check = await checkBooking({ time: new Date(), tableId: newTable, dining_option: "reservation", params: "add" });
   if (check) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
@@ -308,16 +279,17 @@ exports.checkTableBooking = asyncHandler(async (req, res) => {
   }
 })
 
-// const  checkPending = []
-// const handTimeTable = ({id, check}) => {
-//   setTimeout(async () => {
-//     if(check){
-//       await TableByOrder.destroy({ where: { id: id } });
-//     }
-//     const index  = checkPending.findIndex(el => el.id == id)
-//     checkPending.splice(index, 1)
-//   }, 5 * 60000);
-// };
+const checkPending = []
+const handTimeTable = ({ id }) => {
+  setTimeout(async () => {
+    const check = await TableByOrder.findByPk(id, { raw: true });
+    if (check.status === "pending") {
+      await TableByOrder.destroy({ where: { id: id } });
+    }
+    const index = checkPending.findIndex(el => el.id == id)
+    checkPending.splice(index, 1)
+  }, 1 * 15000);
+};
 
 exports.pendingTable = asyncHandler(async (req, res) => {
   const { createdAt, tableId, party_size } = req.body;
@@ -327,8 +299,8 @@ exports.pendingTable = asyncHandler(async (req, res) => {
   const isBooking = await handCheckBooking(createdAt, tableId);
   if (isBooking) return res.status(404).json({ success: false, message: "Bàn đã được đặt trước" });
   const data = await TableByOrder.create({ ...req.body, status: "pending", dining_option: "reservation" });
-  // checkPending.push({ id: data.dataValues.id, check: true })
-  // handTimeTable({id: data.dataValues.id, check: true});
+  checkPending.push({ id: data.dataValues.id })
+  handTimeTable({ id: data.dataValues.id });
   res.status(200).json({ success: true, data });
 })
 
@@ -387,7 +359,6 @@ exports.getBooking = asyncHandler(async (req, res) => {
 exports.activeBooking = asyncHandler(async (req, res) => {
   const { orderId, tableId } = req.body;
   const findtable = await Tables.findByPk(tableId, { raw: true });
-  console.log(findtable)
   if (+findtable.status_table === 0) {
     const dataOrder = await Order.findByPk(orderId);
     const data = { tables: [tableId], name: dataOrder.name, timestamp: new Date().valueOf() };

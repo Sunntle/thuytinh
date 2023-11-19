@@ -198,6 +198,7 @@ exports.completeOrder = asyncHandler(async (req, res) => {
     re.dining_time = handleTimeDining(re.createdAt);
     await re.save();
     await Order.update({ status: 4 }, { where: { id: orderId } });
+    _io.of("/client").emit("complete-payment", "complete-payment")
     res.status(200).json({ success: true, data: "Update thành công" });
   } else {
     res
