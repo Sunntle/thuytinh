@@ -3,7 +3,7 @@ import { Form, Input, message } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import { callLogin } from '../../services/api';
 import { doLoginAction } from '../../redux/account/accountSlice';
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 
 const LoginPage = () => {
@@ -23,10 +23,6 @@ const LoginPage = () => {
     const onFinish = async (values) => {
         const res = await callLogin(values);
         if (res.account) {
-            messageApi.open({
-                type: 'success',
-                content: 'Đăng nhập thành công'
-            });
             localStorage.setItem('access_token', res.accessToken);
             dispatch(doLoginAction(res.account));
             if (res.account.role == 'R4') navigate('/admin');

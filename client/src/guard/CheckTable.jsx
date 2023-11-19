@@ -17,24 +17,25 @@ function CheckTable(props) {
       setLoading(true)
       try {
         if (idTable) {
-          const response = await axios.get(`/table/${idTable}`)
-          console.log(response);
-          if(response.success == false){
-            if(response.message) {
+          const response = await axios.get(`/table/${idTable}?token=${tokenTable}`);
+          console.log(response, tokenTable)
+          if (response.success == false) {
+            if (response.message) {
               setTableExist("Không tồn tại bàn này!")
               return
             }
-            if(currentTime > new Date(response.prevTime).valueOf() && currentTime.valueOf() < new Date(response.nextTime).valueOf()){
+            if (currentTime > new Date(response.prevTime).valueOf() && currentTime.valueOf() < new Date(response.nextTime).valueOf()) {
               setTableExist("Kích hoạt bàn")
               return
             }
           }
-          if(response.success == true){
-            if (response.token == tokenTable && tokenTable && tokenTable != null) {
+          if (response.success == true) {
+            const { token, status_table } = response.data[0]
+            if (token == tokenTable && tokenTable && tokenTable != null) {
               setTableExist("Đúng")
               return
-            }else{
-              (response.token == null || response.token == '') && response.status_table == 0 ? setTableExist("Bàn đang trống") : setTableExist("Bàn đã được sử dụng")
+            } else {
+              (token == null || token == '') && status_table == 0 ? setTableExist("Bàn đang trống") : setTableExist("Bàn đã được sử dụng")
               return
             }
           }
@@ -49,9 +50,9 @@ function CheckTable(props) {
   }, [idTable, tokenTable])
   console.log(isTableExist);
   if (loading) return <Spinner />
-  if(isTableExist == "Kích hoạt bàn") return <Navigate to="/active-booking" replace/>
+  if (isTableExist == "Kích hoạt bàn") return <Navigate to="/active-booking" replace />
   // eslint-disable-next-line react/prop-types
-  return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? (props.children) : (<Navigate to={"/select-table"} state={{isTableExist, ...(idTable ? {prevTable: idTable}: {}) }} replace/>)
+  return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? (props.children) : (<Navigate to={"/select-table"} state={{ isTableExist, ...(idTable ? { prevTable: idTable } : {}) }} replace />)
 
 }
 
