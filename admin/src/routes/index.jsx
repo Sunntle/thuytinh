@@ -19,7 +19,7 @@ import UserPage from "../pages/user";
 import TablePage from "../pages/table";
 import ResSelectTable from "../pages/restaurant/choosetable/res-selectTable";
 import PaymentSuccess from "../pages/restaurant/order/res-orderSuccess";
-import TestTemplate from "../pages/test";
+
 import { ResBooking } from "../pages/restaurant/booking/booking";
 import NotFound from "../components/notfound";
 const router = createBrowserRouter([
@@ -75,14 +75,9 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/booking/:token",
-    element: <TestTemplate />,
-  },
-  {
     path: "/",
     element: <LoginPage />,
   },
-
   {
     path: "/register",
     element: <RegisterPage />,
