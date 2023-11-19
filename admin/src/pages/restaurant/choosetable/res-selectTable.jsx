@@ -61,13 +61,6 @@ const ResSelectTable = () => {
     };
     fetchData();
   }, [dispatch]);
-  useEffect(() => {
-    socket.on("status table", (arg) => {
-    })
-    return () => {
-      socket.off("status table")
-    }
-  }, [socket])
   const switchTable = async (newTable) => {
     const res = { currentTable: +id, newTable: newTable, idOrder: +idOrder };
     const {success , data} = await switchTables(res);

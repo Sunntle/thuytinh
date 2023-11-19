@@ -151,10 +151,6 @@ function UserPage() {
     socket.on("new message", arg =>{
       if(arg.type == "user") fetchData()
     })
-    return () => {
-      socket.off("update-admin-online");
-      socket.off("new message")
-    };
   }, [admin, fetchData]);
 
   const onFinish = useCallback(

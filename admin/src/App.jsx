@@ -21,12 +21,18 @@ const App = () => {
     }
     dispatch(fetchNotification())
   }, [dispatch]);
+  useEffect(()=>{
+    socket.connect((error) => {
+      if (error) {
+        console.error('Error connecting to the server:', error);
+      } else {
+        console.log('Connected to the server');
+      }
+    });
+  },[])
   useEffect(() => {
     if (user.isAuthenticated) {
       socket.emit("user connect", user.user)
-    }
-    return () => {
-      socket && socket.off("user connect")
     }
   }, [user])
   if (user && user.isLoading) return <Spinner />

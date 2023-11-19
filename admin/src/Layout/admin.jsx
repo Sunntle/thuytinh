@@ -57,9 +57,6 @@ const LayoutMain = () => {
       openNotification(arg)
       playAudio();
     })
-    return () => {
-      socket.off("new message")
-    }
   }, [openNotification, dispatch, playAudio])
   const onClick = (e) => {
     navigate(e.key);

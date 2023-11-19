@@ -8,7 +8,7 @@ const ThanksPage = () => {
         <span className="block w-10/12 text-zinc-600">
           Xin cảm ơn quý khách đã sử dụng dịch vụ của nhà hàng.
         </span>
-        <span className="block">Chúc quý khách có 1 ngày vui vẻ !!!</span>
+        <span className="block">Chúc quý khách có 1 ngày vui vẻ !</span>
       </div>
     </div>
   );

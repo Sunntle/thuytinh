@@ -6,12 +6,18 @@ const initialState = {
     lastNotification: null
 }
 export const fetchNotification = createAsyncThunk('notification/fetchNotification', async () => {
-    const response = await getAllNotification({ _sort: "createdAt", _order: "DESC", _limit: 10 });
+    const response = await getAllNotification({ _sort: "createdAt", _order: "DESC", _limit: 10, });
     let lastNotification = null
     if (response.some(el => el.status == 0)) lastNotification = response[0]
     return { data: response, lastNotification }
 })
-
+export const loadMoreNotification = createAsyncThunk('notification/loadMoreNotification', async (step = 0,thunkApi) => {
+    const listNoti = thunkApi.getState().notifications.content
+    const response = await getAllNotification({ _sort: "createdAt", _order: "DESC", _limit: 10, _offset: step });
+    let lastNotification = null
+    if (response.some(el => el.status == 0)) lastNotification = response[0]
+    return { data: [...listNoti,...response], lastNotification }
+})
 // export const loadMoreData = createAsyncThunk('notification/loadMoreData', async (step, thunkApi) => {
 //     const {content: listNoti, isLoading} = thunkApi.getState().notifications
 //     if(isLoading) return
@@ -76,7 +82,7 @@ const notificationSystem = createSlice({
                 state.isLoading = false;
             })
             .addCase(fetchNotification.fulfilled, (state, action) => {
-                state.content = action.payload.data;
+                state.content =  action.payload.data
                 state.lastNotification = action.payload.lastNotification
                 state.isLoading = false
             })
@@ -109,6 +115,17 @@ const notificationSystem = createSlice({
             .addCase(deleteNotification.fulfilled, (state, action) => {
                 state.content = action.payload
                 state.isLoading = false;
+            })
+            .addCase(loadMoreNotification.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(loadMoreNotification.rejected, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(loadMoreNotification.fulfilled, (state, action) => {
+                state.content =  action.payload.data
+                state.lastNotification = action.payload.lastNotification
+                state.isLoading = false
             })
     }
 })

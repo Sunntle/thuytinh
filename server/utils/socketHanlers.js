@@ -36,7 +36,7 @@ exports.handleCallStaff = (socket) => {
       callStaff.push({ socketId: socket.id, idTable: idTable });
        await Notification.create({
         type: "call-staff",
-        description: `Gọi nhân viên - Bàn ${idTable} !!!`,
+        description: `Gọi nhân viên - Bàn ${idTable} !`,
       });
     } catch (err) {
       console.log(err);
@@ -49,7 +49,7 @@ exports.handlePayInCash = (socket) => {
       callStaff.push({ socketId: socket.id, idTable: idTable });
        await Notification.create({
         type: "pay-in-cash",
-        description: `Thanh toán - Bàn ${idTable} !!!`,
+        description: `Thanh toán - Bàn ${idTable} !`,
       });
     } catch (err) {
       console.log(err);

@@ -80,12 +80,9 @@ const ResChooseTable = () => {
         fetchData()
       }
     })
-    socket.on("status table", (arg) => {
+    socket.on("status table", () => {
       fetchData()
     })
-    return () => {
-      socket.off("new message")
-    }
   }, [])
   const fetchData = useCallback(async () => {
     const resTable = await getAllTable();
@@ -100,7 +97,7 @@ const ResChooseTable = () => {
     console.log(resTableId)
     if (resTableId.success === false) {
       api.info({
-        message: 'Thông báo!!!',
+        message: 'Thông báo',
         description:
           resTableId.data
       });
@@ -116,9 +113,9 @@ const ResChooseTable = () => {
     const tableByOrders = resTableId[0].tablebyorders;
     if (tableByOrders && tableByOrders.length === 0 || tableByOrders == undefined) {
       api.info({
-        message: 'Thông báo!!!',
+        message: 'Thông báo',
         description:
-          'Người dùng đang đặt hàng!!!',
+          'Người dùng đang đặt hàng',
       });
     }
     else {
@@ -135,7 +132,7 @@ const ResChooseTable = () => {
   const resetTable = async ({ id }) => {
     const res = await resetTableApi({ tables: [id], reset: true });
     api.success({
-      message: 'Thông báo!!!',
+      message: 'Thông báo',
       description: res
     });
   }

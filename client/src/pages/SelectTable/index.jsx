@@ -7,8 +7,8 @@ import "./index.css";
 import { useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
 import PropTypes from "prop-types";
-import { clearCustomer } from "../../redux/CustomerName/customerNameSlice.js";
 import { Helmet } from "react-helmet";
+import { ScrollToTop } from "../../utils/format.js";
 function showError(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
@@ -26,7 +26,6 @@ function showError(error) {
 }
 
 function SelectTable() {
-  //token -> checktoken in localStorage -> navigate
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
@@ -58,27 +57,30 @@ function SelectTable() {
   ]);
 
   useEffect(() => {
-    const position1 = {
-      latitude: 10.8524972,
-      longitude: 106.6259193,
-    };
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const position2 = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-        const distance = getPreciseDistance(position1, position2);
-        // if(distance > 1000 ) return navigate("/book-table")
-        await sendRequest(
-          { method: "get", url: "/table?_status_table=eq_0" },
-          setTables,
-        );
-      }, showError);
-    } else {
-      // Geolocation is not supported by the browser
-      console.error("Geolocation is not supported by this browser.");
+    const handleFetchData = async()=>{
+      const position1 = {
+        latitude: 10.8524972,
+        longitude: 106.6259193,
+      };
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const position2 = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          };
+          const distance = getPreciseDistance(position1, position2);
+          // if(distance > 1000 ) return navigate("/book-table")
+         
+        }, showError);
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+      await sendRequest(
+        { method: "get", url: "/table?_status_table=eq_0" },
+        setTables,
+      );
     }
+    handleFetchData()
   }, [navigate, sendRequest]);
 
   useEffect(() => {
@@ -103,46 +105,52 @@ function SelectTable() {
         <title>Chọn bàn</title>
         <meta name="select-table" content="Select table" />
       </Helmet>
-
+      <ScrollToTop />
       {idTable &&
-        isTableExist == "Bàn đã được sử dụng" && // 1 == 1
+        isTableExist == "Bàn đã được sử dụng" && 
         +idTable !== customerName.tables?.at(1) && (
           <p className="py-3 text-center">
             Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!
           </p>
         )}
-      <div className="w-full h-12 uppercase font-semibold text-lg text-white bg-primary flex justify-center items-center">
-        Chọn bàn
-      </div>
-      <div className="bg-white px-6 xl:px-12">
-        <Tabs
-          type={"line"}
-          onChange={onHandleTabChange}
-          defaultActiveKey={"in"}
-          centered
-          items={["in", "out"].map((position) => {
-            return {
-              label: position === "in" ? "Ngoài trời" : "Trong nhà",
-              key: position,
-              children: (
-                <div className="w-full h-screen max-w-full">
-                  <div className="grid grid-cols-2 md:grid-col-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {tableByPosition?.map((table) => (
-                      <div
-                        key={table.id}
-                        onClick={() => handleSelectTable(table.id)}
-                        className="cursor-pointer w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center"
-                      >
-                        {table.name_table}
+      {tables && tables.length > 0 ? (
+        <>
+          <div className="w-full h-12 uppercase font-semibold text-lg text-primary flex justify-center items-center">
+            Chọn bàn
+          </div>
+          <div className="bg-white px-6 xl:px-12">
+            <Tabs
+              type={"line"}
+              onChange={onHandleTabChange}
+              defaultActiveKey={"in"}
+              centered
+              items={["in", "out"].map((position) => {
+                return {
+                  label: position === "in" ? "Ngoài trời" : "Trong nhà",
+                  key: position,
+                  children: (
+                    <div className="w-full h-screen max-w-full">
+                      <div className="grid grid-cols-2 md:grid-col-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                        {tableByPosition?.map((table) => (
+                          <div
+                            key={table.id}
+                            onClick={() => handleSelectTable(table.id)}
+                            className="cursor-pointer w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center"
+                          >
+                            {table.name_table}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ),
-            };
-          })}
-        />
-      </div>
+                    </div>
+                  ),
+                };
+              })}
+            />
+          </div>
+        </>
+      ) : (
+        <p>No data available</p>
+      )}
     </div>
   );
 }

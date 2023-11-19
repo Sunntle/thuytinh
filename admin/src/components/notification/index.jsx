@@ -6,13 +6,14 @@ import { memo, useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import {
   deleteNotification,
-
+  loadMoreNotification,
   maskAllRead,
   maskAsRead,
 } from "../../redux/notification/notificationSystem";
 // import InfiniteScroll from 'react-infinite-scroll-component';
 /* eslint-disable react-refresh/only-export-components */
 import defaultAvatar from "../../assets/images/defaultAvatar.png"
+import { useState } from "react";
 function NotificationsComponent({
   notifications,
   openPopover,
@@ -21,6 +22,8 @@ function NotificationsComponent({
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [step, setStep] = useState(10)
+
   const handleCheckedAll = useCallback(() => {
     dispatch(maskAllRead());
   }, [dispatch]);
@@ -45,6 +48,12 @@ function NotificationsComponent({
       ? notifications.filter((el) => el.status == 0).length
       : 0;
   }, [notifications]);
+
+  const handleLoadMore = useCallback(()=>{
+    dispatch(loadMoreNotification(step))
+    setStep(step=> step + 10)
+  },[dispatch, step])
+
   const content = () => {
     if (!Array.isArray(notifications) || notifications.length < 1)
       return <p className="text-gray-500">Không có thông báo nào</p>;
@@ -89,19 +98,19 @@ function NotificationsComponent({
       //   })}
       //     </div>
       // </InfiniteScroll>
-      <div className="max-h-[400px] overflow-y-scroll">
+      <div className="max-h-[400px] overflow-y-scroll scroll-m-0">
         {notifications.map((el, index) => {
           return (
             <div
               key={index}
               className="my-2 flex items-center justify-between py-2 pe-2 rounded-md cursor-pointer hover:bg-gray-100 hover:text-main gap-x-2"
             >
-              <div onClick={() => handleToContent(index)} className="flex items-center gap-x-2 ">
+              <div
+                onClick={() => handleToContent(index)}
+                className="flex items-center gap-x-2 "
+              >
                 <div className="max-w-[50px]">
-                  <img
-                    className="w-full  rounded-md "
-                    src={defaultAvatar}
-                  />
+                  <img className="w-full  rounded-md " src={defaultAvatar} />
                 </div>
                 <div className={el.status == 1 ? "text-gray-500" : " pe-2"}>
                   {el.description}
@@ -114,14 +123,16 @@ function NotificationsComponent({
                 {el.status == 0 ? (
                   <Badge status="processing" color="#fc8e32" />
                 ) : (
-                  <div onClick={() => handleDelete(el.id)}><DeleteOutlined /></div>
+                  <div onClick={() => handleDelete(el.id)}>
+                    <DeleteOutlined />
+                  </div>
                 )}
               </div>
             </div>
           );
         })}
+        <p className="text-gray-500 text-sm text-center cursor-pointer" onClick={handleLoadMore}>Xem thêm</p>
       </div>
-
     );
   };
   return (

@@ -11,30 +11,56 @@ import PageNotFound from "../PageNotFound/PageNotFound.jsx";
 import { Helmet } from "react-helmet";
 import Image from "../../components/Image/Image.jsx";
 
+const columns =  [
+  {
+    title: "Tên món ăn",
+    dataIndex: "product.name_product",
+    key: "name",
+    render: (_, record) => <span>{record?.product?.name_product}</span>,
+  },
+  {
+    title: "Số lượng",
+    dataIndex: "quantity",
+    key: "quantity",
+  },
+  {
+    title: "Giá",
+    dataIndex: "product.price",
+    key: "price",
+    render: (_, record) => (
+      <span>{formatCurrency(record?.product?.price)}</span>
+    ),
+  },
+  {
+    title: "Tổng cộng",
+    dataIndex: "total",
+    key: "total",
+    render: (_, record) => (
+      <span>
+        {formatCurrency(record?.product?.price * record?.quantity)}
+      </span>
+    ),
+  },
+]
+
 const PaymentSuccess = () => {
   // const { idOrder, idTable } = useSelector((state) => state.order);
   const [orderData, setOrderData] = useState(null);
-  const { sendRequest, isLoading } = useHttp();
+  const { sendRequest } = useHttp();
+  const [loading, setLoading] = useState(true)
   const location = useLocation();
 
   const idOrder = useMemo(
     () => location?.state?.idOrder,
     [location?.state?.idOrder],
   );
-
   const fetchData = useCallback(async () => {
-    await sendRequest(fetchOrderById(idOrder), setOrderData);
-  }, [idOrder, sendRequest]);
-
-  useEffect(() => {
-    if (idOrder) fetchData();
-  }, [fetchData, idOrder]);
-
-  useEffect(() => {
-    if (orderData !== null) {
+    const response = await sendRequest(fetchOrderById(idOrder), undefined, true);
+    setOrderData(response)
+    if (response !== null) {
       if (
-        orderData?.data?.transaction_id !== null &&
-        orderData?.data?.transaction_date !== null
+        response?.data?.transaction_id !== null &&
+        response?.data?.transaction_date !== null
       ) {
         try {
           const handlePostPayment = async () => {
@@ -42,8 +68,8 @@ const PaymentSuccess = () => {
               method: "post",
               url: "/payment/vnpay_querydr",
               ...{
-                orderId: orderData?.data?.transaction_id,
-                transDate: orderData?.data?.transaction_date,
+                orderId: response?.data?.transaction_id,
+                transDate: response?.data?.transaction_date,
               },
             };
             const test = await sendRequest(request, undefined, true);
@@ -63,45 +89,16 @@ const PaymentSuccess = () => {
         }
       }
     }
-  }, [idOrder, orderData, sendRequest]);
+    setLoading(false)
+  }, [idOrder, sendRequest]);
 
-  const columns = useMemo(
-    () => [
-      {
-        title: "Tên món ăn",
-        dataIndex: "product.name_product",
-        key: "name",
-        render: (_, record) => <span>{record?.product?.name_product}</span>,
-      },
-      {
-        title: "Số lượng",
-        dataIndex: "quantity",
-        key: "quantity",
-      },
-      {
-        title: "Giá",
-        dataIndex: "product.price",
-        key: "price",
-        render: (_, record) => (
-          <span>{formatCurrency(record?.product?.price)}</span>
-        ),
-      },
-      {
-        title: "Tổng cộng",
-        dataIndex: "total",
-        key: "total",
-        render: (_, record) => (
-          <span>
-            {formatCurrency(record?.product?.price * record?.quantity)}
-          </span>
-        ),
-      },
-    ],
-    [],
-  );
+  useEffect(() => {
+    if (idOrder) fetchData();
+  }, [fetchData, idOrder]);
 
-  if (isLoading) return <Spinner />;
+
   if (!idOrder) return <PageNotFound />;
+  if (loading) return <Spinner />;
 
   return (
     <div className="lg:bg-slate-100 lg:py-2 min-h-screen max-w-full">
@@ -176,7 +173,7 @@ const PaymentSuccess = () => {
                 {moment(
                   orderData?.data?.transaction_date,
                   "YYYYMMDDHHmmss",
-                ).format("DD-MM-YYYY")}
+                ).format("HH:mm DD/MM/YYYY")}
               </span>
             </div>
           </div>
@@ -187,6 +184,7 @@ const PaymentSuccess = () => {
             columns={columns}
             pagination={false}
             dataSource={orderData?.data?.order_details}
+            rowKey={"payment-info"}
           />
         </div>
         {/*  */}
