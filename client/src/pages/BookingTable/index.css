@@ -1,69 +1,73 @@
+/*:where(.css-dev-only-do-not-override-3wdui6).ant-form-item {*/
+/*    margin-bottom: 0;*/
+/*}*/
+
 /* Time Picker*/
-:where(.css-dev-only-do-not-override-byeoj0).ant-picker:hover, :where(.css-dev-only-do-not-override-byeoj0).ant-picker-focused {
-    border-color: #fc8019;
-    box-shadow: 0 0 0 2px #fc801950;
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-picker:hover, :where(.css-dev-only-do-not-override-byeoj0).ant-picker-focused {*/
+/*    border-color: #fc8019;*/
+/*    box-shadow: 0 0 0 2px #fc801950;*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-btn {
-    @apply bg-primary
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-btn {*/
+/*    @apply bg-primary*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
-    @apply bg-primary/80
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {*/
+/*    @apply bg-primary/80*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0) a:hover {
-    @apply text-primary/80
-}
+/*:where(.css-dev-only-do-not-override-byeoj0) a:hover {*/
+/*    @apply text-primary/80*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0) a {
-    @apply text-slate-500
-}
+/*:where(.css-dev-only-do-not-override-byeoj0) a {*/
+/*    @apply text-slate-500*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-picker-dropdown .ant-picker-time-panel-column > li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
-    @apply bg-primary/10
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-picker-dropdown .ant-picker-time-panel-column > li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {*/
+/*    @apply bg-primary/10*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary:disabled, :where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary.ant-btn-disabled {
-    @apply text-slate-800;
-    background-color: #f3f3f3 !important;
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary:disabled, :where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary.ant-btn-disabled {*/
+/*    @apply text-slate-800;*/
+/*    background-color: #f3f3f3 !important;*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary {
-    @apply text-white bg-primary;
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-btn-primary {*/
+/*    @apply text-white bg-primary;*/
+/*}*/
 
 /* Select */
-.ant-select-focused:where(.css-dev-only-do-not-override-byeoj0).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
-    border-color: #fc8019;
-    box-shadow: 0 0 0 2px #fc801950;
-}
+/*.ant-select-focused:where(.css-dev-only-do-not-override-byeoj0).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {*/
+/*    border-color: #fc8019;*/
+/*    box-shadow: 0 0 0 2px #fc801950;*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-select-dropdown .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
-    @apply bg-primary/10
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-select-dropdown .ant-select-item-option-active:not(.ant-select-item-option-disabled) {*/
+/*    @apply bg-primary/10*/
 
-}
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector {
-    border-color: #fc8019;
-    box-shadow: 0 0 0 2px #fc801950;
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector {*/
+/*    border-color: #fc8019;*/
+/*    box-shadow: 0 0 0 2px #fc801950;*/
+/*}*/
 
 /*Form Item*/
-:where(.css-dev-only-do-not-override-byeoj0).ant-form-item {
-    margin-bottom: 0;
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-form-item {*/
+/*    margin-bottom: 0;*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-btn.ant-btn-sm {
-    @apply bg-primary
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-btn.ant-btn-sm {*/
+/*    @apply bg-primary*/
+/*}*/
 
 /*Date Picker*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
-    border: 1px solid #fc8019;
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {*/
+/*    border: 1px solid #fc8019;*/
+/*}*/
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-picker-dropdown .ant-picker-today-btn {
-    color: #fc8019;
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-picker-dropdown .ant-picker-today-btn {*/
+/*    color: #fc8019;*/
+/*}*/

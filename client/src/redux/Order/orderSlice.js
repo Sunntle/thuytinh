@@ -4,6 +4,7 @@ const initialState = {
   order: [],
   idOrder: 0,
   idTable: 0,
+  isOrdered: false
 };
 const orderSlice = createSlice({
   name: "order",
@@ -64,6 +65,9 @@ const orderSlice = createSlice({
     emptyOrder: (state) => {
       state.order = [];
     },
+    checkIsOrdered: (state, action) => {
+      state.isOrdered = action.payload
+    }
   },
 });
 
@@ -72,6 +76,7 @@ export const {
   addIdOrderTable,
   addOrderDetailUpdate,
   addIdOrder,
+  checkIsOrdered,
   addToOrder,
   removeFromOrder,
   increaseQuantity,

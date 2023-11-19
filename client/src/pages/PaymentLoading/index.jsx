@@ -73,14 +73,14 @@ const PaymentLoading = () => {
 
       <Modal title="Thông báo" open={isModalOpen} footer={false}>
         <span className="block text-red-600 text-lg">{errorMessage}</span>
-        <Button
-          className="w-full bg-red-600 active:bg-red-500 text-white mt-4"
+        <button
+          className="w-full py-2 bg-red-600 active:bg-red-500 text-white mt-4"
           onClick={() =>
             navigate(`/home`)
           }
         >
           Quay về trang chủ
-        </Button>
+        </button>
       </Modal>
     </div>
   );

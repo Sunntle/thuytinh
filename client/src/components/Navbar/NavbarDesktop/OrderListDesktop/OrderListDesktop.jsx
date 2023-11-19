@@ -1,5 +1,5 @@
 // React
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 // React-icons
 import { AiFillWarning } from "react-icons/ai";
 import { HiXMark } from "react-icons/hi2";
@@ -20,6 +20,7 @@ import { addOrder } from "../../../../services/api.js";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addIdOrderTable,
+  checkIsOrdered,
   emptyOrder,
 } from "../../../../redux/Order/orderSlice.js";
 // External File
@@ -28,7 +29,11 @@ import Image from "../../../Image/Image.jsx";
 import PropTypes from "prop-types";
 
 const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
-  const { order: orders, idOrder } = useSelector((state) => state.order);
+  const {
+    order: orders,
+    idOrder,
+    isOrdered,
+  } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const [messageApi, contextHolder] = message.useMessage();
   const { sendRequest } = useHttp();
@@ -57,12 +62,17 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
             idTable: customerName?.tables[0],
           }),
         );
+        dispatch(checkIsOrdered(true));
         dispatch(emptyOrder());
         messageApi.open({
           type: "success",
           content: "Đặt món thành công",
         });
-        window.location.href = `${import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL}/tables-${customerName.tables[0]}/order`;
+        window.location.href = `${
+          import.meta.env.MODE === "production"
+            ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION
+            : import.meta.env.VITE_APP_CLIENT_URL
+        }/tables-${customerName.tables[0]}/order`;
       } else {
         messageApi.open({
           type: "error",
@@ -210,27 +220,32 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
             <span className="text-xl">{formatCurrency(totalOrder || 0)}</span>
           </div>
         </div>
-        <div className="w-full flex justify-end items-center text-lg font-semibold text-primary mt-10 px-2 space-x-2">
-          <Button
+        <div className="w-full flex justify-end items-center text-lg font-normal text-primary mt-10 px-2 space-x-2">
+          <button
             onClick={handleUpdateOrder}
-            disabled={
+            className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${
               orders?.length === 0 ||
               orders.some((i) => i.inDb && false) ||
               !orders.every((i) => i.inDb)
-            }
+                ? "hidden"
+                : ""
+            }`}
           >
             Cập nhật
-          </Button>
-          <Button
-            disabled={
-              orders?.length === 0 || orders.some((i) => i.inDb && true)
-            }
-            className="bg-primary text-white hover:text-white font-medium"
-            size="middle"
+          </button>
+
+          <button
+            className={`text-sm py-2 px-4 bg-primary rounded-md text-white hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${
+              isOrdered ||
+              orders?.length === 0 ||
+              orders.some((i) => i.inDb && true)
+                ? "hidden"
+                : ""
+            }`}
             onClick={submitOrderList}
           >
             Đặt món
-          </Button>
+          </button>
         </div>
       </div>
     </Drawer>

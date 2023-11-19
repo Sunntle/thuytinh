@@ -1,5 +1,5 @@
 // React
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 // React-icons
 import { AiFillWarning } from "react-icons/ai";
 import { HiXMark } from "react-icons/hi2";
@@ -12,6 +12,7 @@ import useHttp from "../../../hooks/useHttp.js";
 import { formatCurrency } from "../../../utils/format.js";
 import {
   addIdOrderTable,
+  checkIsOrdered,
   emptyOrder,
 } from "../../../redux/Order/orderSlice.js";
 // Services
@@ -33,18 +34,23 @@ const OrderListModal = ({
   handleCancel,
   setIsOrderModalOpen,
 }) => {
-  const { order: orders, idOrder } = useSelector((state) => state.order);
+  const {
+    order: orders,
+    idOrder,
+    isOrdered,
+  } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const { sendRequest } = useHttp();
   const [messageApi, contextHolder] = message.useMessage();
   const dispatch = useDispatch();
   // Calculate Total Bill
-  const totalOrder = useMemo(() => (
-    orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0)
-  ), [orders]);
+  const totalOrder = useMemo(
+    () => orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0),
+    [orders],
+  );
 
   const submitOrderList = useCallback(async () => {
-    if (customerName.tables.length == 0) return //navigate to select tables
+    if (customerName.tables.length == 0) return; //navigate to select tables
     const body = {
       orders: orders,
       total: totalOrder,
@@ -61,6 +67,8 @@ const OrderListModal = ({
             idTable: customerName?.tables[0],
           }),
         );
+        dispatch(checkIsOrdered(true));
+        dispatch(emptyOrder());
         messageApi.open({
           type: "success",
           content: "Đặt món thành công",
@@ -77,7 +85,16 @@ const OrderListModal = ({
     } finally {
       setIsOrderModalOpen(false);
     }
-  }, [customerName.name, customerName.tables, dispatch, messageApi, orders, sendRequest, setIsOrderModalOpen, totalOrder]);
+  }, [
+    customerName.name,
+    customerName.tables,
+    dispatch,
+    messageApi,
+    orders,
+    sendRequest,
+    setIsOrderModalOpen,
+    totalOrder,
+  ]);
 
   const handleUpdateOrder = async () => {
     const body = {
@@ -115,22 +132,33 @@ const OrderListModal = ({
       onCancel={handleCancel}
       centered
       footer={[
-        <Button
-          key={1}
+        <button
+          key={"2"}
           onClick={handleUpdateOrder}
-          disabled={orders?.length === 0 || orders.some((i) => i.inDb && false)}
+          className={`text-sm py-[0.35rem] px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${
+            orders?.length === 0 ||
+            orders.some((i) => i.inDb && false) ||
+            !orders.every((i) => i.inDb)
+              ? "hidden"
+              : ""
+          }`}
         >
           Cập nhật
-        </Button>,
-        <Button
-          disabled={orders?.length === 0 || orders.some((i) => i.inDb && true)}
-          className="bg-primary text-white active:text-white focus:text-white hover:text-white font-medium"
-          key={2}
-          size="middle"
+        </button>,
+
+        <button
+          key={"1"}
+          className={`ml-2 text-sm py-[0.35rem] px-4 bg-primary rounded-md text-white border border-transparent hover:border-primary hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${
+            isOrdered ||
+            orders?.length === 0 ||
+            orders.some((i) => i.inDb && true)
+              ? "hidden"
+              : ""
+          }`}
           onClick={submitOrderList}
         >
           Đặt món
-        </Button>
+        </button>,
       ]}
     >
       <div className="max-h-96 overflow-y-auto space-y-3 custom-scrollbar">
@@ -191,6 +219,7 @@ const OrderListModal = ({
                 </div>
                 <div className="self-end mr-2">
                   <Popconfirm
+                    disabled={item.inDb && true}
                     title={"Bạn có muốn xóa món ăn này"}
                     okText={"Có"}
                     okType={"danger"}
@@ -201,7 +230,7 @@ const OrderListModal = ({
                       <AiFillWarning className="w-5 h-5 text-red-600 disabled:text-red-300" />
                     }
                   >
-                    <button disabled={item.inDb && true}>
+                    <button>
                       <HiXMark className="w-6 h-6 text-red-600" />
                     </button>
                   </Popconfirm>
