@@ -4,7 +4,7 @@ import "./index.css";
 import { Children, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import { useNavigate } from "react-router-dom";
-import {parseQueryString, ScrollToTop} from "../../utils/format.js";
+import { parseQueryString, ScrollToTop } from "../../utils/format.js";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 
@@ -135,7 +135,6 @@ const BookingTable = () => {
   };
   return (
     <div className="tracking-wide space-y-10 pt-32 max-w-full w-screen min-h-screen bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287118/NhaHangThuyTinh/bxjvz96etxtbyzsiz1ty.webp')] bg-no-repeat bg-cover bg-center">
-
       <ScrollToTop />
 
       <Helmet>
@@ -152,6 +151,7 @@ const BookingTable = () => {
           <div className="p-4 w-full col-span-1 md:col-span-2 flex flex-col place-self-center">
             <span className="ml-3 text-xs text-slate-500">Vị trí</span>
             <Form.Item
+              className="mb-0"
               name="position"
               rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
             >
@@ -168,6 +168,7 @@ const BookingTable = () => {
           <div className="p-4 w-full col-span-1 md:col-span-2 flex flex-col place-self-center">
             <span className="ml-3 text-xs text-slate-500">Số lượng</span>
             <Form.Item
+              className="mb-0"
               name="party_size"
               rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
             >
@@ -184,6 +185,7 @@ const BookingTable = () => {
           <div className="p-4 w-full md:col-span-2 flex flex-col place-self-center">
             <span className="ml-3 text-xs text-slate-500">Ngày</span>
             <Form.Item
+              className="mb-0"
               name="date"
               rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
             >
@@ -201,6 +203,7 @@ const BookingTable = () => {
           <div className="p-4 w-full md:col-span-2 flex flex-col place-self-center">
             <span className="ml-3 text-xs text-slate-500">Giờ</span>
             <Form.Item
+              className="mb-0"
               name="time"
               rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
             >
