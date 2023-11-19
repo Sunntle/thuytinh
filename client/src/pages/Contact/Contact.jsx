@@ -1,5 +1,6 @@
 import { SiContactlesspayment } from "react-icons/si";
 import {Helmet} from "react-helmet";
+import { ScrollToTop } from "../../utils/format";
 
 const Contact = () => {
   return (
@@ -9,7 +10,7 @@ const Contact = () => {
         <title>Liên hệ</title>
         <meta name="contact" content="Contact" />
       </Helmet>
-
+      <ScrollToTop />
       <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-4 justify-center items-center lg:border rounded shadow-md ">
         <form className="col-span-2 grid grid-cols-1 gap-4 w-full h-full p-6">
           <h2 className="text-center text-primary text-3xl font-bold pb-4">
