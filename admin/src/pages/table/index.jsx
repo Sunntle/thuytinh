@@ -38,15 +38,6 @@ const TablePage = () => {
     },
     [messageApi, fetchData]
   );
-
-  useEffect(() => {
-    socket.on("status table", (arg) => {
-      console.log(arg);
-    });
-    return () => {
-      socket.off("status table");
-    };
-  }, [socket]);
   const handleEditTable = useCallback(async (data) => {
     setIsModalOpenUpdate(true);
     setDataUpdate(data);

@@ -18,8 +18,6 @@ module.exports = {
         "pg-hstore": false,
         "nock": false,
         "aws-sdk": false,
-        "bufferutil": false,
-        "utf-8-validate":false
       },
   },
   module: {

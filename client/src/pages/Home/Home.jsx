@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 // External File
 import ProductSlider from "./ProductSlider/index.jsx";
 import {Helmet} from "react-helmet";
+import { ScrollToTop } from "../../utils/format.js";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
@@ -34,7 +35,7 @@ const Home = () => {
         <title>Trang chủ</title>
         <meta name="home" content="Home" />
       </Helmet>
-
+      <ScrollToTop />
       <Banner />
 
       {slideProduct && (

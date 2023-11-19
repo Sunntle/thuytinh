@@ -1,4 +1,4 @@
-import { Button, Collapse, Divider, Form, Modal, Radio, message } from "antd";
+import { Button, Collapse, Divider, Form, Modal, Radio, Spin, message } from "antd";
 import { useEffect, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +30,7 @@ const Order = () => {
   const tableToken = localStorage.getItem("tableToken");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [loadingState, setLoadingState] = useState(false)
   const order = data[0]?.tablebyorders?.[0]?.order || [];
   const totalOrder = calculateTotalWithVAT(order?.total, 10);
 
@@ -61,6 +61,7 @@ const Order = () => {
 
   const onFinish = async (values) => {
     values = { ...values, amount: totalOrder };
+    setLoadingState(true);
     const request = {
       method: "post",
       url: "/payment/create_payment_url",
@@ -68,9 +69,10 @@ const Order = () => {
     };
     const response = await sendRequest(request, undefined, true);
     dispatch(emptyOrder());
+    setIsModalOpen(false)
     form.resetFields();
     if (response !== null) {
-      setIsModalOpen(false);
+   
       window.location.href = String(response);
     }
   };
@@ -83,14 +85,12 @@ const Order = () => {
     });
   };
 
-  if (isLoading) return <Spinner />;
+  if (isLoading || loadingState) return <Spinner />;
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 lg:pt-12">
       {contextHolder}
-
       <ScrollToTop />
-
       <Helmet>
         <title>Món đã đặt</title>
         <meta name="order" content="Order" />
@@ -189,7 +189,6 @@ const Order = () => {
               </div>
             </div>
           </div>
-
           <Modal
             title="Phương thức thanh toán"
             centered
@@ -233,9 +232,13 @@ const Order = () => {
                     key: "2",
                     label: "Thanh toán bằng tiền mặt",
                     children: (
-                        <button onClick={handlePayInCash} className="text-base font-medium py-2 w-full bg-primary rounded text-white hover:bg-primary/20 border border-transparent hover:border-primary hover:text-primary transition-colors duration-200">
-                          Thanh toán bằng tiền mặt
-                        </button>
+                      <Button
+                        type={"primary"}
+                        className="w-full bg-primary"
+                        onClick={handlePayInCash}
+                      >
+                        Thanh toán bằng tiền mặt
+                      </Button>
                     ),
                   },
                 ]}

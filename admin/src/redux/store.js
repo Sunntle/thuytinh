@@ -24,18 +24,15 @@ import notificationSystem from './notification/notificationSystem';
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['account','table']
+    blacklist: ['account','table', 'notification']
 }
 const rootReducer = combineReducers({
     account: accountReducer,
     cart: cartSystem,
     table: tableSystem,
-
     tablelist: listTableSystem,
-
     customize: customizeSystem,
     notifications: notificationSystem
-
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
