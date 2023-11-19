@@ -10,7 +10,7 @@ import { Button, Modal } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../hooks/useHttp.js";
 import { checkErrorCode } from "../../utils/payment.js";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
 const PaymentLoading = () => {
   const location = useLocation();
@@ -50,7 +50,7 @@ const PaymentLoading = () => {
   }, [idOrder, navigate, paymentResponse, sendRequest]);
 
   useEffect(() => {
-    if (checkErrorCode(dataResponse?.vnp_ResponseCode) === false) {
+    if (checkErrorCode(dataResponse?.vnp_ResponseCode) === true) {
       handleNavigate();
     } else {
       const { message } = checkErrorCode(dataResponse?.vnp_ResponseCode);

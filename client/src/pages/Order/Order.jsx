@@ -30,8 +30,9 @@ const Order = () => {
   const tableToken = localStorage.getItem("tableToken");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loadingState, setLoadingState] = useState(false)
-  const order = data[0]?.tablebyorders?.[0]?.order || [];
+  const [loadingState, setLoadingState] = useState(false);
+
+  const order = data?.data?.[0]?.tablebyorders?.[0]?.order || [];
   const totalOrder = calculateTotalWithVAT(order?.total, 10);
 
   useEffect(() => {
@@ -72,7 +73,7 @@ const Order = () => {
     setIsModalOpen(false)
     form.resetFields();
     if (response !== null) {
-   
+
       window.location.href = String(response);
     }
   };
