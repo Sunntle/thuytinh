@@ -227,9 +227,6 @@ const OrderPage = () => {
     socket.on("new message", (arg) => {
       if (arg == "order") fetchData(query);
     });
-    return () => {
-      socket.off("new message");
-    };
   }, [fetchData, query]);
 
   const columns = [

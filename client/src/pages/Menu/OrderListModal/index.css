@@ -1,7 +1,7 @@
-:where(.css-dev-only-do-not-override-byeoj0).ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
-    color: white;
-    border-color: white;
-}
+/*:where(.css-dev-only-do-not-override-byeoj0).ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {*/
+/*    color: white;*/
+/*    border-color: white;*/
+/*}*/
 
 .custom-scrollbar {
     -webkit-overflow-scrolling: touch;

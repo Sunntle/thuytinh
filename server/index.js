@@ -22,6 +22,8 @@ app.use(
     origin: [
       process.env.CLIENT_URL,
       process.env.ADMIN_URL,
+      process.env.ADMIN_URL_TEST,
+      process.env.CLIENT_URL_TEST,
       process.env.CLIENT_URL_PRODUCTION,
       process.env.ADMIN_URL_PRODUCTION,
     ],

@@ -1,7 +1,7 @@
 // React
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {  useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 // React-icons
 import { FiSearch } from "react-icons/fi";
 import { BiFoodMenu } from "react-icons/bi";
@@ -10,7 +10,6 @@ import { FiChevronDown } from "react-icons/fi";
 import OrderListModal from "./OrderListModal/OrderListModal.jsx";
 import CategoryList from "./CategoryList/CategoryList.jsx";
 import ProductList from "./ProductList/ProductList.jsx";
-import { Button } from "antd";
 // Hooks
 import useHttp from "../../hooks/useHttp.js";
 import useDebounce from "../../hooks/useDebounce.js";
@@ -19,13 +18,15 @@ import { ScrollToTop } from "../../utils/format.js";
 import instance from "../../utils/axiosConfig.js";
 // Services
 import * as apiService from "../../services/api.js";
-
 // Extenal Files
 import "./index.css";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
+import { AiOutlineLoading } from "react-icons/ai";
+
 const limit = 20;
+
 const Menu = () => {
-  const [foods, setFoods] = useState({ total: 0, data: []});
+  const [foods, setFoods] = useState({ total: 0, data: [] });
   const [isProductLoading, setIsProductLoading] = useState(false);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -40,47 +41,66 @@ const Menu = () => {
     setIsProductLoading(true);
     try {
       const response = await instance.get(
-        `/product?_limit=${limit}&_offset=${length}`
+        `/product?_limit=${limit}&_offset=${length}`,
       );
-      setFoods(prev => ({
+      setFoods((prev) => ({
         total: response.total,
-        data: [...prev.data, ...response.data]
+        data: [...prev.data, ...response.data],
       }));
     } catch (err) {
       console.error(err);
-    }finally{
-      setIsProductLoading(false)
+    } finally {
+      setIsProductLoading(false);
     }
   }, []);
+
   useEffect(() => {
-    const checkCate = async() =>{
-      const response = await sendRequest(apiService.fetchCategories(), undefined, true);
-      if (categoryIndex !== null && response.some(el=> el.id === +categoryIndex)) {
-        sendRequest(apiService.fetchProductsByCategory(categoryIndex), setFoods,false);
-        setCategories(response)
+    const checkCate = async () => {
+      const response = await sendRequest(
+        apiService.fetchCategories(),
+        undefined,
+        true,
+      );
+      if (
+        categoryIndex !== null &&
+        response.some((el) => el.id === +categoryIndex)
+      ) {
+        sendRequest(
+          apiService.fetchProductsByCategory(categoryIndex),
+          setFoods,
+          false,
+        );
+        setCategories(response);
       } else {
         fetchFoods();
       }
-      setCategories(response)
-    }
-    checkCate()
+      setCategories(response);
+    };
+    checkCate();
   }, [sendRequest, categoryIndex, fetchFoods]);
 
   const handleChangeSearchValue = useCallback((e) => {
     setSearchValue(e.target.value);
-  },[]);
+  }, []);
 
-  const handleSubmitSearchValue = useCallback((e) => {
-    if (e.key === "Enter") {
-      if (searchValue.trim() !== "") {
-        try {
-          sendRequest(apiService.searchProducts(debouncedValue), setFoods,false);
-        } catch (err) {
-          console.error(err);
+  const handleSubmitSearchValue = useCallback(
+    (e) => {
+      if (e.key === "Enter") {
+        if (searchValue.trim() !== "") {
+          try {
+            sendRequest(
+              apiService.searchProducts(debouncedValue),
+              setFoods,
+              false,
+            );
+          } catch (err) {
+            console.error(err);
+          }
         }
       }
-    }
-  },[debouncedValue, searchValue, sendRequest]);
+    },
+    [debouncedValue, searchValue, sendRequest],
+  );
 
   const showOrderListModal = () => {
     setIsOrderModalOpen(true);
@@ -95,13 +115,13 @@ const Menu = () => {
 
   return (
     <div className="pb-24 mt-24 lg:mt-0 text-slate-800 lg:px-16 px-6">
-
       <Helmet>
         <title>Thực đơn</title>
         <meta name="menu" content="Menu" />
       </Helmet>
 
       <ScrollToTop />
+
       <div className="flex flex-col mt-8 space-y-8 lg:mt-24">
         <div className="lg:hidden grid grid-cols-12 gap-4 text-slate-500 ">
           <div className="col-span-10 w-full h-12 bg-slate-100 rounded-lg flex justify-start items-center space-x-3 px-2">
@@ -133,22 +153,28 @@ const Menu = () => {
           </span>
           <CategoryList categories={categories} activeIndex={+categoryIndex} />
         </div>
-        
-        <ProductList foods={foods} isLoading={isLoading}/>
+
+        <ProductList foods={foods} isLoading={isLoading} />
 
         {foods.data.length > 0 && (
-          <Button
-            loading={isProductLoading}
-            type="default"
-            className={`text-lg flex items-center justify-center ${
+          <button
+            disabled={isProductLoading}
+            className={`text-lg group text-slate-500 flex items-center justify-center ${
               categoryIndex !== null || isLoading ? "hidden" : ""
             }`}
-            onClick={()=>fetchFoods(foods.data.length)}
+            onClick={() => fetchFoods(foods.data.length)}
           >
-            <span>Xem thêm</span>
-            <FiChevronDown className="w-6 h-6" />
-          </Button>
+            <span className="mr-2 group-hover:text-primary transition-colors duration-200">
+              {isProductLoading ? "Đang tải" : "Xem thêm"}
+            </span>
+            {isProductLoading ? (
+              <AiOutlineLoading className="w-5 h-5 group-hover:text-primary transition-colors duration-200 animate-spin ease-linear" />
+            ) : (
+              <FiChevronDown className="w-6 h-6 group-hover:text-primary transition-colors duration-200" />
+            )}
+          </button>
         )}
+
         <OrderListModal
           isModalOpen={isOrderModalOpen}
           handleOk={handleOk}

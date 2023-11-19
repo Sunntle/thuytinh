@@ -67,10 +67,6 @@ function MaterialPage() {
         fetchData()
       }
     })
-    return () => {
-      socket.off("new message")
-    }
-
   }, [notifications, location, fetchData])
 
   const handleDeleteMaterial = useCallback(async (id_material) => {
