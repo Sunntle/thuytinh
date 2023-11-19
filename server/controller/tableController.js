@@ -146,7 +146,7 @@ exports.getId = asyncHandler(async (req, res, next) => {
         else return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
       })
     } else {
-      res.status(200).json({ success: true, ...result.toJSON() });
+      res.status(200).json({ success: true, data: [result] });
     }
   }
 });
