@@ -46,3 +46,7 @@ export const ScrollToTop = () => {
   }, []);
   return null;
 };
+
+export const checkDifferentQuantity = () => {
+
+}

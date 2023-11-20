@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   order: [],
   idOrder: 0,
-  idTable: 0,
-  isOrdered: false
+  isOrdered: false,
+  previousQuantity: 0
 };
 const orderSlice = createSlice({
   name: "order",
@@ -29,6 +29,7 @@ const orderSlice = createSlice({
     },
     addOrderDetailUpdate: (state, action) => {
       state.order = action.payload;
+      state.previousQuantity = action.payload.reduce((acc,cur) => acc + cur.quantity,0)
     },
     addIdOrder: (state, action) => {
       state.idOrder = action.payload;

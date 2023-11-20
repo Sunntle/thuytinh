@@ -51,7 +51,7 @@ const BookingTable = () => {
   const [result, setResult] = useState(null);
   const [tables, setTables] = useState([]);
   const watchedDate = Form.useWatch("date", form);
-  const watchedTime = Form.useWatch("time", form);
+  // const watchedTime = Form.useWatch("time", form);
 
   const disabledTime = () => {
     return {

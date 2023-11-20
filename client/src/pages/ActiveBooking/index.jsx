@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
 import {Helmet} from "react-helmet";
 import {ScrollToTop} from "../../utils/format.js";
+import {getIdOrder} from "../../redux/Rating/ratingSlice.js";
 const ActiveBooking = () => {
   const { sendRequest } = useHttp();
   const navigate = useNavigate();
@@ -46,11 +47,12 @@ const ActiveBooking = () => {
       url: "/table/active-booking",
       ...body
     };
-    const { success, message, data, token } = await sendRequest(request, undefined, true);
+    const { success, message, data, token, order } = await sendRequest(request, undefined, true);
     openNotificationWithIcon(success ? "success" : "info", message);
     if (token) {
       localStorage.setItem("tableToken", token)
       dispatch(getCustomerName(data))
+      dispatch(getIdOrder(order?.id))
       navigate(`/tables-${data.tables[0]}`);
     }
 
