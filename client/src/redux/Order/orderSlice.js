@@ -65,6 +65,9 @@ const orderSlice = createSlice({
     emptyOrder: (state) => {
       state.order = [];
     },
+    resetOrderStore: () => {
+      return initialState
+    },
     checkIsOrdered: (state, action) => {
       state.isOrdered = action.payload
     }
@@ -81,5 +84,6 @@ export const {
   removeFromOrder,
   increaseQuantity,
   decreaseQuantity,
+  resetOrderStore
 } = orderSlice.actions;
 export const orderReducer = orderSlice.reducer;

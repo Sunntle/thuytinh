@@ -79,7 +79,7 @@ exports.createOrder = asyncHandler(async (req, res) => {
       { type: "order", description: `Bàn - ${table[0]} vừa đặt món`, content: order_result.id },
       { raw: true },
     );
-    _io.of("/client").emit("status order", { ...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3" });// check correct order
+    // _io.of("/client").emit("status order", { ...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3" });// check correct order
   }
   res.status(200).json({ success: true, data: result });
 });
@@ -176,14 +176,14 @@ exports.updateOrder = asyncHandler(async (req, res) => {
 
 exports.updateOrderAdmin = asyncHandler(async (req, res) => {
   const { table, id, ...rest } = req.body;
+  if (rest.status == 4) {
+    await Tables.prototype.updateStatusTable({
+      status_table: 0,
+      token: null
+    }, [table]);
+  }
   await Order.update({ ...rest }, { where: { id } });
-  await TableByOrder.destroy({ where: { orderId: id } });
-  await TableByOrder.bulkCreate(
-    table.map((item) => ({
-      tableId: +item,
-      orderId: id,
-    })),
-  );
+  _io.of("/client").emit("complete-payment", { data: table[0], message: "Hoàn tất thanh toán" })
   res.status(200).json("Update thành công");
 });
 exports.completeOrder = asyncHandler(async (req, res) => {
@@ -198,7 +198,7 @@ exports.completeOrder = asyncHandler(async (req, res) => {
     re.dining_time = handleTimeDining(re.createdAt);
     await re.save();
     await Order.update({ status: 4 }, { where: { id: orderId } });
-    _io.of("/client").emit("complete-payment", "complete-payment")
+    _io.of("/client").emit("complete-payment", { data: tableId, message: "Hoàn tất thanh toán" })
     res.status(200).json({ success: true, data: "Update thành công" });
   } else {
     res

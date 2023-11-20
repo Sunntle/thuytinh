@@ -10,11 +10,11 @@ const initialState = {
 };
 export const initTable = createAsyncThunk(
   "customer-name/initTable",
-  async (_,{rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     const token = localStorage.getItem("tableToken");
-    if(token){
+    if (token) {
       const response = await axios.get(`/table/current-table?token=${token}`)
-      if(response.message) return rejectWithValue(response.message)
+      if (response.message) return rejectWithValue(response.message)
       return response
     }
     return initialState;
@@ -29,10 +29,14 @@ const customerNameSlice = createSlice({
       state.tables = action.payload.tables;
       state.timestamp = action.payload.timestamp;
     },
-    clearCustomer: (state)=>{
+    clearCustomer: (state) => {
       state.name = initialState.name
       state.tables = initialState.tables;
       state.timestamp = initialState.timestamp;
+    },
+    resetTablesStore: () => {
+      localStorage.removeItem("tableToken")
+      return initialState
     }
   },
   extraReducers: (builder) => {
@@ -40,7 +44,7 @@ const customerNameSlice = createSlice({
       .addCase(initTable.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(initTable.rejected, (state,action) => {
+      .addCase(initTable.rejected, (state, action) => {
         state.isLoading = false;
         state.message = action.payload
       })
@@ -53,5 +57,5 @@ const customerNameSlice = createSlice({
   },
 });
 
-export const { getCustomerName, clearCustomer } = customerNameSlice.actions;
+export const { getCustomerName, clearCustomer, resetTablesStore } = customerNameSlice.actions;
 export const customerNameReducer = customerNameSlice.reducer;
