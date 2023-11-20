@@ -9,7 +9,7 @@ const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/mail");
 const validator = require("validator");
-const { getAllUserOnline } = require("../utils/socketHanlers");
+const { getAllUserOnline, addUserOnline } = require("../utils/socketHanlers");
 
 exports.register = asyncHandler(async (req, res) => {
   const { name, password, email } = req.body;
@@ -53,6 +53,7 @@ exports.login = asyncHandler(async (req, res) => {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    // addUserOnline(user)
     return res.status(200).json({
       accessToken,
       account: user,

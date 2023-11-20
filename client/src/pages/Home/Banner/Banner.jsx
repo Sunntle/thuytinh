@@ -2,7 +2,9 @@ import { Typography } from "antd";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-
+import { Grid } from 'antd';
+import { truncateString } from "../../../utils/format";
+const { useBreakpoint } = Grid;
 const variantsWrapperBanner = {
   open: {
     opacity: 1,
@@ -32,11 +34,10 @@ const variantsBannerItem = {
   },
 };
 
-// const imageUrls =
-//   "https://images.pexels.com/photos/13262499/pexels-photo-13262499.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-
+const description = "Nhà hàng hải sản Thủy Tinh là điểm đến tuyệt vời cho những người yêu thưởng thức ẩm thực biển ngon tuyệt. Với đội ngũ đầu bếp tài năng và không gian thoáng đãng, nhà hàng mang đến trải nghiệm ẩm thực tinh tế, hòa quyện giữa hương vị tươi ngon của hải sản và không khí trấn an của biển cả."
 // eslint-disable-next-line react/prop-types
 const Banner = () => {
+  const screens = useBreakpoint();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
@@ -49,7 +50,7 @@ const Banner = () => {
             backgroundImage: `url("https://res.cloudinary.com/dw6jih4yt/image/upload/v1700286846/NhaHangThuyTinh/lwkwc4xdtjn8hnskla5d.webp")`,
             filter: "brightness(50%)",
             backgroundPosition: "center",
-            backgroundRepeat: "no-repeat"
+            backgroundRepeat: "no-repeat",
           }}
         ></div>
         <motion.div
@@ -57,7 +58,7 @@ const Banner = () => {
           animate={isInView ? "open" : "closed"}
           variants={variantsWrapperBanner}
           transition={{ duration: 0.5 }}
-          className="absolute top-0 lg:px-16 md:px-12 px-8 w-full max-w-2xl h-full flex flex-col items-start justify-center"
+          className={`${screens.lg == true ? "max-w-2xl px-8" : "max-w-lg px-4"} absolute top-0 lg:px-16 md:px-12  w-full h-full flex flex-col items-start justify-center`}
         >
           <motion.div variants={variantsBannerItem}>
             <Typography.Title style={{ color: "#FC8019", margin: 0 }} level={1}>
@@ -66,12 +67,9 @@ const Banner = () => {
           </motion.div>
           <motion.h4
             variants={variantsBannerItem}
-            className="text-white my-5 py-2 "
+            className="text-gray-300 my-5 py-2"
           >
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi
-            illum cupiditate quaerat ratione vero natus eligendi culpa hic,
-            ipsum aliquam placeat minima consectetur neque eveniet, quam nam eum
-            excepturi nobis?{" "}
+            {screens.lg == true ? description: truncateString(description, 100) }
           </motion.h4>
           <motion.div variants={variantsBannerItem}>
             <Link

@@ -139,18 +139,14 @@ function UserPage() {
         const arrAdmin = [...admin.data];
         arrAdmin.forEach((itemA) => {
           const itemB = data.find((el) => el.id === itemA.id);
-          if (itemB) {
-            itemA.status = true;
-          } else {
-            itemA.status = false;
-          }
+          itemB ? (itemA.status = true) : (itemA.status = false);
         });
         setAdmin((prev) => ({ ...prev, data: arrAdmin }));
       }
     });
-    socket.on("new message", arg =>{
-      if(arg.type == "user") fetchData()
-    })
+    socket.on("new message", (arg) => {
+      if (arg.type == "user") fetchData();
+    });
   }, [admin, fetchData]);
 
   const onFinish = useCallback(

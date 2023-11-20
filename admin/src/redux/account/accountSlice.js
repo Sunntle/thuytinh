@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { callFetchAccount } from '../../services/api';
+import { socket } from '../../socket';
 
 const initialState = {
     isAuthenticated: false,
@@ -28,6 +29,7 @@ export const accountSlide = createSlice({
         doLoginAction: (state, action) => {
             state.isAuthenticated = true;
             state.user = action.payload;
+            socket.emit("user-connected",  action.payload)
         },
         getAccountAction: (state, action) => {
             state.isAuthenticated = true;

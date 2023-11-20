@@ -2,14 +2,26 @@ const { Notification } = require("../models");
 
 const userConnected = [];
 const callStaff = [];
-const listPermission = ["R2", "R3", "R4"];
+
 exports.getAllUserOnline = () => {
   return userConnected;
 };
+exports.addUserOnline = (user) =>{
+  const isExist = userConnected.findIndex(item => item.id == user.id)
+  if(!isExist){
+    userConnected.push({ role: user.role, id: user.id });
+    _io.of("/admin").emit("update-admin-online", userConnected);
+  }
+}
 exports.handleNewUserConnect = (socket) => {
-  socket.on("user connect", (user) => {
+  socket.on("user-connected", (user) => {
     try {
-      userConnected.push({ socketId: socket.id, role: user.role, id: user.id });
+      const isExist = userConnected.findIndex(item => item.id == user.id)
+      if(isExist != -1) {
+        userConnected[isExist].socketId = socket.id
+      }else{
+        userConnected.push({ socketId: socket.id, role: user.role, id: user.id });
+      }
       _io.of("/admin").emit("update-admin-online", userConnected);
     } catch (err) {
       console.log(err);
