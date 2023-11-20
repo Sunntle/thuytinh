@@ -21,6 +21,8 @@ const sendEmail = require("../utils/mail");
 
 const findTables = async (tables) => {
   const re = await Tables.findAll({
+    order: [["id", "asc"], [{ model: TableByOrder }, "createdAt", "DESC"]],
+
     include: {
       model: TableByOrder,
       include: {
@@ -55,8 +57,11 @@ const findTables = async (tables) => {
 exports.getAll = asyncHandler(async (req, res) => {
   let query = {
     ...apiQueryRest(req.query), nest: true,
+    order: [["id", "asc"], [{ model: TableByOrder }, "createdAt", "DESC"]],
+
     include: {
-      model: TableByOrder, include: {
+      model: TableByOrder,
+      include: {
         model: Order, ...bien,
         attributes: ["id", "name", "phone", "total", "status", "id_employee", "createdAt", "updatedAt"],
         where: {
@@ -324,9 +329,6 @@ exports.bookingTables = asyncHandler(async (req, res) => {
     { raw: true },
   );
   await sendEmail(email, "Thông báo", templateSendUser(data));
-  // checkPending.length > 0 && checkPending.forEach(el => {
-  //   if(el.id == id) el.check = false
-  // })
   res.status(200).json({ success: true, data: result });
 });
 

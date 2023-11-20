@@ -392,7 +392,7 @@ function MaterialPage() {
               content={"Nhập nguyên liệu"}
               key="submit"
               htmlType="submit"
-              className="border-borderSecondaryColor bg-secondaryColor"
+              className="border-borderSecondaryColor bg-secondaryColor text-white"
             />
 
 

@@ -24,7 +24,7 @@ import {
   getAllUser,
   updateOrderAdmin,
 } from "../../services/api";
-import { formatNgay, formatGia } from "../../utils/format";
+import { formatNgay, formatGia, formatnumber } from "../../utils/format";
 import ConfirmComponent from "../../components/confirm";
 import moment from "moment";
 import Spinner from "../../components/spinner";
@@ -77,7 +77,7 @@ const OrderPage = () => {
     ];
     return arr;
   }, []);
-  
+
   const fetchData = useCallback(async (query) => {
     const { data, total } = await getAllOrder(query);
     const avl =
@@ -95,7 +95,7 @@ const OrderPage = () => {
           id_employee: item.id_employee,
           status: status.label,
           payment: renderTextPay(item.payment_gateway),
-          createdAt: formatNgay(item.createdAt),
+          createdAt: formatNgay(item.createdAt, "HH:mm DD/MM/YYYY"),
           quantity: item?.order_details.reduce((a, b) => a + b?.quantity, 0),
           meta: {
             ...item,
@@ -173,7 +173,7 @@ const OrderPage = () => {
             Search
           </Button>
           <Button
-            onClick={()=> clearFilters && handleReset(clearFilters)}
+            onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
             style={{
               width: 90,
@@ -231,8 +231,9 @@ const OrderPage = () => {
 
   const columns = [
     {
-      title: "ID",
+      title: "Mã hóa đơn",
       dataIndex: "id",
+      align: "center",
       fixed: "left",
       width: 100,
       render: (_, record) => (
@@ -245,20 +246,30 @@ const OrderPage = () => {
       ),
     },
     {
+      title: "Trạng thái",
+      dataIndex: "status",
+      filters: statusOrder.map(item => ({ ...item, text: item.label, value: item.label })),
+      onFilter: (value, record) => {
+        console.log(value, record)
+        return record.status == value
+      },
+      width: 150,
+    },
+    {
       title: "Khách hàng",
       dataIndex: "name",
       width: 150,
       ...getColumnSearchProps("name"),
     },
-    {
-      title: "Số điện thoại",
-      dataIndex: "phone",
-      width: 150,
-      ...getColumnSearchProps("phone"),
-      render: (_, data) => (
-        <span>{data.phone ? "0"+data.phone : "Không có số điện thoại"}</span>
-    )
-    },
+    // {
+    //   title: "Số điện thoại",
+    //   dataIndex: "phone",
+    //   width: 150,
+    //   ...getColumnSearchProps("phone"),
+    //   render: (_, data) => (
+    //     <span>{data.phone ? "0" + data.phone : "Không có số điện thoại"}</span>
+    //   )
+    // },
     {
       title: "Nhân viên",
       dataIndex: "employee",
@@ -266,43 +277,44 @@ const OrderPage = () => {
       ...getColumnSearchProps("employee"),
       render: (_, data) => (
         <span>{data.employee ? data.employee : "Khách hàng"}</span>
-    )
+      )
     },
     {
       title: "Số lượng",
       dataIndex: "quantity",
+      align: "center",
       width: 150,
       sorter: (a, b) => a.quantity - b.quantity,
     },
     {
       title: "Bàn",
       dataIndex: "table",
+      align: "center",
       width: 150,
     },
 
     {
       title: "Thanh toán",
       dataIndex: "payment",
+      align: "center",
       width: 200,
     },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      width: 150,
-    },
+
     {
       title: "Ngày đặt",
       dataIndex: "createdAt",
+      align: "center",
       width: 150,
       sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
     },
     {
       title: "Tổng tiền",
       dataIndex: "total",
+      align: "center",
       width: 150,
       render: (_, record) => (
         <span className="text-main font-medium text-lg">
-          {formatGia(record.total)}
+          {formatnumber(record.total)}
         </span>
       ),
     },
@@ -313,12 +325,12 @@ const OrderPage = () => {
       width: 150,
       render: (_, record) => (
         <div className="h-10 flex items-center cursor-pointer">
-          {/* <span
+          <span
             className="bg-orange-500 px-4 rounded-md py-2 text-white"
             onClick={() => showModalUpdate(record)}
           >
             Sửa
-          </span> */}
+          </span>
           <ConfirmComponent
             title="Xác nhận xóa đơn hàng"
             confirm={() => handDeleteOrder(record.id)}
@@ -461,6 +473,11 @@ const OrderPage = () => {
                         <Input />
                       </Form.Item>
                       <Form.Item
+                        name="table"
+                      >
+                        <Input hidden />
+                      </Form.Item>
+                      <Form.Item
                         label="Số điện thoại"
                         name="phone"
                       // rules={[
@@ -536,7 +553,7 @@ const OrderPage = () => {
                         }}
                       >
                         <Button type="primary" htmlType="submit">
-                          Submit
+                          Gửi
                         </Button>
                       </Form.Item>
                     </Form>

@@ -321,7 +321,7 @@ const RecipePage = () => {
               }}
             >
               <Button type="primary" htmlType="submit">
-                Submit
+                Gửi
               </Button>
             </Form.Item>
           </Form>
