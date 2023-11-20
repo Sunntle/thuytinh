@@ -14,7 +14,6 @@ export const ResBooking = () => {
         try {
             const resBooking = await getAllBooking()
             setBooking(resBooking)
-            console.log(resBooking)
         } catch (err) {
             console.log(err)
         }
@@ -113,7 +112,7 @@ export const ResBooking = () => {
     return (
         <>
             <div className='p-10'>
-            {contextHolder}
+                {contextHolder}
                 <Title level={3}>Danh sách đặt bàn</Title>
                 <Table className='mt-4' columns={columns} dataSource={booking.rows} rowKey={"id"} />
                 <UpdateBooking

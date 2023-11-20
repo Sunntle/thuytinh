@@ -49,7 +49,6 @@ const ResRevenue = () => {
       const monthly = calculateMonthlyRevenue(data)
       dataAdmin.success && setAdmin(dataAdmin);
       setRevenue({ data, daily, weekly, monthly });
-      console.log(data)
       setData(res1);
       const avl = data?.map((item) => {
         let data = {
@@ -104,15 +103,15 @@ const ResRevenue = () => {
         title: 'Số điện thoại',
         dataIndex: 'phone',
         render: (_, data) => (
-          <span>{data.phone ? "0"+data.phone : "Không có số điện thoại"}</span>
-      )
+          <span>{data.phone ? "0" + data.phone : "Không có số điện thoại"}</span>
+        )
       },
       {
         title: 'Người phụ trách',
         dataIndex: 'employee',
         render: (_, data) => (
           <span>{data.employee ? data.employee : "Khách hàng"}</span>
-      )
+        )
       },
       {
         title: 'Số lượng',
@@ -175,16 +174,16 @@ const ResRevenue = () => {
                   Tổng tháng
                 </span>
                 <p className="text-orange-400 text-2xl font-medium text-center">
-                {data.montdPreAndCur?.[0]?.total ? (
-                  <CountUp
-                    end={data.montdPreAndCur?.[0]?.total}
-                    separator=","
-                  />
-                ) : (
-                  0
-                )}
-                {' '}
-                đ
+                  {data.montdPreAndCur?.[0]?.total ? (
+                    <CountUp
+                      end={data.montdPreAndCur?.[0]?.total}
+                      separator=","
+                    />
+                  ) : (
+                    0
+                  )}
+                  {' '}
+                  đ
                 </p>
               </div>
               <div className="w-1/3  p-4 h-full flex flex-col justify-center items gap-1">
@@ -193,8 +192,8 @@ const ResRevenue = () => {
                 </span>
                 <p className="text-2xl font-medium text-green-500 text-center">
                   <CountUp
-                  end={revenue.weekly || 0}
-                  separator=","
+                    end={revenue.weekly || 0}
+                    separator=","
                   />{' '}đ
                 </p>
               </div>

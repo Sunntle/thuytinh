@@ -32,7 +32,6 @@ const HomeSlide = ({ listProduct }) => {
           },
         }}
         autoplay={true}
-        onSlideChange={() => console.log("slide change")}
       >
         {listProduct &&
           listProduct?.data?.map((product) => (
