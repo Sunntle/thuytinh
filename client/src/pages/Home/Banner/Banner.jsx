@@ -76,7 +76,7 @@ const Banner = () => {
               to="menu"
               size="large"
               type="text"
-              className=" text-primary hover:text-primary rounded border-box hover:bg-white transform transition duration-300 hover:shadow-[3px_3px_0px_1px_#fc8019,-3px_-3px_0px_1px_#fbd38d]"
+              className="hover:py-1 hover:px-2 text-primary hover:text-primary rounded border-box hover:bg-white transform transition duration-300 hover:shadow-[3px_3px_0px_1px_#fc8019,-3px_-3px_0px_1px_#fbd38d]"
             >
               Xem thêm
             </Link>
