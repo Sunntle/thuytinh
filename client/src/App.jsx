@@ -19,7 +19,13 @@ const App = () => {
 
       socket.on("complete-payment", ({ data, message }) => {
         if (customerName.tables[0] == data) {
-          console.log(message);
+          dispatch(resetOrderStore())
+          dispatch(resetTablesStore())
+        }
+
+      })
+      socket.on("status table", ({ data }) => {
+        if (customerName.tables[0] == data) {
           dispatch(resetOrderStore())
           dispatch(resetTablesStore())
         }
