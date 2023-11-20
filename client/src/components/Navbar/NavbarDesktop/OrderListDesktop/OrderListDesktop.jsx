@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import { AiFillWarning } from "react-icons/ai";
 import { HiXMark } from "react-icons/hi2";
 // Components
-import { Button, Drawer, message, Popconfirm } from "antd";
+import { Drawer, message, Popconfirm } from "antd";
 // Hooks
 import useHttp from "../../../../hooks/useHttp.js";
 // Utils
@@ -33,6 +33,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     order: orders,
     idOrder,
     isOrdered,
+    previousQuantity,
   } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const [messageApi, contextHolder] = message.useMessage();
@@ -42,7 +43,12 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
   // Calculate Total Bill
   const totalOrder = useMemo(
     () => orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0),
-    [orders],
+    [orders]
+  );
+
+  const currentQuantity = useMemo(
+    () => orders?.reduce((acc, cur) => acc + cur.quantity, 0),
+    [orders]
   );
 
   const submitOrderList = useCallback(async () => {
@@ -60,7 +66,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           addIdOrderTable({
             idOrder: response?.data?.orders?.id,
             idTable: customerName?.tables[0],
-          }),
+          })
         );
         dispatch(checkIsOrdered(true));
         dispatch(emptyOrder());
@@ -180,6 +186,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                   </span>
                   <span className="cursor-pointer group">
                     <Popconfirm
+                      disabled={item.inDb && true}
                       title={"Bạn có muốn xóa món ăn này"}
                       okText={"Có"}
                       okType={"danger"}
@@ -189,7 +196,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                         <AiFillWarning className="w-5 h-5 text-red-600 disabled:text-red-300" />
                       }
                     >
-                      <button disabled={item.inDb && true}>
+                      <button>
                         <HiXMark className="w-5 h-5 text-red-600" />
                       </button>
                     </Popconfirm>
@@ -220,9 +227,12 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
         <div className="w-full flex justify-end items-center text-lg font-normal text-primary mt-10 px-2 space-x-2">
           <button
             onClick={handleUpdateOrder}
-            className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${orders?.length === 0 ||
-                orders.some((i) => i.inDb && false) ||
-                !orders.every((i) => i.inDb)
+
+            className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${
+              orders?.length === 0 ||
+              !orders.some((i) => i.inDb) ||
+              !orders.every((i) => i.inDb) ||
+              currentQuantity === previousQuantity
                 ? "hidden"
                 : ""
               }`}

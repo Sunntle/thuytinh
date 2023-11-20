@@ -82,7 +82,13 @@ const Booked = () => {
     }
   };
 
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <>
+        <Spinner />
+        <ScrollToTop />
+      </>
+    );
 
   return (
     <div className="py-24 text-slate-500 tracking-wide max-w-full w-screen min-h-screen bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287118/NhaHangThuyTinh/bxjvz96etxtbyzsiz1ty.webp')] bg-no-repeat bg-cover bg-center">
@@ -242,7 +248,10 @@ const Booked = () => {
           centered={true}
         >
           <div className="w-full flex flex-col justify-stretch items-center space-y-3">
-            <Image src="https://res.cloudinary.com/dw6jih4yt/image/upload/w_400,h_300/v1700285718/NhaHangThuyTinh/vs5y5bjdebolhbjgg3f0.webp" alt="Ảnh" />
+            <Image
+              src="https://res.cloudinary.com/dw6jih4yt/image/upload/w_400,h_300/v1700285718/NhaHangThuyTinh/vs5y5bjdebolhbjgg3f0.webp"
+              alt="Ảnh"
+            />
             <p className="block text-lg text-primary font-medium text-center">
               Xin cảm ơn quý khách đã đặt bàn <br />{" "}
               <span className="text-sm">
