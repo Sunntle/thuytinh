@@ -5,9 +5,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
-import {Helmet} from "react-helmet";
-import {ScrollToTop} from "../../utils/format.js";
-import {getIdOrder} from "../../redux/Rating/ratingSlice.js";
+import { Helmet } from "react-helmet";
+import { ScrollToTop } from "../../utils/format.js";
+import { addIdOrder, checkIsOrdered } from "../../redux/Order/orderSlice.js";
+
 const ActiveBooking = () => {
   const { sendRequest } = useHttp();
   const navigate = useNavigate();
@@ -17,8 +18,8 @@ const ActiveBooking = () => {
   const [api, contextHolder] = notification.useNotification();
   const openNotificationWithIcon = (type, res) => {
     api[type]({
-      message: 'Thông báo',
-      description: res
+      message: "Thông báo",
+      description: res,
     });
   };
   const onSubmitFindTable = async (values) => {
@@ -27,7 +28,6 @@ const ActiveBooking = () => {
       url: `/table/booking?phone=${values.phone}&name=${values.name}&email=${values.email}&tableId=${values.table_id}`,
     };
     const data = await sendRequest(request, undefined, true);
-    console.log(data)
     if (data === undefined) {
       alert("Không có dữ liệu");
     } else {
@@ -36,27 +36,31 @@ const ActiveBooking = () => {
   };
 
   const onClickActiveBooking = async () => {
-
     const body = {
       tableId: tableActive?.tableId,
-      orderId: tableActive?.orderId
-    }
+      orderId: tableActive?.orderId,
+    };
 
     const request = {
       method: "post",
       url: "/table/active-booking",
-      ...body
+      ...body,
     };
-    const { success, message, data, token, order } = await sendRequest(request, undefined, true);
+    const { success, message, data, token, order } = await sendRequest(
+      request,
+      undefined,
+      true,
+    );
     openNotificationWithIcon(success ? "success" : "info", message);
     if (token) {
-      localStorage.setItem("tableToken", token)
-      dispatch(getCustomerName(data))
-      dispatch(getIdOrder(order?.id))
+      console.log(order);
+      localStorage.setItem("tableToken", token);
+      dispatch(getCustomerName(data));
+      dispatch(addIdOrder(order.id));
+      dispatch(checkIsOrdered(true));
       navigate(`/tables-${data.tables[0]}`);
     }
-
-  }
+  };
 
   return (
     <div className="py-24 text-slate-500 tracking-wide max-w-full w-screen min-h-screen bg-[url('https://images.unsplash.com/photo-1699148689335-16a572d22c22?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-no-repeat bg-cover bg-center">
@@ -109,8 +113,8 @@ const ActiveBooking = () => {
                 },
                 {
                   pattern: regexEmail,
-                  message: "Vui lòng nhập đúng định dạng email"
-                }
+                  message: "Vui lòng nhập đúng định dạng email",
+                },
               ]}
               name="email"
             >
@@ -176,7 +180,12 @@ const ActiveBooking = () => {
           </div>
         </Form>
       </div>
-      <Modal open={!!tableActive} closable={false} footer={false} centered={true}>
+      <Modal
+        open={!!tableActive}
+        closable={false}
+        footer={false}
+        centered={true}
+      >
         <div className="w-full flex flex-col justify-stretch items-center space-y-3">
           <button
             onClick={() => onClickActiveBooking()}
