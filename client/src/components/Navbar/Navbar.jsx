@@ -1,6 +1,7 @@
 import  { AiOutlineShop } from "react-icons/ai";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import { BsCalendar3 } from "react-icons/bs";
+import { FaPeopleGroup } from "react-icons/fa6";
 import { NavLink, useLocation } from "react-router-dom";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { IoRestaurantOutline } from "react-icons/io5";
@@ -34,6 +35,13 @@ const initialNavItem = [
     routeName: "Đặt bàn",
     originRouteName: "reservation",
   },
+  {
+    id: 9,
+    route: `/about`,
+    routeName: "Về chúng tôi",
+    icon: <FaPeopleGroup className="w-6 h-6"/>,
+    originRouteName: "about",
+  },
   // {
   //   id: 10,
   //   route: `/account`,
@@ -49,13 +57,7 @@ const initialNavItemDesktop = [
     route: `/contact`,
     routeName: "Liên hệ",
     originRouteName: "contact",
-  },
-  {
-    id: 9,
-    route: `/about`,
-    routeName: "Về chúng tôi",
-    originRouteName: "about",
-  },
+  }
 ];
 
 const handleNavLink = (arrayNavLink, navItemAdded, idTable) => {

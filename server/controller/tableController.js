@@ -373,7 +373,7 @@ exports.activeBooking = asyncHandler(async (req, res) => {
     // clearTimeout(timeoutId);
     return res.status(200).json({ success: true, message: "Kích hoạt thành công", token, data, order });
   }
-  res.status(404).json({ success: false, message: "Bàn đã trước đó được hoạt động" });
+  res.status(200).json({ success: false, message: "Bàn đã trước đó được hoạt động" });
 });
 
 exports.updateBooking = asyncHandler(async (req, res) => {

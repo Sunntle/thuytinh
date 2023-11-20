@@ -17,8 +17,8 @@ function CheckTable(props) {
       setLoading(true)
       try {
         if (idTable) {
-          const response = await axios.get(`/table/${idTable}`);
-          console.log(response)
+          const query = tokenTable ? `/table/${idTable}?token=${tokenTable}` : `/table/${idTable}`
+          const response = await axios.get(query);
           if (response.success == false) {
             if (response.message) {
               setTableExist("Không tồn tại bàn này!")
