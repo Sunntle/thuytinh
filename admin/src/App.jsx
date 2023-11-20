@@ -20,21 +20,14 @@ const App = () => {
       dispatch(fetchAccount());
     }
     dispatch(fetchNotification())
+    // socket.emit("user-connected", response)
   }, [dispatch]);
-  useEffect(()=>{
-    socket.connect((error) => {
-      if (error) {
-        console.error('Error connecting to the server:', error);
-      } else {
-        console.log('Connected to the server');
-      }
-    });
-  },[])
+
   useEffect(() => {
     if (user.isAuthenticated) {
-      socket.emit("user connect", user.user)
+      socket.emit("user-connected", user.user)
     }
-  }, [user])
+  }, [user.isAuthenticated, user.user])
   if (user && user.isLoading) return <Spinner />
   return (
     <ConfigProviderAntd

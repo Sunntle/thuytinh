@@ -61,7 +61,7 @@ const BookingTable = () => {
           return hours;
         }
         const currentHour = moment().hour();
-        for (let i = 7; i <= currentHour + 2; i++) {
+        for (let i = 7; i < currentHour + 2; i++) {
           hours.push(i);
         }
         hours.push(23);

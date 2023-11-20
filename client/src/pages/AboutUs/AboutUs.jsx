@@ -28,7 +28,6 @@ const AboutUs = () => {
 
   return (
     <div className="py-24">
-
       <Helmet>
         <title>Về chúng tôi</title>
         <meta name="about-us" content="About us" />
@@ -42,14 +41,17 @@ const AboutUs = () => {
             <h1 className=" text-4xl md:text-5xl font-semibold text-gray-200">
               Về Chúng Tôi
             </h1>
-            <p className="mt-4 text-base opacity-80">
-              Lorem Ipsum chỉ đơn giản là một đoạn văn bản giả, được dùng vào
-              việc trình bày và dàn trang
+            <p className="mt-4 text-base opacity-80 ">
+              Nhà hàng hải sản Thủy Tinh là điểm đến tuyệt vời cho những người
+              yêu thưởng thức ẩm thực biển ngon tuyệt. Với đội ngũ đầu bếp tài
+              năng và không gian thoáng đãng, nhà hàng mang đến trải nghiệm ẩm
+              thực tinh tế, hòa quyện giữa hương vị tươi ngon của hải sản và
+              không khí trấn an của biển cả.
             </p>
           </div>
           <div className="w-full flex flex-col justify-center items-center mt-6">
             <button
-              onClick={()=> navigate("/select-table")}
+              onClick={() => navigate("/select-table")}
               type="submit"
               className="hover:bg-[#F0A500E5] transition-colors duration-300 w-1/4 md:w-24 py-2 text-base bg-orange-500 text-white rounded-md focus:outline-none focus:ring focus:ring-orange-500"
             >
@@ -76,7 +78,7 @@ const AboutUs = () => {
                 lồng nuôi.
               </p>
               <button
-               onClick={()=> navigate("/select-table")}
+                onClick={() => navigate("/select-table")}
                 type="submit"
                 className="mt-6 hover:bg-[#F0A500E5] transition-colors duration-300 w-24 py-2 text-base bg-orange-500 text-white rounded-md focus:outline-none focus:ring focus:ring-orange-500"
               >
@@ -118,7 +120,7 @@ const AboutUs = () => {
                 dùng vào việc trình bày và dàn trang
               </p>
               <button
-               onClick={()=> navigate("/select-table")}
+                onClick={() => navigate("/select-table")}
                 type="submit"
                 className="mt-6 hover:bg-[#F0A500E5] transition-colors duration-300 w-24 py-2 text-base bg-orange-500 text-white rounded-md focus:outline-none focus:ring focus:ring-orange-500"
               >
@@ -174,7 +176,12 @@ const AboutUs = () => {
                         <span className="whitespace-nowrap text-xs py-2">
                           <Rate value={rating.rate} />
                         </span>
-                        <div className="h-[50px] max-h-[50px]"> <span className="text-xs line-clamp-1">{truncateString(rating.description, 50)}</span></div>
+                        <div className="h-[50px] max-h-[50px]">
+                          {" "}
+                          <span className="text-xs line-clamp-1">
+                            {truncateString(rating.description, 50)}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </SwiperSlide>
