@@ -30,7 +30,7 @@ function CheckTable(props) {
             }
           }
           if (response.success == true) {
-            const { token, status_table } = response.data[0]
+            const { token, status_table } = response.data[0];
             if (token == tokenTable && tokenTable && tokenTable != null) {
               setTableExist("Đúng")
               return
