@@ -68,11 +68,10 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           type: "success",
           content: "Đặt món thành công",
         });
-        window.location.href = `${
-          import.meta.env.MODE === "production"
+        window.location.href = `${import.meta.env.MODE === "production"
             ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION
             : import.meta.env.VITE_APP_CLIENT_URL
-        }/tables-${customerName.tables[0]}/order`;
+          }/tables-${customerName.tables[0]}/order`;
       } else {
         messageApi.open({
           type: "error",
@@ -109,11 +108,10 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       };
       await sendRequest(request, undefined, true);
       dispatch(emptyOrder());
-      window.location.href = `${
-        import.meta.env.MODE === "production"
+      window.location.href = `${import.meta.env.MODE === "production"
           ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION
           : import.meta.env.VITE_APP_CLIENT_URL
-      }/tables-${customerName.tables[0]}/order`;
+        }/tables-${customerName.tables[0]}/order`;
     } catch (err) {
       console.error(err);
     } finally {
@@ -187,7 +185,6 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                       okType={"danger"}
                       cancelText={"Không"}
                       onConfirm={() => handleDeleteConfirm(item.id, dispatch)}
-                      onCancel={() => console.log("Cancel")}
                       icon={
                         <AiFillWarning className="w-5 h-5 text-red-600 disabled:text-red-300" />
                       }
@@ -223,25 +220,23 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
         <div className="w-full flex justify-end items-center text-lg font-normal text-primary mt-10 px-2 space-x-2">
           <button
             onClick={handleUpdateOrder}
-            className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${
-              orders?.length === 0 ||
-              orders.some((i) => i.inDb && false) ||
-              !orders.every((i) => i.inDb)
+            className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${orders?.length === 0 ||
+                orders.some((i) => i.inDb && false) ||
+                !orders.every((i) => i.inDb)
                 ? "hidden"
                 : ""
-            }`}
+              }`}
           >
             Cập nhật
           </button>
 
           <button
-            className={`text-sm py-2 px-4 bg-primary rounded-md text-white hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${
-              isOrdered ||
-              orders?.length === 0 ||
-              orders.some((i) => i.inDb && true)
+            className={`text-sm py-2 px-4 bg-primary rounded-md text-white hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${isOrdered ||
+                orders?.length === 0 ||
+                orders.some((i) => i.inDb && true)
                 ? "hidden"
                 : ""
-            }`}
+              }`}
             onClick={submitOrderList}
           >
             Đặt món

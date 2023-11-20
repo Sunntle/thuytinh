@@ -1,4 +1,4 @@
-import { DatePicker, Form, Select, TimePicker } from "antd";
+import { DatePicker, Form, Select, TimePicker, Grid } from "antd";
 import moment from "moment";
 import "./index.css";
 import { Children, useState } from "react";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { parseQueryString, ScrollToTop } from "../../utils/format.js";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
-
+import { IoSearch } from "react-icons/io5";
 const disabledDate = (cur) => {
   return cur && cur < moment().subtract(1, "day").endOf("day");
 };
@@ -44,8 +44,10 @@ const party_sizes = [
     value: "6",
   },
 ];
+const { useBreakpoint } = Grid;
 const BookingTable = () => {
   const { sendRequest } = useHttp();
+  const screen = useBreakpoint()
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [result, setResult] = useState(null);
@@ -87,7 +89,6 @@ const BookingTable = () => {
   };
 
   const fetchTable = async ({ position, createdAt, party_size }) => {
-    console.log(position, createdAt, party_size);
     const request = {
       method: "get",
       url: `/table/check-booking?position=${position}&createdAt=${createdAt}&party_size=${party_size}`,
@@ -112,7 +113,6 @@ const BookingTable = () => {
   const onSubmitPendingTable = async (tableId) => {
     const { party_size, createdAt } = parseQueryString(result);
     const momentOne = moment(createdAt, "DD/MM/YYYY HH:mm").toISOString();
-    console.log(momentOne);
     const body = {
       party_size: party_size,
       tableId: tableId,
@@ -124,9 +124,8 @@ const BookingTable = () => {
       ...body,
     };
     const dataResponse = await sendRequest(request, undefined, true);
-    // console.log(data)
+
     if (!dataResponse.success) {
-      console.log(dataResponse.message);
     } else {
       navigate(`/booked${result}&tables=${tableId}`, {
         state: { id: dataResponse.data.id },
@@ -223,9 +222,10 @@ const BookingTable = () => {
           <div className="w-full h-full tracking-wide col-span-2 md:col-span-1 pt-6 md:pt-0">
             <button
               type={"submit"}
-              className="md:p-6 md:flex justify-center items-center w-full h-full tracking-wide bg-primary rounded-b-lg md:rounded-bl-none md:rounded-br-lg md:rounded-r-lg md:text-sm text-white font-medium"
+              className=" md:flex justify-center items-center w-full h-full tracking-wide bg-primary rounded-b-lg md:rounded-bl-none md:rounded-br-lg md:rounded-r-lg md:text-sm text-white font-medium"
             >
-              Tìm kiếm
+
+              {screen.md === true ? <IoSearch size={20} /> : "Tìm kiếm"}
             </button>
           </div>
         </Form>

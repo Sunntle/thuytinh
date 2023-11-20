@@ -47,7 +47,7 @@ const RenderFooter = ({
         <button className='bg-indigo-500 text-white' onClick={() => openSwithTable(tablelist)}>Chuyển bàn</button>
       </div>
       <div className='flex justify-center col-span-2 m-1'>
-        {console.log(isPay)}
+
         {!isPay ? <Button className='bg-green-500 text-white font-semibold' type='success' onClick={showModal}>
           Thanh Toán
         </Button> : <ButtonComponents className='text-white bg-secondaryColor border-none'
@@ -196,7 +196,6 @@ const ResOrder = ({ handleCancel, open }) => {
     }
 
   }
-  console.log(tablelist)
   return (
     <>
       {contextHolder}

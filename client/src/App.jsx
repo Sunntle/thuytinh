@@ -41,6 +41,11 @@ const App = () => {
           Form: {
             itemMarginBottom: 0,
             algorithm: true
+          },
+          Button: {
+            colorWhite: "#323232",
+            colorPrimaryHover: "#ffffff",
+            algorithm: true
           }
         },
       }}
