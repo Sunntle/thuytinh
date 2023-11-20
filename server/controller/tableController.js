@@ -197,7 +197,6 @@ exports.updateStatusAndToken = asyncHandler(async (req, res) => {
       status_table: 0,
       token: null
     }, tables)
-
     return res.status(200).json("Đặt lại bàn thành công! ");
   }
   let check = await checkBooking({ time: new Date(), tableId: tables, dining_option: "reservation", params: "add" });
