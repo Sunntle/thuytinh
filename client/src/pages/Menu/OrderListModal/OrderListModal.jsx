@@ -91,16 +91,7 @@ const OrderListModal = ({
     } finally {
       setIsOrderModalOpen(false);
     }
-  }, [
-    customerName.name,
-    customerName.tables,
-    dispatch,
-    messageApi,
-    orders,
-    sendRequest,
-    setIsOrderModalOpen,
-    totalOrder,
-  ]);
+  }, [customerName.name, customerName.tables, dispatch, idOrder, messageApi, orders, sendRequest, setIsOrderModalOpen, totalOrder]);
 
   const handleUpdateOrder = async () => {
     const body = {
@@ -142,9 +133,8 @@ const OrderListModal = ({
           key={"2"}
           onClick={handleUpdateOrder}
           className={`text-sm py-[0.35rem] px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${
-            orders?.length === 0 ||
+            idOrder === 0 ||
             !orders.some((i) => i.inDb) ||
-            !orders.every((i) => i.inDb) ||
             currentQuantity === previousQuantity
               ? "hidden"
               : ""
