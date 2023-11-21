@@ -12,7 +12,7 @@ const {
 } = require("../models");
 const validator = require("validator");
 
-const { apiQueryRest, bien, bookingValidate, templateSendUser, checkBooking, isEmpty, handleTimeDining, timeLimit } = require('../utils/const');
+const { apiQueryRest, bien, bookingValidate, templateSendUser, checkBooking, isEmpty, handleTimeDining, timeLimit, isTimestampValid } = require('../utils/const');
 const { Op } = require('sequelize');
 const { generateTable, generateHash } = require("../middlewares/jwt");
 const { listPermission } = require("../middlewares/verify");
@@ -118,9 +118,16 @@ exports.getId = asyncHandler(async (req, res, next) => {
     if (token) {
       await jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
         if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-        const data = await findTables([id]);
-        if (data) return res.status(200).json({ success: true, data });
-        else return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+        const checkTokenOld = isTimestampValid(decode.timestamp);
+        if (checkTokenOld && !check) {
+          const data = await findTables([id]);
+          return res.status(200).json({ success: true, data });
+        } else {
+          return res.status(404).json({
+            success: false, data: "Bàn đã được đặt trước",
+            prevTime: moment(check).subtract(30, "minutes"), nextTime: moment(check).add(30, "minutes")
+          });
+        }
       })
     } else {
       res.status(200).json({ success: true, data: [result] });
