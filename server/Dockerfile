@@ -9,10 +9,8 @@ RUN npm install
 RUN npm install -g webpack webpack-cli webpack-node-externals
 
 COPY . .
-
+RUN chmod +x import-data-and-set-sql-mode.sh
+RUN chmod +x wait-for-it.sh
 RUN npm run build
 
 CMD [ "node", "dist/main.js" ]
-
-#docker build --tag node-docker .
-#docker run -p 8080:8080 -d node-docker

@@ -29,7 +29,7 @@ const NavbarDesktop = ({
   const [isMenuHovered, setIsMenuHovered] = useState(false);
   const [isOrderDesktop, setIsOrderDesktop] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-
+  const location = useLocation();
   const handleMenuMouseEnter = useCallback(() => {
     setIsMenuHovered(true);
   }, []);
@@ -37,7 +37,7 @@ const NavbarDesktop = ({
   const handleMenuMouseLeave = useCallback(() => {
     setIsMenuHovered(false);
   }, []);
-  const location = useLocation();
+
   const [logoPath, setLogoPath] = useState(colorLogo);
   const checkHome = useMemo(() => {
     return location.pathname == "/" || location.pathname == "/home";
@@ -110,7 +110,7 @@ const NavbarDesktop = ({
                       {categories?.map((category, index) => (
                         <li key={index}>
                           <Link
-                            to={`?category=${category.id}`}
+                            to={`/tables-${idTable}?category=${category.id}`}
                             className="relative block w-full hover:text-primary hover:translate-x-4 drop-shadow text-slate-800 whitespace-nowrap transition-all duration-200"
                           >
                             Món {category.name_category}
