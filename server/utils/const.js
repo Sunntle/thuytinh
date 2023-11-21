@@ -143,11 +143,11 @@ const checkBooking = async ({ time, tableId, dining_option, params, limit, isAct
                 }
             }]
         }
-    }else{
-        query= {include:[{model: Order, where: {status: 0}}]}
+    } else {
+        query = { include: [{ model: Order, where: { status: 0 } }] }
     }
     query.where = {
-    
+
         dining_option: dining_option,
         status: { [Op[dining_option === "eat-in" ? "notIn" : "in"]]: ["pending", "confirmed"] },
         createdAt: {
@@ -172,9 +172,13 @@ function handleTimeDining(inputTime) {
     const formattedTime = `${remainingTime.hours()}:${remainingTime.minutes()}:${remainingTime.seconds()}`;
     return moment(formattedTime, "HH:mm:ss").format("HH:mm:ss");
 }
-
+function isTimestampValid(timestamp) {
+    const currentTimestamp = new Date().getTime();
+    const validTimestamp = timestamp + 75 * 60 * 1000;
+    return validTimestamp > currentTimestamp
+}
 module.exports = {
-    timeLimit,
+    timeLimit, isTimestampValid,
     handleTimeDining, isEmpty, checkBooking,
     templateSendUser, bookingValidate, currentYear, tinhWeek,
     bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct
