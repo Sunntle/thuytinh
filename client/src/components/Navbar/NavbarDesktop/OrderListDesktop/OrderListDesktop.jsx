@@ -34,6 +34,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     idOrder,
     isOrdered,
     previousQuantity,
+    isActiveBooking,
   } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const [messageApi, contextHolder] = message.useMessage();
@@ -43,12 +44,12 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
   // Calculate Total Bill
   const totalOrder = useMemo(
     () => orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0),
-    [orders]
+    [orders],
   );
 
   const currentQuantity = useMemo(
     () => orders?.reduce((acc, cur) => acc + cur.quantity, 0),
-    [orders]
+    [orders],
   );
 
   const submitOrderList = useCallback(async () => {
@@ -66,7 +67,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           addIdOrderTable({
             idOrder: response?.data?.orders?.id,
             idTable: customerName?.tables[0],
-          })
+          }),
         );
         dispatch(checkIsOrdered(true));
         dispatch(emptyOrder());
@@ -74,10 +75,11 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           type: "success",
           content: "Đặt món thành công",
         });
-        window.location.href = `${import.meta.env.MODE === "production"
+        window.location.href = `${
+          import.meta.env.MODE === "production"
             ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION
             : import.meta.env.VITE_APP_CLIENT_URL
-          }/tables-${customerName.tables[0]}/order`;
+        }/tables-${customerName.tables[0]}/order`;
       } else {
         messageApi.open({
           type: "error",
@@ -114,10 +116,11 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       };
       await sendRequest(request, undefined, true);
       dispatch(emptyOrder());
-      window.location.href = `${import.meta.env.MODE === "production"
+      window.location.href = `${
+        import.meta.env.MODE === "production"
           ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION
           : import.meta.env.VITE_APP_CLIENT_URL
-        }/tables-${customerName.tables[0]}/order`;
+      }/tables-${customerName.tables[0]}/order`;
     } catch (err) {
       console.error(err);
     } finally {
@@ -227,26 +230,25 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
         <div className="w-full flex justify-end items-center text-lg font-normal text-primary mt-10 px-2 space-x-2">
           <button
             onClick={handleUpdateOrder}
-
             className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${
-              orders?.length === 0 ||
-              !orders.some((i) => i.inDb) ||
-              !orders.every((i) => i.inDb) ||
+              idOrder === 0 ||
+              (isActiveBooking && !orders.some((i) => i.inDb)) ||
               currentQuantity === previousQuantity
                 ? "hidden"
                 : ""
-              }`}
+            }`}
           >
             Cập nhật
           </button>
 
           <button
-            className={`text-sm py-2 px-4 bg-primary rounded-md text-white hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${isOrdered ||
-                orders?.length === 0 ||
-                orders.some((i) => i.inDb && true)
+            className={`text-sm py-2 px-4 bg-primary rounded-md text-white hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${
+              isOrdered ||
+              orders?.length === 0 ||
+              orders.some((i) => i.inDb && true)
                 ? "hidden"
                 : ""
-              }`}
+            }`}
             onClick={submitOrderList}
           >
             Đặt món
