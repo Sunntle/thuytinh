@@ -97,7 +97,7 @@ const AboutUs = () => {
         </div>
         <div className="my-12 px-16">
           <h2 className="text-5xl text-center text-primary w-full font-semibold lg:mb-4 mb-2">
-            Chuyên các món hải sản
+            Đầu bếp chuyên nghiệp
           </h2>
           <div className="mt-10 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0">
             <div className="flex-1 hidden lg:flex p-6 border-2 border-[#F0A500E5] justify-center items-center mr-0 lg:mr-20">
@@ -108,16 +108,12 @@ const AboutUs = () => {
               />
             </div>
             <div className="flex-1 text-center lg:text-right">
-              <h2 className="text-4xl font-semibold mb-2 text-primary">
-                Tôm hùm Khánh Hoà
-              </h2>
+              <h2 className="text-4xl font-semibold mb-2 text-primary">Đội ngũ đầu bếp</h2>
               <p className="text-gray-700 w-full opacity-60 pt-2 leading-7 lg:line-clamp-10 line-clamp-4">
-                Khi nhắc đến địa điểm nuôi trồng thủy hải sản nói chung và tôm
-                hùm nói riêng thì sẽ thật là thiếu sót khi mà chúng ta không
-                nhắc tới Khánh Hòa. Đây là một tỉnh có sản lượng tôm hùm và lồng
-                nuôi tôm dẫn đầu cả nước với khoảng 880 tấn tôm mỗi vụ và 28.500
-                lồng nuôi.Lorem Ipsum chỉ đơn giản là một đoạn văn bản giả, được
-                dùng vào việc trình bày và dàn trang
+                Từ bề dày kinh nghiệm và sự nhạy cảm trong nghề, các đầu bếp tài
+                năng của Thuỷ Tinh đã thổi hồn vào từng món ăn, cuốn hút và
+                quyến rũ khách hàng bằng nghệ thuật trình bày sang trọng nhưng
+                cũng rất đỗi gần gũi thân quen và hương vị khó cưỡng nhất.
               </p>
               <button
                 onClick={() => navigate("/select-table")}
