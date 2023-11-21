@@ -19,6 +19,7 @@ function CheckTable(props) {
         if (idTable) {
           const query = tokenTable ? `/table/${idTable}?token=${tokenTable}` : `/table/${idTable}`
           const response = await axios.get(query);
+
           console.log(query);
           console.log(response);
           if (response.success == false) {
@@ -33,6 +34,7 @@ function CheckTable(props) {
           }
           if (response.success == true) {
             const { token, status_table } = response.data[0];
+            console.log(token, tokenTable, token == tokenTable)
             if (token == tokenTable && tokenTable && tokenTable != null) {
               setTableExist("Đúng")
               return

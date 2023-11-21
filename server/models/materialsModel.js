@@ -37,18 +37,22 @@ Materials.beforeDestroy(async (material, options) => {
 Materials.prototype.checkAmountByProduct = async function (products) {
   const approve = [];
   const over = [];
-
+  const arr = [];
   for (const product of products) {
-    let val = await getQtyMaterialByProduct(product);
-    let checkQty = await checkQtyMaterials(val, Materials);
+    const val = await getQtyMaterialByProduct(product);
+    const checkQty = await checkQtyMaterials(val, Materials);
     if (checkQty) {
+      arr.push(val);
       approve.push(product)
+    } else {
+      over.push(product)
+    }
+  }
+  if (products.length === approve.length) {
+    for (const val of arr) {
       await Promise.all(val.map(async (item) => (
         await Materials.decrement("amount", { by: item.total, where: { id: item.id_material } })
       )))
-    } else {
-      over.push(product)
-      await Product.update({ status: 4 }, { where: { id: product.id } });
     }
   }
 

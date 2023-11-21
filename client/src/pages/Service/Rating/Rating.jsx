@@ -62,6 +62,7 @@ const Rating = ({ ratingModal, setRatingModal }) => {
           <Form.Item
             className="flex flex-col justify-center items-center mb-0"
             name="rating"
+            rules={[{ required: true, message: "Vui lòng đánh giá sao !" }]}
           >
             <Rate tooltips={desc} value={value} onChange={setValue} />
           </Form.Item>
@@ -72,7 +73,7 @@ const Rating = ({ ratingModal, setRatingModal }) => {
               ""
             )}
           </div>
-          <Form.Item name="text">
+          <Form.Item name="text" rules={[{ required: true, message: "Vui lòng nhập phản hồi !" }]}>
             <Input.TextArea
               autoSize={{ maxRows: 4 }}
               // classNames="w-full h-32 focus:outline-none border-0 focus:ring-opacity-50 text-gray-700"

@@ -34,14 +34,17 @@ exports.createOrder = asyncHandler(async (req, res) => {
   const arrTable = table;
   const checkStatus = await Tables.prototype.checkStatus(arrTable, 0, token);
   if (checkStatus) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
-  const { approve, over } =
-    await Materials.prototype.checkAmountByProduct(orders);
+  const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
+  if (over.length > 0) {
+    return res.status(200).json({ success: false, message: `${over[0].name_product} không đủ số lượng` });
+  }
+  const priceOver = approve.reduce((con, cur) => con + cur.price * cur.quantity, 0);
   if (approve.length === 0)
     return res
       .status(200)
       .json({ success: false, data: "Sản phẩm hết nguyên liệu" });
   const order_result = await Order.create({
-    total,
+    total: priceOver,
     name: customerName,
     id_employee
   });
@@ -114,6 +117,7 @@ exports.delOrder = asyncHandler(async (req, res) => {
 
 exports.updateOrder = asyncHandler(async (req, res) => {
   const { id_order, carts, id_table, total } = req.body;
+
   const over = [];
   let current = await OrderDetail.findAll({
     where: {
@@ -121,35 +125,37 @@ exports.updateOrder = asyncHandler(async (req, res) => {
     },
     raw: true,
   });
-  await Order.update({ total }, { where: { id: id_order } });
+
+  let check = false;
   for (const cart of carts) {
-    let orderDatabase = current.find((ele) => ele.id_product === cart.id);
-    let val = await getQtyMaterialByProduct(cart);
-    let result = await checkQtyMaterials(val, Materials);
-    if (orderDatabase) {
-      cart.quantity -= orderDatabase.quantity;
-      if (cart.quantity > 0) {
-        if (result) {
-          await Promise.all(
-            val.map(
-              async (item) =>
-                await Materials.decrement("amount", {
-                  by: item.total,
-                  where: { id: item.id_material },
-                }),
-            ),
-          );
-          await OrderDetail.increment("quantity", {
-            by: cart.quantity,
-            where: { id: orderDatabase.id },
-          });
-        } else {
-          over.push(cart);
-          await Product.update({ status: 4 }, { where: { id: cart.id } });
-        }
-      }
-    } else {
-      if (result) {
+    cart.quantity -= cart.inDb;
+    const val = await getQtyMaterialByProduct(cart);
+    const result = await checkQtyMaterials(val, Materials);
+    if (!result) {
+      check = true;
+      res.status(200).json({ success: false, data: cart, message: `${cart.name_product} không đủ số lượng` });
+      break;
+    }
+  }
+  if (!check) {
+    for (const cart of carts) {
+      const orderDatabase = current.find((ele) => ele.id_product === cart.id);
+      const val = await getQtyMaterialByProduct(cart);
+      if (orderDatabase) {
+        await Promise.all(
+          val.map(
+            async (item) =>
+              await Materials.decrement("amount", {
+                by: item.total,
+                where: { id: item.id_material },
+              }),
+          ),
+        );
+        await OrderDetail.increment("quantity", {
+          by: cart.quantity,
+          where: { id: orderDatabase.id },
+        });
+      } else {
         await Promise.all(
           val.map(
             async (item) =>
@@ -164,13 +170,12 @@ exports.updateOrder = asyncHandler(async (req, res) => {
           quantity: cart.quantity,
           id_order: id_order,
         });
-      } else {
-        over.push(cart);
-        await Product.update({ status: 4 }, { where: { id: cart.id } });
       }
     }
+    await Order.update({ total }, { where: { id: id_order } });
+    res.status(200).json({ message: "Update thành công", over, success: true });
   }
-  res.status(200).json({ message: "Update thành công", over, success: true });
+
 });
 
 

@@ -32,7 +32,7 @@ const Tables = db.sequelize.define(
     },
     { timestamps: true }
 );
-Tables.prototype.updateStatusTable = async (update, idArr) => {
+Tables.prototype.updateStatusTable = async (update, idArr, check) => {
     await Tables.update(update, { where: { id: { [Op.in]: idArr } } });
     if (update.status_table === 1) {
         await Tables.increment("total_booked", { by: 1, where: { id: { [Op.in]: idArr } } })
@@ -40,7 +40,7 @@ Tables.prototype.updateStatusTable = async (update, idArr) => {
     let data = await Tables.findAll({ where: { id: { [Op.in]: idArr } }, raw: true })
     _io.of("/admin").emit("status table", data);
     if (+update.status_table === 0) {
-        _io.of("/client").emit("complete-payment", { data: idArr[0] });
+        !check && _io.of("/client").emit("complete-payment", { data: idArr[0] });
     }
 
 }

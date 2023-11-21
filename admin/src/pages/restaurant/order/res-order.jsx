@@ -32,7 +32,7 @@ const RenderFooter = ({
     </div>
     <div className='total mt-2'>
       <span className={`font-medium text-lg ${customize ? "text-white" : "text-black"}`}>Tổng tiền:</span>
-      <span className='float-right text-lg text-main'>{formatGia(tablelist?.tablebyorders[0]?.order?.total || 0)}</span>
+      <span className='float-right text-lg text-main'>{formatGia(tablelist?.tablebyorders[0]?.order?.total * 1.1 || 0)}</span>
     </div>
     <div className='grid grid-cols-4 mt-12'>
       <div className='flex justify-center font-semibold col-span-2 m-1'>
