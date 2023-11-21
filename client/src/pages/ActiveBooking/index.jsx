@@ -65,7 +65,6 @@ const ActiveBooking = () => {
     );
     openNotificationWithIcon(success ? "success" : "info", message);
     if (token) {
-      console.log(order);
       localStorage.setItem("tableToken", token);
       dispatch(getCustomerName(data));
       dispatch(addIdOrder(order.id));
