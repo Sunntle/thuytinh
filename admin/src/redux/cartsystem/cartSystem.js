@@ -12,7 +12,6 @@ const cartSystem = createSlice({
             const find = state.carts.findIndex(item => item.id === action.payload.id);
 
             if (find >= 0) {
-
                 if (action.payload.amount === 0 || action.payload.amount === state.carts[find].quantity) {
                     state.err = "Sản phẩm hết hàng !";
                 } else {
@@ -27,7 +26,6 @@ const cartSystem = createSlice({
                     state.carts.push(newProduct);
                 }
             }
-
             return state;
         },
         setErr: (state, action) => {
@@ -65,7 +63,7 @@ const cartSystem = createSlice({
             );
             if (state.carts[itemIndex].quantity >= 1) {
                 if (state.carts[itemIndex].inDb && state.carts[itemIndex].inDb === state.carts[itemIndex].quantity) {
-                    state.carts[itemIndex].quantiy = state.carts[itemIndex].inDb;
+                    state.carts[itemIndex].quantity = state.carts[itemIndex].inDb;
                     state.err = "Không thể xóa sản phẩm trong đơn hàng cũ !";
                 } else if (state.carts[itemIndex].quantity === 1) {
                     state.carts[itemIndex].quantity = 1

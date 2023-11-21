@@ -116,19 +116,24 @@ exports.getId = asyncHandler(async (req, res, next) => {
     }
   } else {
     if (token) {
-      await jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
-        if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
-        const checkTokenOld = isTimestampValid(decode.timestamp);
-        if (checkTokenOld && !check) {
-          const data = await findTables([id]);
-          return res.status(200).json({ success: true, data });
-        } else {
-          return res.status(404).json({
-            success: false, data: "Bàn đã được đặt trước",
-            prevTime: moment(check).subtract(30, "minutes"), nextTime: moment(check).add(30, "minutes")
-          });
-        }
-      })
+      if (!(result.token == token)) {
+        await jwt.verify(token, process.env.JWT_INFO_TABLE, async (err, decode) => {
+          if (err) return res.status(404).json("Bàn bạn đã hết hạn sử dụng");
+          const checkTokenOld = isTimestampValid(decode.timestamp);
+          if (check && !checkTokenOld) {
+            return res.status(404).json({
+              success: false, data: "Bàn đã được đặt trước",
+              prevTime: moment(check).subtract(30, "minutes"), nextTime: moment(check).add(30, "minutes")
+            });
+          } else {
+            const data = await findTables([id]);
+            return res.status(200).json({ success: true, data });
+          }
+        })
+      } else {
+        const data = await findTables([id]);
+        return res.status(200).json({ success: true, data });
+      }
     } else {
       res.status(200).json({ success: true, data: [result] });
     }
@@ -232,7 +237,8 @@ exports.switchTables = asyncHandler(async (req, res) => {
   await TableByOrder.update({ tableId: newTable }, { where: { tableId: currentTable, orderId: idOrder } });
   let getCurrent = await Tables.findOne({ where: { id: currentTable }, raw: true });
   await Tables.prototype.updateStatusTable({ token: getCurrent.token, status_table: 1 }, [newTable]);
-  await Tables.prototype.updateStatusTable({ token: null, status_table: 0 }, [currentTable]);
+  await Tables.prototype.updateStatusTable({ token: null, status_table: 0 }, [currentTable], true);
+  _io.of("/client").emit("switch-tables", { newTable, currentTable });
   res.status(200).json({ success: true, data: "Chuyển thành bàn thành công" });
 });
 

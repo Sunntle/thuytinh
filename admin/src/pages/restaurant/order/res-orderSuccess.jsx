@@ -137,7 +137,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center w-full space-x-5 py-1 px-3">
               <span className="whitespace-nowrap">Tổng cộng:</span>
               <span className="block font-semibold">
-                {formatGia(order?.data?.total || 0)}
+                {formatGia(order?.data?.total * 1.1 || 0)}
               </span>
             </div>
           </div>

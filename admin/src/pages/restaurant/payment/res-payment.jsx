@@ -1,4 +1,4 @@
-import{ useEffect } from 'react'
+import { useEffect } from 'react'
 // import "./res-payment.css"
 import { Button, Divider, message } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
@@ -40,10 +40,10 @@ const ResPayment = () => {
             res = await addOrder(body);
             dispatch(RemoveAllCart(false));
             dispatch(RemoveTableList());
-            res.success  && navigate("/employee/choosetable") 
+            res.success && navigate("/employee/choosetable")
             message.open({
-                type:res.success ? "success" : "info",
-                content: res.success ? "Đặt món thành công thành công!" : res.data ,
+                type: res.success ? "success" : "info",
+                content: res.success ? "Đặt món thành công thành công!" : res.data,
             });
         } catch (err) {
             console.log(err);
@@ -62,13 +62,21 @@ const ResPayment = () => {
                 total: total.cartTotalAmount
             };
             res = await updateOrder(body);
-            dispatch(RemoveAllCart(true));
-            dispatch(RemoveTableList());
-            message.open({
-                type: "success",
-                content: "Cập nhật món mới thành công thành công!",
-            });
-            navigate('/employee/choosetable/');
+            if (res.success === false) {
+                message.open({
+                    type: "info",
+                    content: res.message
+                });
+            } else {
+                dispatch(RemoveAllCart(true));
+                dispatch(RemoveTableList());
+                message.open({
+                    type: "success",
+                    content: "Cập nhật món mới thành công thành công!",
+                });
+                navigate('/employee/choosetable/');
+            }
+
         } catch (err) {
             console.log(err);
         }
@@ -104,9 +112,9 @@ const ResPayment = () => {
                                     <span className='text-main text-sm mb-3'>{(formatGia(item.price))}</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
-                                <div className='product-remove pe-2'>
-                                    <span className='text-orange-500 cursor-pointer' onClick={() => dispatch(RemoveCart(item))}><DeleteOutlined /></span>
-                                </div>
+                                    <div className='product-remove pe-2'>
+                                        <span className='text-orange-500 cursor-pointer' onClick={() => dispatch(RemoveCart(item))}><DeleteOutlined /></span>
+                                    </div>
                                     <div className="flex justify-between items-center">
                                         <span className='rounded-full bg-orange-500 p-1 cursor-pointer' onClick={() => dispatch(DecreaseCart(item))}><HiMinus className="text-white w-3 h-4 sm:w-4 sm:h-4 " /></span>
                                         <span className="font-medium text-lg mx-3 ">{item.quantity}</span>

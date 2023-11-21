@@ -30,7 +30,7 @@ const orderSlice = createSlice({
     },
     addOrderDetailUpdate: (state, action) => {
       state.order = action.payload;
-      state.previousQuantity = action.payload.reduce((acc,cur) => acc + cur.quantity,0)
+      state.previousQuantity = action.payload.reduce((acc, cur) => acc + cur.quantity, 0)
     },
     addIdOrder: (state, action) => {
       state.idOrder = action.payload;
@@ -57,7 +57,7 @@ const orderSlice = createSlice({
       const existingItem = state.order.find((item) => item.id === food.id);
       if (existingItem.quantity > 1) {
         if (existingItem.inDb && existingItem.inDb === existingItem.quantity) {
-          existingItem.quantiy = existingItem.inDb;
+          existingItem.quantity = existingItem.inDb;
         } else {
           existingItem.quantity -= 1;
         }
@@ -80,7 +80,7 @@ const orderSlice = createSlice({
 
 export const {
   emptyOrder,
-    checkIsActiveBooking,
+  checkIsActiveBooking,
   addIdOrderTable,
   addOrderDetailUpdate,
   addIdOrder,

@@ -20,7 +20,16 @@ const App = () => {
           dispatch(resetOrderStore())
           dispatch(resetTablesStore())
         }
-        window.location.href =  import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL;
+        window.location.href = import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL;
+      })
+    }
+  }, [customerName.tables]);
+  useEffect(() => {
+    if (customerName.tables.length > 0) {
+      socket.on("switch-tables", ({ currentTable }) => {
+        if (customerName.tables[0] == currentTable) {
+          window.location.reload();
+        }
       })
     }
   }, [customerName.tables]);
