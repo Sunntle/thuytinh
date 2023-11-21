@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import { AiFillWarning } from "react-icons/ai";
 import { HiXMark } from "react-icons/hi2";
 // Components
-import { Button, Drawer, message, Popconfirm } from "antd";
+import { Drawer, message, Popconfirm } from "antd";
 // Hooks
 import useHttp from "../../../../hooks/useHttp.js";
 // Utils
@@ -33,6 +33,8 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     order: orders,
     idOrder,
     isOrdered,
+    previousQuantity,
+    isActiveBooking,
   } = useSelector((state) => state.order);
   const customerName = useSelector((state) => state.customerName);
   const [messageApi, contextHolder] = message.useMessage();
@@ -42,6 +44,11 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
   // Calculate Total Bill
   const totalOrder = useMemo(
     () => orders?.reduce((acc, cur) => acc + cur.quantity * cur.price, 0),
+    [orders],
+  );
+
+  const currentQuantity = useMemo(
+    () => orders?.reduce((acc, cur) => acc + cur.quantity, 0),
     [orders],
   );
 
@@ -182,17 +189,17 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                   </span>
                   <span className="cursor-pointer group">
                     <Popconfirm
+                      disabled={item.inDb && true}
                       title={"Bạn có muốn xóa món ăn này"}
                       okText={"Có"}
                       okType={"danger"}
                       cancelText={"Không"}
                       onConfirm={() => handleDeleteConfirm(item.id, dispatch)}
-                      onCancel={() => console.log("Cancel")}
                       icon={
                         <AiFillWarning className="w-5 h-5 text-red-600 disabled:text-red-300" />
                       }
                     >
-                      <button disabled={item.inDb && true}>
+                      <button>
                         <HiXMark className="w-5 h-5 text-red-600" />
                       </button>
                     </Popconfirm>
@@ -224,9 +231,9 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           <button
             onClick={handleUpdateOrder}
             className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${
-              orders?.length === 0 ||
-              orders.some((i) => i.inDb && false) ||
-              !orders.every((i) => i.inDb)
+              idOrder === 0 ||
+              (isActiveBooking && !orders.some((i) => i.inDb)) ||
+              currentQuantity === previousQuantity
                 ? "hidden"
                 : ""
             }`}

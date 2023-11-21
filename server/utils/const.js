@@ -146,6 +146,7 @@ const checkBooking = async ({ time, tableId, dining_option, params, limit, isAct
     }else{
         query= {include:[{model: Order, where: {status: 0}}]}
     }
+   
     query.where = {
     
         dining_option: dining_option,

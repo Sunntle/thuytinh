@@ -369,8 +369,6 @@ exports.activeBooking = asyncHandler(async (req, res) => {
     const token = generateTable(JSON.stringify(data));
     await Tables.prototype.updateStatusTable({ token: token, status_table: 1 }, [tableId]);
     const order = await Order.findOne({ where: { id: orderId }, ...bien });
-    // block = { id: null, check: false };
-    // clearTimeout(timeoutId);
     return res.status(200).json({ success: true, message: "Kích hoạt thành công", token, data, order });
   }
   res.status(200).json({ success: false, message: "Bàn đã trước đó được hoạt động" });

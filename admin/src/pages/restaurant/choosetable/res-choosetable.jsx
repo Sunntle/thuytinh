@@ -17,7 +17,8 @@ const ButtonTable = ({ table, handleTableClick, handleDetailModal, resetTable })
         : 'bg-[#D1D5DB] text-white'
         } transition-colors hover:bg-secondaryColor hover:bg-opacity-40 hover:border-yellow-400 hover:border-[3px] hover:border-solid`}
     >
-      {table.status_table === 1 && table.tablebyorders.length === 0 && (
+
+      {table.status_table === 1 && (table.tablebyorders.length === 0 || table.tablebyorders?.[0]?.order?.order_details?.length === 0) && (
         <div className='w-full flex justify-end cursor-pointer'>
           <Dropdown
             menu={{
@@ -94,7 +95,6 @@ const ResChooseTable = () => {
 
   const handleTableClick = async (index) => {
     const resTableId = await getTableId(index.id, { id_employee: userId });
-    console.log(resTableId)
     if (resTableId.success === false) {
       api.info({
         message: 'Thông báo',
@@ -109,7 +109,6 @@ const ResChooseTable = () => {
 
   const handleDetailModal = async (table) => {
     const resTableId = await getTableId(table.id, { id_employee: userId });
-    console.log(resTableId)
     const tableByOrders = resTableId[0].tablebyorders;
     if (tableByOrders && tableByOrders.length === 0 || tableByOrders == undefined) {
       api.info({

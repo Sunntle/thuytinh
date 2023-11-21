@@ -250,7 +250,6 @@ const OrderPage = () => {
       dataIndex: "status",
       filters: statusOrder.map(item => ({ ...item, text: item.label, value: item.label })),
       onFilter: (value, record) => {
-        console.log(value, record)
         return record.status == value
       },
       width: 150,

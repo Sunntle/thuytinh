@@ -2,7 +2,7 @@ import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
-import {ScrollToTop, truncateString} from "../../utils/format.js";
+import { ScrollToTop, truncateString } from "../../utils/format.js";
 import Reason from "../../components/Reason/Reason.jsx";
 import { Rate } from "antd";
 
@@ -12,12 +12,12 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useNavigate } from "react-router-dom";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
 const AboutUs = () => {
   const [slideProduct, setSlideRating] = useState(null);
   const { sendRequest } = useHttp();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     const request = {
       method: "get",
@@ -35,13 +35,13 @@ const AboutUs = () => {
 
       <ScrollToTop />
 
-      <section className="relative mt-[-20px] h-96 w-full bg-cover bg-center bg-gray-300 bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287265/NhaHangThuyTinh/uwrwxltugznhpakhhyry.webp')]">
+      <section className="relative mt-[-36px] h-96 w-full bg-cover bg-center bg-gray-300 bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287265/NhaHangThuyTinh/uwrwxltugznhpakhhyry.webp')]">
         <div className="flex flex-col items-center justify-center absolute inset-0 bg-black bg-opacity-40">
-          <div className="text-center text-gray-200 w-2/3 lg:w-1/3">
-            <h1 className=" text-4xl md:text-5xl font-semibold text-gray-200">
+          <div className="text-center text-gray-200 w-2/3 lg:w-1/2">
+            <h1 className="text-3xl md:text-5xl font-semibold text-gray-200">
               Về Chúng Tôi
             </h1>
-            <p className="mt-4 text-base opacity-80 ">
+            <p className="mt-4 text-base opacity-80 lg:line-clamp-10 line-clamp-4">
               Nhà hàng hải sản Thủy Tinh là điểm đến tuyệt vời cho những người
               yêu thưởng thức ẩm thực biển ngon tuyệt. Với đội ngũ đầu bếp tài
               năng và không gian thoáng đãng, nhà hàng mang đến trải nghiệm ẩm
@@ -61,16 +61,16 @@ const AboutUs = () => {
         </div>
       </section>
       <section className="bg-[#f8f2e5e5] flex flex-col justify-center items-center">
-        <div className="my-12 px-16">
-          <h2 className="text-5xl text-center text-primary w-full font-semibold mb-4">
+        <div className="my-6 px-6 md:my-12 md:px-16">
+          <h2 className="md:text-5xl text-3xl text-center text-primary w-full font-semibold lg:mb-4 mb-2">
             Chuyên các món hải sản
           </h2>
-          <div className="mt-10 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0 text-center lg:text-left">
+          <div className="md:mt-10 mt-5 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0 text-center lg:text-left">
             <div className="flex-1">
-              <h2 className="text-4xl font-semibold mb-2 text-primary">
+              <h2 className="md:text-4xl text-2xl font-semibold mb-2 text-primary">
                 Tôm hùm Khánh Hoà
               </h2>
-              <p className="text-gray-700 lg:w-2/3 w-full opacity-60 pt-2 leading-7">
+              <p className="text-gray-700 lg:w-2/3 w-full opacity-60 pt-2 leading-7 lg:line-clamp-10 line-clamp-4">
                 Khi nhắc đến địa điểm nuôi trồng thủy hải sản nói chung và tôm
                 hùm nói riêng thì sẽ thật là thiếu sót khi mà chúng ta không
                 nhắc tới Khánh Hòa. Đây là một tỉnh có sản lượng tôm hùm và lồng
@@ -95,11 +95,11 @@ const AboutUs = () => {
             </div>
           </div>
         </div>
-        <div className="my-12 px-16">
-          <h2 className="text-5xl text-center text-primary w-full font-semibold mb-4">
-            Chuyên các món hải sản
+        <div className="my-6 px-6 md:my-12 md:px-16">
+          <h2 className="md:text-5xl text-3xl text-center text-primary w-full font-semibold lg:mb-4 mb-2">
+            Đầu bếp chuyên nghiệp
           </h2>
-          <div className="mt-10 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0">
+          <div className="md:mt-10 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0">
             <div className="flex-1 hidden lg:flex p-6 border-2 border-[#F0A500E5] justify-center items-center mr-0 lg:mr-20">
               <img
                 src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287388/NhaHangThuyTinh/nnmewv644b1utmu2l3et.webp"
@@ -108,16 +108,12 @@ const AboutUs = () => {
               />
             </div>
             <div className="flex-1 text-center lg:text-right">
-              <h2 className="text-4xl font-semibold mb-2 text-primary">
-                Tôm hùm Khánh Hoà
-              </h2>
-              <p className="text-gray-700 w-full opacity-60 pt-2 leading-7">
-                Khi nhắc đến địa điểm nuôi trồng thủy hải sản nói chung và tôm
-                hùm nói riêng thì sẽ thật là thiếu sót khi mà chúng ta không
-                nhắc tới Khánh Hòa. Đây là một tỉnh có sản lượng tôm hùm và lồng
-                nuôi tôm dẫn đầu cả nước với khoảng 880 tấn tôm mỗi vụ và 28.500
-                lồng nuôi.Lorem Ipsum chỉ đơn giản là một đoạn văn bản giả, được
-                dùng vào việc trình bày và dàn trang
+              <h2 className="md:text-4xl text-2xl font-semibold mb-2 text-primary">Đội ngũ đầu bếp</h2>
+              <p className="text-gray-700 w-full opacity-60 pt-2 leading-7 lg:line-clamp-10 line-clamp-4">
+                Từ bề dày kinh nghiệm và sự nhạy cảm trong nghề, các đầu bếp tài
+                năng của Thuỷ Tinh đã thổi hồn vào từng món ăn, cuốn hút và
+                quyến rũ khách hàng bằng nghệ thuật trình bày sang trọng nhưng
+                cũng rất đỗi gần gũi thân quen và hương vị khó cưỡng nhất.
               </p>
               <button
                 onClick={() => navigate("/select-table")}
@@ -131,7 +127,7 @@ const AboutUs = () => {
         </div>
       </section>
       <section className="lg:px-16 px-6 my-12 w-full h-full">
-        <h2 className="text-4xl text-center text-primary w-full font-semibold mb-14">
+        <h2 className="md:text-4xl text-3xl text-center text-primary w-full font-semibold mb-14">
           Đánh giá của khách hàng
         </h2>
         <Swiper

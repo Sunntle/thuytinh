@@ -15,12 +15,12 @@ const App = () => {
 
   useEffect(() => {
     if (customerName.tables.length > 0) {
-      socket.on("complete-payment", ({ data, message }) => {
+      socket.on("complete-payment", ({ data }) => {
         if (customerName.tables[0] == data) {
           dispatch(resetOrderStore())
           dispatch(resetTablesStore())
-          window.location.href =  import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL;
         }
+        window.location.href =  import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL;
       })
     }
   }, [customerName.tables]);
@@ -33,8 +33,9 @@ const App = () => {
             itemMarginBottom: 0,
             algorithm: true
           },
-          Button:{
-            dangerColor: "#000000",
+          Button: {
+            colorWhite: "#323232",
+            colorPrimaryHover: "#ffffff",
             algorithm: true
           }
         },

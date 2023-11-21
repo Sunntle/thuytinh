@@ -35,7 +35,7 @@ const AboutUs = () => {
   return (
     <div className="min-h-[700px] my-12 px-6 lg:px-16 lg:pt-12 bg-white flex justify-center items-center">
         <div>
-          <h2 className="text-4xl font-bold text-primary pb-4">
+          <h2 className="md:text-4xl text-3xl font-bold text-primary pb-4">
             Tại sao bạn chọn chúng tôi
           </h2>
           <p className="text-gray-500 text-sm lg:w-1/2 w-full">

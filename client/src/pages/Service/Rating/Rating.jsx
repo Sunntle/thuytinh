@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { Form, Rate, Modal, Input } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../../hooks/useHttp.js";
@@ -29,7 +29,6 @@ const Rating = ({ ratingModal, setRatingModal }) => {
       });
       setIsModalOpen(true);
       form.resetFields();
-      console.log("Gửi đánh giá thành công");
     } catch (error) {
       console.error("Lỗi khi gửi dữ liệu lên server", error);
     }

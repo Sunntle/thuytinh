@@ -3,8 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   order: [],
   idOrder: 0,
-  idTable: 0,
-  isOrdered: false
+  isOrdered: false,
+  previousQuantity: 0,
+  isActiveBooking: false
 };
 const orderSlice = createSlice({
   name: "order",
@@ -29,13 +30,13 @@ const orderSlice = createSlice({
     },
     addOrderDetailUpdate: (state, action) => {
       state.order = action.payload;
+      state.previousQuantity = action.payload.reduce((acc,cur) => acc + cur.quantity,0)
     },
     addIdOrder: (state, action) => {
       state.idOrder = action.payload;
     },
     addIdOrderTable: (state, action) => {
       const { idTable, idOrder } = action.payload;
-      console.log(idTable, idOrder);
       state.idOrder = idOrder;
       state.idTable = idTable;
     },
@@ -70,12 +71,16 @@ const orderSlice = createSlice({
     },
     checkIsOrdered: (state, action) => {
       state.isOrdered = action.payload
-    }
+    },
+    checkIsActiveBooking: (state, action) => {
+      state.isActiveBooking = action.payload
+    },
   },
 });
 
 export const {
   emptyOrder,
+    checkIsActiveBooking,
   addIdOrderTable,
   addOrderDetailUpdate,
   addIdOrder,

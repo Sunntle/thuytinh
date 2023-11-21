@@ -59,7 +59,6 @@ const RecipePage = () => {
         value: item.id,
         label: item.name_product,
       }));
-    console.log(data)
     setData(data);
     setOptionsMaterial(con);
     setOptionsProduct(conProduct);

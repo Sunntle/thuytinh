@@ -10,8 +10,13 @@ import { Spinner } from "../../components/index.js";
 import PageNotFound from "../PageNotFound/PageNotFound.jsx";
 import { Helmet } from "react-helmet";
 import Image from "../../components/Image/Image.jsx";
+import { useDispatch } from "react-redux";
+import {
+  checkIsActiveBooking,
+  checkIsOrdered,
+} from "../../redux/Order/orderSlice.js";
 
-const columns =  [
+const columns = [
   {
     title: "Tên món ăn",
     dataIndex: "product.name_product",
@@ -36,18 +41,16 @@ const columns =  [
     dataIndex: "total",
     key: "total",
     render: (_, record) => (
-      <span>
-        {formatCurrency(record?.product?.price * record?.quantity)}
-      </span>
+      <span>{formatCurrency(record?.product?.price * record?.quantity)}</span>
     ),
   },
-]
+];
 
 const PaymentSuccess = () => {
-  // const { idOrder, idTable } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
   const [orderData, setOrderData] = useState(null);
   const { sendRequest } = useHttp();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
   const idOrder = useMemo(
@@ -55,8 +58,12 @@ const PaymentSuccess = () => {
     [location?.state?.idOrder],
   );
   const fetchData = useCallback(async () => {
-    const response = await sendRequest(fetchOrderById(idOrder), undefined, true);
-    setOrderData(response)
+    const response = await sendRequest(
+      fetchOrderById(idOrder),
+      undefined,
+      true,
+    );
+    setOrderData(response);
     if (response !== null) {
       if (
         response?.data?.transaction_id !== null &&
@@ -84,18 +91,19 @@ const PaymentSuccess = () => {
             await sendRequest(updateStatusPayment, undefined, true);
           };
           handlePostPayment();
+          dispatch(checkIsOrdered(false));
+          dispatch(checkIsActiveBooking(false));
         } catch (err) {
           console.log(err);
         }
       }
     }
-    setLoading(false)
-  }, [idOrder, sendRequest]);
+    setLoading(false);
+  }, [dispatch, idOrder, sendRequest]);
 
   useEffect(() => {
     if (idOrder) fetchData();
   }, [fetchData, idOrder]);
-
 
   if (!idOrder) return <PageNotFound />;
   if (loading) return <Spinner />;
@@ -111,7 +119,7 @@ const PaymentSuccess = () => {
         {/* Logo */}
         <div className="flex justify-start p-4">
           <div className="flex justify-between items-center">
-            <div className="w-12 h-12 lg:w-16 lg:h-16">
+            <div className="w-16 h-16 lg:w-16 lg:h-16 mr-2">
               <Image
                 src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287744/NhaHangThuyTinh/tziu6xi6mg75j8sgd0xh.webp"
                 alt="logo"
@@ -155,7 +163,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Số bàn:</span>
               <span className="whitespace-nowrap font-semibold text-primary">
-                {orderData?.data?.tablebyorders[0].id}
+                {orderData?.data?.tablebyorders[0].tableId}
               </span>
             </div>
           </div>
@@ -164,7 +172,7 @@ const PaymentSuccess = () => {
             <div className="flex justify-between items-center space-x-1 w-full">
               <span className="whitespace-nowrap">Hóa đơn số:</span>
               <span className="block font-semibold text-primary">
-                {orderData?.data?.transaction_id}
+                {orderData?.data?.tablebyorders[0].orderId}
               </span>
             </div>
             <div className="flex justify-between items-center space-x-1 w-full">
