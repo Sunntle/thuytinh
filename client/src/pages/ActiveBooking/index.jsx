@@ -8,14 +8,17 @@ import { getCustomerName } from "../../redux/CustomerName/customerNameSlice.js";
 import { Helmet } from "react-helmet";
 import { ScrollToTop } from "../../utils/format.js";
 import { addIdOrder, checkIsOrdered } from "../../redux/Order/orderSlice.js";
+import { HiXMark } from "react-icons/hi2";
+import { Spinner } from "../../components/index.js";
 
 const ActiveBooking = () => {
-  const { sendRequest } = useHttp();
+  const { sendRequest, isLoading } = useHttp();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [tableActive, setTableActive] = useState(null);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+
   const openNotificationWithIcon = (type, res) => {
     api[type]({
       message: "Thông báo",
@@ -27,11 +30,20 @@ const ActiveBooking = () => {
       method: "get",
       url: `/table/booking?phone=${values.phone}&name=${values.name}&email=${values.email}&tableId=${values.table_id}`,
     };
-    const data = await sendRequest(request, undefined, true);
-    if (data === undefined) {
-      alert("Không có dữ liệu");
-    } else {
-      setTableActive(data[0]);
+    try {
+      const data = await sendRequest(request, undefined, true);
+
+      if (data.length === 0) {
+        api.open({
+          message: <span className="text-red-500">Không có dữ liệu</span>,
+          description: <span>Vui lòng kiểm tra lại thông tin</span>,
+          icon: <HiXMark size={30} className="text-red-500" />,
+        });
+      } else {
+        setTableActive(data[0]);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -61,6 +73,8 @@ const ActiveBooking = () => {
       navigate(`/tables-${data.tables[0]}`);
     }
   };
+
+  if (isLoading) return <Spinner />;
 
   return (
     <div className="py-24 text-slate-500 tracking-wide max-w-full w-screen min-h-screen bg-[url('https://images.unsplash.com/photo-1699148689335-16a572d22c22?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-no-repeat bg-cover bg-center">

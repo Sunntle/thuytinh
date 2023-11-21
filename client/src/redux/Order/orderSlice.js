@@ -4,7 +4,8 @@ const initialState = {
   order: [],
   idOrder: 0,
   isOrdered: false,
-  previousQuantity: 0
+  previousQuantity: 0,
+  isActiveBooking: false
 };
 const orderSlice = createSlice({
   name: "order",
@@ -70,12 +71,16 @@ const orderSlice = createSlice({
     },
     checkIsOrdered: (state, action) => {
       state.isOrdered = action.payload
-    }
+    },
+    checkIsActiveBooking: (state, action) => {
+      state.isActiveBooking = action.payload
+    },
   },
 });
 
 export const {
   emptyOrder,
+    checkIsActiveBooking,
   addIdOrderTable,
   addOrderDetailUpdate,
   addIdOrder,

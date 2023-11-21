@@ -11,9 +11,12 @@ import PageNotFound from "../PageNotFound/PageNotFound.jsx";
 import { Helmet } from "react-helmet";
 import Image from "../../components/Image/Image.jsx";
 import { useDispatch } from "react-redux";
-import { checkIsOrdered } from "../../redux/Order/orderSlice.js";
+import {
+  checkIsActiveBooking,
+  checkIsOrdered,
+} from "../../redux/Order/orderSlice.js";
 
-const columns =  [
+const columns = [
   {
     title: "Tên món ăn",
     dataIndex: "product.name_product",
@@ -38,18 +41,16 @@ const columns =  [
     dataIndex: "total",
     key: "total",
     render: (_, record) => (
-      <span>
-        {formatCurrency(record?.product?.price * record?.quantity)}
-      </span>
+      <span>{formatCurrency(record?.product?.price * record?.quantity)}</span>
     ),
   },
-]
+];
 
 const PaymentSuccess = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [orderData, setOrderData] = useState(null);
   const { sendRequest } = useHttp();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
   const idOrder = useMemo(
@@ -57,8 +58,12 @@ const PaymentSuccess = () => {
     [location?.state?.idOrder],
   );
   const fetchData = useCallback(async () => {
-    const response = await sendRequest(fetchOrderById(idOrder), undefined, true);
-    setOrderData(response)
+    const response = await sendRequest(
+      fetchOrderById(idOrder),
+      undefined,
+      true,
+    );
+    setOrderData(response);
     if (response !== null) {
       if (
         response?.data?.transaction_id !== null &&
@@ -86,19 +91,19 @@ const PaymentSuccess = () => {
             await sendRequest(updateStatusPayment, undefined, true);
           };
           handlePostPayment();
-          dispatch(checkIsOrdered(false))
+          dispatch(checkIsOrdered(false));
+          dispatch(checkIsActiveBooking(false));
         } catch (err) {
           console.log(err);
         }
       }
     }
-    setLoading(false)
+    setLoading(false);
   }, [dispatch, idOrder, sendRequest]);
 
   useEffect(() => {
     if (idOrder) fetchData();
   }, [fetchData, idOrder]);
-
 
   if (!idOrder) return <PageNotFound />;
   if (loading) return <Spinner />;
