@@ -38,7 +38,7 @@ const AboutUs = () => {
       <section className="relative mt-[-36px] h-96 w-full bg-cover bg-center bg-gray-300 bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287265/NhaHangThuyTinh/uwrwxltugznhpakhhyry.webp')]">
         <div className="flex flex-col items-center justify-center absolute inset-0 bg-black bg-opacity-40">
           <div className="text-center text-gray-200 w-2/3 lg:w-1/2">
-            <h1 className=" text-4xl md:text-5xl font-semibold text-gray-200">
+            <h1 className="text-3xl md:text-5xl font-semibold text-gray-200">
               Về Chúng Tôi
             </h1>
             <p className="mt-4 text-base opacity-80 lg:line-clamp-10 line-clamp-4">
@@ -61,13 +61,13 @@ const AboutUs = () => {
         </div>
       </section>
       <section className="bg-[#f8f2e5e5] flex flex-col justify-center items-center">
-        <div className="my-12 px-16">
-          <h2 className="text-5xl text-center text-primary w-full font-semibold lg:mb-4 mb-2">
+        <div className="my-6 px-6 md:my-12 md:px-16">
+          <h2 className="md:text-5xl text-3xl text-center text-primary w-full font-semibold lg:mb-4 mb-2">
             Chuyên các món hải sản
           </h2>
-          <div className="mt-10 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0 text-center lg:text-left">
+          <div className="md:mt-10 mt-5 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0 text-center lg:text-left">
             <div className="flex-1">
-              <h2 className="text-4xl font-semibold mb-2 text-primary">
+              <h2 className="md:text-4xl text-2xl font-semibold mb-2 text-primary">
                 Tôm hùm Khánh Hoà
               </h2>
               <p className="text-gray-700 lg:w-2/3 w-full opacity-60 pt-2 leading-7 lg:line-clamp-10 line-clamp-4">
@@ -95,11 +95,11 @@ const AboutUs = () => {
             </div>
           </div>
         </div>
-        <div className="my-12 px-16">
-          <h2 className="text-5xl text-center text-primary w-full font-semibold lg:mb-4 mb-2">
+        <div className="my-6 px-6 md:my-12 md:px-16">
+          <h2 className="md:text-5xl text-3xl text-center text-primary w-full font-semibold lg:mb-4 mb-2">
             Đầu bếp chuyên nghiệp
           </h2>
-          <div className="mt-10 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0">
+          <div className="md:mt-10 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0">
             <div className="flex-1 hidden lg:flex p-6 border-2 border-[#F0A500E5] justify-center items-center mr-0 lg:mr-20">
               <img
                 src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287388/NhaHangThuyTinh/nnmewv644b1utmu2l3et.webp"
@@ -108,7 +108,7 @@ const AboutUs = () => {
               />
             </div>
             <div className="flex-1 text-center lg:text-right">
-              <h2 className="text-4xl font-semibold mb-2 text-primary">Đội ngũ đầu bếp</h2>
+              <h2 className="md:text-4xl text-2xl font-semibold mb-2 text-primary">Đội ngũ đầu bếp</h2>
               <p className="text-gray-700 w-full opacity-60 pt-2 leading-7 lg:line-clamp-10 line-clamp-4">
                 Từ bề dày kinh nghiệm và sự nhạy cảm trong nghề, các đầu bếp tài
                 năng của Thuỷ Tinh đã thổi hồn vào từng món ăn, cuốn hút và
@@ -127,7 +127,7 @@ const AboutUs = () => {
         </div>
       </section>
       <section className="lg:px-16 px-6 my-12 w-full h-full">
-        <h2 className="text-4xl text-center text-primary w-full font-semibold mb-14">
+        <h2 className="md:text-4xl text-3xl text-center text-primary w-full font-semibold mb-14">
           Đánh giá của khách hàng
         </h2>
         <Swiper

@@ -40,7 +40,7 @@ Tables.prototype.updateStatusTable = async (update, idArr) => {
     let data = await Tables.findAll({ where: { id: { [Op.in]: idArr } }, raw: true })
     _io.of("/admin").emit("status table", data);
     if (+update.status_table === 0) {
-        _io.of("/client").emit("status table", { data: idArr[0] });
+        _io.of("/client").emit("complete-payment", { data: idArr[0] });
     }
 
 }

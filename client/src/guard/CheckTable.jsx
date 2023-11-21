@@ -19,6 +19,8 @@ function CheckTable(props) {
         if (idTable) {
           const query = tokenTable ? `/table/${idTable}?token=${tokenTable}` : `/table/${idTable}`
           const response = await axios.get(query);
+          console.log(query);
+          console.log(response);
           if (response.success == false) {
             if (response.message) {
               setTableExist("Không tồn tại bàn này!")
@@ -49,6 +51,7 @@ function CheckTable(props) {
     checkTableExist()
   }, [idTable, tokenTable])
   if (loading) return <Spinner />
+  console.log(isTableExist);
   if (isTableExist == "Kích hoạt bàn") return <Navigate to="/active-booking" replace />
   // eslint-disable-next-line react/prop-types
   return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? (props.children) : (<Navigate to={"/select-table"} state={{ isTableExist, ...(idTable ? { prevTable: idTable } : {}) }} replace />)
