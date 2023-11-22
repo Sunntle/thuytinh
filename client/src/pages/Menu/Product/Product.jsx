@@ -78,19 +78,19 @@ const Product = (props) => {
   };
 
   const handleAddToOrder = async (product) => {
-    if(!product) {
+    if (!product) {
       await messageApi.open({
         type: "danger",
         content: "Không tồn tại món ăn này",
       });
-      return 
-    } 
-    if(!(product.amount > 0)){
+      return;
+    }
+    if (!(product.amount > 0)) {
       await messageApi.open({
         type: "info",
         content: "Sản phẩm đã hết hàng",
       });
-      return
+      return;
     }
     dispatch(addToOrder(product));
     await messageApi.open({
@@ -118,10 +118,10 @@ const Product = (props) => {
         <div className="flex h-full flex-col justify-end">
           <span
             className={`text-xs font-medium line-clamp-1 ${
-              amount > 0  ? "text-green-500" : "text-red-500"
+              amount > 0 ? "text-green-500" : "text-red-500"
             }`}
           >
-            {amount > 0  ? "Còn món" : "Hết món"}
+            {amount > 0 ? "Còn món" : "Hết món"}
           </span>
           <span className="text-base lg:text-lg font-medium line-clamp-1">
             {name_product}
@@ -135,13 +135,11 @@ const Product = (props) => {
         </div>
         <button
           className="group"
-          disabled={!(!amount || amount > 0)}
+          disabled={amount <= 0}
           onClick={() => handleAddToOrder(props.item)}
         >
           <AiFillPlusCircle
-            className={`w-6 h-6 md:w-8 md:h-8 text-primary group-disabled:text-primary/20 active:text-primary/80 group-hover:text-primary/80 transition-colors duration-200 ${
-              amount > 0 ? "" : "text-primary/20"
-            }`}
+            className={`w-6 h-6 md:w-8 md:h-8 text-primary group-disabled:text-primary/20 active:text-primary/80 group-hover:text-primary/80 transition-colors duration-200 `}
           />
         </button>
       </div>

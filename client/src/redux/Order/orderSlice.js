@@ -15,7 +15,7 @@ const orderSlice = createSlice({
       const food = action.payload;
       const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem) {
-        if (existingItem.amount) {
+        if (existingItem.amount && Number.isInteger(existingItem.amount)) {
           if (existingItem.quantity < food.amount) {
             existingItem.quantity += 1;
           } else {

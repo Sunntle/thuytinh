@@ -31,7 +31,7 @@ export const fetchProductByLoadMore = (_limit, _offset) => {
 export const fetchProductsByCategory = (categoryId) => {
   return {
     method: "get",
-    url: `/product/category/${categoryId}`,
+    url: `/product?_id_category=eq_${categoryId}`,
   };
 };
 
