@@ -117,7 +117,6 @@ exports.delOrder = asyncHandler(async (req, res) => {
 
 exports.updateOrder = asyncHandler(async (req, res) => {
   const { id_order, carts, id_table, total } = req.body;
-
   const over = [];
   let current = await OrderDetail.findAll({
     where: {
@@ -128,7 +127,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
 
   let check = false;
   for (const cart of carts) {
-    cart.quantity -= cart.inDb;
+    if(cart.inDb) cart.quantity -= cart.inDb;
     const val = await getQtyMaterialByProduct(cart);
     const result = await checkQtyMaterials(val, Materials);
     if (!result) {
