@@ -14,7 +14,7 @@ const center = {
   lng: 106.6259193,
 };
 
-const key = "AIzaSyAy1u4tQoExOEJdUu_XsOMt6wfK5CxvSos";
+const key = "...";
 
 function Map() {
   const { isLoaded } = useJsApiLoader({
