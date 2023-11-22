@@ -13,7 +13,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
-
+const date = new Date().getMonth() + 1
 const AboutUs = () => {
   const [slideProduct, setSlideRating] = useState(null);
   const { sendRequest } = useHttp();
@@ -21,7 +21,7 @@ const AboutUs = () => {
   useEffect(() => {
     const request = {
       method: "get",
-      url: "/review",
+      url: `/review?_time${date}`,
     };
     sendRequest(request, setSlideRating);
   }, [sendRequest]);
