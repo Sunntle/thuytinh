@@ -73,14 +73,10 @@ const ProductDetail = memo(({ openDrawer, onClose, id }) => {
         </div>
         <div
           className={`text-sm mt-3 font-medium ${
-            !productDetail.amount || productDetail.amount > 0
-              ? "text-green-500"
-              : " text-red-500 "
+            productDetail.amount > 0 ? "text-green-500" : " text-red-500 "
           }`}
         >
-          {!productDetail.amount || productDetail.amount > 0
-            ? "Còn món"
-            : "Hết món"}
+          {productDetail.amount > 0 ? "Còn món" : "Hết món"}
         </div>
         <div className="flex justify-between items-center">
           <span className="font-semibold text-lg text-slate-500 line-clamp-2">

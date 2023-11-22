@@ -2,7 +2,7 @@ import { getPreciseDistance } from "geolib";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
-import { Tabs } from "antd";
+import { Tabs, message } from "antd";
 import "./index.css";
 import { useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
@@ -12,17 +12,26 @@ import { ScrollToTop } from "../../utils/format.js";
 function showError(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
+      message.open({type: "error", content: "User denied the request for Geolocation."})
+      console.log("User denied the request for Geolocation.");
       return "User denied the request for Geolocation.";
 
     case error.POSITION_UNAVAILABLE:
+      message.open({type: "error", content: "Location information is unavailable."})
+      console.log("Location information is unavailable.");
       return "Location information is unavailable.";
 
     case error.TIMEOUT:
+      message.open({type: "error", content: "The request to get user location timed out."})
+      console.log("The request to get user location timed out.");
       return "The request to get user location timed out.";
 
     case error.UNKNOWN_ERROR:
+      message.open({type: "error", content: "An unknown error occurred."})
+      console.log("An unknown error occurred.");
       return "An unknown error occurred.";
   }
+  
 }
 
 function SelectTable() {
@@ -69,8 +78,10 @@ function SelectTable() {
             longitude: position.coords.longitude,
           };
           const distance = getPreciseDistance(position1, position2);
-          // if(distance > 1000 ) return navigate("/book-table")
-         
+          if(distance > 1000 ) {
+            console.log(`Bạn đang cách nhà hàng: ${distance}m`);
+            message.open({type: "info", content: `Bạn đang cách nhà hàng: ${distance}m`})
+          }
         }, showError);
       } else {
         console.error("Geolocation is not supported by this browser.");
