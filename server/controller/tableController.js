@@ -109,7 +109,7 @@ exports.getId = asyncHandler(async (req, res, next) => {
       }, raw: true
     });
     if (employee) {
-      let data = await findTables([id]);
+      const data = await findTables([id]);
       res.status(200).json(data);
     } else {
       res.status(404).json("Phải phải nhân viên !");

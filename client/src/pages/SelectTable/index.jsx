@@ -9,6 +9,7 @@ import { Spinner } from "../../components/index.js";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
 import { ScrollToTop } from "../../utils/format.js";
+import Map from "./MapComponent.jsx"
 function showError(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
@@ -67,25 +68,6 @@ function SelectTable() {
 
   useEffect(() => {
     const handleFetchData = async()=>{
-      const position1 = {
-        latitude: 10.8524972,
-        longitude: 106.6259193,
-      };
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          const position2 = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          };
-          const distance = getPreciseDistance(position1, position2);
-          if(distance > 1000 ) {
-            console.log(`Bạn đang cách nhà hàng: ${distance}m`);
-            message.open({type: "info", content: `Bạn đang cách nhà hàng: ${distance}m`})
-          }
-        }, showError);
-      } else {
-        console.error("Geolocation is not supported by this browser.");
-      }
       await sendRequest(
         { method: "get", url: "/table?_status_table=eq_0" },
         setTables,
@@ -117,6 +99,7 @@ function SelectTable() {
         <meta name="select-table" content="Select table" />
       </Helmet>
       <ScrollToTop />
+
       {idTable &&
         isTableExist == "Bàn đã được sử dụng" && 
         +idTable !== customerName.tables?.at(1) && (
@@ -162,6 +145,7 @@ function SelectTable() {
       ) : (
         <p>No data available</p>
       )}
+      {/* <Map /> */}
     </div>
   );
 }
