@@ -9,21 +9,23 @@ const cartSystem = createSlice({
     initialState,
     reducers: {
         AddCart: (state, action) => {
-            const find = state.carts.findIndex(item => item.id === action.payload.id);
-
-            if (find >= 0) {
-                if (action.payload.amount === 0 || action.payload.amount === state.carts[find].quantity) {
-                    state.err = "Sản phẩm hết hàng !";
+            const find = state.carts?.find(item => item.id === action.payload.id);
+            if(action.payload.amount === 0 ){
+                state.err = "Sản phẩm hết hàng !";
+            }else {
+                if (find) {
+                    if(find.amount){
+                        if ( action.payload.amount === find.quantity || action.payload.amount < (find.quantity - find.inDb) ) {
+                            state.err = "Sản phẩm hết hàng !";
+                        } else {
+                            find.quantity += 1;
+                        }
+                    }else{
+                        find.quantity += 1;
+                    }
                 } else {
-                    state.carts[find].quantity += 1;
-                }
-            } else {
-                if (action.payload?.amount === 0) {
-                    state.err = "Sản phẩm hết hàng !";
-                }
-                else {
-                    const newProduct = { ...action.payload, quantity: 1 };
-                    state.carts.push(newProduct);
+                        const newProduct = { ...action.payload, quantity: 1 };
+                        state.carts.push(newProduct);
                 }
             }
             return state;
