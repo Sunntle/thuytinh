@@ -65,7 +65,7 @@ const AboutUs = () => {
           <h2 className="md:text-5xl text-3xl text-center text-primary w-full font-semibold lg:mb-4 mb-2">
             Chuyên các món hải sản
           </h2>
-          <div className="md:mt-10 mt-5 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0 text-center lg:text-left">
+          <div className="lg:mt-10 md:mt-5 mt-3 lg:mb-28 mb-0 w-full flex flex-col md:flex-row lg:space-y-0 text-center lg:text-left">
             <div className="flex-1">
               <h2 className="md:text-4xl text-2xl font-semibold mb-2 text-primary">
                 Tôm hùm Khánh Hoà
@@ -99,7 +99,7 @@ const AboutUs = () => {
           <h2 className="md:text-5xl text-3xl text-center text-primary w-full font-semibold lg:mb-4 mb-2">
             Đầu bếp chuyên nghiệp
           </h2>
-          <div className="md:mt-10 lg:mb-28 mb-0 w-full flex flex-col md:flex-row space-y-6 lg:space-y-0">
+          <div className="lg:mt-10 md:mt-5 mt-3 lg:mb-28 mb-0 w-full flex flex-col md:flex-row lg:space-y-0">
             <div className="flex-1 hidden lg:flex p-6 border-2 border-[#F0A500E5] justify-center items-center mr-0 lg:mr-20">
               <img
                 src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287388/NhaHangThuyTinh/nnmewv644b1utmu2l3et.webp"
@@ -155,7 +155,8 @@ const AboutUs = () => {
           autoplay={true}
         >
           {slideProduct &&
-            slideProduct?.data?.map((rating) => {
+            slideProduct?.data?.filter(el=> el.rate >=3)?.map((rating,index) => {
+              if(index > 5) return null
               if (rating.rate >= 3) {
                 return (
                   <SwiperSlide key={rating.id}>
