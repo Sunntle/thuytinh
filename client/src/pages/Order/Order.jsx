@@ -1,4 +1,4 @@
-import { Button, Collapse, Divider, Form, Modal, Radio, message } from "antd";
+import { Collapse, Divider, Form, Modal, Radio, message } from "antd";
 import { useEffect, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,10 +70,9 @@ const Order = () => {
     };
     const response = await sendRequest(request, undefined, true);
     dispatch(emptyOrder());
-    setIsModalOpen(false)
+    setIsModalOpen(false);
     form.resetFields();
     if (response !== null) {
-
       window.location.href = String(response);
     }
   };
@@ -222,7 +221,10 @@ const Order = () => {
                           </Radio.Group>
                         </Form.Item>
                         <Form.Item className="text-right">
-                          <button type={"submit"} className="text-base font-medium py-2 w-full bg-primary rounded text-white hover:bg-primary/20 border border-transparent hover:border-primary hover:text-primary transition-colors duration-200">
+                          <button
+                            type={"submit"}
+                            className="text-base font-medium py-2 w-full bg-primary rounded text-white hover:bg-primary/20 border border-transparent hover:border-primary hover:text-primary transition-colors duration-200"
+                          >
                             Thanh toán
                           </button>
                         </Form.Item>
@@ -233,13 +235,13 @@ const Order = () => {
                     key: "2",
                     label: "Thanh toán bằng tiền mặt",
                     children: (
-                      <Button
-                        type={"primary"}
-                        className="w-full bg-primary"
+                      <button
                         onClick={handlePayInCash}
+                        type={"submit"}
+                        className="text-base font-medium py-2 w-full bg-primary rounded text-white hover:bg-primary/20 border border-transparent hover:border-primary hover:text-primary transition-colors duration-200"
                       >
                         Thanh toán bằng tiền mặt
-                      </Button>
+                      </button>
                     ),
                   },
                 ]}

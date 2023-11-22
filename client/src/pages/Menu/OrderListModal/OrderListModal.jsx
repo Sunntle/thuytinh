@@ -76,6 +76,7 @@ const OrderListModal = ({
           }),
         );
         dispatch(checkIsOrdered(true));
+        dispatch(checkIsActiveBooking(true))
         dispatch(emptyOrder());
         messageApi.open({
           type: "success",
@@ -127,7 +128,7 @@ const OrderListModal = ({
       } else {
         message.open({
           type: "info",
-          content: response.message
+          content: response.message,
         });
       }
     } catch (err) {
@@ -150,25 +151,26 @@ const OrderListModal = ({
         <button
           key={"2"}
           onClick={handleUpdateOrder}
-          className={`text-sm py-[0.35rem] px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${idOrder === 0 ||
+          className={`text-sm py-[0.35rem] px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${
+            idOrder === 0 ||
             (isActiveBooking && !orders.some((i) => i.inDb)) ||
             currentQuantity === previousQuantity
-            ?
-            "hidden"
-            : ""
-            }`}
+              ? "hidden"
+              : ""
+          }`}
         >
           Cập nhật
         </button>,
 
         <button
           key={"1"}
-          className={`ml-2 text-sm py-[0.35rem] px-4 bg-primary rounded-md text-white border border-transparent hover:border-primary hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${isOrdered ||
+          className={`ml-2 text-sm py-[0.35rem] px-4 bg-primary rounded-md text-white border border-transparent hover:border-primary hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${
+            isOrdered ||
             orders?.length === 0 ||
             orders.some((i) => i.inDb && true)
-            ? "hidden"
-            : ""
-            }`}
+              ? "hidden"
+              : ""
+          }`}
           onClick={submitOrderList}
         >
           Đặt món

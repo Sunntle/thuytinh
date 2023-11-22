@@ -19,7 +19,7 @@ import { addOrder } from "../../../../services/api.js";
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addIdOrderTable,
+  addIdOrderTable, checkIsActiveBooking,
   checkIsOrdered,
   emptyOrder,
 } from "../../../../redux/Order/orderSlice.js";
@@ -70,6 +70,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           }),
         );
         dispatch(checkIsOrdered(true));
+        dispatch(checkIsActiveBooking(true));
         dispatch(emptyOrder());
         messageApi.open({
           type: "success",
