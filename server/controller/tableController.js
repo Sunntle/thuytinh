@@ -306,7 +306,7 @@ const handTimeTable = ({ id }) => {
     }
     const index = checkPending.findIndex(el => el.id == id)
     checkPending.splice(index, 1)
-  }, 1 * 15000);
+  }, 5 * 60000);
 };
 
 exports.pendingTable = asyncHandler(async (req, res) => {

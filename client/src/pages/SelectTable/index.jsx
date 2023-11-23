@@ -39,6 +39,7 @@ function SelectTable() {
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
+  const [position, setPosition] = useState(null)
   const { sendRequest, isLoading } = useHttp();
   const location = useLocation();
   const customerName = useSelector((state) => state.customerName);
@@ -67,6 +68,9 @@ function SelectTable() {
   ]);
 
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(location =>{
+      setPosition({lat: location.coords.latitude, lng: location.coords.longitude})
+    }, showError)
     const handleFetchData = async()=>{
       await sendRequest(
         { method: "get", url: "/table?_status_table=eq_0" },
@@ -74,7 +78,7 @@ function SelectTable() {
       );
     }
     handleFetchData()
-  }, [navigate, sendRequest]);
+  }, [sendRequest]);
 
   useEffect(() => {
     if (tables && tables.length > 0) {
@@ -122,7 +126,7 @@ function SelectTable() {
               type={"line"}
               onChange={onHandleTabChange}
               defaultActiveKey={"in"}
-              tabBarExtraContent={<Button onClick={handleScrollToMap} className="hover:bg-primary hover:text-white">Xem trên bản đồ</Button>}
+              tabBarExtraContent={<Button type="link" onClick={handleScrollToMap} className=" hover:text-primary active:text-primary bg-transparent">Xem trên bản đồ</Button>}
               centered
               items={["in", "out"].map((position) => {
                 return {
@@ -151,7 +155,7 @@ function SelectTable() {
       ) : (
         <p>No data available</p>
       )}
-      <Map mapRef={mapRef}/>
+      <Map mapRef={mapRef} currentPosition={position}/>
     </div>
   );
 }
