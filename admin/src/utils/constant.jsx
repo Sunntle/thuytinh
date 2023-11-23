@@ -33,7 +33,7 @@ export const NAV_ITEMS_ADMIN= [ getItem("Quản lí", null, <BiCategory />, [
   getItem("Đánh giá", "/admin/reviews"),
   getItem("Tài khoản", "/admin/user"),
 ]), ...NAV_ITEMS]
-export const url = import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL;;
+export const url = import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL + "/";
 
 export const DarkSvg = () => (
   <svg
