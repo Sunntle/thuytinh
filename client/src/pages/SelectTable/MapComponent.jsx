@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import {
   GoogleMap,
   Marker,
@@ -6,7 +7,7 @@ import {
   Autocomplete,
   InfoBox,
 } from "@react-google-maps/api";
-import { Button, Col, Row, Skeleton, Typography } from "antd";
+import { Button, Col, Row, Skeleton, Typography, message } from "antd";
 import { memo, useRef, useState } from "react";
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
 const center = {
@@ -30,15 +31,14 @@ function Map({mapRef}) {
   const destiantionRef = useRef(null);
 
   async function calculateRoute() {
-    if (originRef.current.value === "" || destiantionRef.current.value === "") {
-      return;
+    if (originRef.current.value === "") {
+      message.open({type: "error", content: "Không được bỏ trống điểm bắt đầu"})
+      return 
     }
-    // eslint-disable-next-line no-undef
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
       origin: originRef.current.value,
-      destination: destiantionRef.current.value,
-      // eslint-disable-next-line no-undef
+      destination: destiantionRef.current.value === "" ? new google.maps.LatLng(10.8524972, 106.6259193) : destiantionRef.current.value,
       travelMode: google.maps.TravelMode.DRIVING,
     });
     setDirectionsResponse(results);
@@ -113,6 +113,7 @@ function Map({mapRef}) {
           />
         </Col>
       </Row>
+      <p className="italic my-2 text-gray-500 text-xs"><span className="text-red-600">*</span>Mặc định điểm kết thúc là Nhà hàng Thủy Tinh</p>
       <Typography.Paragraph>Khoảng cách: <b>{distance}</b> </Typography.Paragraph>
       <Typography.Paragraph>
         Thời gian ước tính: <b>{duration}</b>
