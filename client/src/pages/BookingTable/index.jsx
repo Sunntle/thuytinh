@@ -1,13 +1,13 @@
 import { DatePicker, Form, Select, TimePicker, Grid } from "antd";
 import moment from "moment";
 import "./index.css";
-import { Children, useState } from "react";
+import { useState } from "react";
 import useHttp from "../../hooks/useHttp.js";
 import { useNavigate } from "react-router-dom";
 import { parseQueryString, ScrollToTop } from "../../utils/format.js";
-import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { IoSearch } from "react-icons/io5";
+
 const disabledDate = (cur) => {
   return cur && cur < moment().subtract(1, "day").endOf("day");
 };
@@ -47,13 +47,12 @@ const party_sizes = [
 const { useBreakpoint } = Grid;
 const BookingTable = () => {
   const { sendRequest } = useHttp();
-  const screen = useBreakpoint()
+  const screen = useBreakpoint();
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [result, setResult] = useState(null);
   const [tables, setTables] = useState([]);
   const watchedDate = Form.useWatch("date", form);
-  // const watchedTime = Form.useWatch("time", form);
 
   const disabledTime = () => {
     return {
@@ -97,6 +96,7 @@ const BookingTable = () => {
   };
 
   const onSubmitFetchTable = async (values) => {
+    console.log(values);
     let date = moment(values.date["$d"]).format("DD/MM/YYYY");
     let time = moment(values.time["$d"]).format("HH:mm");
     const createdAt = moment(date + time, "DD/MM/YYYY HH:mm").format(
@@ -204,13 +204,24 @@ const BookingTable = () => {
             <Form.Item
               className="mb-0"
               name="time"
-              rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
+              rules={[
+                { required: true, message: "Vui lòng không bỏ trống" },
+                {
+                  validator: (_, value) => {
+                    if (value?.["$H"] === 0) {
+                      return Promise.reject("Vui lòng chọn đúng giờ");
+                    } else {
+                      return Promise.resolve();
+                    }
+                  },
+                },
+              ]}
             >
               <TimePicker
                 showNow={false}
                 className="w-full focus:border-primary"
                 placeholder="Chọn giờ"
-                // defaultValue={moment().format("HH:mm")}
+                // hideDisabledOptions={true}
                 disabledTime={disabledTime}
                 bordered={false}
                 minuteStep={15}
@@ -224,8 +235,11 @@ const BookingTable = () => {
               type={"submit"}
               className=" md:flex justify-center items-center w-full h-full tracking-wide bg-primary rounded-b-lg md:rounded-bl-none md:rounded-br-lg md:rounded-r-lg md:text-sm text-white font-medium"
             >
-
-              {screen.md === true ? <IoSearch size={20} /> : "Tìm kiếm"}
+              {screen.md === true ? (
+                <IoSearch size={20} />
+              ) : (
+                <span className="text-lg">Tìm kiếm</span>
+              )}
             </button>
           </div>
         </Form>
