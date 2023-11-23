@@ -14,12 +14,11 @@ const center = {
   lng: 106.6259193,
 };
 
-const key = "AIzaSyAy1u4tQoExOEJdUu_XsOMt6wfK5CxvSos";
 
 // eslint-disable-next-line react/prop-types
 function Map({mapRef}) {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: key,
+    googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAP_KEY,
     libraries: ["places"],
   });
 
