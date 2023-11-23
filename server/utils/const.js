@@ -116,9 +116,12 @@ const bookingValidate = (params) => {
 
 
 const templateSendUser = ({ createdAt, name, tableId, token }) => {
-    let html = `<h1>Nhà hàng hải sản thủy tinh xin chào quý khách</h1>
-     <h3> ${name} bạn vừa đặt trước bàn số ${tableId} thời gian : ${moment(createdAt).format("DD/MM/YYYY HH:mm")} </h3>
-    <p>Bạn có thể hủy đơn hàng khi click vào đây : <a href='${process.env.NODE_ENV == 'production' ? process.env.CLIENT_URL_PRODUCTION : process.env.CLIENT_URL}/cancel-booking?token=${token}'>Cancel</a></p>
+    let html = `Xin chào bạn,
+    <p> <strong>${name}</strong> bạn vừa đặt trước bàn số <strong>${tableId}</strong> vào lúc : <strong>${moment(createdAt).format(" HH:mm DD/MM/YYYY")}</strong></p>
+    <p>Hãy sắp xếp đến đúng giờ để thưởng thức những món ngon của nhà hàng nhé!</p>
+    <p>Hoặc bạn có thể hủy đơn hàng khi click vào đây : <a href='${process.env.NODE_ENV == 'production' ? process.env.CLIENT_URL_PRODUCTION : process.env.CLIENT_URL}/cancel-booking?token=${token}'>Cancel</a></p>
+    <p>Nhà hàng hải sản Thủy Tinh cảm ơn bạn vì đã đến và trải nghiệm dịch vụ của nhà hàng.
+    Chúc bạn có một ngày tốt lành!</p>
      `;
     return html
 }

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 import {
   GoogleMap,
@@ -8,7 +9,7 @@ import {
   InfoBox,
 } from "@react-google-maps/api";
 import { Button, Col, Row, Skeleton, Typography, message } from "antd";
-import { memo, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
 const center = {
   lat: 10.8524972,
@@ -16,7 +17,7 @@ const center = {
 };
 
 // eslint-disable-next-line react/prop-types
-function Map({mapRef}) {
+function Map({mapRef, currentPosition}) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAP_KEY,
     libraries: ["places"],
@@ -30,29 +31,29 @@ function Map({mapRef}) {
   const originRef = useRef(null);
   const destiantionRef = useRef(null);
 
-  async function calculateRoute() {
-    if (originRef.current.value === "") {
-      message.open({type: "error", content: "Không được bỏ trống điểm bắt đầu"})
+  const calculateRoute = useCallback(async() => {
+    if (originRef.current.value === "" && currentPosition === null) {
+      message.open({type: "error", content: "Cho phép lấy vị trí hoặc phải chọn điểm bắt đầu"})
       return 
     }
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
-      origin: originRef.current.value,
+      origin: originRef.current.value === "" ? new google.maps.LatLng(currentPosition?.lat, currentPosition?.lng) : originRef.current.value,
       destination: destiantionRef.current.value === "" ? new google.maps.LatLng(10.8524972, 106.6259193) : destiantionRef.current.value,
       travelMode: google.maps.TravelMode.DRIVING,
     });
     setDirectionsResponse(results);
     setDistance(results.routes[0].legs[0].distance.text);
     setDuration(results.routes[0].legs[0].duration.text);
-  }
+  },[])
 
-  function clearRoute() {
+  const clearRoute = useCallback(() => {
     setDirectionsResponse(null);
     setDistance("");
     setDuration("");
     originRef.current.value = "";
     destiantionRef.current.value = "";
-  }
+  },[])
   if (!isLoaded) {
     return <Skeleton />;
   }
