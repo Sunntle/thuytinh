@@ -14,7 +14,6 @@ const center = {
   lng: 106.6259193,
 };
 
-
 // eslint-disable-next-line react/prop-types
 function Map({mapRef}) {
   const { isLoaded } = useJsApiLoader({
