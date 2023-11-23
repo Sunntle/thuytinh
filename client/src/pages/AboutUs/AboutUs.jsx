@@ -21,7 +21,7 @@ const AboutUs = () => {
   useEffect(() => {
     const request = {
       method: "get",
-      url: `/review?_time${date}`,
+      url: `/review?_time=${date}`,
     };
     sendRequest(request, setSlideRating);
   }, [sendRequest]);

@@ -4,21 +4,20 @@ import {
   useJsApiLoader,
   DirectionsRenderer,
   Autocomplete,
+  InfoBox,
 } from "@react-google-maps/api";
-import { Button, Input, Skeleton } from "antd";
+import { Button, Col, Row, Skeleton, Typography } from "antd";
 import { memo, useRef, useState } from "react";
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
-
 const center = {
   lat: 10.8524972,
   lng: 106.6259193,
 };
 
-const key = "...";
-
-function Map() {
+// eslint-disable-next-line react/prop-types
+function Map({mapRef}) {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: key,
+    googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAP_KEY,
     libraries: ["places"],
   });
 
@@ -31,17 +30,14 @@ function Map() {
   const destiantionRef = useRef(null);
 
   async function calculateRoute() {
-    if (
-      originRef.current.input.value === "" ||
-      destiantionRef.current.input.value === ""
-    ) {
+    if (originRef.current.value === "" || destiantionRef.current.value === "") {
       return;
     }
     // eslint-disable-next-line no-undef
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
-      origin: originRef.current.input.value,
-      destination: destiantionRef.current.input.value,
+      origin: originRef.current.value,
+      destination: destiantionRef.current.value,
       // eslint-disable-next-line no-undef
       travelMode: google.maps.TravelMode.DRIVING,
     });
@@ -54,50 +50,75 @@ function Map() {
     setDirectionsResponse(null);
     setDistance("");
     setDuration("");
-    originRef.current.input.value = "";
-    destiantionRef.current.input.value = "";
+    originRef.current.value = "";
+    destiantionRef.current.value = "";
   }
-
-  const onLoad = (autocomplete) => {
-    console.log(autocomplete);
-    // originRef.current.input = autocomplete;
-  };
-  const onPlaceChanged = (string) => {
-   console.log(string);
-  };
   if (!isLoaded) {
     return <Skeleton />;
   }
+
   return (
-    <div>
-      <Autocomplete
-        onLoad={onLoad}
-        onPlaceChanged={onPlaceChanged}
-        options={{ types: ["geocode"] }}
-      >
-        <Input type="text" placeholder="Origin" ref={originRef} />
-      </Autocomplete>
-      <Autocomplete onLoad={onLoad}>
-        <Input type="text" placeholder="Destination" ref={destiantionRef} />
-      </Autocomplete>
-      <Button type="submit" onClick={calculateRoute}>
-        Calculate Route
-      </Button>
-      <div>Distance: {distance} </div>
-      <div>Duration: {duration} </div>
-      <Button
-        aria-label="center back"
-        icon={<FaLocationArrow />}
-        onClick={() => {
-          map.panTo(center);
-          map.setZoom(15);
-        }}
-      />
-      <Button
-        aria-label="center back"
-        icon={<FaTimes />}
-        onClick={clearRoute}
-      />
+    <Row ref={mapRef} gutter={[10, 10]} align={"top"} justify={"center"} className="px-6 xl:px-12">
+       <Col xs={24} lg={12}>
+        <div className="w-full h-12 uppercase font-semibold text-lg text-primary text-center mb-3">
+            Xem địa chỉ trên bản đồ
+          </div>
+        <Row gutter={[10, 10]} align={"middle"} className="mb-3">
+        <Col xs={24} sm={12} md={12}>
+          <Row gutter={[10, 10]}>
+            <Col xs={12}>
+              <Autocomplete className="h-full">
+                <input
+                  className="p-2 w-full h-full rounded-md border border-gray-300"
+                  type="text"
+                  placeholder="Bắt đầu"
+                  ref={originRef}
+                />
+              </Autocomplete>
+            </Col>
+            <Col xs={12}>
+              <Autocomplete className="h-full">
+                <input
+                  className="p-2 w-full h-full rounded-md border border-gray-300"
+                  type="text"
+                  placeholder="Kết thúc"
+                  ref={destiantionRef}
+                />
+              </Autocomplete>
+            </Col>
+          </Row>
+        </Col>
+        <Col xs={24} sm={12} md={12} className="flex">
+          <Button
+            className="me-2 hover:bg-black hover:text-white border border-solid border-gray-300 rounded-md"
+            type="submit"
+            onClick={calculateRoute}
+          >
+            Tính khoảng cách
+          </Button>
+          <Button
+            aria-label="center back"
+            icon={<FaLocationArrow />}
+            onClick={() => {
+              map.panTo(center);
+              map.setZoom(15);
+            }}
+            className="me-2 hover:bg-black "
+          />
+          <Button
+            aria-label="center back"
+            icon={<FaTimes />}
+            onClick={clearRoute}
+            className="hover:bg-black "
+          />
+        </Col>
+      </Row>
+      <Typography.Paragraph>Khoảng cách: <b>{distance}</b> </Typography.Paragraph>
+      <Typography.Paragraph>
+        Thời gian ước tính: <b>{duration}</b>
+      </Typography.Paragraph>
+      </Col>
+      <Col xs={24} lg={12}>
       <GoogleMap
         center={center}
         zoom={15}
@@ -110,12 +131,18 @@ function Map() {
         }}
         onLoad={(map) => setMap(map)}
       >
-        <Marker position={center} />
+        <Marker position={center}>
+          <InfoBox options={{ closeBoxURL: '', enableEventPropagation: true }}>
+            <p className="bg-primary text-white rounded-md p-1 whitespace-nowrap px-2 w-max">Nhà hàng hải sản Thủy Tinh</p>
+          </InfoBox>
+        </Marker>
         {directionsResponse && (
           <DirectionsRenderer directions={directionsResponse} />
         )}
       </GoogleMap>
-    </div>
+      </Col>
+    </Row>
+     
   );
 }
 export default memo(Map);

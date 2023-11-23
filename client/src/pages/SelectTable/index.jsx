@@ -1,8 +1,8 @@
 import { getPreciseDistance } from "geolib";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
-import { Tabs, message } from "antd";
+import { Button, Tabs, message } from "antd";
 import "./index.css";
 import { useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
@@ -44,13 +44,13 @@ function SelectTable() {
   const customerName = useSelector((state) => state.customerName);
   const isTableExist = location.state?.isTableExist; //ban dang duoc su dung
   const idTable = location.state?.prevTable; //1
+  const mapRef = useRef(null)
   const handleSelectTable = useCallback(
     async (id) => {
       navigate(`/tables-${id}`, { state: { from: "menu" } });
     },
     [navigate],
   );
-
   useEffect(() => {
     if (
       customerName.name.length > 0 &&
@@ -87,7 +87,13 @@ function SelectTable() {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-
+  const handleScrollToMap = useCallback( () =>{
+    mapRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "start",
+    });
+  },[])
   if (isTableExist == "Không tồn tại bàn này!")
     return <h2 className="py-5 mt-[80px] text-center">{isTableExist}</h2>;
   if (isLoading) return <Spinner />;
@@ -99,7 +105,6 @@ function SelectTable() {
         <meta name="select-table" content="Select table" />
       </Helmet>
       <ScrollToTop />
-
       {idTable &&
         isTableExist == "Bàn đã được sử dụng" && 
         +idTable !== customerName.tables?.at(1) && (
@@ -117,13 +122,14 @@ function SelectTable() {
               type={"line"}
               onChange={onHandleTabChange}
               defaultActiveKey={"in"}
+              tabBarExtraContent={<Button onClick={handleScrollToMap} className="hover:bg-primary hover:text-white">Xem trên bản đồ</Button>}
               centered
               items={["in", "out"].map((position) => {
                 return {
                   label: position === "in" ? "Ngoài trời" : "Trong nhà",
                   key: position,
                   children: (
-                    <div className="w-full h-screen max-w-full">
+                    <div className="w-full mb-10 h-screen max-w-full">
                       <div className="grid grid-cols-2 md:grid-col-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                         {tableByPosition?.map((table) => (
                           <div
@@ -145,7 +151,7 @@ function SelectTable() {
       ) : (
         <p>No data available</p>
       )}
-      {/* <Map /> */}
+      <Map mapRef={mapRef}/>
     </div>
   );
 }
