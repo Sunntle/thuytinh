@@ -301,7 +301,7 @@ const checkPending = []
 const handTimeTable = ({ id }) => {
   setTimeout(async () => {
     const check = await TableByOrder.findByPk(id, { raw: true });
-    if (check.status === "pending") {
+    if (check && check?.status === "pending") {
       await TableByOrder.destroy({ where: { id: id } });
     }
     const index = checkPending.findIndex(el => el.id == id)
