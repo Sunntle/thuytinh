@@ -33,10 +33,14 @@ const ResRevenue = () => {
   const [dataOrder, setDataOrder] = useState([]);
   const [dataChart, setDataChart] = useState([]);
   const renderTextPay = (params) => {
-    if (params === "Cash" || !params) {
-      return "Thanh toán tiền mặt";
+    if (params) {
+      if (params === "Cash") {
+        return "Thanh toán tiền mặt";
+      } else {
+        return params;
+      }
     } else {
-      return params;
+      return "Chưa thanh toán";
     }
   };
 
@@ -103,7 +107,7 @@ const ResRevenue = () => {
         title: 'Số điện thoại',
         dataIndex: 'phone',
         render: (_, data) => (
-          <span>{data.phone ? "0" + data.phone : "Không có số điện thoại"}</span>
+          <span>{data.phone ? data.phone : "Không có số điện thoại"}</span>
         )
       },
       {
