@@ -257,7 +257,7 @@ const BookingTable = () => {
               className="mx-auto w-11/12 md:w-9/12 lg:w-8/12 xl:w-6/12 min-h-fit bg-white rounded py-1 px-2"
             >
               <div key={table.id} className="flex justify-between items-center">
-                <span>{table.name_table}</span>
+                <span>Bàn {table.id}</span>
                 <span
                   className="cursor-pointer bg-primary py-2 px-3 rounded text-white"
                   onClick={() => onSubmitPendingTable(table.id)}

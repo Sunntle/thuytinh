@@ -13,26 +13,26 @@ import Map from "./MapComponent.jsx"
 function showError(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
-      message.open({type: "error", content: "User denied the request for Geolocation."})
+      message.open({ type: "error", content: "User denied the request for Geolocation." })
       console.log("User denied the request for Geolocation.");
       return "User denied the request for Geolocation.";
 
     case error.POSITION_UNAVAILABLE:
-      message.open({type: "error", content: "Location information is unavailable."})
+      message.open({ type: "error", content: "Location information is unavailable." })
       console.log("Location information is unavailable.");
       return "Location information is unavailable.";
 
     case error.TIMEOUT:
-      message.open({type: "error", content: "The request to get user location timed out."})
+      message.open({ type: "error", content: "The request to get user location timed out." })
       console.log("The request to get user location timed out.");
       return "The request to get user location timed out.";
 
     case error.UNKNOWN_ERROR:
-      message.open({type: "error", content: "An unknown error occurred."})
+      message.open({ type: "error", content: "An unknown error occurred." })
       console.log("An unknown error occurred.");
       return "An unknown error occurred.";
   }
-  
+
 }
 
 function SelectTable() {
@@ -68,10 +68,10 @@ function SelectTable() {
   ]);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(location =>{
-      setPosition({lat: location.coords.latitude, lng: location.coords.longitude})
+    navigator.geolocation.getCurrentPosition(location => {
+      setPosition({ lat: location.coords.latitude, lng: location.coords.longitude })
     }, showError)
-    const handleFetchData = async()=>{
+    const handleFetchData = async () => {
       await sendRequest(
         { method: "get", url: "/table?_status_table=eq_0" },
         setTables,
@@ -91,13 +91,13 @@ function SelectTable() {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-  const handleScrollToMap = useCallback( () =>{
+  const handleScrollToMap = useCallback(() => {
     mapRef.current.scrollIntoView({
       behavior: "smooth",
       block: "nearest",
       inline: "start",
     });
-  },[])
+  }, [])
   if (isTableExist == "Không tồn tại bàn này!")
     return <h2 className="py-5 mt-[80px] text-center">{isTableExist}</h2>;
   if (isLoading) return <Spinner />;
@@ -110,7 +110,7 @@ function SelectTable() {
       </Helmet>
       <ScrollToTop />
       {idTable &&
-        isTableExist == "Bàn đã được sử dụng" && 
+        isTableExist == "Bàn đã được sử dụng" &&
         +idTable !== customerName.tables?.at(1) && (
           <p className="py-3 text-center">
             Bàn này đã được sử dụng vui lòng chọn bàn khác nhé!
@@ -141,7 +141,7 @@ function SelectTable() {
                             onClick={() => handleSelectTable(table.id)}
                             className="cursor-pointer w-auto h-44 border-2 border-primary bg-primary/20 rounded-md flex justify-center items-center"
                           >
-                            {table.name_table}
+                            Bàn {table.id}
                           </div>
                         ))}
                       </div>
@@ -155,7 +155,7 @@ function SelectTable() {
       ) : (
         <p>No data available</p>
       )}
-      <Map mapRef={mapRef} currentPosition={position}/>
+      <Map mapRef={mapRef} currentPosition={position} />
     </div>
   );
 }
