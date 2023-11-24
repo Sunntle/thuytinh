@@ -42,9 +42,8 @@ const LayoutMain = () => {
     try {
       if (!audio.current) {
         audio.current = new Audio(AudioNotify);
-      }
-      if (audio.current) {
-        audio.current.play();
+      }else{
+        audio.current?.play();
       }
     } catch (error) {
       console.error('Audio playback failed:', error);
@@ -57,6 +56,9 @@ const LayoutMain = () => {
       openNotification(arg)
       playAudio();
     })
+    return () =>{
+      if(socket) socket.off("new message")
+    }
   }, [openNotification, dispatch, playAudio])
   const onClick = (e) => {
     navigate(e.key);

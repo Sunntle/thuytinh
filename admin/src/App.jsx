@@ -20,7 +20,6 @@ const App = () => {
       dispatch(fetchAccount());
     }
     dispatch(fetchNotification())
-    // socket.emit("user-connected", response)
   }, [dispatch]);
 
   useEffect(() => {

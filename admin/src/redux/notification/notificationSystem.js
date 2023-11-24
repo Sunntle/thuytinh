@@ -7,16 +7,12 @@ const initialState = {
 }
 export const fetchNotification = createAsyncThunk('notification/fetchNotification', async () => {
     const response = await getAllNotification({ _sort: "createdAt", _order: "DESC", _limit: 10, });
-    let lastNotification = null
-    if (response.some(el => el.status == 0)) lastNotification = response[0]
-    return { data: response, lastNotification }
+    return { data: response }
 })
 export const loadMoreNotification = createAsyncThunk('notification/loadMoreNotification', async (step = 0,thunkApi) => {
     const listNoti = thunkApi.getState().notifications.content
     const response = await getAllNotification({ _sort: "createdAt", _order: "DESC", _limit: 10, _offset: step });
-    let lastNotification = null
-    if (response.some(el => el.status == 0)) lastNotification = response[0]
-    return { data: [...listNoti,...response], lastNotification }
+    return { data: [...listNoti,...response] }
 })
 // export const loadMoreData = createAsyncThunk('notification/loadMoreData', async (step, thunkApi) => {
 //     const {content: listNoti, isLoading} = thunkApi.getState().notifications
@@ -83,7 +79,7 @@ const notificationSystem = createSlice({
             })
             .addCase(fetchNotification.fulfilled, (state, action) => {
                 state.content =  action.payload.data
-                state.lastNotification = action.payload.lastNotification
+                state.lastNotification = null
                 state.isLoading = false
             })
             // .addCase(loadMoreData.pending, (state) => {
@@ -124,7 +120,6 @@ const notificationSystem = createSlice({
             })
             .addCase(loadMoreNotification.fulfilled, (state, action) => {
                 state.content =  action.payload.data
-                state.lastNotification = action.payload.lastNotification
                 state.isLoading = false
             })
     }

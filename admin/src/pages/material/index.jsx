@@ -1,6 +1,6 @@
-import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, notification, Button, Tooltip } from "antd";
+import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, notification, Button, Space } from "antd";
 import ButtonComponents from "../../components/button";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Table } from "antd";
 import ConfirmComponent from "../../components/confirm";
 import AddNewMaterial from "./add";
@@ -15,27 +15,32 @@ import {
 import EditMaterial from "./edit";
 import ColumnChart from "../../components/chart/column-chart";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 import Spinner from "../../components/spinner";
 import { formatGia, formatNgay } from "../../utils/format";
-import { socket } from "../../socket";
 import { overMasterial, unitMasterial, renderToString } from "../../utils/constant";
+import { SearchOutlined } from "@ant-design/icons";
 const { Title, Text } = Typography;
-
+const handleSearchData = (string) =>{
+  if(string.includes("_")){
+    const arr = string.split("_")
+    const newArr = arr.map(el=>el[0].toUpperCase() + el.slice(1))
+    return newArr.join(" ")
+  }
+  return string[0].toUpperCase() + string.slice(1)
+}
 function MaterialPage() {
   const [open, setOpen] = useState(false);
-  const [, contextHolder] = notification.useNotification();
   const [openModelEdit, setOpenModelEdit] = useState(false);
   const [materials, setMaterials] = useState([]);
   const [data, setData] = useState(null);
   const [dataChart, setDataChart] = useState([]);
   const [openDrawer, setOpenDrawer] = useState(false);
   const customize = useSelector(state => state.customize)
-  const notifications = useSelector(state => state.notifications);
+  const notifications = useSelector(state => state.notifications)
   const [listImportMaterial, setListImportMaterial] = useState([])
-  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
+  const searchInput = useRef(null);
 
   const fetchData = useCallback(async () => {
     const res = await getAllMaterial();
@@ -62,12 +67,10 @@ function MaterialPage() {
   }, [fetchData]);
 
   useEffect(() => {
-    socket.on("new message", arg => {
-      if (arg.type === "material") {
-        fetchData()
-      }
-    })
-  }, [notifications, location, fetchData])
+    if(notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === 'material' && notifications.lastNotification?.status === false){
+      fetchData()
+    }
+  }, [fetchData, notifications])
 
   const handleDeleteMaterial = useCallback(async (id_material) => {
     const res = await deleteMaterial(id_material);
@@ -90,6 +93,102 @@ function MaterialPage() {
     const { name_material, id, image } = record;
     form.setFieldsValue({ name_material, materialId: id, image });
   }, [form])
+
+  const handleSearch = (selectedKeys, confirm, ) => {
+    confirm();
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+  };
+ 
+  const getColumnSearchProps = useCallback((dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${handleSearchData(dataIndex)}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Tìm kiếm
+          </Button>
+          <Button
+            onClick={()=> clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Đặt lại
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+            }}
+          >
+            Lọc
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Đóng
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1677ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+    record[dataIndex]
+    ?.toString()
+    ?.toLowerCase()
+    ?.includes(value?.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => text,
+  }),[]);
 
   const columns = useMemo(() => [
     {
@@ -121,24 +220,7 @@ function MaterialPage() {
     {
       title: "Tên",
       dataIndex: "name_material",
-      filters: [
-        {
-          text: "Cá",
-          value: "Cá",
-        },
-        {
-          text: "Rau",
-          value: "Rau",
-        },
-        {
-          text: "Thịt",
-          value: "Thịt",
-        },
-      ],
-      filterMode: "tree",
-      filterSearch: true,
-      onFilter: (value, record) => record.name_material.startsWith(value),
-      width: "20%",
+      ...getColumnSearchProps("name_material")
     },
     {
       title: "Đơn vị",
@@ -192,7 +274,7 @@ function MaterialPage() {
         </div>
       ),
     },
-  ], [handleClickEditMaterial, handleDeleteMaterial, handleImport]);
+  ], [getColumnSearchProps, handleClickEditMaterial, handleDeleteMaterial, handleImport]);
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
@@ -250,18 +332,16 @@ function MaterialPage() {
   }, [form, openDrawer])
 
   const handleFinish = useCallback(async (values) => {
-    const res = await importMaterial(values);
-    notification.success({ message: "Thông báo", description: res });
-    fetchData()
+    await importMaterial(values);
     closeDrawer()
-  }, [closeDrawer, fetchData])
+  }, [closeDrawer])
+
   const unitMasterialTextOver = () => {
     let result = unitMasterial.map((val, i) => (`${overMasterial[i]} ${val}`)).join(", ")
     return result
   }
   return (
     <div className="my-7 px-5">
-      {contextHolder}
       {loading ? (
         <Spinner />
       ) : (<>
@@ -380,13 +460,17 @@ function MaterialPage() {
               rules={[
                 {
                   required: true,
-                  min: 1,
                   message: "Bạn phải nhập số lượng nguyên liệu",
+                },
+                {
+                  type: "number",
+                  min: 1,
+                  message: "Số lượng nguyên liệu phải lớn hơn 0",
                 },
               ]}
 
             >
-              <Input />
+              <InputNumber min={0} className="w-full" />
             </Form.Item>
             <ButtonComponents
               content={"Nhập nguyên liệu"}

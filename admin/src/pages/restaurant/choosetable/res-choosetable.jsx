@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Tabs, notification, Dropdown } from 'antd';
 import { FiUsers } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -74,26 +74,29 @@ const ResChooseTable = () => {
   const [open, setOpen] = useState(false);
   const [api, contextHolder] = notification.useNotification();
   const userId = useSelector((state) => state.account.user.id)
+  const notifications = useSelector(state => state.notifications)
 
-  useEffect(() => {
-    socket.on("new message", arg => {
-      if (arg.type === "order") {
-        fetchData()
-      }
-    })
-    socket.on("status table", () => {
-      fetchData()
-    })
-  }, [])
   const fetchData = useCallback(async () => {
     const resTable = await getAllTable();
     dispatch(AddTable(resTable));
   }, []);
+  
+  useEffect(()=>{
+    if(notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === 'order' && notifications.lastNotification?.status === false){
+      fetchData()
+    }
+  },[fetchData, notifications])
+
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+    socket.on("status table", () => {
+      fetchData()
+    })
+  }, [fetchData])
 
-  const handleTableClick = async (index) => {
+
+
+  const handleTableClick = useCallback(async (index) => {
     const resTableId = await getTableId(index.id, { id_employee: userId });
     if (resTableId.success === false) {
       api.info({
@@ -105,9 +108,9 @@ const ResChooseTable = () => {
     }
     dispatch(AddTableList(index));
     navigate('/employee/menu/');
-  };
+  },[api, dispatch, navigate, userId]);
 
-  const handleDetailModal = async (table) => {
+  const handleDetailModal = useCallback(async (table) => {
     const resTableId = await getTableId(table.id, { id_employee: userId });
     const tableByOrders = resTableId[0].tablebyorders;
     if (tableByOrders && tableByOrders.length === 0 || tableByOrders == undefined) {
@@ -121,21 +124,22 @@ const ResChooseTable = () => {
       dispatch(AddTableList(resTableId));
       setOpen(true)
     }
+  },[api, dispatch, userId])
 
-  }
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     dispatch(RemoveTableList())
     setOpen(false);
-  };
+  },[dispatch]);
 
-  const resetTable = async ({ id }) => {
+  const resetTable = useCallback(async ({ id }) => {
     const res = await resetTableApi({ tables: [id], reset: true });
     api.success({
       message: 'Thông báo',
       description: res
     });
-  }
-  const items = [
+  },[api])
+
+  const items = useMemo(()=>([
     {
       key: '1',
       label: 'Tất cả',
@@ -195,7 +199,7 @@ const ResChooseTable = () => {
         </div>
       ),
     },
-  ];
+  ]),[handleDetailModal, handleTableClick, resetTable, tableData]);
 
   return (
     <>

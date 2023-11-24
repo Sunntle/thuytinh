@@ -28,7 +28,7 @@ import { formatNgay, formatGia, formatnumber } from "../../utils/format";
 import ConfirmComponent from "../../components/confirm";
 import moment from "moment";
 import Spinner from "../../components/spinner";
-import { socket } from "../../socket";
+import { useSelector } from "react-redux";
 const { Title } = Typography;
 const config = {
   rules: [
@@ -61,12 +61,7 @@ const OrderPage = () => {
   const [tableAndEmployee, setTableAndEmployee] = useState(null);
   const [openModalUpdate, setOpenModalUpdate] = useState(initData);
   const [openOrderDetail, setOpenOrderDetail] = useState(initData);
-
-  const [query, setQuery] = useState({
-    _sort: "createdAt",
-    _order: "DESC",
-  });
-
+  const notifications = useSelector(state => state.notifications)
   const statusOrder = useMemo(() => {
     let arr = [
       { value: 0, label: "Hủy đơn hàng" },
@@ -124,18 +119,47 @@ const OrderPage = () => {
     setTableAndEmployee({ table: optionsBan, employee: optionsNv });
   };
   useEffect(() => {
-    fetchData(query);
-  }, [query]);
+    fetchData({
+      _sort: "createdAt",
+      _order: "DESC",
+    });
+  }, [fetchData]);
   useEffect(() => {
     fetchDataEmployeeAndTable();
   }, []);
+
+  const handDeleteOrder = useCallback(async (id) => {
+    await delOrder(id);
+    fetchData();
+    messageApi.open({
+      type: "success",
+      content: "Đã xóa đơn " + id,
+    });
+  },[fetchData, messageApi]);
+  const showModalUpdate = useCallback((record) => {
+    let data = { ...record };
+    data.meta.createdAt = moment(data.meta.createdAt);
+    setOpenModalUpdate({ data: data.meta, show: true });
+    form.setFieldsValue(data.meta);
+  },[form]);
+
+  const onClose = () => {
+    setOpenOrderDetail(initData);
+    setOpenModalUpdate(initData);
+  };
+
+  const onFinish = async (values) => {
+    await updateOrderAdmin(values);
+    fetchData();
+    onClose();
+  };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
   };
   const handleReset = (clearFilters) => {
     clearFilters();
   };
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = useCallback((dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -222,14 +246,14 @@ const OrderPage = () => {
       }
     },
     render: (text) => text,
-  });
+  }),[]);
   useEffect(() => {
-    socket.on("new message", (arg) => {
-      if (arg == "order") fetchData(query);
-    });
-  }, [fetchData, query]);
+    if(notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === "order" && notifications.lastNotification?.status === false){
+      fetchData()
+    }
+  }, [fetchData, notifications]);
 
-  const columns = [
+  const columns = useMemo(()=>([
     {
       title: "Mã hóa đơn",
       dataIndex: "id",
@@ -339,34 +363,11 @@ const OrderPage = () => {
         </div>
       ),
     },
-  ];
+  ]),[getColumnSearchProps, handDeleteOrder, showModalUpdate, statusOrder]);
   const showDetail = (record) => {
     setOpenOrderDetail({ show: true, data: record.meta });
   };
-  const showModalUpdate = (record) => {
-    let data = { ...record };
-    data.meta.createdAt = moment(data.meta.createdAt);
-    setOpenModalUpdate({ data: data.meta, show: true });
-    form.setFieldsValue(data.meta);
-  };
-  const handDeleteOrder = async (id) => {
-    await delOrder(id);
-    fetchData(query);
-    messageApi.open({
-      type: "success",
-      content: "Đã xóa đơn " + id,
-    });
-  };
-  const onClose = () => {
-    setOpenOrderDetail(initData);
-    setOpenModalUpdate(initData);
-  };
-
-  const onFinish = async (values) => {
-    await updateOrderAdmin(values);
-    fetchData(query);
-    onClose();
-  };
+ 
 
   return (
     <div className="my-7 px-5">
