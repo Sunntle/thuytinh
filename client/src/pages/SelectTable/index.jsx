@@ -130,7 +130,7 @@ function SelectTable() {
               centered
               items={["in", "out"].map((position) => {
                 return {
-                  label: position === "in" ? "Ngoài trời" : "Trong nhà",
+                  label: position === "in" ? "Trong nhà": "Ngoài trời" ,
                   key: position,
                   children: (
                     <div className="w-full mb-10 h-screen max-w-full">
