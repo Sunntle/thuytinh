@@ -15,7 +15,11 @@ const CreateTable = ({ options, fetchData, setIsModalOpen, isModalOpen, messageA
     }, [form, setIsModalOpen])
 
     const onFinish = async (values) => {
+<<<<<<< HEAD
 
+=======
+        values.qr_code = url+ 'tables-' + code;
+>>>>>>> c11e0a54c95d79bac4c527ba2280e5daeb0af235
         let { success, data } = await createTables(values);
         if (success) {
             fetchData();

@@ -13,7 +13,8 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
-const date = new Date().getMonth() + 1
+
+const date = new Date().getMonth() + 1;
 const AboutUs = () => {
   const [slideProduct, setSlideRating] = useState(null);
   const { sendRequest } = useHttp();
@@ -108,7 +109,9 @@ const AboutUs = () => {
               />
             </div>
             <div className="flex-1 text-center lg:text-right">
-              <h2 className="md:text-4xl text-2xl font-semibold mb-2 text-primary">Đội ngũ đầu bếp</h2>
+              <h2 className="md:text-4xl text-2xl font-semibold mb-2 text-primary">
+                Đội ngũ đầu bếp
+              </h2>
               <p className="text-gray-700 w-full opacity-60 pt-2 leading-7 lg:line-clamp-10 line-clamp-4">
                 Từ bề dày kinh nghiệm và sự nhạy cảm trong nghề, các đầu bếp tài
                 năng của Thuỷ Tinh đã thổi hồn vào từng món ăn, cuốn hút và
@@ -126,68 +129,71 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-      <section className="lg:px-16 px-6 my-12 w-full h-full">
-        <h2 className="md:text-4xl text-3xl text-center text-primary w-full font-semibold mb-14">
-          Đánh giá của khách hàng
-        </h2>
-        <Swiper
-          // install Swiper modules
-          modules={[A11y]}
-          spaceBetween={10}
-          breakpoints={{
-            375: {
-              slidesPerView: 2,
-              spaceBetween: 15,
-            },
-            768: {
-              slidesPerView: 3,
-              spaceBetween: 10,
-            },
-            1024: {
-              slidesPerView: 4,
-              spaceBetween: 30,
-            },
-            1440: {
-              slidesPerView: 5,
-              spaceBetween: 30,
-            },
-          }}
-          autoplay={true}
-        >
-          {slideProduct &&
-            slideProduct?.data?.filter(el=> el.rate >=3)?.map((rating,index) => {
-              if(index > 5) return null
-              if (rating.rate >= 3) {
-                return (
-                  <SwiperSlide key={rating.id}>
-                    <div className="flex flex-col justify-center items-center md:flex-row p-2 border hover:shadow-lg cursor-pointer transition-all">
-                      <div className="w-24 h-20">
-                        <img
-                          className="w-24 h-20 rounded-full"
-                          src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287461/NhaHangThuyTinh/yvunsalh6buihbg9ocbp.webp"
-                          alt=""
-                        />
-                      </div>
-                      <div className="flex p-2 flex-col text-slate-500">
-                        <span>{rating.name}</span>
-                        <span className="whitespace-nowrap text-xs py-2">
-                          <Rate value={rating.rate} />
-                        </span>
-                        <div className="h-[50px] max-h-[50px]">
-                          {" "}
-                          <span className="text-xs line-clamp-1">
-                            {truncateString(rating.description, 50)}
+      {slideProduct && (
+        <section className="lg:px-16 px-6 my-12 w-full h-full">
+          <h2 className="md:text-4xl text-3xl text-center text-primary w-full font-semibold mb-14">
+            Đánh giá của khách hàng
+          </h2>
+          <Swiper
+            // install Swiper modules
+            modules={[A11y]}
+            spaceBetween={10}
+            breakpoints={{
+              375: {
+                slidesPerView: 2,
+                spaceBetween: 15,
+              },
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 10,
+              },
+              1024: {
+                slidesPerView: 4,
+                spaceBetween: 30,
+              },
+              1440: {
+                slidesPerView: 5,
+                spaceBetween: 30,
+              },
+            }}
+            autoplay={true}
+          >
+            {slideProduct?.data
+              ?.filter((el) => el.rate >= 3)
+              ?.map((rating, index) => {
+                if (index > 5) return null;
+                if (rating.rate >= 3) {
+                  return (
+                    <SwiperSlide key={rating.id}>
+                      <div className="flex flex-col justify-center items-center md:flex-row p-2 border hover:shadow-lg cursor-pointer transition-all">
+                        <div className="w-24 h-20">
+                          <img
+                            className="w-24 h-20 rounded-full"
+                            src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287461/NhaHangThuyTinh/yvunsalh6buihbg9ocbp.webp"
+                            alt=""
+                          />
+                        </div>
+                        <div className="flex p-2 flex-col text-slate-500">
+                          <span>{rating.name}</span>
+                          <span className="whitespace-nowrap text-xs py-2">
+                            <Rate value={rating.rate} />
                           </span>
+                          <div className="h-[50px] max-h-[50px]">
+                            {" "}
+                            <span className="text-xs line-clamp-1">
+                              {truncateString(rating.description, 50)}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </SwiperSlide>
-                );
-              }
-              return null;
-            })}
-        </Swiper>
-      </section>
+                    </SwiperSlide>
+                  );
+                }
+                return null;
+              })}
+          </Swiper>
+        </section>
+      )}
       <Reason />
     </div>
   );
