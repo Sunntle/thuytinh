@@ -8,7 +8,6 @@ import { updateTables } from '../../services/api';
 const UpdateTable = ({ options, setDataUpdate, fetchData, dataUpdate, isModalOpenUpdate, setIsModalOpenUpdate, messageApi }) => {
 
     const [updateForm] = Form.useForm();
-
     useEffect(() => {
         if (dataUpdate) {
             updateForm.setFieldsValue(dataUpdate);

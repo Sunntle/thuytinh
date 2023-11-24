@@ -1,25 +1,16 @@
-import { Form, Input, Modal, QRCode, Select } from 'antd';
-import { useCallback, useState } from 'react'
+import { Form, Input, Modal, Select } from 'antd';
+import { useCallback } from 'react';
 import ButtonComponents from '../../components/button';
 import { createTables } from '../../services/api';
-import { url } from '../../utils/constant';
 
 const CreateTable = ({ options, fetchData, setIsModalOpen, isModalOpen, messageApi }) => {
     const [form] = Form.useForm();
-
-
     const handleCancel = useCallback(() => {
         setIsModalOpen(false);
         form.resetFields();
-        setCode(url)
     }, [form, setIsModalOpen])
 
     const onFinish = async (values) => {
-<<<<<<< HEAD
-
-=======
-        values.qr_code = url+ 'tables-' + code;
->>>>>>> c11e0a54c95d79bac4c527ba2280e5daeb0af235
         let { success, data } = await createTables(values);
         if (success) {
             fetchData();
@@ -62,6 +53,7 @@ const CreateTable = ({ options, fetchData, setIsModalOpen, isModalOpen, messageA
                         }]}
                     >
                         <Select options={options} />
+
                     </Form.Item>
 
                     <Form.Item className='flex justify-end'>
