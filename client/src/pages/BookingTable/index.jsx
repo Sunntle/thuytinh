@@ -132,6 +132,7 @@ const BookingTable = () => {
       });
     }
   };
+
   return (
     <div className="pb-24 tracking-wide space-y-10 pt-32 max-w-full w-screen min-h-screen bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287118/NhaHangThuyTinh/bxjvz96etxtbyzsiz1ty.webp')] bg-no-repeat bg-cover bg-center">
       <ScrollToTop />
@@ -195,6 +196,7 @@ const BookingTable = () => {
                 disabledDate={disabledDate}
                 format={"DD/MM/YYYY"}
                 size={"middle"}
+
               />
             </Form.Item>
           </div>
@@ -204,13 +206,24 @@ const BookingTable = () => {
             <Form.Item
               className="mb-0"
               name="time"
-              rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
+              rules={[
+                { required: true, message: "Vui lòng không bỏ trống" },
+                {
+                  validator: (_, value) => {
+                    if (value?.['$H'] == 0) {
+                      return Promise.reject('Vui lòng nhập đúng định dạng');
+                    } else {
+                      return Promise.resolve();
+                    }
+                  }
+                }
+              ]}
             >
               <TimePicker
                 showNow={false}
                 className="w-full focus:border-primary"
                 placeholder="Chọn giờ"
-                // defaultValue={moment().format("HH:mm")}
+                hideDisabledOptions={true}
                 disabledTime={disabledTime}
                 bordered={false}
                 minuteStep={15}
