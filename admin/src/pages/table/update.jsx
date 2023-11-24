@@ -8,11 +8,9 @@ import { updateTables } from '../../services/api';
 const UpdateTable = ({ options, setDataUpdate, fetchData, dataUpdate, isModalOpenUpdate, setIsModalOpenUpdate, messageApi }) => {
 
     const [updateForm] = Form.useForm();
-
     useEffect(() => {
         if (dataUpdate) {
-            const data = { ...dataUpdate, qr_code: dataUpdate.qr_code.split('-')[1] }
-            updateForm.setFieldsValue(data);
+            updateForm.setFieldsValue(dataUpdate);
         }
     }, [dataUpdate])
     const handleCancel = useCallback(() => {
@@ -21,7 +19,6 @@ const UpdateTable = ({ options, setDataUpdate, fetchData, dataUpdate, isModalOpe
         updateForm.resetFields();
     }, [dataUpdate, isModalOpenUpdate])
     const onFinish = async (values) => {
-        values.qr_code = url + values.qr_code;
         let { success, data } = await updateTables(values);
         if (success) {
             fetchData();
@@ -85,18 +82,7 @@ const UpdateTable = ({ options, setDataUpdate, fetchData, dataUpdate, isModalOpe
                         />
 
                     </Form.Item>
-                    <Form.Item
-                        label={`Mã quét nhanh`}
-                        name="qr_code"
-                        rules={[{
-                            required: true,
-                            message: 'Vui lòng nhập url',
-                        }]}
-                    >
-                        <Input
-                            placeholder={`Vd: 1`}
-                        />
-                    </Form.Item>
+
                     <Form.Item className='flex justify-end'>
                         <ButtonComponents className="border-borderSecondaryColor text-main" htmlType={"submit"}
                             content={"Cập nhật"} />

@@ -10,11 +10,7 @@ const Tables = db.sequelize.define(
         },
         name_table: {
             type: DataTypes.STRING,
-        },
-        qr_code: {
-            type: DataTypes.STRING,
-        },
-        total_booked: {
+        }, total_booked: {
             type: DataTypes.INTEGER,
             defaultValue: 0
         },

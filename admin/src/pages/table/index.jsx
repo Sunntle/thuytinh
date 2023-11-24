@@ -7,6 +7,7 @@ import CreateTable from "./create";
 import UpdateTable from "./update";
 import Spinner from "../../components/spinner";
 import { socket } from "../../socket";
+import { url } from "../../utils/constant";
 const { Title } = Typography;
 const options = [
   { value: "out", label: "Bên ngoài" },
@@ -52,7 +53,7 @@ const TablePage = () => {
       {
         title: "Mã quét",
         dataIndex: "qr_code",
-        render: (_, record) => <QRCode value={record.qr_code} size={90} />,
+        render: (_, record) => <QRCode value={url + "tables-" + record.id} size={90} />,
       },
       {
         title: "Mã bàn",

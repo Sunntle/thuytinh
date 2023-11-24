@@ -168,13 +168,10 @@ exports.checkCurrentTable = asyncHandler(async (req, res, next) => {
 });
 
 exports.create = asyncHandler(async (req, res) => {
-  const { name_table, qr_code } = req.body;
+  const { name_table } = req.body;
   const [_, created] = await Tables.findOrCreate({
     where: {
-      [Op.or]: [
-        { qr_code },
-        { name_table }
-      ]
+      name_table
     },
     defaults: req.body,
     raw: true,
@@ -186,11 +183,11 @@ exports.create = asyncHandler(async (req, res) => {
 
 
 exports.update = asyncHandler(async (req, res) => {
-  const { id, qr_code, name_table } = req.body;
+  const { id, name_table } = req.body;
   const is = await Tables.findOne({
     where: {
       [Op.and]: [
-        { [Op.or]: [{ qr_code: { [Op.eq]: qr_code } }, { name_table: { [Op.eq]: name_table } }] },
+        { name_table },
         { id: { [Op.ne]: id } }
       ]
     },
