@@ -53,10 +53,7 @@ export const ResBooking = () => {
             },
             {
                 title: 'Số điện thoại',
-                dataIndex: 'phone',
-                render: (_, data) => (
-                    <span>0{data.order.phone}</span>
-                )
+                dataIndex: ['order', 'phone'],
             },
             {
                 title: 'Email',

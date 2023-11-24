@@ -129,11 +129,11 @@ const ResPayment = () => {
                 <div className='Order-total border rounded-md'>
                     <div className='tax'>
                         <span>Thuế VAT:</span>
-                        <span className='float-right'>0%</span>
+                        <span className='float-right'>10%</span>
                     </div>
                     <div className='total mt-3'>
                         <span className='font-medium text-lg'>Tổng tiền:</span>
-                        <span className='float-right text-lg text-main'>{formatGia(total.cartTotalAmount) || 0}</span>
+                        <span className='float-right text-lg text-main'>{formatGia(total.cartTotalAmount * 1.1) || 0}</span>
                     </div>
                     {tablelist ? (
                         <div className='grid grid-cols-2 mt-12'>

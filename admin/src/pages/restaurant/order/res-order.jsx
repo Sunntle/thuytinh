@@ -60,41 +60,41 @@ const RenderFooter = ({
           onCancel={handleCancel2}
           footer={false}
         >
-          <div className="w-full flex flex-col justify-start items-center space-y-1">
+          <div className="w-full flex flex-col justify-start space-y-1">
             <Collapse
               ghost
               items={[
-                {
-                  key: "1",
-                  label: "Thanh toán bằng VNPAY",
-                  children: (
-                    <Form form={form} onFinish={onFinish}>
-                      <Form.Item name="bankCode">
-                        <Radio.Group className="radio-custom">
-                          <Radio value="">Cổng thanh toán VNPAYQR</Radio>
-                          <Radio value="VNPAYQR">
-                            Thanh toán qua ứng dụng hỗ trợ VNPAYQR
-                          </Radio>
-                          <Radio value="VNBANK">
-                            Thanh toán qua ATM-Tài khoản ngân hàng nội địa
-                          </Radio>
-                          <Radio value="INTCARD">
-                            Thanh toán qua thẻ quốc tế
-                          </Radio>
-                        </Radio.Group>
-                      </Form.Item>
-                      <Form.Item className="text-right">
-                        <Button
-                          type={"primary"}
-                          htmlType={"submit"}
-                          className="bg-primary"
-                        >
-                          Thanh toán
-                        </Button>
-                      </Form.Item>
-                    </Form>
-                  ),
-                },
+                // {
+                //   key: "1",
+                //   label: "Thanh toán bằng VNPAY",
+                //   children: (
+                //     <Form form={form} onFinish={onFinish}>
+                //       <Form.Item name="bankCode">
+                //         <Radio.Group className="radio-custom">
+                //           <Radio value="">Cổng thanh toán VNPAYQR</Radio>
+                //           <Radio value="VNPAYQR">
+                //             Thanh toán qua ứng dụng hỗ trợ VNPAYQR
+                //           </Radio>
+                //           <Radio value="VNBANK">
+                //             Thanh toán qua ATM-Tài khoản ngân hàng nội địa
+                //           </Radio>
+                //           <Radio value="INTCARD">
+                //             Thanh toán qua thẻ quốc tế
+                //           </Radio>
+                //         </Radio.Group>
+                //       </Form.Item>
+                //       <Form.Item className="text-right">
+                //         <Button
+                //           type={"primary"}
+                //           htmlType={"submit"}
+                //           className="bg-primary"
+                //         >
+                //           Thanh toán
+                //         </Button>
+                //       </Form.Item>
+                //     </Form>
+                //   ),
+                // },
                 {
                   key: "2",
                   label: "Thanh toán bằng tiền mặt",
