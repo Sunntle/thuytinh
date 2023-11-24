@@ -1,22 +1,16 @@
-import { Form, Input, Modal, QRCode, Select } from 'antd';
-import { useCallback, useState } from 'react'
+import { Form, Input, Modal, Select } from 'antd';
+import { useCallback } from 'react';
 import ButtonComponents from '../../components/button';
 import { createTables } from '../../services/api';
-import { url } from '../../utils/constant';
 
 const CreateTable = ({ options, fetchData, setIsModalOpen, isModalOpen, messageApi }) => {
     const [form] = Form.useForm();
-    const [code, setCode] = useState('');
-
-
     const handleCancel = useCallback(() => {
         setIsModalOpen(false);
         form.resetFields();
-        setCode(url)
     }, [form, setIsModalOpen])
-    
+
     const onFinish = async (values) => {
-        values.qr_code = url+ 'tables-' + code;
         let { success, data } = await createTables(values);
         if (success) {
             fetchData();
@@ -61,24 +55,7 @@ const CreateTable = ({ options, fetchData, setIsModalOpen, isModalOpen, messageA
                         <Select options={options} />
 
                     </Form.Item>
-                    <div className='flex justify-center w-full'>
-                        <QRCode value={url + code} />
-                    </div>
-                    <Form.Item
-                        label={`Mã quét nhanh`}
-                        name="qr_code"
-                        rules={[{
-                            required: true,
-                            message: 'Vui lòng nhập url',
-                        }]}
-                    >
-                        <Input
-                            placeholder={`Vd: 1`}
-                            onChange={(e) => {
-                                setCode(e.target.value)
-                            }}
-                        />
-                    </Form.Item>
+
                     <Form.Item className='flex justify-end'>
                         <ButtonComponents className="border-borderSecondaryColor text-main" htmlType={"submit"}
                             content={"Thêm mới"} />

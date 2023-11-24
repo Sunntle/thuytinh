@@ -132,6 +132,7 @@ const BookingTable = () => {
       });
     }
   };
+
   return (
     <div className="pb-24 tracking-wide space-y-10 pt-32 max-w-full w-screen min-h-screen bg-[url('https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287118/NhaHangThuyTinh/bxjvz96etxtbyzsiz1ty.webp')] bg-no-repeat bg-cover bg-center">
       <ScrollToTop />
@@ -195,6 +196,7 @@ const BookingTable = () => {
                 disabledDate={disabledDate}
                 format={"DD/MM/YYYY"}
                 size={"middle"}
+
               />
             </Form.Item>
           </div>
