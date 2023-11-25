@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { AiFillPlusCircle } from "react-icons/ai";
 // Components
 import ProductDetail from "../ProductDetail/ProductDetail.jsx";
-import { message } from "antd";
+
 import Image from "../../../components/Image/Image.jsx";
 // Utils
 import {
@@ -12,27 +12,25 @@ import {
   formatCurrency,
 } from "../../../utils/format.js";
 // Redux
-import { addToOrder, setError } from "../../../redux/Order/orderSlice.js";
-import { useDispatch, useSelector } from "react-redux";
+
 // Motion
 import { usePresence, useAnimate } from "framer-motion";
 import PropTypes from "prop-types";
 
 const Product = (props) => {
+  const {handleAddToOrder} = props
   const { id, name_product, price, amount, discount } = props.item;
   const imageUrl = useMemo(
     () => props.item.imageUrls || props.item.imageproducts?.[0]?.url,
-    [props.item],
+    [props.item]
   );
-  const [messageApi, contextHolder] = message.useMessage();
   const [isPresent, safeToRemove] = usePresence();
-  const { err, order } = useSelector((state) => state.order);
+
   const [scope, animate] = useAnimate();
-  const dispatch = useDispatch();
+
   const [openDrawer, setOpenDrawer] = useState(false);
   const [productDetail, setProductDetail] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
-
   useLayoutEffect(() => {
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth >= 1024);
@@ -50,7 +48,7 @@ const Product = (props) => {
         await animate(
           scope.current,
           { opacity: [0, 1] },
-          { duration: 0.5, delay: 0.05 * id },
+          { duration: 0.5, delay: 0.05 * id }
         );
       };
       enterAnimation();
@@ -59,7 +57,7 @@ const Product = (props) => {
         await animate(
           scope.current,
           { opacity: [1, 0] },
-          { duration: 0.5, delay: 0.05 * id },
+          { duration: 0.5, delay: 0.05 * id }
         );
         safeToRemove();
       };
@@ -78,48 +76,12 @@ const Product = (props) => {
     setOpenDrawer(false);
   };
 
-  const handleAddToOrder = async (product) => {
-    if (!product) {
-      await messageApi.open({
-        type: "danger",
-        content: "Không tồn tại món ăn này",
-      });
-      return;
-    }
-
-    if (!(product.amount > 0)) {
-      await messageApi.open({
-        type: "info",
-        content: "Sản phẩm đã hết hàng",
-      });
-      return;
-    }
-
-    const itemFound = order.find((item) => item.id === product.id);
-
-    if (!itemFound || itemFound?.quantity < product.amount) {
-      await messageApi.open({
-        type: "success",
-        content: "Thêm món thành công",
-      });
-      dispatch(addToOrder(product));
-    } else {
-      await messageApi.open({
-        type: "error",
-        content: "Hết món",
-      });
-      return;
-    }
-
-  };
-
   return (
     <div
       ref={scope}
       key={id}
       className="relative box-border tracking-wide min-h-0 w-auto h-auto border rounded-lg shadow cursor-pointer transition-shadow duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)]"
     >
-      {contextHolder}
       <div className="w-full h-32 lg:h-40" onClick={showProductDetail}>
         <Image
           isLoading={!imageUrl && true}
@@ -166,6 +128,7 @@ const Product = (props) => {
 
 Product.propTypes = {
   item: PropTypes.object,
+  handleAddToOrder: PropTypes.func
 };
 
 export default Product;

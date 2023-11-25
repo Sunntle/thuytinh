@@ -5,6 +5,7 @@ const initRoutes = require("./routes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const db = require("./config/connectDatabase");
+const moment = require("moment");
 const { Server } = require("socket.io");
 const {
   handleNewUserConnect,
@@ -14,6 +15,7 @@ const {
   handleUserDisconnect,
 } = require("./utils/socketHanlers");
 require("dotenv").config();
+moment.tz.setDefault('Asia/Bangkok');
 const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cookieParser());

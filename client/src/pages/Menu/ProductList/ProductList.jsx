@@ -1,8 +1,40 @@
 import Product from "../Product/Product.jsx";
 import Spinner from "../../../components/Spinner/Spinner.jsx";
 import PropTypes from "prop-types";
+import { addToOrder } from "../../../redux/Order/orderSlice.js";
+import { message } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const ProductList = ({ foods, isLoading }) => {
+
+  const {isSuccess} = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    if(isSuccess?.status.length > 0){
+      message.open({type: isSuccess.type, content: isSuccess.message})
+    }
+  },[isSuccess])
+
+  const handleAddToOrder = async (product) => {
+    if (!product) {
+      message.open({
+        type: "danger",
+        content: "Không tồn tại món ăn này",
+      });
+      return;
+    }
+
+    if (!(product.amount > 0)) {
+      message.open({
+        type: "info",
+        content: "Sản phẩm đã hết hàng",
+      });
+      return;
+    }
+    dispatch(addToOrder(product));
+  };
     if (isLoading) return <Spinner />;
     if (foods === null)
       return (
@@ -16,7 +48,7 @@ const ProductList = ({ foods, isLoading }) => {
       {foods &&
         foods?.data.map((item,index) => (
           <span key={index}>
-            <Product item={item} />
+            <Product item={item} handleAddToOrder={handleAddToOrder}/>
           </span>
         ))}
     </div>

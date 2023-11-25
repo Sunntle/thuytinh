@@ -123,9 +123,7 @@ const BookingTable = () => {
       ...body,
     };
     const dataResponse = await sendRequest(request, undefined, true);
-
-    if (!dataResponse.success) {
-    } else {
+    if (dataResponse.success) {
       navigate(`/booked${result}&tables=${tableId}`, {
         state: { id: dataResponse.data.id },
       });

@@ -1,6 +1,6 @@
 // React
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 // React-icons
 import { FiSearch } from "react-icons/fi";
@@ -22,6 +22,7 @@ import * as apiService from "../../services/api.js";
 import "./index.css";
 import { Helmet } from "react-helmet";
 import { AiOutlineLoading } from "react-icons/ai";
+import { resetStatusOrder } from "../../redux/Order/orderSlice.js";
 
 const limit = 20;
 
@@ -36,7 +37,8 @@ const Menu = () => {
   const { sendRequest, isLoading } = useHttp();
   const debouncedValue = useDebounce(searchValue, 100);
   const categoryIndex = searchParams.get("category") || null;
-
+  const dispatch = useDispatch()
+  useEffect(()=> { dispatch(resetStatusOrder())}, [])
   const fetchFoods = useCallback(async (length = 0) => {
     setIsProductLoading(true);
     try {
