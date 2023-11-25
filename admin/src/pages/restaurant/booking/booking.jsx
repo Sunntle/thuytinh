@@ -4,22 +4,25 @@ import { delBooking, getAllBooking } from '../../../services/api';
 import ConfirmComponent from '../../../components/confirm';
 import { formatNgay } from '../../../utils/format';
 import UpdateBooking from './update'
+import Spinner from '../../../components/spinner';
 const { Title } = Typography;
 export const ResBooking = () => {
     const [booking, setBooking] = useState({})
     const [isModalOpenUpdate, setIsModalOpenUpdate] = useState(false);
     const [dataUpdate, setDataUpdate] = useState(null);
     const [messageApi, contextHolder] = message.useMessage();
-    const fetchData = useCallback(async () => {
+    const [loading, setLoading] = useState(true)
+    const fetchData = useCallback(async (params = {}) => {
         try {
-            const resBooking = await getAllBooking()
-            setBooking(resBooking)
+            const resBooking = await getAllBooking(params);
+            setBooking(resBooking);
+            setLoading(false);
         } catch (err) {
-            console.log(err)
+            console.error(err);
         }
-    }, [])
+    }, []);
     useEffect(() => {
-        fetchData();
+        fetchData({ _sort: "createdAt", _order: "desc" });
     }, [fetchData]);
     const handleDeleteBooking = useCallback(
         async (id) => {
@@ -109,17 +112,21 @@ export const ResBooking = () => {
     return (
         <>
             <div className='p-10'>
-                {contextHolder}
-                <Title level={3}>Danh sách đặt bàn</Title>
-                <Table className='mt-4' columns={columns} dataSource={booking.rows} rowKey={"id"} />
-                <UpdateBooking
-                    setDataUpdate={setDataUpdate}
-                    dataUpdate={dataUpdate}
-                    fetchData={fetchData}
-                    isModalOpenUpdate={isModalOpenUpdate}
-                    setIsModalOpenUpdate={setIsModalOpenUpdate}
-                    messageApi={messageApi}
-                />
+                {loading ? (<Spinner />) : (
+                    <>
+                        {contextHolder}
+                        <Title level={3}>Danh sách đặt bàn</Title>
+                        <Table className='mt-4' columns={columns} dataSource={booking.rows} rowKey={"id"} />
+                        <UpdateBooking
+                            setDataUpdate={setDataUpdate}
+                            dataUpdate={dataUpdate}
+                            fetchData={fetchData}
+                            isModalOpenUpdate={isModalOpenUpdate}
+                            setIsModalOpenUpdate={setIsModalOpenUpdate}
+                            messageApi={messageApi}
+                        />
+                    </>
+                )}
             </div>
         </>
     )
