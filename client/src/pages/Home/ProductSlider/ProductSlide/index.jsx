@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import Image from "../../../../components/Image/Image.jsx";
 
 const ProductSlide = React.memo(({ item, currentSlide }) => {
-  console.log(item);
   return (
     <>
       <span className="absolute top-2 left-2 text-base text-[#BEB7B5]">

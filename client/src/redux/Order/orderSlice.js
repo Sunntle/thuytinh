@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  isSuccess: {status: "", message: "", type: ""},
   err: null,
   order: [],
   idOrder: 0,
@@ -19,15 +20,19 @@ const orderSlice = createSlice({
         if (existingItem.amount && Number.isInteger(existingItem.amount)) {
           if (existingItem.quantity < food.amount) {
             existingItem.quantity += 1;
-          } else {
-            alert("Hết món")
-            return state;
+            state.isSuccess = {status: "OK", message: "Đặt món thành công ", type: "success"}
+          } else{
+            state.isSuccess = {status: "Warning", message: "Hết món", type: "error"}
           }
+
         } else {
           existingItem.quantity += 1;
+          state.isSuccess = {status: "OK", message: "Đặt món thành công ", type: "success"}
         }
       } else {
+
         state.order.push({ ...food, quantity: 1 });
+        state.isSuccess = {status: "OK", message: "Đặt món thành công ", type: "success"}
       }
     },
     addOrderDetailUpdate: (state, action) => {
@@ -80,12 +85,15 @@ const orderSlice = createSlice({
     checkIsActiveBooking: (state, action) => {
       state.isActiveBooking = action.payload;
     },
+    resetStatusOrder: (state)=>{
+      state.isSuccess = {status: "", message: "", type: ""}
+    }
   },
 });
 
 export const {
   emptyOrder,
-    setError,
+  setError,
   checkIsActiveBooking,
   addIdOrderTable,
   addOrderDetailUpdate,
@@ -96,5 +104,6 @@ export const {
   increaseQuantity,
   decreaseQuantity,
   resetOrderStore,
+  resetStatusOrder
 } = orderSlice.actions;
 export const orderReducer = orderSlice.reducer;
