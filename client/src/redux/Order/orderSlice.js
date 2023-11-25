@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  err: null,
   order: [],
   idOrder: 0,
   isOrdered: false,
   previousQuantity: 0,
-  isActiveBooking: false
+  isActiveBooking: false,
 };
 const orderSlice = createSlice({
   name: "order",
@@ -19,7 +20,8 @@ const orderSlice = createSlice({
           if (existingItem.quantity < food.amount) {
             existingItem.quantity += 1;
           } else {
-            alert("Hết món");
+            alert("Hết món")
+            return state;
           }
         } else {
           existingItem.quantity += 1;
@@ -30,7 +32,10 @@ const orderSlice = createSlice({
     },
     addOrderDetailUpdate: (state, action) => {
       state.order = action.payload;
-      state.previousQuantity = action.payload.reduce((acc, cur) => acc + cur.quantity, 0)
+      state.previousQuantity = action.payload.reduce(
+        (acc, cur) => acc + cur.quantity,
+        0,
+      );
     },
     addIdOrder: (state, action) => {
       state.idOrder = action.payload;
@@ -67,19 +72,20 @@ const orderSlice = createSlice({
       state.order = [];
     },
     resetOrderStore: () => {
-      return initialState
+      return initialState;
     },
     checkIsOrdered: (state, action) => {
-      state.isOrdered = action.payload
+      state.isOrdered = action.payload;
     },
     checkIsActiveBooking: (state, action) => {
-      state.isActiveBooking = action.payload
+      state.isActiveBooking = action.payload;
     },
   },
 });
 
 export const {
   emptyOrder,
+    setError,
   checkIsActiveBooking,
   addIdOrderTable,
   addOrderDetailUpdate,
@@ -89,6 +95,6 @@ export const {
   removeFromOrder,
   increaseQuantity,
   decreaseQuantity,
-  resetOrderStore
+  resetOrderStore,
 } = orderSlice.actions;
 export const orderReducer = orderSlice.reducer;

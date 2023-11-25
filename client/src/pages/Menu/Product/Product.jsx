@@ -12,8 +12,8 @@ import {
   formatCurrency,
 } from "../../../utils/format.js";
 // Redux
-import { addToOrder } from "../../../redux/Order/orderSlice.js";
-import { useDispatch } from "react-redux";
+import { addToOrder, setError } from "../../../redux/Order/orderSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 // Motion
 import { usePresence, useAnimate } from "framer-motion";
 import PropTypes from "prop-types";
@@ -26,6 +26,7 @@ const Product = (props) => {
   );
   const [messageApi, contextHolder] = message.useMessage();
   const [isPresent, safeToRemove] = usePresence();
+  const { err, order } = useSelector((state) => state.order);
   const [scope, animate] = useAnimate();
   const dispatch = useDispatch();
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -85,6 +86,7 @@ const Product = (props) => {
       });
       return;
     }
+
     if (!(product.amount > 0)) {
       await messageApi.open({
         type: "info",
@@ -92,11 +94,23 @@ const Product = (props) => {
       });
       return;
     }
-    dispatch(addToOrder(product));
-    await messageApi.open({
-      type: "success",
-      content: "Đã thêm món ăn",
-    });
+
+    const itemFound = order.find((item) => item.id === product.id);
+
+    if (!itemFound || itemFound?.quantity < product.amount) {
+      await messageApi.open({
+        type: "success",
+        content: "Thêm món thành công",
+      });
+      dispatch(addToOrder(product));
+    } else {
+      await messageApi.open({
+        type: "error",
+        content: "Hết món",
+      });
+      return;
+    }
+
   };
 
   return (

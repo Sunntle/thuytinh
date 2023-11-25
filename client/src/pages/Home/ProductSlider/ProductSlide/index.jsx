@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import Image from "../../../../components/Image/Image.jsx";
 
 const ProductSlide = React.memo(({ item, currentSlide }) => {
+  console.log(item);
   return (
     <>
       <span className="absolute top-2 left-2 text-base text-[#BEB7B5]">
@@ -36,10 +37,7 @@ const ProductSlide = React.memo(({ item, currentSlide }) => {
           }}
           className="h-[250px] w-[250px] lg:h-[300px] lg:w-[300px] xl:h-[350px] xl:w-[350px]"
         >
-          <Image
-            alt="anh"
-            src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700289119/NhaHangThuyTinh/ep96fcdyntguk3tbc2vv.webp"
-          />
+          <Image alt="anh" src={item.image} />
         </motion.div>
       </div>
       <motion.div
@@ -80,6 +78,7 @@ ProductSlide.propTypes = {
   item: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
+    image: PropTypes.string,
     // Add more specific PropTypes for item properties if needed
   }).isRequired,
   currentSlide: PropTypes.number.isRequired,
