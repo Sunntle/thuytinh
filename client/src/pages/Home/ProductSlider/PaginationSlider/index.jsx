@@ -13,12 +13,13 @@ const PaginationSlider = memo(({ className, index, products }) => {
         }}
       >
         <div
-          className={`w-44 h-44 z-40 absolute -top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-full drop-shadow-2xl rotate-${(index + 1) * 45
-            }`}
+          className={`w-44 h-44 z-40 absolute -top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-full drop-shadow-2xl rotate-${
+            (index + 1) * 45
+          }`}
         >
           <Image
-            src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700289119/NhaHangThuyTinh/ep96fcdyntguk3tbc2vv.webp"
-            alt={"img"}
+            src={products?.[index]?.image}
+            alt={"Ảnh"}
             isLoading={!products}
             className={"rounded-full"}
           />
@@ -43,6 +44,7 @@ PaginationSlider.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       description: PropTypes.string,
+      image: PropTypes.string,
       // Add more specific PropTypes for product properties if needed
     }),
   ),

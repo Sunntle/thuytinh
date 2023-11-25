@@ -22,7 +22,7 @@ const ProductSlider = ({ products }) => {
   products = products?.data?.slice(0, 4)?.map((item) => ({
     name: item.name_product,
     image:
-      typeof item.imageproducts[0] === "string" ? item.imageproducts[0] : "",
+      typeof item?.imageproducts?.[1]?.url === "string" ? item?.imageproducts?.[1]?.url : "",
     description: item.description,
   }));
   const [currentSlide, setCurrentSlide] = useState(0);

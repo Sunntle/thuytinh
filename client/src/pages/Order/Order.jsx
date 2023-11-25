@@ -9,7 +9,7 @@ import {
   addOrderDetailUpdate,
   emptyOrder,
 } from "../../redux/Order/orderSlice.js";
-import { fetchTableById } from "../../services/api.js";
+import { fetchOrderById, fetchTableById } from "../../services/api.js";
 import {
   ScrollToTop,
   calculateTotalWithVAT,
@@ -25,6 +25,7 @@ const Order = () => {
   const { sendRequest, isLoading } = useHttp();
   const [data, setData] = useState([]);
   const { tables } = useSelector((state) => state.customerName);
+  const { idOrder } = useSelector((state) => state.order);
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
   const tableToken = localStorage.getItem("tableToken");
@@ -61,19 +62,27 @@ const Order = () => {
   };
 
   const onFinish = async (values) => {
-    values = { ...values, amount: totalOrder };
-    setLoadingState(true);
-    const request = {
-      method: "post",
-      url: "/payment/create_payment_url",
-      ...values,
-    };
-    const response = await sendRequest(request, undefined, true);
-    dispatch(emptyOrder());
-    setIsModalOpen(false);
-    form.resetFields();
-    if (response !== null) {
-      window.location.href = String(response);
+    const {
+      data: { status: status_order },
+    } = await sendRequest(fetchOrderById(idOrder), undefined, true);
+
+    if (status_order > 0 && status_order < 3) {
+      values = { ...values, amount: totalOrder };
+      setLoadingState(true);
+      const request = {
+        method: "post",
+        url: "/payment/create_payment_url",
+        ...values,
+      };
+      const response = await sendRequest(request, undefined, true);
+      dispatch(emptyOrder());
+      setIsModalOpen(false);
+      form.resetFields();
+      if (response !== null) {
+        window.location.href = String(response);
+      }
+    } else if (status_order === 3) {
+      message.open({type: 'warning',content: "Hoá đơn đã thanh toán"});
     }
   };
 
