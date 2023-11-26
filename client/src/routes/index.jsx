@@ -10,7 +10,6 @@ import CheckTable from "../guard/CheckTable";
 import PageNotFound from "../pages/PageNotFound/PageNotFound.jsx";
 import ThanksPage from "../pages/ThanksPage/ThanksPage.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess/PaymentSuccess.jsx";
-import LayoutContainer from "../layouts/LayoutContainer";
 import PaymentLoading from "../pages/PaymentLoading/index.jsx";
 import DeliveryNotSupported from "../pages/DeliveryNotSupported/index.jsx";
 import Home from "../pages/Home/Home";
@@ -25,7 +24,7 @@ import CancelBooking from "../pages/BookingTable/CancelBooking/index.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LayoutContainer />,
+    element: <Layout/>,
     children: [
       {
         index: true,
@@ -63,11 +62,11 @@ const router = createBrowserRouter([
   {
     path: "/:alias",
     element: (
+      <Layout>
       <CheckTable>
-        <EnterName>
-          <Layout />
-        </EnterName>
+          <EnterName/>
       </CheckTable>
+      </Layout>
     ),
     children: [
       {

@@ -61,8 +61,8 @@ const Banner = () => {
           className={`${screens.lg == true ? "max-w-2xl px-8" : "max-w-lg px-4"} absolute top-0 lg:px-16 md:px-12  w-full h-full flex flex-col items-start justify-center`}
         >
           <motion.div variants={variantsBannerItem}>
-            <Typography.Title style={{ color: "#FC8019", margin: 0 }} level={1}>
-              Nhà hàng hải sản Thủy Tinh
+            <Typography.Title style={{ color: "#FC8019", margin: 0 }} level={screens.lg ? 1 :  2}>
+              Nhà hàng hải sản  {screens.xs ? <><br/>Thủy Tinh</>: "Thủy Tinh"}
             </Typography.Title>
           </motion.div>
           <motion.h4

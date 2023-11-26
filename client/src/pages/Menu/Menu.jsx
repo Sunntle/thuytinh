@@ -38,7 +38,6 @@ const Menu = () => {
   const debouncedValue = useDebounce(searchValue, 100);
   const categoryIndex = searchParams.get("category") || null;
   const dispatch = useDispatch()
-  useEffect(()=> { dispatch(resetStatusOrder())}, [])
   const fetchFoods = useCallback(async (length = 0) => {
     setIsProductLoading(true);
     try {
@@ -80,7 +79,11 @@ const Menu = () => {
     };
     checkCate();
   }, [sendRequest, categoryIndex, fetchFoods]);
-
+  useEffect(()=>{
+    return ()=>{
+      { dispatch(resetStatusOrder())}
+    }
+  },[dispatch])
   const handleChangeSearchValue = useCallback((e) => {
     setSearchValue(e.target.value);
   }, []);

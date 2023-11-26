@@ -59,8 +59,8 @@ function Map({ mapRef, currentPosition }) {
   }
 
   return (
-    <div className="overflow-hidden">
-      <Row ref={mapRef} gutter={[10, 10]} align={"top"} justify={"center"} className="px-6 xl:px-12">
+    <div className="overflow-hidden px-6 xl:px-12">
+      <Row ref={mapRef} gutter={[10, 10]} align={"top"} justify={"center"}>
         <Col xs={24} lg={12}>
           <div className="w-full h-12 uppercase font-semibold text-lg text-primary text-center mb-3">
             Xem địa chỉ trên bản đồ

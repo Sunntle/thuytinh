@@ -238,7 +238,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           <button
             onClick={handleUpdateOrder}
             className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${idOrder === 0 ||
-              (isActiveBooking && !orders.some((i) => i.inDb)) ||
+              (isActiveBooking && !orders?.some((i) => i.inDb)) ||
               currentQuantity === previousQuantity
               ? "hidden"
               : ""
@@ -250,7 +250,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           <button
             className={`text-sm py-2 px-4 bg-primary rounded-md text-white hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${isOrdered ||
               orders?.length === 0 ||
-              orders.some((i) => i.inDb && true)
+              orders?.some((i) => i.inDb && true)
               ? "hidden"
               : ""
               }`}

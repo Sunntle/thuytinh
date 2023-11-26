@@ -6,8 +6,12 @@ import useHttp from "../../hooks/useHttp.js";
 import Spinner from "../../components/Spinner/Spinner.jsx";
 import { Helmet } from "react-helmet";
 import Image from "../../components/Image/Image.jsx";
-import { message } from "antd";
+import { Button, Input, message, Grid } from "antd";
+import { AiOutlineEnter } from "react-icons/ai";
+import "./index.css"
+const {useBreakpoint} = Grid
 const EnterName = (props) => {
+  const screens = useBreakpoint()
   const [customerName, setCustomerName] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
   const { sendRequest } = useHttp();
@@ -42,7 +46,7 @@ const EnterName = (props) => {
   if (customerNameState?.name?.length > 0 && isTableTokenExist) return props.children
 
   return (
-    <div className="overflow-hidden h-screen max-w-screen flex items-center">
+    <div className={`${screens.lg == false && "mt-[50px]"} overflow-hidden h-screen max-w-screen flex  items-center`}>
       {contextHolder}
       <Helmet>
         <title>Nhập tên</title>
@@ -53,23 +57,25 @@ const EnterName = (props) => {
         <div className="w-6/12 lg:w-6/12 m-auto">
           <Image src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700285866/NhaHangThuyTinh/lrwdetzbjqm4ccgqlxab.webp" alt="service-picture" />
         </div>
-        <div className="flex flex-col items-center space-y-3 lg:space-y-6">
+        <div className="flex flex-col items-center space-y-3 lg:space-y-6 entername">
           <span className="font-medium text-sm w-9/12 lg:text-xl text-center">
             Vui lòng nhập tên để nhà hàng tiện xưng hô và phục vụ được tốt nhất
           </span>
-          <input
-            onChange={handleChangeName}
-            value={customerName}
-            type="text"
-            className="w-9/12 h-12 border rounded-lg pl-3"
-            placeholder="Nhập tên"
-          />
-          <button
+            <Input
+              onChange={handleChangeName}
+              value={customerName}
+              type="text"
+              className="w-9/12 h-12 border rounded-lg pl-3"
+              placeholder="Nhập tên"
+              suffix={<Button type="link" className="text-gray-500 " onClick={handleSubmitName}><AiOutlineEnter /></Button>}
+            />
+            
+          {screens.lg && <button
             onClick={handleSubmitName}
             className="w-9/12 h-12 bg-primary text-white active:bg-opacity-80 rounded-lg text-lg font-medium"
           >
             Tiếp tục
-          </button>
+          </button>}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { getPreciseDistance } from "geolib";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
@@ -46,6 +46,7 @@ function SelectTable() {
   const isTableExist = location.state?.isTableExist; //ban dang duoc su dung
   const idTable = location.state?.prevTable; //1
   const mapRef = useRef(null)
+
   const handleSelectTable = useCallback(
     async (id) => {
       navigate(`/tables-${id}`, { state: { from: "menu" } });
@@ -121,7 +122,7 @@ function SelectTable() {
           <div className="w-full h-12 uppercase font-semibold text-lg text-primary flex justify-center items-center">
             Chọn bàn
           </div>
-          <div className="bg-white px-6 xl:px-12">
+          <div className="bg-white h-full px-6 xl:px-12">
             <Tabs
               type={"line"}
               onChange={onHandleTabChange}
@@ -133,7 +134,7 @@ function SelectTable() {
                   label: position === "in" ? "Trong nhà": "Ngoài trời" ,
                   key: position,
                   children: (
-                    <div className="w-full mb-10 h-screen max-w-full">
+                    <div className="w-full mb-10 min-h-screen max-w-full">
                       <div className="grid grid-cols-2 md:grid-col-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                         {tableByPosition?.map((table) => (
                           <div

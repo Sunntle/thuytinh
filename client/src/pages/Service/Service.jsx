@@ -27,7 +27,7 @@ const Service = () => {
       <div className="flex flex-col mt-8 space-y-6">
         <div className="w-full min-h-fit rounded-2xl bg-[#8a3617]">
           <img
-            className="w-full h-full max-h-[450px] object-contain"
+            className="w-full h-full max-h-[450px] object-contain rounded-lg"
             src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1699338283/NhaHangThuyTinh/qoj52hlvylu0hybn1em0.webp"
             alt=""
           />

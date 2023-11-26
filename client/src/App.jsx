@@ -46,6 +46,9 @@ const App = () => {
             colorWhite: "#323232",
             colorPrimaryHover: "#ffffff",
             algorithm: true
+          },
+          Input:{
+            activeBorderColor: "#FC8019",
           }
         },
       }}

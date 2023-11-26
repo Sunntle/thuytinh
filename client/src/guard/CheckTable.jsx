@@ -1,15 +1,18 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import Spinner from "../components/Spinner/Spinner.jsx";
 import axios from "../utils/axiosConfig.js";
+import { useSelector } from "react-redux";
+import EnterName from "../pages/EnterName/EnterName.jsx";
 
 const currentTime = new Date().valueOf()
 
-function CheckTable(props) {
+function CheckTable() {
   const location = useLocation();
   const [isTableExist, setTableExist] = useState("")
   const [loading, setLoading] = useState(true)
   const tokenTable = localStorage.getItem("tableToken")
+  const customerNameState = useSelector(state => state.customerName)
   const idTable = !location.pathname.includes("undefined") ? location.pathname.split("/")[1].split("-")[1] : undefined
   useEffect(() => {
     const checkTableExist = async () => {
@@ -47,10 +50,15 @@ function CheckTable(props) {
     }
     checkTableExist()
   }, [idTable, tokenTable])
+
+  const handleNavigate = useCallback(()=>{
+    if (customerNameState?.name?.length > 0 && tokenTable) return <Outlet/>
+    return <EnterName/>
+  },[customerNameState?.name?.length, tokenTable])
   if (loading) return <Spinner />
   if (isTableExist == "Kích hoạt bàn") return <Navigate to="/active-booking" replace />
   // eslint-disable-next-line react/prop-types
-  return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? (props.children) : (<Navigate to={"/select-table"} state={{ isTableExist, ...(idTable ? { prevTable: idTable } : {}) }} replace />)
+  return isTableExist == "Đúng" || isTableExist == "Bàn đang trống" ? handleNavigate() : (<Navigate to={"/select-table"} state={{ isTableExist, ...(idTable ? { prevTable: idTable } : {}) }} replace />)
 
 }
 
