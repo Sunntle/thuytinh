@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import ResOrder from '../order/res-order';
 import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSystem';
 import { socket } from '../../../socket';
+import Spinner from '../../../components/spinner';
 const ButtonTable = ({ table, handleTableClick, handleDetailModal, resetTable }) => (
   <div key={table.id}>
     <span
@@ -75,17 +76,23 @@ const ResChooseTable = () => {
   const [api, contextHolder] = notification.useNotification();
   const userId = useSelector((state) => state.account.user.id)
   const notifications = useSelector(state => state.notifications)
+  const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    const resTable = await getAllTable();
-    dispatch(AddTable(resTable));
+    try {
+      const resTable = await getAllTable();
+      dispatch(AddTable(resTable));
+      setLoading(false);
+    } catch (error) {
+      console.error('Lỗi khi tải dữ liệu bàn:', error);
+    }
   }, []);
-  
-  useEffect(()=>{
-    if(notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === 'order' && notifications.lastNotification?.status === false){
+
+  useEffect(() => {
+    if (notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === 'order' && notifications.lastNotification?.status === false) {
       fetchData()
     }
-  },[fetchData, notifications])
+  }, [fetchData, notifications])
 
   useEffect(() => {
     fetchData();
@@ -108,7 +115,7 @@ const ResChooseTable = () => {
     }
     dispatch(AddTableList(index));
     navigate('/employee/menu/');
-  },[api, dispatch, navigate, userId]);
+  }, [api, dispatch, navigate, userId]);
 
   const handleDetailModal = useCallback(async (table) => {
     const resTableId = await getTableId(table.id, { id_employee: userId });
@@ -124,12 +131,12 @@ const ResChooseTable = () => {
       dispatch(AddTableList(resTableId));
       setOpen(true)
     }
-  },[api, dispatch, userId])
+  }, [api, dispatch, userId])
 
   const handleCancel = useCallback(() => {
     dispatch(RemoveTableList())
     setOpen(false);
-  },[dispatch]);
+  }, [dispatch]);
 
   const resetTable = useCallback(async ({ id }) => {
     const res = await resetTableApi({ tables: [id], reset: true });
@@ -137,9 +144,9 @@ const ResChooseTable = () => {
       message: 'Thông báo',
       description: res
     });
-  },[api])
+  }, [api])
 
-  const items = useMemo(()=>([
+  const items = useMemo(() => ([
     {
       key: '1',
       label: 'Tất cả',
@@ -199,14 +206,19 @@ const ResChooseTable = () => {
         </div>
       ),
     },
-  ]),[handleDetailModal, handleTableClick, resetTable, tableData]);
+  ]), [handleDetailModal, handleTableClick, resetTable, tableData]);
 
   return (
     <>
       <div className="w-full p-10">
-        {contextHolder}
-        <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1" animated items={items} />
-        <ResOrder handleCancel={handleCancel} open={open} />
+        {loading ? (<Spinner />) : (
+          <>
+            {contextHolder}
+            <Tabs className="mx-6 text-slate-500 active:text-main" defaultActiveKey="1" animated items={items} />
+            <ResOrder handleCancel={handleCancel} open={open} />
+          </>
+        )}
+
       </div>
     </>
   );
