@@ -27,6 +27,7 @@ import {
 import "./index.css";
 import Image from "../../../Image/Image.jsx";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
   const {
@@ -36,6 +37,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     previousQuantity,
     isActiveBooking,
   } = useSelector((state) => state.order);
+  const navigate = useNavigate()
   const customerName = useSelector((state) => state.customerName);
   const [messageApi, contextHolder] = message.useMessage();
   const { sendRequest } = useHttp();
@@ -76,10 +78,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           type: "success",
           content: "Đặt món thành công",
         });
-        window.location.href = `${import.meta.env.MODE === "production"
-          ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION
-          : import.meta.env.VITE_APP_CLIENT_URL
-          }/tables-${customerName.tables[0]}/order`;
+        navigate(`/tables-${customerName.tables[0]}/order`)
       } else {
         messageApi.open({
           type: "error",
@@ -91,16 +90,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     } finally {
       setIsOrderDesktop(false);
     }
-  }, [
-    customerName.name,
-    customerName.tables,
-    dispatch,
-    messageApi,
-    orders,
-    sendRequest,
-    setIsOrderDesktop,
-    totalOrder,
-  ]);
+  }, [customerName.name, customerName.tables, dispatch, messageApi, navigate, orders, sendRequest, setIsOrderDesktop, totalOrder]);
 
   const handleUpdateOrder = async () => {
     const body = {
@@ -117,10 +107,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       const res = await sendRequest(request, undefined, true);
       if (res.success) {
         dispatch(emptyOrder());
-        window.location.href = `${import.meta.env.MODE === "production"
-          ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION
-          : import.meta.env.VITE_APP_CLIENT_URL
-          }/tables-${customerName.tables[0]}/order`;
+        navigate(`/tables-${customerName.tables[0]}/order`)
       } else {
         messageApi.open({
           type: "error",

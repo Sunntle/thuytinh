@@ -16,11 +16,12 @@ import { motion } from "framer-motion";
 import ProductSlider from "./ProductSlider/index.jsx";
 import {Helmet} from "react-helmet";
 import { ScrollToTop } from "../../utils/format.js";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
-
+  const customerName = useSelector(state => state.customerName)
   useEffect(() => {
     const fetchAllProduct = async () => {
       await sendRequest(fetchProductByLimit(7), setSlideProduct, false);
@@ -60,7 +61,7 @@ const Home = () => {
         <div className="hidden lg:flex z-30 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-between text-white">
           <span className="w-24 h-px bg-white"></span>
           <Link
-            to="/menu"
+            to={customerName?.tables.length > 0 ? `/tables-${customerName?.tables}/menu` : '/select-table'}
             className="cursor-pointer font-light text-sm whitespace-nowrap px-4 py-2 border rounded-sm border-white hover:bg-white hover:text-slate-800 transition-colors duration-200"
           >
             Xem thêm
@@ -96,7 +97,7 @@ const Home = () => {
 
       {slideProduct && <ProductSlider products={slideProduct} />}
 
-      <Reason />
+      <Reason customerName={customerName}/>
     </div>
   );
 };

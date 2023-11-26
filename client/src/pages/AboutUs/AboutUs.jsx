@@ -160,8 +160,7 @@ const AboutUs = () => {
           >
             {slideProduct?.data
               ?.filter((el) => el.rate >= 3)
-              ?.map((rating, index) => {
-                if (index > 5) return null;
+              ?.map((rating) => {
                 if (rating.rate >= 3) {
                   return (
                     <SwiperSlide key={rating.id}>

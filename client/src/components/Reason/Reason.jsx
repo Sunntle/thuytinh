@@ -1,8 +1,10 @@
+/* eslint-disable react/prop-types */
 import { BsBookmarkCheckFill } from "react-icons/bs";
 import { FaShippingFast } from "react-icons/fa";
 import { RiServiceFill } from "react-icons/ri";
 import { motion } from "framer-motion";
 import Image from "../../components/Image/Image.jsx";
+import { useNavigate } from "react-router-dom";
 
 const arrContent = [
   {
@@ -31,7 +33,8 @@ const arrContent = [
   },
 ];
 
-const AboutUs = () => {
+const AboutUs = ({customerName}) => {
+  const navigate = useNavigate()
   return (
     <div className="min-h-[700px] my-12 px-6 lg:px-16 lg:pt-12 bg-white flex justify-center items-center">
         <div>
@@ -73,7 +76,7 @@ const AboutUs = () => {
                         <p className="text-sm text-gray-500 line-clamp-3">
                           {item.content}
                         </p>
-                        <button className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-primary/80 transition duration-300 ease-in-out hover:scale-105">
+                        <button onClick={()=>{{customerName?.tables.length > 0 ? navigate(`/tables-${customerName?.tables}/menu`) : navigate('/select-table')}}} className="w-full bg-primary text-white rounded-full px-4 py-2 hover:bg-primary/80 transition duration-300 ease-in-out hover:scale-105">
                           Xem Menu
                         </button>
                       </div>

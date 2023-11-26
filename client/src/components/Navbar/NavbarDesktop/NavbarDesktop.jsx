@@ -71,7 +71,7 @@ const NavbarDesktop = ({
   return (
     <div
       ref={headerRef}
-      className={`tracking-wide hidden ease-in-out duration-200 lg:flex lg:justify-between lg:items-center lg:fixed z-30 ${checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
+      className={`tracking-wide hidden ease-in-out duration-500 lg:flex lg:justify-between lg:items-center lg:fixed z-30 ${checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
         } top-0 w-full h-20 px-16 py-2 drop-shadow-md`}
     >
       {contextHolder}
