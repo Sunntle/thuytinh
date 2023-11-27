@@ -36,7 +36,7 @@ const arrContent = [
 const AboutUs = ({customerName}) => {
   const navigate = useNavigate()
   return (
-    <div className="min-h-[700px] my-12 px-6 lg:px-16 lg:pt-12 bg-white flex justify-center items-center">
+    <div className="min-h-[700px] px-6 lg:px-16 lg:pt-12 bg-white flex justify-center items-center">
         <div>
           <h2 className="md:text-4xl text-3xl font-bold text-primary pb-4">
             Tại sao bạn chọn chúng tôi

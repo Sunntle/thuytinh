@@ -422,7 +422,7 @@ exports.getListBooking = asyncHandler(async (req, res) => {
   const data = await TableByOrder.findAndCountAll({
     include: { model: Order },
     where: { status: "confirmed" },
-    order: [["createdAt", "ASC"]]
+    order: [["createdAt", "DESC"]]
   });
   return res.status(200).json(data);
 });

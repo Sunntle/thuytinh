@@ -8,6 +8,8 @@ import { fetchAccount } from "./redux/account/accountSlice";
 import router from "./routes";
 import { socket } from "./socket";
 import { fetchNotification } from "./redux/notification/notificationSystem";
+import moment from 'moment-timezone';
+moment.tz.setDefault('Asia/Bangkok');
 const nextCallAccount = ['/', '/register'];
 const App = () => {
   const dispatch = useDispatch();

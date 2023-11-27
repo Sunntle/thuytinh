@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { ConfigProvider as ConfigProviderAntd } from "antd";
 import { socket } from "./services/socket";
 import { resetOrderStore } from "./redux/Order/orderSlice";
+import moment from 'moment-timezone';
+moment.tz.setDefault('Asia/Bangkok');
 const App = () => {
   const dispatch = useDispatch();
   const customerName = useSelector(state => state.customerName)
@@ -19,8 +21,8 @@ const App = () => {
         if (customerName.tables[0] == data) {
           dispatch(resetOrderStore())
           dispatch(resetTablesStore())
+          window.location.href = import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL;
         }
-        window.location.href = import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_CLIENT_URL_PRODUCTION : import.meta.env.VITE_APP_CLIENT_URL;
       })
     }
   }, [customerName.tables]);
