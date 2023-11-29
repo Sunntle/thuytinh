@@ -59,6 +59,22 @@ const ResMenu = () => {
 
     }, [selectedCategory])
 
+    const handleAddToCart = (product) => {
+        try{
+            dispatch(AddCart(product));
+            messageApi.open({
+                type: "success",
+                content: "Đặt món thành công",
+              });
+        } catch{
+            messageApi.open({
+                type: "error",
+                content: "Đặt món thất bại",
+              });
+        }
+        
+    }
+
     useEffect(() => {
         fetchData(page, 12);
     }, [selectedCategory, page, fetchData]);
@@ -82,6 +98,7 @@ const ResMenu = () => {
             dispatch(setErr(null))
         }
     }, [dispatch, messageApi, warning]);
+
     return (
         <div className='w-full p-10'>
             {loading ? (<Spinner />) : (
@@ -129,7 +146,7 @@ const ResMenu = () => {
                                                                             <p className=' font-medium text-main text-lg mr-1 lg:order-2 xl:order-none'> {(formatGia(product.price - (product.price * product.discount / 100)))}</p>
                                                                             <p className=' font-medium text-slate-300 line-through text-xs lg:order-1 xl:order-none'> {(formatGia(product.price))}</p>
                                                                         </div>
-                                                                        <PlusOutlined onClick={() => dispatch(AddCart({ ...product, price: product.price - (product.price * product.discount / 100) }))} size={30} className='p-1 bg-main rounded-full text-white' />
+                                                                        <PlusOutlined onClick={() => handleAddToCart({ ...product, price: product.price - (product.price * product.discount / 100) })} size={30} className='p-1 bg-main rounded-full text-white' />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -142,7 +159,7 @@ const ResMenu = () => {
                                                                 <div className='text-xs text-slate-500 mt-2'>{product.amount >= 1 ? ('Số lượng : ' + product.amount) : (product.amount === 0.5 ? null : ('Sản phẩm hết hàng!'))}</div>
                                                                 <div className='flex justify-between items-center'>
                                                                     <p className=' font-medium text-main text-lg mt-1'> {(formatGia(product.price))}</p>
-                                                                    <PlusOutlined onClick={() => dispatch(AddCart(product))} size={30} className='p-1 bg-main rounded-full text-white' />
+                                                                    <PlusOutlined onClick={() => handleAddToCart(product)} size={30} className='p-1 bg-main rounded-full text-white' />
                                                                 </div>
                                                             </div>
                                                         </div>)}
