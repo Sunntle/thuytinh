@@ -8,7 +8,9 @@ const Product = require("../models/productModel");
 const ImageProduct = require("../models/imageModel");
 const Order = require("../models/orderModel");
 const Tables = require("../models/tableModel");
+const Notification = require("../models/notificationModel");
 const unitMasterial = ["kg", "gram", "phần", "lít", "quả", "con", "thùng"];
+const overMasterial = ["2", "500", "9", "5", "50", "20", "10"];
 const apiQueryRest = (params) => {
     const { _offset, _limit, _sort, _order, q, title, _noQuery, ...rest } = params;
     let query = { distinct: true };
@@ -149,7 +151,7 @@ const checkBooking = async ({ time, tableId, dining_option, params, limit, isAct
     } else {
         query = { include: [{ model: Order, where: { status: 0 } }] }
     }
-   
+
     query.where = {
 
         dining_option: dining_option,
@@ -181,8 +183,27 @@ function isTimestampValid(timestamp) {
     const validTimestamp = timestamp + 75 * 60 * 1000;
     return validTimestamp > currentTimestamp
 }
+const checkOverMaterial = async (table, id) => {
+    const dataChart = await table.findOne({
+        attributes: ["id", "amount", "name_material", "unit", "image"],
+        where: {
+            [Op.and]: {
+                id: id,
+                [Op.or]: unitMasterial.map((unit, index) => ({
+                    unit: unit,
+                    amount: { [Op.lte]: parseFloat(overMasterial[index]) },
+                })),
+            }
+        },
+        raw: true
+    });
+    if (dataChart) {
+        await Notification.create({ type: "order", description: `Nguyên liệu  ${dataChart.name_material} ${dataChart.amount < 1 ? "hết hàng " : "gần hết hàng nhé "}!`, content: id }, { raw: true })
+    }
+}
 module.exports = {
-    timeLimit, isTimestampValid,
+    checkOverMaterial,
+    timeLimit, isTimestampValid, overMasterial,
     handleTimeDining, isEmpty, checkBooking,
     templateSendUser, bookingValidate, currentYear, tinhWeek,
     bien, unitMasterial, apiQueryRest, handleTotalQty, checkQtyMaterials, getQtyMaterialByProduct

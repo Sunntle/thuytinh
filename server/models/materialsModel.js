@@ -1,7 +1,7 @@
 const { DataTypes, Op } = require("sequelize");
 const db = require("../config/connectDatabase");
 const cloudinary = require("cloudinary").v2;
-const { unitMasterial, checkQtyMaterials, handleTotalQty, getQtyMaterialByProduct } = require("../utils/const");
+const { unitMasterial, checkQtyMaterials, handleTotalQty, getQtyMaterialByProduct, checkOverMaterial } = require("../utils/const");
 const Recipes = require("./recipeModel");
 const Product = require("./productModel");
 const Materials = db.sequelize.define(
@@ -50,9 +50,10 @@ Materials.prototype.checkAmountByProduct = async function (products) {
   }
   if (products.length === approve.length) {
     for (const val of arr) {
-      await Promise.all(val.map(async (item) => (
+      await Promise.all(val.map(async (item) => {
         await Materials.decrement("amount", { by: item.total, where: { id: item.id_material } })
-      )))
+        await checkOverMaterial(Materials, item.id_material)
+      }))
     }
   }
 

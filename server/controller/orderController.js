@@ -3,7 +3,7 @@ const {
   apiQueryRest,
   checkQtyMaterials,
   getQtyMaterialByProduct,
-  bien, currentYear, tinhWeek, checkBooking, handleTimeDining
+  bien, currentYear, tinhWeek, checkBooking, handleTimeDining, checkOverMaterial
 } = require("../utils/const");
 const asyncHandler = require("express-async-handler");
 const {
@@ -127,7 +127,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
 
   let check = false;
   for (const cart of carts) {
-    if(cart.inDb) cart.quantity -= cart.inDb;
+    if (cart.inDb) cart.quantity -= cart.inDb;
     const val = await getQtyMaterialByProduct(cart);
     const result = await checkQtyMaterials(val, Materials);
     if (!result) {
@@ -141,29 +141,33 @@ exports.updateOrder = asyncHandler(async (req, res) => {
       const orderDatabase = current.find((ele) => ele.id_product === cart.id);
       const val = await getQtyMaterialByProduct(cart);
       if (orderDatabase) {
-        await Promise.all(
-          val.map(
-            async (item) =>
-              await Materials.decrement("amount", {
-                by: item.total,
-                where: { id: item.id_material },
-              }),
-          ),
-        );
+
+        await Promise.all(val.map(
+          async (item) => {
+            await Materials.decrement("amount", {
+              by: item.total,
+              where: { id: item.id_material },
+            })
+            await checkOverMaterial(Materials, item.id_material)
+          }
+        ))
+
         await OrderDetail.increment("quantity", {
           by: cart.quantity,
           where: { id: orderDatabase.id },
         });
       } else {
-        await Promise.all(
-          val.map(
-            async (item) =>
-              await Materials.decrement("amount", {
-                by: item.total,
-                where: { id: item.id_material },
-              }),
-          ),
-        );
+
+        await Promise.all(val.map(
+          async (item) => {
+            await Materials.decrement("amount", {
+              by: item.total,
+              where: { id: item.id_material },
+            })
+            await checkOverMaterial(Materials, item.id_material)
+          }
+        ))
+
         await OrderDetail.create({
           id_product: cart.id,
           quantity: cart.quantity,
