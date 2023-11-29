@@ -24,6 +24,7 @@ import ConfirmComponent from "../../components/confirm";
 import ButtonComponents from "../../components/button";
 import CreateRecipe from "./add_recipe";
 import Spinner from "../../components/spinner";
+import ImageComponent from "../../components/image";
 const init = { show: false, data: [] };
 const { Title } = Typography;
 const RecipePage = () => {
@@ -156,7 +157,7 @@ const RecipePage = () => {
               title: "Ảnh sản phẩm",
               key: "thumbnail",
               render: (_, record) => (
-                <img src={record.product.imageproducts?.[0]?.url} width={100} />
+                <ImageComponent src={record.product?.imageproducts?.[0]?.url} list={record.product?.imageproducts} />
               ),
             },
             {

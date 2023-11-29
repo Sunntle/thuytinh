@@ -37,6 +37,7 @@ const App = () => {
         components: {
           Button: {
             colorPrimary: "#FC8019",
+            colorLink: "#FC8019",
             algorithm: true,
           },
           Pagination: {

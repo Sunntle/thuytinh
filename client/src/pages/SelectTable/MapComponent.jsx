@@ -15,19 +15,19 @@ const center = {
   lat: 10.8524972,
   lng: 106.6259193,
 };
+const libraries = ['places']
 
 // eslint-disable-next-line react/prop-types
-function Map({ mapRef, currentPosition }) {
+function Map({ mapRef, currentPosition, setMapLoaded }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_MAP_KEY,
-    libraries: ["places"],
+    libraries,
   });
 
   const [map, setMap] = useState(/** @type google.maps.Map */(null));
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
-
   const originRef = useRef(null);
   const destiantionRef = useRef(null);
 
@@ -45,7 +45,7 @@ function Map({ mapRef, currentPosition }) {
     setDirectionsResponse(results);
     setDistance(results.routes[0].legs[0].distance.text);
     setDuration(results.routes[0].legs[0].duration.text);
-  }, [])
+  }, [currentPosition])
 
   const clearRoute = useCallback(() => {
     setDirectionsResponse(null);
@@ -54,13 +54,14 @@ function Map({ mapRef, currentPosition }) {
     originRef.current.value = "";
     destiantionRef.current.value = "";
   }, [])
+
   if (!isLoaded) {
     return <Skeleton />;
   }
 
   return (
-    <div className="overflow-hidden px-6 xl:px-12">
-      <Row ref={mapRef} gutter={[10, 10]} align={"top"} justify={"center"}>
+    <div ref={mapRef} className="overflow-hidden px-6 xl:px-12">
+      <Row  gutter={[10, 10]} align={"top"} justify={"center"}>
         <Col xs={24} lg={12}>
           <div className="w-full h-12 uppercase font-semibold text-lg text-primary text-center mb-3">
             Xem địa chỉ trên bản đồ
@@ -130,9 +131,12 @@ function Map({ mapRef, currentPosition }) {
               zoomControl: false,
               streetViewControl: false,
               mapTypeControl: false,
-              fullscreenControl: false,
+              fullscreenControl: true,
             }}
-            onLoad={(map) => setMap(map)}
+            onLoad={(map) => {
+              setMap(map);
+              setMapLoaded(true)
+            }}
           >
             <Marker position={center}>
               <InfoBox options={{ closeBoxURL: '', enableEventPropagation: true }}>
@@ -146,8 +150,6 @@ function Map({ mapRef, currentPosition }) {
         </Col>
       </Row>
     </div>
-
-
   );
 }
 export default memo(Map);
