@@ -11,8 +11,7 @@ exports.list = async (req, res) => {
   let query = {
     ...apiQueryRest({ ...req.query, title: "name_material" }), nest: true,
     include: { model: Warehouse, attributes: ["price_import"] },
-    order: [[{ model: Warehouse }, 'createdAt', 'DESC']],
-    subQuery: false
+    order: [[{ model: Warehouse }, 'createdAt', 'DESC']]
   };
 
   const { count, rows } = await Materials.findAndCountAll(query);

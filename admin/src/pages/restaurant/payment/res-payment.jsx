@@ -7,8 +7,9 @@ import { DeleteOutlined } from '@ant-design/icons'
 import { HiMinus, HiPlus } from "react-icons/hi2";
 import { addOrder, updateOrder } from '../../../services/api'
 import { useNavigate } from 'react-router-dom';
-import { formatGia } from '../../../utils/format'
+import { formatGia, truncateString } from '../../../utils/format'
 import { RemoveTableList } from '../../../redux/table/listTableSystem'
+import ImageComponent from "../../../components/image"
 
 const ResPayment = () => {
 
@@ -104,11 +105,11 @@ const ResPayment = () => {
                     <div key={index}>
                         <div className='flex items-center my-3'>
                             <div className='flex items-center h-16 w-15 mr-1 hover:bg-hoverColor'>
-                                <img className=' rounded-lg  h-full w-full  object-contain ' src={item?.imageproducts?.[0]?.url} />
+                                <ImageComponent className='rounded-lg max-w-[100px] h-full w-full  object-contain' src={item?.imageproducts?.[0]?.url}/>
                             </div>
                             <div className='flex-grow'>
                                 <div className='flex justify-between'>
-                                    <span className='text-sm text-slade-500 overflow-hidden break-words mb-1'>{item.name_product}</span>
+                                    <span className='text-sm text-slade-500 overflow-hidden break-words mb-1'>{truncateString(item?.name_product, 25)}</span>
                                     <span className='text-main text-sm mb-3'>{(formatGia(item.price))}</span>
                                 </div>
                                 <div className='flex items-center justify-between'>

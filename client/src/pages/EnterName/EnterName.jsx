@@ -8,7 +8,6 @@ import { Helmet } from "react-helmet";
 import Image from "../../components/Image/Image.jsx";
 import { Button, Input, message, Grid } from "antd";
 import { AiOutlineEnter } from "react-icons/ai";
-import "./index.css"
 const {useBreakpoint} = Grid
 const EnterName = (props) => {
   const screens = useBreakpoint()
@@ -67,7 +66,7 @@ const EnterName = (props) => {
               type="text"
               className="w-9/12 h-12 border rounded-lg pl-3"
               placeholder="Nhập tên"
-              suffix={<Button type="link" className="text-gray-500 " onClick={handleSubmitName}><AiOutlineEnter /></Button>}
+              suffix={<Button type="link" className="text-gray-500 " onClick={handleSubmitName}><AiOutlineEnter color="#FC8019"/></Button>}
             />
             
           {screens.lg && <button

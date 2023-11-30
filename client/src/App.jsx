@@ -40,6 +40,9 @@ const App = () => {
   return (
     <ConfigProviderAntd
       theme={{
+        token:{
+          colorPrimary: '#FC8019',
+        },
         components: {
           Form: {
             itemMarginBottom: 0,
@@ -50,9 +53,6 @@ const App = () => {
             colorPrimaryHover: "#ffffff",
             algorithm: true
           },
-          Input:{
-            activeBorderColor: "#FC8019",
-          }
         },
       }}
     >

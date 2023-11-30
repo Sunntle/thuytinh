@@ -11,7 +11,7 @@ import { getAllCate, getAllProduct } from '../../../services/api';
 import { formatGia } from '../../../utils/format';
 import ResPayment from '../payment/res-payment';
 import Spinner from '../../../components/spinner';
-
+import ImageComponent from "../../../components/image"
 const ResMenu = () => {
     const [product, setProduct] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -139,7 +139,7 @@ const ResMenu = () => {
                                                     {product.discount > 0 ? (
                                                         <Badge.Ribbon text={`${product.discount}%`} color='rgb(239 68 68)'>
                                                             <div className='shadow-xl border-solid border border-gray-300 rounded-lg min-h-[230px] w-auto' >
-                                                                <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
+                                                                <ImageComponent className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} list={product?.imageproducts}/>
                                                                 <div className='p-4 flex flex-col'>
                                                                     <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
                                                                     <div className='text-xs mt-2 text-slate-500'>{product.amount >= 1 ? ('Số lượng : ' + product.amount) : (product.amount === 0.5 ? ('Số lượng : vô hạn') : ('Sản phẩm hết hàng!'))}</div>
@@ -155,7 +155,7 @@ const ResMenu = () => {
                                                         </Badge.Ribbon>
                                                     ) : (
                                                         <div className='shadow-xl border-solid border border-gray-300 rounded-lg min-h-[230px] h-auto w-auto'>
-                                                            <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
+                                                            <ImageComponent className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} list={product?.imageproducts}/>
                                                             <div className='p-4 flex lg:min-h-[124px] xl:min-h-0 flex-col'>
                                                                 <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
                                                                 <div className='text-xs text-slate-500 mt-2'>{product.amount >= 1 ? ('Số lượng : ' + product.amount) : (product.amount === 0.5 ? ('Số lượng : vô hạn') : ('Sản phẩm hết hàng!'))}</div>

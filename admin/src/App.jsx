@@ -34,6 +34,9 @@ const App = () => {
     <ConfigProviderAntd
       theme={{
         algorithm: customize.darkMode ? darkAlgorithm : defaultAlgorithm,
+        token:{
+          colorPrimary: '#FC8019',
+        },
         components: {
           Button: {
             colorPrimary: "#FC8019",

@@ -45,6 +45,7 @@ import NotificationsComponent from "../notification";
 import { DarkSvg } from "../../utils/constant";
 import Clock from "../clock/Clock";
 import logo3 from "../../assets/images/logo3.svg";
+import ImageComponent from "../image"
 const DarkIcon = (props) => <Icon component={DarkSvg} {...props} />;
 const LightIcon = (props) => <Icon component={LightSvg} {...props} />;
 
@@ -273,13 +274,13 @@ function HeaderComponent({ collapsed, setCollapsed }) {
                     <SwiperSlide key={index}>
                       <Link to={`/employee/menu?product=${product.id}`}>
                         <div className="p-2 h-[167px] border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
-                          <img
+                          <ImageComponent
                             className="w-full mb-3 "
                             src={product?.imageproducts[0]?.url}
-                            alt=""
+                            preview
                           />
                           <h6 className="font-semibold text-gray-500">
-                            {product.name_product}
+                            {truncateString(product?.name_product, 25)}
                           </h6>
                         </div>
                       </Link>
