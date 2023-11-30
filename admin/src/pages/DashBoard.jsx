@@ -11,11 +11,11 @@ import Spinner from "../components/spinner";
 import { Link } from "react-router-dom";
 import LineChart from "../components/chart/line-chart";
 import { weekArrText } from "../utils/constant";
-
-const { Title } = Typography;
+import ImageComponent from "../components/image"
 import CountUp from 'react-countup';
 import moment from "moment";
 import 'moment/dist/locale/vi';
+const { Title } = Typography;
 const DashBoard = () => {
   moment.locale('vi');
   const [data, setData] = useState({});
@@ -238,11 +238,9 @@ const DashBoard = () => {
                       <Badge.Ribbon text={`${el.discount}% Off`} color="red">
                         <div className="py-5 px-3 sm:px-5 md:px-3 border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 flex items-center justify-around sm:justify-around lg:justify-evenly">
                           <div>
-                            <img
-                              className="w-full"
-                              style={{ maxWidth: "130px" }}
+                            <ImageComponent
+                              className="w-full max-w-[130px]"
                               src={el?.imageproducts[0]?.url}
-                              alt=""
                             />
                           </div>
                           <div>

@@ -1,15 +1,13 @@
 import { Col, Pagination, Row, Typography } from "antd";
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Spinner from "../../components/spinner";
-import { AddCart } from "../../redux/cartsystem/cartSystem";
 import { getAllCate, getAllMaterial, getAllProduct } from "../../services/api";
 import { formatGia, truncateString } from "../../utils/format";
-import { PlusOutlined } from '@ant-design/icons';
-
+import ImageComponent from "../../components/image"
+import { useMemo } from "react";
 const { Title } = Typography;
 
 function SearchPage() {
@@ -18,12 +16,10 @@ function SearchPage() {
   const [material, setMaterial] = useState(null);
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
-
+  const kw = useMemo(()=>searchParams.get("keyword"),[searchParams]);
   const fetchData = useCallback(
     async (_limit = 6, _offset = 0) => {
-      try {
-        const kw = searchParams.get("keyword");
+      try { 
         const [res, resMaterial, resCategory] = await Promise.all([
           getAllProduct({
             q: kw,
@@ -52,14 +48,32 @@ function SearchPage() {
     },
     [searchParams]
   );
+  const fetchProduct = useCallback(async(_limit = 6, _offset = 0)=>{
+    const res = await getAllProduct({
+      q: kw,
+      _limit: _limit,
+      _offset: _offset,
+    })
+    setProduct(res);
+  },[kw])
+
+  const fetchMaterial = useCallback(async(_limit = 6, _offset = 0)=>{
+    const res = await getAllMaterial({
+      q: kw,
+      _limit: _limit,
+      _offset: _offset,
+    })
+    setMaterial(res);
+  },[kw])
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  const handlePageChange = useCallback((page, pagesize = 5) => {
-    fetchData(pagesize, pagesize * (page - 1));
-  },[fetchData]);
-
+  const handlePageChange = useCallback((page, pagesize = 5, type) => {
+    if(type == 'product') fetchProduct(pagesize, pagesize * (page - 1))
+    if(type == 'material') fetchMaterial(pagesize, pagesize * (page - 1))
+  },[fetchMaterial, fetchProduct]);
   const renderCategory = () => {
     if (category?.length < 1)
       return <h4 className="text-gray-600 pb-3">Không có danh mục phù hợp</h4>;
@@ -77,7 +91,7 @@ function SearchPage() {
           modules={[Autoplay]}
           slidesPerView={2}
           spaceBetween={20}
-          className="mySwiper"
+          className="mySwiper py-5"
           breakpoints={{
             640: {
               slidesPerView: 3,
@@ -101,7 +115,7 @@ function SearchPage() {
             return (
               <SwiperSlide key={index}>
                 <div className="px-5 py-3 xl:px-10 xl:py-6  border border-solid rounded-md border-gray-300 hover:border-borderSecondaryColor transition duration-300 text-center">
-                  <img
+                  <ImageComponent
                     className="w-full mb-3"
                     src={category.thumbnail}
                     alt=""
@@ -125,19 +139,20 @@ function SearchPage() {
         <Title level={4} className="font-semibol">
           Món ăn: <span className="text-main">{product?.total}</span>
         </Title>
-        <Row gutter={[10, 10]}>
+        <Row gutter={[10, 10]} className="py-5">
           {product?.data.map((el, index) => (
             <Col md={4} sm={8} xs={12} className="rounded-lg" key={index}>
               <div className="shadow-xl border-solid border border-gray-300 rounded-lg min-h-[250px] w-auto">
-                <img
+                <ImageComponent
                   className="h-full w-full rounded-t-lg"
                   src={el?.imageproducts[0]?.url}
+                  list={el?.imageproducts}
                 />
   
-                <div className="p-4 flex flex-col ">
-                  <Link to={`/employee/menu?product=${category.id}`} className="font-medium text-xl hover:text-main">{truncateString(el.name_product, 15)}</Link>
+                <div className="p-4 flex flex-col">
+                  <Link to={`/employee/menu?product=${category.id}`} className="font-medium text-xl hover:text-main">{truncateString(el.name_product, 10)}</Link>
                   <div className="text-xs mt-2 text-slate-500">
-                    Số lượng : {el.amount}
+                  {el.amount >= 1 ? ('Số lượng : ' + el.amount) : (el.amount === 0.5 ? ('Số lượng : vô hạn') : ('Sản phẩm hết hàng!'))}
                   </div>
                   <div className="flex justify-between items-center">
                     {el.discount > 0 ? (
@@ -156,10 +171,6 @@ function SearchPage() {
                         {formatGia(el.price)}
                       </p>
                     )}
-                    <PlusOutlined
-                      onClick={() => dispatch(AddCart(el))}
-                      className="p-2 bg-main rounded-full text-white"
-                    />
                   </div>
                 </div>
               </div>
@@ -168,10 +179,11 @@ function SearchPage() {
         </Row>
         <div className="text-right">
           <Pagination
+            pageSize={6}
             responsive={true}
             defaultCurrent={1}
             total={product?.total}
-            onChange={handlePageChange}
+            onChange={(page, pagesize)=>handlePageChange(page, pagesize, 'product')}
           />
         </div>
       </div>
@@ -188,20 +200,18 @@ function SearchPage() {
           <Title level={4} className="font-semibold">
             Nguyên liệu: <span className="text-main">{material?.total}</span>
           </Title>
-          <div className="">
+          <div className="py-5">
           {material?.data.map((el, index) => (
             <div key={index} className="flex items-center gap-5 pb-4">
               <div>
-                <img
-                  className="w-full"
-                  style={{ maxWidth: "180px" }}
+                <ImageComponent
+                  className="w-full max-w-[180px]"
                   src={el.image}
-                  alt=""
                 />
               </div>
               <div>
                 <Link
-                  to={`/employee/menu?material=${el.id}`}
+                  to={`/admin/material`}
                   className="font-semibold text-xl hover:text-main"
                 >
                   {el.name_material}
@@ -217,9 +227,10 @@ function SearchPage() {
           <div className="text-right">
             <Pagination
               responsive={true}
+              pageSize={6}
               defaultCurrent={1}
               total={material?.total}
-              onChange={handlePageChange}
+              onChange={(page, pagesize)=>handlePageChange(page, pagesize, 'material')}
             />
           </div>
         </div>

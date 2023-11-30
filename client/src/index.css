@@ -27,6 +27,9 @@ html {
 :where(.css-dev-only-do-not-override-13fbrly).ant-tabs >.ant-tabs-nav .ant-tabs-nav-operations, :where(.css-dev-only-do-not-override-13fbrly).ant-tabs >div>.ant-tabs-nav .ant-tabs-nav-operations {
     display: none;
 }
+.ant-spin-dot-item {
+    background-color: #FC8019 !important;
+}
 @media (min-width: 1024px) {
     .main-layout {
         margin-top: 80px;

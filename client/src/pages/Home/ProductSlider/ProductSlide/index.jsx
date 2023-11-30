@@ -2,8 +2,12 @@ import { motion } from "framer-motion";
 import React from "react";
 import PropTypes from "prop-types";
 import Image from "../../../../components/Image/Image.jsx";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ProductSlide = React.memo(({ item, currentSlide }) => {
+  const navigate = useNavigate()
+  const customerName = useSelector(state => state.customerName)
   return (
     <>
       <span className="absolute top-2 left-2 text-base text-[#BEB7B5]">
@@ -64,6 +68,7 @@ const ProductSlide = React.memo(({ item, currentSlide }) => {
           }}
           transition={{ duration: 0.3, ease: "linear", delay: 1 }}
           type="text"
+          onClick={()=>{{customerName?.tables.length > 0 ? navigate(`/tables-${customerName?.tables}/menu`) : navigate('/select-table')}}}
           className=" text-primary w-full lg:w-fit text-base font-medium bg-white/90 hover:text-primary rounded p-2 border-box hover:bg-white transition-colors duration-300"
         >
           Xem thêm
