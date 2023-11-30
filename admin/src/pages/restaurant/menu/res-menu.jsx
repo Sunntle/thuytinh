@@ -6,7 +6,7 @@ import { createSearchParams, useNavigate, useSearchParams } from 'react-router-d
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from "swiper/react";
-import { AddCart, setErr } from '../../../redux/cartsystem/cartSystem';
+import { AddCart, setErr, setSuccess } from '../../../redux/cartsystem/cartSystem';
 import { getAllCate, getAllProduct } from '../../../services/api';
 import { formatGia } from '../../../utils/format';
 import ResPayment from '../payment/res-payment';
@@ -16,6 +16,7 @@ const ResMenu = () => {
     const [product, setProduct] = useState([]);
     const [categories, setCategories] = useState([]);
     const warning = useSelector(state => state.cart.err);
+    const success = useSelector(state => state.cart.isSuccess);
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
     const [messageApi, contextHolder] = message.useMessage();
@@ -61,11 +62,8 @@ const ResMenu = () => {
 
     const handleAddToCart = (product) => {
         try{
-            dispatch(AddCart(product));
-            messageApi.open({
-                type: "success",
-                content: "Đặt món thành công",
-              });
+             dispatch(AddCart(product));
+
         } catch{
             messageApi.open({
                 type: "error",
@@ -97,7 +95,11 @@ const ResMenu = () => {
             messageApi.warning(warning);
             dispatch(setErr(null))
         }
-    }, [dispatch, messageApi, warning]);
+        if(success){
+            messageApi.success(success);
+            dispatch(setSuccess(null))
+        }
+    }, [dispatch, messageApi, warning,success]);
 
     return (
         <div className='w-full p-10'>
@@ -140,7 +142,7 @@ const ResMenu = () => {
                                                                 <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
                                                                 <div className='p-4 flex flex-col'>
                                                                     <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
-                                                                    <div className='text-xs mt-2 text-slate-500'>Số lượng : {product.amount}</div>
+                                                                    <div className='text-xs mt-2 text-slate-500'>{product.amount >= 1 ? ('Số lượng : ' + product.amount) : (product.amount === 0.5 ? ('Số lượng : vô hạn') : ('Sản phẩm hết hàng!'))}</div>
                                                                     <div className='flex justify-between items-center mt-2'>
                                                                         <div className='product-price flex lg:flex-col xl:flex-row xl:justify-between xl:items-center'>
                                                                             <p className=' font-medium text-main text-lg mr-1 lg:order-2 xl:order-none'> {(formatGia(product.price - (product.price * product.discount / 100)))}</p>
@@ -156,7 +158,7 @@ const ResMenu = () => {
                                                             <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
                                                             <div className='p-4 flex lg:min-h-[124px] xl:min-h-0 flex-col'>
                                                                 <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
-                                                                <div className='text-xs text-slate-500 mt-2'>{product.amount >= 1 ? ('Số lượng : ' + product.amount) : (product.amount === 0.5 ? null : ('Sản phẩm hết hàng!'))}</div>
+                                                                <div className='text-xs text-slate-500 mt-2'>{product.amount >= 1 ? ('Số lượng : ' + product.amount) : (product.amount === 0.5 ? ('Số lượng : vô hạn') : ('Sản phẩm hết hàng!'))}</div>
                                                                 <div className='flex justify-between items-center'>
                                                                     <p className=' font-medium text-main text-lg mt-1'> {(formatGia(product.price))}</p>
                                                                     <PlusOutlined onClick={() => handleAddToCart(product)} size={30} className='p-1 bg-main rounded-full text-white' />
