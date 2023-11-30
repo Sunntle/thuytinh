@@ -49,7 +49,7 @@ const ResRevenue = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const [{ data }, res1, dataAdmin, res] = await Promise.all([getAllOrder({ _sort: "createdAt", _order: "desc" }), getDataDashboard({ weekcurrent: moment().week(), type: timeChart }), getAllUser({ _like: "role_R1_not" }), getAllMaterial()])
+      const [{ data }, res1, dataAdmin, res] = await Promise.all([getAllOrder({ _sort: "createdAt", _order: "desc" }), getDataDashboard({ weekcurrent: moment().week(), type: timeChart }), getAllUser({ _like: "role_R4" }), getAllMaterial()])
       const daily = calculateDailyRevenue(data);
       const weekly = calculateWeeklyRevenue(data);
       const monthly = calculateMonthlyRevenue(data)

@@ -5,7 +5,7 @@ import { initTable, resetTablesStore } from "./redux/CustomerName/customerNameSl
 import { useDispatch, useSelector } from "react-redux";
 import { ConfigProvider as ConfigProviderAntd } from "antd";
 import { socket } from "./services/socket";
-import { resetOrderStore } from "./redux/Order/orderSlice";
+import { resetOrderStore, resetStatusOrder } from "./redux/Order/orderSlice";
 import moment from 'moment-timezone';
 moment.tz.setDefault('Asia/Bangkok');
 const App = () => {
@@ -13,6 +13,7 @@ const App = () => {
   const customerName = useSelector(state => state.customerName)
   useEffect(() => {
     dispatch(initTable());
+    dispatch(resetStatusOrder())
   }, [dispatch]);
 
   useEffect(() => {

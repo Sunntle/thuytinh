@@ -198,7 +198,7 @@ const checkOverMaterial = async (table, id) => {
         raw: true
     });
     if (dataChart) {
-        await Notification.create({ type: "order", description: `Nguyên liệu  ${dataChart.name_material} ${dataChart.amount < 1 ? "hết hàng " : "gần hết hàng nhé "}!`, content: id }, { raw: true })
+        await Notification.create({ type: "material", description: `Nguyên liệu  ${dataChart.name_material} ${dataChart.amount < 1 ? "hết hàng " : "gần hết hàng "}!`, content: id }, { raw: true })
     }
 }
 module.exports = {

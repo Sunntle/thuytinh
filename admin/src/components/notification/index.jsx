@@ -14,7 +14,20 @@ import {
 /* eslint-disable react-refresh/only-export-components */
 import defaultAvatar from "../../assets/images/defaultAvatar.png"
 import { useState } from "react";
+const handleCheckNavigate = (type, role)=>{
+  switch(role){
+    case "R4": {
+      if(type.includes('-')) return `/employee/choosetable`
+      return `/admin/${type}`
+    }
+    default: {
+      if(type.includes('table')) return `/employee/booking`
+      return type.includes('-') ? `/employee/choosetable`: `/employee/renvenue`
+    }
+  }
+}
 function NotificationsComponent({
+  role,
   notifications,
   openPopover,
   setOpenPopover,
@@ -30,10 +43,10 @@ function NotificationsComponent({
 
   const handleToContent = useCallback((index) => {
     const content = notifications[index];
-    const navigateTo = content.type.includes('-') ? `/employee/choosetable` :`/admin/${content.type}`;
+    const navigateTo = handleCheckNavigate(content.type, role)
     dispatch(maskAsRead(content));
     navigate(navigateTo);
-  }, [dispatch, navigate, notifications])
+  }, [dispatch, navigate, notifications, role])
 
   const handleDelete = useCallback(async (id) => {
     dispatch(deleteNotification(id));

@@ -348,6 +348,7 @@ function HeaderComponent({ collapsed, setCollapsed }) {
             />
           </Tooltip>
           <NotificationsComponent
+            role={user?.user.role}
             notifications={noti.content}
             openPopover={openPopover}
             setOpenPopover={setOpenPopover}

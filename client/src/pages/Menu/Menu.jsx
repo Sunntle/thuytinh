@@ -80,9 +80,7 @@ const Menu = () => {
     checkCate();
   }, [sendRequest, categoryIndex, fetchFoods]);
   useEffect(()=>{
-    return ()=>{
-      { dispatch(resetStatusOrder())}
-    }
+    return ()=>dispatch(resetStatusOrder())
   },[dispatch])
   const handleChangeSearchValue = useCallback((e) => {
     setSearchValue(e.target.value);
