@@ -142,7 +142,7 @@ const ResMenu = () => {
                                                                 <img className='h-full w-full rounded-t-lg' src={product?.imageproducts[0]?.url} />
                                                                 <div className='p-4 flex flex-col'>
                                                                     <div className='font-medium lg:text-xs xl:text-sm'>{product.name_product}</div>
-                                                                    <div className='text-xs mt-2 text-slate-500'>Số lượng : {product.amount}</div>
+                                                                    <div className='text-xs mt-2 text-slate-500'>{product.amount >= 1 ? ('Số lượng : ' + product.amount) : (product.amount === 0.5 ? ('Số lượng : vô hạn') : ('Sản phẩm hết hàng!'))}</div>
                                                                     <div className='flex justify-between items-center mt-2'>
                                                                         <div className='product-price flex lg:flex-col xl:flex-row xl:justify-between xl:items-center'>
                                                                             <p className=' font-medium text-main text-lg mr-1 lg:order-2 xl:order-none'> {(formatGia(product.price - (product.price * product.discount / 100)))}</p>
