@@ -72,7 +72,7 @@ const ResPayment = () => {
                 dispatch(RemoveTableList());
                 message.open({
                     type: "success",
-                    content: "Cập nhật món mới thành công thành công!",
+                    content: "Cập nhật món mới thành công !",
                 });
                 navigate('/employee/choosetable/');
             }

@@ -14,19 +14,16 @@ import {
 // Redux
 
 // Motion
-import { usePresence, useAnimate } from "framer-motion";
+import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 
 const Product = (props) => {
-  const {handleAddToOrder} = props
+  const { handleAddToOrder } = props
   const { id, name_product, price, amount, discount } = props.item;
   const imageUrl = useMemo(
     () => props.item.imageUrls || props.item.imageproducts?.[0]?.url,
     [props.item]
   );
-  const [isPresent, safeToRemove] = usePresence();
-
-  const [scope, animate] = useAnimate();
 
   const [openDrawer, setOpenDrawer] = useState(false);
   const [productDetail, setProductDetail] = useState(false);
@@ -42,28 +39,6 @@ const Product = (props) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isPresent) {
-      const enterAnimation = async () => {
-        await animate(
-          scope.current,
-          { opacity: [0, 1] },
-          { duration: 0.5, delay: 0.05 * id }
-        );
-      };
-      enterAnimation();
-    } else {
-      const exitAnimation = async () => {
-        await animate(
-          scope.current,
-          { opacity: [1, 0] },
-          { duration: 0.5, delay: 0.05 * id }
-        );
-        safeToRemove();
-      };
-      exitAnimation();
-    }
-  }, [animate, id, isPresent, safeToRemove, scope]);
 
   const showProductDetail = () => {
     if (!isLargeScreen) {
@@ -77,8 +52,10 @@ const Product = (props) => {
   };
 
   return (
-    <div
-      ref={scope}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
       key={id}
       className="relative box-border tracking-wide min-h-0 w-auto h-auto border rounded-lg shadow cursor-pointer transition-shadow duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)]"
     >
@@ -86,16 +63,15 @@ const Product = (props) => {
         <Image
           isLoading={!imageUrl && true}
           src={imageUrl}
-          className="rounded-t-lg"
+          className="rounded-t-lg "
           alt={name_product}
         />
       </div>
       <div className="flex justify-between items-center p-2 text-slate-500">
         <div className="flex h-full flex-col justify-end">
           <span
-            className={`text-xs font-medium line-clamp-1 ${
-              amount > 0 ? "text-green-500" : "text-red-500"
-            }`}
+            className={`text-xs font-medium line-clamp-1 ${amount > 0 ? "text-green-500" : "text-red-500"
+              }`}
           >
             {amount > 0 ? "Còn món" : "Hết món"}
           </span>
@@ -122,7 +98,7 @@ const Product = (props) => {
       {productDetail && (
         <ProductDetail id={id} openDrawer={openDrawer} onClose={onClose} />
       )}
-    </div>
+    </motion.div>
   );
 };
 

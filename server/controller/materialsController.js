@@ -1,9 +1,9 @@
 const { Materials, Notification, Product, Recipes, Warehouse } = require("../models");
 const { Op, literal } = require("sequelize");
-const { unitMasterial } = require("../utils/const");
+const { unitMasterial, overMasterial } = require("../utils/const");
 const { apiQueryRest } = require('../utils/const')
 const asyncHandler = require("express-async-handler");
-const overMasterial = ["2", "500", "9", "5", "50", "20", "10"];
+
 
 
 let notificationSent = false
