@@ -43,7 +43,7 @@ const ResPayment = () => {
             res.success && navigate("/employee/choosetable")
             message.open({
                 type: res.success ? "success" : "info",
-                content: res.success ? "Đặt món thành công thành công!" : res.data,
+                content: res.success ? "Đặt món thành công!" : res.data,
             });
         } catch (err) {
             console.log(err);
