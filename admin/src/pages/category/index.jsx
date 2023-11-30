@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useState } from "react";
 import CreateCategory from "./add_cat";
 import ButtonComponents from "../../components/button";
@@ -20,6 +20,8 @@ import { formatNgay } from "../../utils/format";
 import ConfirmComponent from "../../components/confirm";
 import { UploadOutlined } from "@ant-design/icons";
 import Spinner from "../../components/spinner";
+import ImageComponent from "../../components/image";
+
 const { Title } = Typography;
 const CategoryPage = () => {
   const [form] = Form.useForm();
@@ -40,7 +42,7 @@ const CategoryPage = () => {
     setOpenModalUpdate(false);
   };
 
-  const showModalUpdate = (record) => {
+  const showModalUpdate = useCallback((record) => {
     setOpenModalUpdate(true);
     const data = { ...record };
     data.thumbnail = [
@@ -52,15 +54,15 @@ const CategoryPage = () => {
       },
     ];
     form.setFieldsValue(data);
-  };
-  const handDeleteOrder = async (id) => {
+  },[form]);
+  const handDeleteOrder = useCallback(async (id) => {
     const res = await delCate(id);
     message.open({
       type: "success",
       content: res,
     });
     fetchData();
-  };
+  },[]);
   const onFinish = async (values) => {
     message.open({
       type: "loading",
@@ -88,6 +90,60 @@ const CategoryPage = () => {
     fetchData();
 
   };
+  const columns = useMemo(()=>([
+    {
+      title: "Tên danh mục",
+      dataIndex: "name_category",
+      key: "name_category",
+      sorter: true,
+    },
+    {
+      title: "Ảnh chính",
+      dataIndex: "thumbnail",
+      key: "thumbnail",
+      render: (_, record) => <ImageComponent src={record.thumbnail}/>,
+    },
+    {
+      title: "Ẩn / Hiện",
+      dataIndex: "status",
+      key: "status",
+      sorter: true,
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      sorter: true,
+      render: (_, record) => <span>{formatNgay(record.createdAt)}</span>,
+    },
+    {
+      title: "Ngày cập nhật",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      sorter: true,
+      render: (_, record) => <span>{formatNgay(record.updatedAt)}</span>,
+    },
+    {
+      title: "Chỉnh sửa",
+      key: "action",
+      render: (_, record) => (
+        <div className="h-10 flex items-center cursor-pointer">
+          <span
+            className="bg-orange-500 px-4 rounded-md py-2 text-white"
+            onClick={() => showModalUpdate(record)}
+          >
+            Sửa
+          </span>
+          <ConfirmComponent
+            title="Xác nhận xóa danh mục này?"
+            confirm={() => handDeleteOrder(record.id)}
+          >
+            Xóa
+          </ConfirmComponent>
+        </div>
+      ),
+    },
+  ]),[handDeleteOrder, showModalUpdate])
   return (
     <div className="px-5 mt-5">
       {loading ? (
@@ -106,60 +162,7 @@ const CategoryPage = () => {
           </Col>
         </Row>
         <Table
-          columns={[
-            {
-              title: "Tên danh mục",
-              dataIndex: "name_category",
-              key: "name_category",
-              sorter: true,
-            },
-            {
-              title: "Ảnh chính",
-              dataIndex: "thumbnail",
-              key: "thumbnail",
-              render: (_, record) => <img className="w-full" src={record.thumbnail} style={{ maxWidth: "120px" }} />,
-            },
-            {
-              title: "Ẩn / Hiện",
-              dataIndex: "status",
-              key: "status",
-              sorter: true,
-            },
-            {
-              title: "Ngày tạo",
-              dataIndex: "createdAt",
-              key: "createdAt",
-              sorter: true,
-              render: (_, record) => <span>{formatNgay(record.createdAt)}</span>,
-            },
-            {
-              title: "Ngày cập nhật",
-              dataIndex: "updatedAt",
-              key: "updatedAt",
-              sorter: true,
-              render: (_, record) => <span>{formatNgay(record.updatedAt)}</span>,
-            },
-            {
-              title: "Chỉnh sửa",
-              key: "action",
-              render: (_, record) => (
-                <div className="h-10 flex items-center cursor-pointer">
-                  <span
-                    className="bg-orange-500 px-4 rounded-md py-2 text-white"
-                    onClick={() => showModalUpdate(record)}
-                  >
-                    Sửa
-                  </span>
-                  <ConfirmComponent
-                    title="Xác nhận xóa danh mục này?"
-                    confirm={() => handDeleteOrder(record.id)}
-                  >
-                    Xóa
-                  </ConfirmComponent>
-                </div>
-              ),
-            },
-          ]}
+          columns={columns}
           dataSource={data}
           rowKey={"id"}
         />

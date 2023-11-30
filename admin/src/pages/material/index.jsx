@@ -1,4 +1,4 @@
-import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, notification, Button, Space } from "antd";
+import { Col, Row, Typography, message, Form, Input, InputNumber, Drawer, Button, Space } from "antd";
 import ButtonComponents from "../../components/button";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Table } from "antd";
@@ -19,6 +19,7 @@ import Spinner from "../../components/spinner";
 import { formatGia, formatNgay } from "../../utils/format";
 import { overMasterial, unitMasterial, renderToString } from "../../utils/constant";
 import { SearchOutlined } from "@ant-design/icons";
+import ImageComponent from "../../components/image";
 const { Title, Text } = Typography;
 const handleSearchData = (string) =>{
   if(string.includes("_")){
@@ -204,12 +205,7 @@ function MaterialPage() {
       dataIndex: "image",
 
       render: (_, record) => (
-        <img
-          className="w-full"
-          style={{ maxWidth: "120px" }}
-          src={record.image}
-          alt=""
-        />
+        <ImageComponent src={record.image}/>
       ),
     },
     {

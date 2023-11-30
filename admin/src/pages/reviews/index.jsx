@@ -1,7 +1,6 @@
 import { DownCircleFilled, UpCircleFilled } from "@ant-design/icons";
-import { Col, Pagination, Popconfirm, Rate, Row, Select, message, Typography, Statistic } from "antd";
+import { Col, Pagination, Popconfirm, Rate, Row, Select, message, Typography, Statistic, Button, Space } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import ButtonComponents from "../../components/button";
 import ColumnChart from "../../components/chart/column-chart";
 import SearchComponent from "../../components/search";
 import Spinner from "../../components/spinner";
@@ -9,10 +8,12 @@ import { deleteReview, getAllReviews } from "../../services/api";
 import { desc, limit, month } from "../../utils/constant";
 import { formatNgay, getDaysInMonth } from "../../utils/format";
 import CountUp from 'react-countup';
+
 const formatter = (value) => <CountUp end={value} separator="," />;
 const options = month.map((el) => ({ value: el, label: `Tháng: ${el}` }));
 const year = new Date().getFullYear()
 const initMonth = new Date().getMonth() + 1
+
 function ReviewsPage() {
   const [page, setPage] = useState(1);
   const [reviews, setReviews] = useState(null);
@@ -224,26 +225,7 @@ function ReviewsPage() {
                           <p className="text-gray-500 my-2">
                             {formatNgay(el.createdAt, "HH:mm DD-MM-YYYY")}
                           </p>
-                        </Col>
-                      </Row>
-                    </Col>
-                    <Col xs="12">
-                      <Popconfirm
-                        title="Xóa đánh giá này"
-                        description="Bạn chắc chắn muốn xóa bình luận này?"
-                        onConfirm={() => handleDeleteReview(el.id)}
-                        onCancel={handleCancelConfirm}
-                        okText="Xóa"
-                        cancelText="Hủy"
-                      >
-                        <ButtonComponents
-                          className="text-white bg-secondaryColor border-none"
-                          content={"Xóa"}
-                        />
-                      </Popconfirm>
-                    </Col>
-                  </Row>
-                  <div className="my-3 text-center">
+                          <div className="my-3 text-center">
                     <Rate
                       tooltips={desc}
                       className="text-main"
@@ -258,12 +240,29 @@ function ReviewsPage() {
                       ""
                     )}
                   </div>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col xs="12">
+                      
+                    </Col>
+                  </Row>
                   <Typography.Paragraph className=" h-16">
                     {el.description}
                   </Typography.Paragraph>
-                  <p className="text-gray-500 my-3 font-semibold">
+                  <Space className="text-gray-500 flex justify-between items-center font-semibold">
                     {formatNgay(el["order.createdAt"])}
-                  </p>
+                    <Popconfirm
+                        title="Xóa đánh giá này"
+                        description="Bạn chắc chắn muốn xóa bình luận này?"
+                        onConfirm={() => handleDeleteReview(el.id)}
+                        onCancel={handleCancelConfirm}
+                        okText="Xóa"
+                        cancelText="Hủy"
+                      >
+                        <Button type="link" className="font-semibold">Xóa</Button>
+                      </Popconfirm>
+                  </Space>
                 </div>
               </Col>
             );

@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
 import { Button, Tabs, message } from "antd";
@@ -9,7 +9,8 @@ import { Spinner } from "../../components/index.js";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
 import { ScrollToTop } from "../../utils/format.js";
-import Map from "./MapComponent.jsx"
+
+const Map = lazy(()=> import("./MapComponent.jsx"))
 function showError(error) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
@@ -39,7 +40,9 @@ function SelectTable() {
   const navigate = useNavigate();
   const [tables, setTables] = useState([]);
   const [tableByPosition, setTableByPosition] = useState([]);
-  const [position, setPosition] = useState(null)
+  const [position, setPosition] = useState(null);
+  const [showMap, setShowMap] = useState(false)
+  const [mapLoaded, setMapLoaded] = useState(false)
   const { sendRequest, isLoading } = useHttp();
   const location = useLocation();
   const customerName = useSelector((state) => state.customerName);
@@ -92,13 +95,18 @@ function SelectTable() {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-  const handleScrollToMap = useCallback(() => {
-    mapRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "start",
-    });
-  }, [])
+
+  useEffect(()=>{
+    if(mapRef.current && showMap !== false){
+      mapRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start",
+      });
+    }
+  },[mapLoaded, showMap])
+
+
   if (isTableExist == "Không tồn tại bàn này!")
     return <h2 className="py-5 mt-[80px] text-center">{isTableExist}</h2>;
   if (isLoading) return <Spinner />;
@@ -127,7 +135,7 @@ function SelectTable() {
               type={"line"}
               onChange={onHandleTabChange}
               defaultActiveKey={"in"}
-              tabBarExtraContent={<Button type="link" onClick={handleScrollToMap} className=" hover:text-primary active:text-primary bg-transparent">Xem trên bản đồ</Button>}
+              tabBarExtraContent={<Button type="link" onClick={()=> setShowMap(true)} className=" hover:text-primary active:text-primary bg-transparent">Xem trên bản đồ</Button>}
               centered
               items={["in", "out"].map((position) => {
                 return {
@@ -154,9 +162,9 @@ function SelectTable() {
           </div>
         </>
       ) : (
-        <p>No data available</p>
+        <p className="pt-10 text-center">No data is available or all tables are used</p>
       )}
-      <Map mapRef={mapRef} currentPosition={position} />
+      {showMap && <Suspense fallback={<Spinner/>}><Map setMapLoaded={setMapLoaded} mapRef={mapRef} currentPosition={position} /></Suspense>}
     </div>
   );
 }

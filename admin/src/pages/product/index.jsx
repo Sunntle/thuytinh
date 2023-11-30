@@ -1,7 +1,6 @@
-import { Col, Row, Typography, message, Input, Button, Space } from "antd";
+import { Col, Row, Typography, message, Input, Button, Space, Table, Image } from "antd";
 import ButtonComponents from "../../components/button";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import ConfirmComponent from "../../components/confirm";
 import {
@@ -18,6 +17,7 @@ import AddNewProduct from "./add";
 import EditProduct from "./edit";
 import Spinner from "../../components/spinner";
 import { useRef } from "react";
+import ImageComponent from "../../components/image";
 const { Title } = Typography;
 function ProductPage() {
   const [open, setOpen] = useState(false);
@@ -176,12 +176,7 @@ function ProductPage() {
         title: "Hình ảnh",
         dataIndex: "imageproducts",
         render: (_, record) => (
-          <img
-            className="w-full"
-            style={{ maxWidth: "150px" }}
-            src={record?.imageproducts?.[0]?.url}
-            alt=""
-          />
+          <ImageComponent src={record?.imageproducts?.[0]?.url} list={record?.imageproducts}/>
         ),
       },
       {
