@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     carts: [],
     quantity: 0,
-    err: null
+    err: null,
+    isSuccess: null,
 }
 const cartSystem = createSlice({
     name: "cart",
@@ -19,19 +20,25 @@ const cartSystem = createSlice({
                             state.err = "Sản phẩm hết hàng !";
                         } else {
                             find.quantity += 1;
+                            state.isSuccess = "Đặt món thành công "
                         }
                     }else{
                         find.quantity += 1;
+                        state.isSuccess = "Đặt món thành công "
                     }
                 } else {
                         const newProduct = { ...action.payload, quantity: 1 };
                         state.carts.push(newProduct);
+                        state.isSuccess = "Đặt món thành công "
                 }
             }
             return state;
         },
         setErr: (state, action) => {
             state.err = action.payload;
+        },
+        setSuccess: (state, action) => {
+            state.isSuccess = action.payload;
         },
         AddCartUpdate: (state, action) => {
             const tempvar = { ...action.payload, quantity: action.payload.quantity };
@@ -99,5 +106,5 @@ const cartSystem = createSlice({
     }
 })
 
-export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart, RemoveReduxCart, DecreaseCart, getTotal, setErr } = cartSystem.actions;
+export const { AddCart, AddCartUpdate, RemoveCart, RemoveAllCart, RemoveReduxCart, DecreaseCart, getTotal, setErr ,setSuccess} = cartSystem.actions;
 export default cartSystem.reducer;
