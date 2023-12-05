@@ -14,7 +14,7 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
       return result ? formatGia(result.total) : 0
     } else {
       const result = montdPreAndCur?.[0]?.month === param;
-      return result ? 0 : montdPreAndCur?.[0]?.total
+      return result ? 0 : formatGia(montdPreAndCur?.[0]?.total)
     }
   };
 

@@ -176,9 +176,9 @@ const ResRevenue = () => {
                     Tổng tháng
                   </span>
                   <p className="text-orange-400 text-2xl font-medium text-center">
-                    {data.montdPreAndCur?.[0]?.total ? (
+                    {data.montdPreAndCur?.[1]?.total ? (
                       <CountUp
-                        end={data.montdPreAndCur?.[0]?.total}
+                        end={data.montdPreAndCur?.[1]?.total}
                         separator=","
                       />
                     ) : (
