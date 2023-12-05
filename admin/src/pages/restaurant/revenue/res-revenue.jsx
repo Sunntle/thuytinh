@@ -20,6 +20,7 @@ import {
   calculateWeeklyRevenue,
   formatGia,
   formatNgay,
+  renderTextPay,
 } from "../../../utils/format";
 import CountUp from 'react-countup';
 import Spinner from "../../../components/spinner";
@@ -34,17 +35,7 @@ const ResRevenue = () => {
   const [dataOrder, setDataOrder] = useState([]);
   const [dataChart, setDataChart] = useState([]);
   const [loading, setLoading] = useState(true)
-  const renderTextPay = (params) => {
-    if (params) {
-      if (params === "Cash") {
-        return "Thanh toán tiền mặt";
-      } else {
-        return params;
-      }
-    } else {
-      return "Chưa thanh toán";
-    }
-  };
+
 
 
   const fetchData = useCallback(async () => {
@@ -92,10 +83,10 @@ const ResRevenue = () => {
 
   useEffect(() => {
     fetchData({
-        // _sort: "createdAt",
-        // _order: "DESC",
+      // _sort: "createdAt",
+      // _order: "DESC",
     });
-  }, [fetchData,timeChart]);
+  }, [fetchData, timeChart]);
   const columns = useMemo(
     () => [
       {
@@ -185,9 +176,9 @@ const ResRevenue = () => {
                     Tổng tháng
                   </span>
                   <p className="text-orange-400 text-2xl font-medium text-center">
-                    {data.montdPreAndCur?.[0]?.total ? (
+                    {data.montdPreAndCur?.[1]?.total ? (
                       <CountUp
-                        end={data.montdPreAndCur?.[0]?.total}
+                        end={data.montdPreAndCur?.[1]?.total}
                         separator=","
                       />
                     ) : (

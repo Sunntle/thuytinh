@@ -8,6 +8,17 @@ export function getItem(label, key, icon, children) {
     label,
   };
 }
+export const renderTextPay = (params) => {
+  if (params) {
+    if (params === "Cash") {
+      return "Thanh toán tiền mặt";
+    } else {
+      return params;
+    }
+  } else {
+    return "Chưa thanh toán";
+  }
+};
 export const formatNgay = (params, option = "DD-MM-YYYY") => {
   return moment(params).format(option);
 };

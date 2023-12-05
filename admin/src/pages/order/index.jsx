@@ -24,7 +24,7 @@ import {
   getAllUser,
   updateOrderAdmin,
 } from "../../services/api";
-import { formatNgay, formatGia, formatnumber } from "../../utils/format";
+import { formatNgay, formatGia, formatnumber, renderTextPay } from "../../utils/format";
 import ConfirmComponent from "../../components/confirm";
 import moment from "moment";
 import Spinner from "../../components/spinner";
@@ -44,13 +44,7 @@ const initData = {
   show: false,
   data: [],
 };
-const renderTextPay = (params) => {
-  if (params === "Cash" || !params) {
-    return "Thanh toán tiền mặt";
-  } else {
-    return params;
-  }
-};
+
 
 const OrderPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -135,13 +129,13 @@ const OrderPage = () => {
       type: "success",
       content: "Đã xóa đơn " + id,
     });
-  },[fetchData, messageApi]);
+  }, [fetchData, messageApi]);
   const showModalUpdate = useCallback((record) => {
     let data = { ...record };
     data.meta.createdAt = moment(data.meta.createdAt);
     setOpenModalUpdate({ data: data.meta, show: true });
     form.setFieldsValue(data.meta);
-  },[form]);
+  }, [form]);
 
   const onClose = () => {
     setOpenOrderDetail(initData);
@@ -246,14 +240,14 @@ const OrderPage = () => {
       }
     },
     render: (text) => text,
-  }),[]);
+  }), []);
   useEffect(() => {
-    if(notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === "order" && notifications.lastNotification?.status === false){
+    if (notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === "order" && notifications.lastNotification?.status === false) {
       fetchData()
     }
   }, [fetchData, notifications]);
 
-  const columns = useMemo(()=>([
+  const columns = useMemo(() => ([
     {
       title: "Mã hóa đơn",
       dataIndex: "id",
@@ -321,6 +315,7 @@ const OrderPage = () => {
       dataIndex: "payment",
       align: "center",
       width: 200,
+      sorter: (a, b) => a.payment.localeCompare(b.payment),
     },
 
     {
@@ -363,11 +358,11 @@ const OrderPage = () => {
         </div>
       ),
     },
-  ]),[getColumnSearchProps, handDeleteOrder, showModalUpdate, statusOrder]);
+  ]), [getColumnSearchProps, handDeleteOrder, showModalUpdate, statusOrder]);
   const showDetail = (record) => {
     setOpenOrderDetail({ show: true, data: record.meta });
   };
- 
+
 
   return (
     <div className="my-7 px-5">

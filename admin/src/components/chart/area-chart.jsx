@@ -1,12 +1,24 @@
 import Chart from "react-apexcharts";
 import { Select, Row, Col, Progress } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-
+import { formatGia, formatNgay } from "../../utils/format";
+import moment from "moment"
 const AreaChart = ({ setTimeChart, timeChart, data }) => {
   const { montdPreAndCur, chart_order, countOrder } = data;
   const handleChange = (value) => {
     setTimeChart(value);
   };
+  const renderTextTotal = (param) => {
+    if (param) {
+      const result = montdPreAndCur.find(i => i.month === param);
+      return result ? formatGia(result.total) : 0
+    } else {
+      const result = montdPreAndCur?.[0]?.month === param;
+      return result ? 0 : formatGia(montdPreAndCur?.[0]?.total)
+    }
+  };
+
+
   return (
     <div className="w-full block max-h-[25rem] ">
       <Row
@@ -16,7 +28,7 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
         gutter={[0, 16]}
       >
         <Col xs={12} className="font-medium text-xl">
-          Order Rate
+          Thông kê đặt hàng
         </Col>
         <Col xs={12} className="flex justify-end">
           <Select
@@ -45,7 +57,7 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
             <Col xs={7} className="flex justify-center items-center">
               <div className="flex flex-col gap-2">
                 <span className="text-gray-400 font-medium whitespace-nowrap">
-                  Order total
+                  Đặt hàng
                 </span>
                 <span className="font-medium">{countOrder || 0}</span>
               </div>
@@ -53,7 +65,7 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
             <Col xs={12} className="flex justify-center items-center">
               <div className="flex flex-col justify-between  border-2 w-full p-2 rounded-md">
                 <div className="flex justify-between">
-                  <span className="font-medium text-gray-400">Target</span>
+                  <span className="font-medium text-gray-400">Mục tiêu</span>
                   <span className="font-medium">100</span>
                 </div>
                 <Progress
@@ -72,8 +84,8 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
               <div className="wc border-main mt-1"></div>
             </Col>
             <Col xs={18}>
-              <div className="text-xs"> Month this</div>
-              <div className="font-medium pt-1">{montdPreAndCur?.[0]?.total || 0}</div>
+              <div className="text-xs"> Tháng này </div>
+              <div className="font-medium pt-1">{renderTextTotal(moment().format("MM-YYYY"))}</div>
             </Col>
           </Row>
           <Row className="w-2/5">
@@ -81,8 +93,8 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
               <div className="wc border-main mt-1"></div>
             </Col>
             <Col xs={18}>
-              <div className="text-xs">Last Month </div>
-              <div className="font-medium pt-1">{montdPreAndCur?.[1]?.total || 0}</div>
+              <div className="text-xs">Tháng trước </div>
+              <div className="font-medium pt-1">{renderTextTotal()}</div>
             </Col>
           </Row>
         </Col>

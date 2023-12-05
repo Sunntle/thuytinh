@@ -79,7 +79,7 @@ const DashBoard = () => {
               <p className="text-lg font-medium text-green-500 text-center">
                 {data.montdPreAndCur?.[0]?.total ? (
                   <CountUp
-                    end={data.montdPreAndCur?.[0]?.total}
+                    end={data.montdPreAndCur?.[1]?.total}
                     separator=","
                   />
                 ) : (
