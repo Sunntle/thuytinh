@@ -3,9 +3,10 @@ const {
   apiQueryRest,
   checkQtyMaterials,
   getQtyMaterialByProduct,
-  bien, currentYear, tinhWeek, checkBooking, handleTimeDining, checkOverMaterial
+  bien, currentYear, tinhWeek, checkBooking, handleTimeDining, checkOverMaterial, getMonthAndYear
 } = require("../utils/const");
 const asyncHandler = require("express-async-handler");
+const moment = require("moment");
 const {
   Order,
   OrderDetail,
@@ -218,14 +219,12 @@ exports.completeOrder = asyncHandler(async (req, res) => {
 exports.dashBoard = asyncHandler(async (req, res) => {
   let data = {};
   const currentMonth = new Date();
-  const previousMonth = new Date();
 
   const { type, weekcurrent } = req.query;
   const info = type === "MONTH" ? "T/" : "Năm : ";
 
   let dateInWeek = tinhWeek(weekcurrent);
-  previousMonth.setMonth(previousMonth.getMonth() - 1);
-  previousMonth.setDate(1);
+
   data.costMaterial = await Warehouse.findOne({
     attributes: [[literal("SUM(price_import * amount_import)"), "total_cost"]],
     where: {
@@ -241,35 +240,31 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     order: [[type, "ASC"]],
     raw: true,
   };
+  const specificDate = moment(currentMonth).format("MM-YYYY");
+  const lastMonthDate = moment(currentMonth).subtract(1, 'months').format("MM-YYYY");
 
-  if (type === "MONTH")
-    con.where = {
-      createdAt: {
-        [Op.between]: [currentYear(), currentYear("endOf")],
-      },
-    };
+  if (type === "MONTH") con.where = {
+    createdAt: {
+      [Op.between]: [currentYear(), currentYear("endOf")],
+    },
+  };
+
   data.montdPreAndCur = await Order.findAll({
     attributes: [
-      [fn("SUM", col("total")), "total"],
-      [fn("MONTH", col("createdAt")), "month"],
+      [fn('SUM', col('total')), 'total'],
+      [fn('DATE_FORMAT', col('createdAt'), '%m-%Y'), 'month'],
     ],
     where: {
-      createdAt: {
-        [Op.or]: [
-          {
-            [Op.between]: [previousMonth, currentMonth],
-          },
-          where(
-            fn("YEAR", col("createdAt")),
-            currentYear(),
-          ),
-        ],
-      },
+      [Op.or]: [
+        literal(`DATE_FORMAT(\`createdAt\`, '%m-%Y') = '${lastMonthDate}'`),
+        literal(`DATE_FORMAT(\`createdAt\`, '%m-%Y') = '${specificDate}'`),
+      ]
     },
-    group: [fn("MONTH", col("createdAt"))],
-    order: [[fn("MONTH", col("createdAt")), "desc"]],
-    raw: true,
+    group: ["month"],
+    order: [["month", 'asc']],
+    raw: true
   });
+
   data.chartWeek = await Order.findAll({
     attributes: [
       [fn('date', col('createdAt')), 'createdAt'],
