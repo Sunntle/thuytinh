@@ -23,7 +23,7 @@ const EnterName = (props) => {
   }, []);
 
   const handleSubmitName = useCallback(async () => {
-    if (customerName.length === 0) {
+    if (customerName.trim().length === 0) {
       messageApi.open({
         type: "error",
         content: "Vui lòng nhập tên !!"
@@ -61,6 +61,10 @@ const EnterName = (props) => {
             Vui lòng nhập tên để nhà hàng tiện xưng hô và phục vụ được tốt nhất
           </span>
             <Input
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.code === 13) handleSubmitName()
+              } }
+              required
               onChange={handleChangeName}
               value={customerName}
               type="text"

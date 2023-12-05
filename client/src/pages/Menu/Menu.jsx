@@ -23,6 +23,7 @@ import "./index.css";
 import { Helmet } from "react-helmet";
 import { AiOutlineLoading } from "react-icons/ai";
 import { resetStatusOrder } from "../../redux/Order/orderSlice.js";
+import { FloatButton } from "antd";
 
 const limit = 20;
 
@@ -79,9 +80,11 @@ const Menu = () => {
     };
     checkCate();
   }, [sendRequest, categoryIndex, fetchFoods]);
+
   useEffect(()=>{
     return ()=>dispatch(resetStatusOrder())
   },[dispatch])
+
   const handleChangeSearchValue = useCallback((e) => {
     setSearchValue(e.target.value);
   }, []);
@@ -124,7 +127,7 @@ const Menu = () => {
       </Helmet>
 
       <ScrollToTop />
-
+      
       <div className="flex flex-col mt-8 space-y-8 lg:mt-24">
         <div className="lg:hidden grid grid-cols-12 gap-4 text-slate-500 ">
           <div className="col-span-10 w-full h-12 bg-slate-100 rounded-lg flex justify-start items-center space-x-3 px-2">
@@ -185,6 +188,7 @@ const Menu = () => {
           setIsOrderModalOpen={setIsOrderModalOpen}
         />
       </div>
+      <FloatButton.BackTop visibilityHeight={500} style={{ bottom: 80, right: 10}}/>
     </div>
   );
 };

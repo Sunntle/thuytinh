@@ -177,7 +177,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
       }
     }
     await Order.update({ total }, { where: { id: id_order } });
-    res.status(200).json({ message: "Update thành công", over, success: true });
+    res.status(200).json({ message: "Cập nhật thành công", over, success: true });
   }
 
 });
@@ -193,7 +193,7 @@ exports.updateOrderAdmin = asyncHandler(async (req, res) => {
   }
   await Order.update({ ...rest }, { where: { id } });
   _io.of("/client").emit("complete-payment", { data: table[0], message: "Hoàn tất thanh toán" })
-  res.status(200).json("Update thành công");
+  res.status(200).json("Cập nhật thành công");
 });
 exports.completeOrder = asyncHandler(async (req, res) => {
   const { orderId, tableId } = req.body;
@@ -208,7 +208,7 @@ exports.completeOrder = asyncHandler(async (req, res) => {
     await re.save();
     await Order.update({ status: 4 }, { where: { id: orderId } });
     _io.of("/client").emit("complete-payment", { data: tableId, message: "Hoàn tất thanh toán" })
-    res.status(200).json({ success: true, data: "Update thành công" });
+    res.status(200).json({ success: true, data: "Cập nhật thành công" });
   } else {
     res
       .status(404)

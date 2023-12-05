@@ -45,7 +45,7 @@ const Banner = () => {
     <div>
       <div className="h-screen relative">
         <div
-          className="h-full w-full "
+          className="h-full w-full"
           style={{
             backgroundImage: `url("https://res.cloudinary.com/dw6jih4yt/image/upload/v1700286846/NhaHangThuyTinh/lwkwc4xdtjn8hnskla5d.webp")`,
             filter: "brightness(50%)",

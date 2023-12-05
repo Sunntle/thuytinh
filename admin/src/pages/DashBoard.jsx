@@ -59,7 +59,7 @@ const DashBoard = () => {
     <div className="w-full my-7 px-5">
       <Row gutter={[32, 16]}>
         <Col xs={24} lg={16}>
-          <div className="rounded-lg border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
+          <div className="rounded-lg border-solid border-orange-400 border-2 bg-orange-100 dark:bg-darkModeBgBox flex-row flex items-center h-24">
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1 border-r-2">
               <span className="font-medium text-sm text-center ">
                 Tổng thu nhập - Năm {new Date().getFullYear()}
@@ -98,14 +98,14 @@ const DashBoard = () => {
               </p>
             </div>
           </div>
-          <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2 mb-6">
+          <div className="max-w-full mt-4 rounded-lg border-orange-400 border-solid border-2 mb-6">
             <AreaChart
               timeChart={timeChart}
               setTimeChart={setTimeChart}
               data={data}
             />
           </div>
-          <div className="max-w-full mt-4 rounded-lg border-gray-400 border-solid border-2 mb-6">
+          <div className="max-w-full mt-4 rounded-lg border-orange-400 border-solid border-2 mb-6">
             <LineChart
               series={[
                 {
@@ -192,7 +192,7 @@ const DashBoard = () => {
             >
               <div>
                 <Title level={4} className="text-center mt-4">
-                  Thông kê theo tuần
+                  Thống kê doanh thu, đơn hàng theo tuần
                 </Title>
                 <div className="flex justify-center">
                   <Segmented
@@ -273,9 +273,9 @@ const DashBoard = () => {
           </div>
         </Col>
         <Col xs={24} lg={8} className="flex flex-col gap-y-4">
-          <div className=" flex flex-col gap-y-4 p-4 rounded-lg border-gray-400 border-solid border-2">
+          <div className=" flex flex-col gap-y-4 p-4 rounded-lg border-orange-400 border-solid border-2">
             <div className="flex flex-row ">
-              <div className="border-2 rounded-md ms-5 flex justify-end">
+              <div className="border-2 rounded-mdflex justify-end">
                 <CiViewTimeline size={50} className="text-main" />
               </div>
               <div className="flex flex-col justify-center items-start ms-5">
@@ -290,7 +290,7 @@ const DashBoard = () => {
               </div>
             </div>
             <div className="flex flex-row ">
-              <div className="border-2 rounded-md ms-5 flex justify-end">
+              <div className="border-2 rounded-md flex justify-end">
                 <CiViewTimeline size={50} className="text-main" />
               </div>
               <div className="flex flex-col justify-center items-start  ms-5">
@@ -301,7 +301,7 @@ const DashBoard = () => {
               </div>
             </div>
             <div className="flex flex-row ">
-              <div className="border-2 rounded-md ms-5 flex justify-end">
+              <div className="border-2 rounded-md flex justify-end">
                 <CiViewTimeline size={50} className="text-main" />
               </div>
               <div className="flex flex-col justify-center items-start   ms-5">
@@ -316,7 +316,7 @@ const DashBoard = () => {
               </div>
             </div>
             <div className="flex flex-row ">
-              <div className="border-2 rounded-md ms-5 flex justify-end">
+              <div className="border-2 rounded-md flex justify-end">
                 <CiViewTimeline size={50} className="text-main" />
               </div>
               <div className="flex flex-col justify-center items-start  ms-5">
@@ -327,7 +327,7 @@ const DashBoard = () => {
               </div>
             </div>
           </div>
-          <div className="border-2 rounded-lg p-4 border-gray-400 border-solid">
+          <div className="border-2 p-4 rounded-lg border-orange-400 border-solid">
             <span className="font-medium text-lg">
               Top 5 sản phẩm được ưa chuộng
             </span>

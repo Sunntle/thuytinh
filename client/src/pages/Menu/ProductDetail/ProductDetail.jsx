@@ -62,9 +62,9 @@ const ProductDetail = memo(({ openDrawer, onClose, id }) => {
       }
     >
       <div className="text-slate-500">
-        <div className="w-auto h-auto rounded">
+        <div className="rounded flex items-center justify-center">
           <Image
-            className="rounded"
+            className="rounded max-w-[500px]"
             src={
               productDetail?.imageUrls || productDetail?.imageproducts?.[0]?.url
             }

@@ -34,7 +34,7 @@ const ResPayment = () => {
             const body = {
                 orders: carts,
                 total: total.cartTotalAmount,
-                customerName: "Nv_" + staff.user.name,
+                customerName: "NV-" + staff.user.name,
                 table: [tablelist.id],
                 id_employee: staff.user.id
             };

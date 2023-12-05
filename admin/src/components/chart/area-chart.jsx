@@ -28,7 +28,7 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
         gutter={[0, 16]}
       >
         <Col xs={12} className="font-medium text-xl">
-          Thông kê đặt hàng
+          Thống kê đặt hàng
         </Col>
         <Col xs={12} className="flex justify-end">
           <Select

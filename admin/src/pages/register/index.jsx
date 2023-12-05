@@ -21,9 +21,11 @@ const RegisterPage = ({handleFinish}) => {
               {
                 required: true,
                 min: 5,
-                message: "Ít nhất 5 kí tự !",
-              },
+                message: "Tên phải  có ít nhất 5 kí tự và không chứa khoảng trắng",
+                whitespace: true
+              }
             ]}
+
             validateTrigger={true}
           >
             <Input

@@ -175,7 +175,7 @@ const ResRevenue = () => {
                   <span className=" font-medium text-sm text-center ">
                     Tổng tháng
                   </span>
-                  <p className="text-orange-400 text-2xl font-medium text-center">
+                  <p className="text-orange-400 text-lg font-medium text-center">
                     {data.montdPreAndCur?.[1]?.total ? (
                       <CountUp
                         end={data.montdPreAndCur?.[1]?.total}
@@ -192,7 +192,7 @@ const ResRevenue = () => {
                   <span className=" font-medium text-sm text-center">
                     Tổng tiền tuần
                   </span>
-                  <p className="text-2xl font-medium text-green-500 text-center">
+                  <p className="text-lg font-medium text-green-500 text-center">
                     <CountUp
                       end={revenue.weekly || 0}
                       separator=","
@@ -203,7 +203,7 @@ const ResRevenue = () => {
                   <span className=" font-medium text-sm text-center">
                     Tổng tiền ngày
                   </span>
-                  <p className="text-2xl font-medium text-red-500 text-center">
+                  <p className="text-lg font-medium text-red-500 text-center">
                     <CountUp
                       end={revenue.daily}
                       separator=","
@@ -280,10 +280,8 @@ const ResRevenue = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col mt-6 border-solid border-2 rounded border-orange-400 p-4">
-                <Typography.Title level={5}>
-                  Quản trị viên:
-                </Typography.Title>
+              <div className="flex flex-col mt-4 border-solid border-2 rounded-lg border-orange-400 p-4">
+              <span className="font-medium text-lg">Quản trị viên</span>
                 <List
                   itemLayout="horizontal"
                   dataSource={admin?.data}
@@ -308,7 +306,7 @@ const ResRevenue = () => {
                   )}
                 />
               </div>
-              <div className="flex flex-col mt-6 border-solid border-2 rounded border-orange-400">
+              <div className="flex flex-col mt-4 border-solid border-2 rounded-lg border-orange-400">
                 <div className="border-2 rounded-lg p-4">
                   <span className="font-medium text-lg">Món ăn phổ biến</span>
                   <div className="overflow-hidden w-full p-2">

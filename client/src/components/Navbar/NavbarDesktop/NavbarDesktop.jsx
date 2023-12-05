@@ -6,7 +6,6 @@ import {
   useEffect,
 } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { FiUser } from "react-icons/fi";
 import OrderListDesktop from "./OrderListDesktop/OrderListDesktop.jsx";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
@@ -137,10 +136,11 @@ const NavbarDesktop = ({
       <div className="flex justify-between items-center space-x-3">
         <div className="cursor-pointer flex items-center space-x-2 relative"></div>
         <div className="cursor-pointer flex items-center space-x-2">
-          <FiUser
+          {/* <FiUser
             size={24}
             className="hover:text-white/60 transition-colors duration-300"
-          />
+          /> */}
+          {idTable ? `Bạn đang ngồi bàn ${idTable}` : ""}
         </div>
         <div
           onClick={handleDetailOrder}
