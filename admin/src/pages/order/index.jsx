@@ -124,7 +124,10 @@ const OrderPage = () => {
 
   const handDeleteOrder = useCallback(async (id) => {
     await delOrder(id);
-    fetchData();
+    fetchData({
+      _sort: "createdAt",
+      _order: "DESC",
+    });
     messageApi.open({
       type: "success",
       content: "Đã xóa đơn " + id,
@@ -144,7 +147,10 @@ const OrderPage = () => {
 
   const onFinish = async (values) => {
     await updateOrderAdmin(values);
-    fetchData();
+    fetchData({
+      _sort: "createdAt",
+      _order: "DESC",
+    });
     onClose();
   };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -243,7 +249,10 @@ const OrderPage = () => {
   }), []);
   useEffect(() => {
     if (notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === "order" && notifications.lastNotification?.status === false) {
-      fetchData()
+      fetchData({
+        _sort: "createdAt",
+        _order: "DESC",
+      });
     }
   }, [fetchData, notifications]);
 
