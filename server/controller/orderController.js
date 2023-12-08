@@ -99,7 +99,7 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
       {
         ...bien.include,
       },
-      { model: TableByOrder, attributes: ["tableId"] },
+      { model: TableByOrder, attributes: ["tableId", "status"] },
       {
         model: User,
         attributes: ["name"],
