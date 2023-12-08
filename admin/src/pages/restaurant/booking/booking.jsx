@@ -1,6 +1,6 @@
 import { Table, Typography, message } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { delBooking, getAllBooking } from '../../../services/api';
+import { delBooking, getAllBooking, updateBooking } from '../../../services/api';
 import ConfirmComponent from '../../../components/confirm';
 import { formatNgay } from '../../../utils/format';
 import UpdateBooking from './update'
@@ -36,9 +36,17 @@ export const ResBooking = () => {
         },
         [fetchData]
     );
-    const handleEditBooking = useCallback(async (data) => {
-        setIsModalOpenUpdate(true);
-        setDataUpdate(data);
+    const handleEditBooking = useCallback(async (id) => {
+        setLoading(true)
+        try {
+            const res = await updateBooking({ id, status: "canceled" });
+            message.open({ type: "success", content: res });
+            fetchData({ _sort: "createdAt", _order: "desc" });
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     const columns = useMemo(
@@ -98,10 +106,10 @@ export const ResBooking = () => {
                             Sửa
                         </span> */}
                         <ConfirmComponent
-                            title="Xác nhận xóa đơn hàng này này?"
-                            confirm={() => handleDeleteBooking(record.id)}
+                            title="Xác nhận hủy đơn hàng này này?"
+                            confirm={() => handleEditBooking(record.id)}
                         >
-                            Xóa
+                            Hủy
                         </ConfirmComponent>
                     </div>
                 ),
