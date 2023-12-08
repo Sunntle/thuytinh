@@ -35,6 +35,7 @@ const ProductList = ({ foods, isLoading }) => {
     }
     dispatch(addToOrder(product));
   };
+
     if (isLoading) return <Spinner />;
     if (foods === null)
       return (

@@ -3,8 +3,32 @@ import PropTypes from "prop-types";
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Product } from "../../../components/index.js";
+import { addToOrder } from "../../../redux/Order/orderSlice.js";
+import { useDispatch } from "react-redux";
+import { message } from "antd";
 
 const HomeSlide = ({ listProduct }) => {
+  const dispatch = useDispatch();
+
+  const handleAddToOrder = async (product) => {
+    if (!product) {
+      message.open({
+        type: "danger",
+        content: "Không tồn tại món ăn này",
+      });
+      return;
+    }
+
+    if (!(product.amount > 0)) {
+      message.open({
+        type: "info",
+        content: "Sản phẩm đã hết hàng",
+      });
+      return;
+    }
+    dispatch(addToOrder(product));
+  };
+
   return (
     <div className="relative w-auto">
       <Swiper
@@ -36,7 +60,7 @@ const HomeSlide = ({ listProduct }) => {
         {listProduct &&
           listProduct?.data?.map((product) => (
             <SwiperSlide key={product.id}>
-              <Product item={product} />
+              <Product item={product} handleAddToOrder={handleAddToOrder} />
             </SwiperSlide>
           ))}
       </Swiper>
