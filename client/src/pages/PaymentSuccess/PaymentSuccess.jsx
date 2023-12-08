@@ -90,7 +90,7 @@ const PaymentSuccess = () => {
             };
             await sendRequest(updateStatusPayment, undefined, true);
           };
-          handlePostPayment();
+          await handlePostPayment();
           dispatch(checkIsOrdered(false));
           dispatch(checkIsActiveBooking(false));
         } catch (err) {
@@ -115,9 +115,9 @@ const PaymentSuccess = () => {
         <meta name="payment-success" content="Payment success" />
       </Helmet>
 
-      <div className="relative h-screen w-screen bg-white max-w-full lg:max-w-3xl mx-auto lg:shadow-2xl text-slate-800">
+      <div className="relative py-6 h-fit w-screen bg-white max-w-full lg:max-w-3xl mx-auto lg:shadow-2xl text-slate-800">
         {/* Logo */}
-        <div className="flex justify-start p-4">
+        <div className="flex justify-start px-4">
           <div className="flex justify-between items-center">
             <div className="w-16 h-16 lg:w-16 lg:h-16 mr-2">
               <Image

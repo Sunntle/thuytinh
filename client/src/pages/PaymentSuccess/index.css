@@ -1,6 +1,7 @@
 .ant-table-cell {
     @apply text-center
 }
-:where(.css-dev-only-do-not-override-byeoj0).ant-table-wrapper .ant-table-thead >tr>th, :where(.css-dev-only-do-not-override-byeoj0).ant-table-wrapper .ant-table-thead >tr>td {
+
+:where(.css-dev-only-do-not-override-1k5zuen).ant-table-wrapper .ant-table-thead > tr > th, :where(.css-dev-only-do-not-override-1k5zuen).ant-table-wrapper .ant-table-thead > tr > td {
     @apply text-center
 }

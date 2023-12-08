@@ -1,27 +1,28 @@
 // React
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 // Components
 import HomeSlide from "./HomeSlide/index.jsx";
 import Banner from "./Banner/Banner.jsx";
 import Reason from "../../components/Reason/Reason.jsx";
 import Image from "../../components/Image/Image.jsx";
+import ProductSlider from "./ProductSlider/index.jsx";
 // Service
 import { fetchProductByLimit } from "../../services/api.js";
+// Utils
+import { ScrollToTop } from "../../utils/format.js";
 // Hooks
 import useHttp from "../../hooks/useHttp.js";
 // Framer Motion
 import { motion } from "framer-motion";
-// External File
-import ProductSlider from "./ProductSlider/index.jsx";
-import {Helmet} from "react-helmet";
-import { ScrollToTop } from "../../utils/format.js";
+// Redux
 import { useSelector } from "react-redux";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
-  const customerName = useSelector(state => state.customerName)
+  const customerName = useSelector((state) => state.customerName);
   useEffect(() => {
     const fetchAllProduct = async () => {
       await sendRequest(fetchProductByLimit(7), setSlideProduct, false);
@@ -31,12 +32,13 @@ const Home = () => {
 
   return (
     <div className="tracking-wide pb-12 lg:pb-0">
-
       <Helmet>
         <title>Trang chủ</title>
         <meta name="home" content="Home" />
       </Helmet>
+
       <ScrollToTop />
+
       <Banner />
 
       {slideProduct && (
@@ -61,7 +63,11 @@ const Home = () => {
         <div className="hidden lg:flex z-30 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-between text-white">
           <span className="w-24 h-px bg-white"></span>
           <Link
-            to={customerName?.tables.length > 0 ? `/tables-${customerName?.tables}/menu` : '/select-table'}
+            to={
+              customerName?.tables.length > 0
+                ? `/tables-${customerName?.tables}/menu`
+                : "/select-table"
+            }
             className="cursor-pointer font-light text-sm whitespace-nowrap px-4 py-2 border rounded-sm border-white hover:bg-white hover:text-slate-800 transition-colors duration-200"
           >
             Xem thêm
@@ -71,33 +77,33 @@ const Home = () => {
 
         <div className="w-full lg:w-1/3 group overflow-hidden rounded-t-lg lg:rounded-none lg:rounded-l-lg h-44 lg:h-60">
           <Image
-              className="group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all"
-              src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700286603/NhaHangThuyTinh/lbb88datzhiomznphpbs.webp"
-              alt="anh"
+            className="group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all"
+            src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700286603/NhaHangThuyTinh/lbb88datzhiomznphpbs.webp"
+            alt="anh"
           />
         </div>
 
         <div className="w-full lg:w-1/3 group relative overflow-hidden h-44 lg:h-60">
           <div className="absolute w-full z-10 h-72 bg-black bg-opacity-40"></div>
           <Image
-              className="group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all"
-              src="https://res.cloudinary.com/dw6jih4yt/image/upload/w_400,h_300/v1700286706/NhaHangThuyTinh/x5wrroqsgx3yvi8aw8dn.webp"
-              alt="anh"
+            className="group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all"
+            src="https://res.cloudinary.com/dw6jih4yt/image/upload/w_400,h_300/v1700286706/NhaHangThuyTinh/x5wrroqsgx3yvi8aw8dn.webp"
+            alt="anh"
           />
         </div>
 
         <div className="w-full lg:w-1/3 group overflow-hidden rounded-b lg:rounded-none lg:rounded-r-lg h-44 lg:h-60">
           <Image
-              className="group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all"
-              src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700286654/NhaHangThuyTinh/vxeoyjkpypumsxpwbmtq.webp"
-              alt="anh"
+            className="group-hover:opacity-90 group-hover:scale-110 duration-200 transition-all"
+            src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700286654/NhaHangThuyTinh/vxeoyjkpypumsxpwbmtq.webp"
+            alt="anh"
           />
         </div>
       </motion.section>
 
       {slideProduct && <ProductSlider products={slideProduct} />}
 
-      <Reason customerName={customerName}/>
+      <Reason customerName={customerName} />
     </div>
   );
 };
