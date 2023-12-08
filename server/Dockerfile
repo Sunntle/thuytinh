@@ -9,7 +9,7 @@ RUN npm install
 RUN npm install -g webpack webpack-cli webpack-node-externals
 
 COPY . .
-RUN chmod +x import-data-and-set-sql-mode.sh
+
 RUN chmod +x wait-for-it.sh
 RUN npm run build
 
