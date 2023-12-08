@@ -60,7 +60,7 @@ const PaymentSuccess = () => {
   };
   return (
     <div className="lg:p-10 min-h-screen max-w-full ">
-      <div className="relative h-screen w-screen max-w-full mx-auto">
+      <div className="relative  w-screen max-w-full mx-auto">
         {/* Invoice Text*/}
         <div className="flex items-center justify-start mt-6 gap-x-3">
           <div className="relative bg-main h-6 lg:h-8 w-full"></div>
