@@ -36,6 +36,7 @@ export const accountSlide = createSlice({
             state.user = action.payload;
         },
         doLogoutAction: () => {
+            socket.disconnect()
             localStorage.removeItem('access_token');
             return initialState
         }
