@@ -29,6 +29,7 @@ export const accountSlide = createSlice({
         doLoginAction: (state, action) => {
             state.isAuthenticated = true;
             state.user = action.payload;
+            socket.connect()
             socket.emit("user-connected",  action.payload)
         },
         getAccountAction: (state, action) => {
