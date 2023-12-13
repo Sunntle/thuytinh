@@ -7,15 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 const ProductList = ({ foods, isLoading }) => {
-
-  const {isSuccess} = useSelector((state) => state.order);
+  const { isSuccess } = useSelector((state) => state.order);
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    if(isSuccess?.status.length > 0){
-      message.open({type: isSuccess.type, content: isSuccess.message})
+  useEffect(() => {
+    if (isSuccess?.status.length > 0) {
+      message.open({ type: isSuccess.type, content: isSuccess.message });
     }
-  },[isSuccess])
+  }, [isSuccess]);
 
   const handleAddToOrder = async (product) => {
     if (!product) {
@@ -36,20 +35,20 @@ const ProductList = ({ foods, isLoading }) => {
     dispatch(addToOrder(product));
   };
 
-    if (isLoading) return <Spinner />;
-    if (foods === null)
-      return (
-        <span className="w-full flex justify-center items-center font-medium text-base">
-          Không có dữ liệu
-        </span>
-      );
-    //sort product out of stock: foods?.data.sort((a,b)=> b.amount - a.amount)
+  if (isLoading) return <Spinner />;
+  if (foods === null)
+    return (
+      <span className="w-full flex justify-center items-center font-medium text-base">
+        Không có dữ liệu
+      </span>
+    );
+  //sort product out of stock: foods?.data.sort((a,b)=> b.amount - a.amount)
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       {foods &&
-        foods?.data.map((item,index) => (
+        foods?.data.map((item, index) => (
           <span key={index}>
-            <Product item={item} handleAddToOrder={handleAddToOrder}/>
+            <Product item={item} handleAddToOrder={handleAddToOrder} />
           </span>
         ))}
     </div>
@@ -57,14 +56,14 @@ const ProductList = ({ foods, isLoading }) => {
 };
 
 ProductList.propTypes = {
-    foods: PropTypes.shape({
-        data: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.number,
-            })
-        ),
-    }),
-    isLoading: PropTypes.bool,
+  foods: PropTypes.shape({
+    data: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+      }),
+    ),
+  }),
+  isLoading: PropTypes.bool,
 };
 
 export default ProductList;

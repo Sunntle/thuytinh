@@ -1,29 +1,23 @@
 // React
-import { useCallback, useMemo } from "react";
-// React-icons
+import { useCallback, useMemo } from "react"; // React-icons
 import { AiFillWarning } from "react-icons/ai";
-import { HiXMark } from "react-icons/hi2";
-// Components
-import { Drawer, message, Popconfirm } from "antd";
-// Hooks
-import useHttp from "../../../../hooks/useHttp.js";
-// Utils
+import { HiXMark } from "react-icons/hi2"; // Components
+import { Drawer, message, Popconfirm } from "antd"; // Hooks
+import useHttp from "../../../../hooks/useHttp.js"; // Utils
 import { formatCurrency } from "../../../../utils/format.js";
 import {
   handleDeleteConfirm,
   handleOrderReduxDecreaseQuantity,
   handleOrderReduxIncreaseQuantity,
-} from "../../../../utils/buttonUtils.js";
-// Services
-import { addOrder } from "../../../../services/api.js";
-// Redux
+} from "../../../../utils/buttonUtils.js"; // Services
+import { addOrder } from "../../../../services/api.js"; // Redux
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addIdOrderTable, checkIsActiveBooking,
+  addIdOrderTable,
+  checkIsActiveBooking,
   checkIsOrdered,
   emptyOrder,
-} from "../../../../redux/Order/orderSlice.js";
-// External File
+} from "../../../../redux/Order/orderSlice.js"; // External File
 import "./index.css";
 import Image from "../../../Image/Image.jsx";
 import PropTypes from "prop-types";
@@ -37,7 +31,7 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     previousQuantity,
     isActiveBooking,
   } = useSelector((state) => state.order);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const customerName = useSelector((state) => state.customerName);
   const [messageApi, contextHolder] = message.useMessage();
   const { sendRequest } = useHttp();
@@ -78,11 +72,11 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
           type: "success",
           content: "Đặt món thành công",
         });
-        navigate(`/tables-${customerName.tables[0]}/order`)
+        navigate(`/tables-${customerName.tables[0]}/order`);
       } else {
         messageApi.open({
           type: "error",
-          content: response.message
+          content: response.message,
         });
       }
     } catch (err) {
@@ -90,7 +84,17 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
     } finally {
       setIsOrderDesktop(false);
     }
-  }, [customerName.name, customerName.tables, dispatch, messageApi, navigate, orders, sendRequest, setIsOrderDesktop, totalOrder]);
+  }, [
+    customerName.name,
+    customerName.tables,
+    dispatch,
+    messageApi,
+    navigate,
+    orders,
+    sendRequest,
+    setIsOrderDesktop,
+    totalOrder,
+  ]);
 
   const handleUpdateOrder = async () => {
     const body = {
@@ -107,19 +111,26 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
       const res = await sendRequest(request, undefined, true);
       if (res.success) {
         dispatch(emptyOrder());
-        navigate(`/tables-${customerName.tables[0]}/order`)
+        navigate(`/tables-${customerName.tables[0]}/order`);
       } else {
         messageApi.open({
           type: "error",
-          content: res.message
+          content: res.message,
         });
       }
-
     } catch (err) {
       console.error(err);
     } finally {
       setIsOrderDesktop(false);
     }
+  };
+
+  const onConfirmDelete = async (id) => {
+    handleDeleteConfirm(id, dispatch);
+    await message.open({
+      type: "info",
+      content: "Huỷ món thành công",
+    });
   };
 
   return (
@@ -162,13 +173,9 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                     >
                       -
                     </span>
-                    <input
-                      readOnly={true}
-                      className="w-8 h-8 bg-white text-center text-xs outline-none"
-                      type="number"
-                      value={item.quantity}
-                      min={1}
-                    />
+                    <span className="w-8 h-8 flex items-center justify-center text-sm">
+                      {item.quantity}
+                    </span>
                     <span
                       onClick={() =>
                         handleOrderReduxIncreaseQuantity(item, dispatch)
@@ -184,17 +191,23 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
                   <span className="cursor-pointer group">
                     <Popconfirm
                       disabled={item.inDb && true}
-                      title={"Bạn có muốn xóa món ăn này"}
-                      okText={"Có"}
+                      placement={"leftTop"}
+                      title={
+                        <span className="font-medium ml-2">
+                          Bạn có muốn huỷ món ăn này
+                        </span>
+                      }
+                      okText={"Đồng ý"}
                       okType={"danger"}
-                      cancelText={"Không"}
-                      onConfirm={() => handleDeleteConfirm(item.id, dispatch)}
+                      cancelText={"Huỷ"}
+                      onConfirm={() => onConfirmDelete(item.id)}
+                      onCancel={() => console.log("Hủy bỏ")}
                       icon={
                         <AiFillWarning className="w-5 h-5 text-red-600 disabled:text-red-300" />
                       }
                     >
                       <button>
-                        <HiXMark className="w-5 h-5 text-red-600" />
+                        <HiXMark className="w-6 h-6 text-red-600" />
                       </button>
                     </Popconfirm>
                   </span>
@@ -224,23 +237,25 @@ const OrderListDesktop = ({ isOrderDesktop, setIsOrderDesktop }) => {
         <div className="w-full flex justify-end items-center text-lg font-normal text-primary mt-10 px-2 space-x-2">
           <button
             onClick={handleUpdateOrder}
-            className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${idOrder === 0 ||
+            className={`text-sm py-2 px-4 bg-transparent rounded-md text-primary border border-primary hover:bg-primary hover:text-white transition-colors duration-200 ${
+              idOrder === 0 ||
               (isActiveBooking && !orders?.some((i) => i.inDb)) ||
               currentQuantity === previousQuantity
-              ? "hidden"
-              : ""
-              }`}
+                ? "hidden"
+                : ""
+            }`}
           >
             Cập nhật
           </button>
 
           <button
-            className={`text-sm py-2 px-4 bg-primary rounded-md text-white hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${isOrdered ||
+            className={`text-sm py-2 px-4 bg-primary rounded-md text-white hover:bg-primary/20 hover:text-primary transition-colors duration-200 ${
+              isOrdered ||
               orders?.length === 0 ||
               orders?.some((i) => i.inDb && true)
-              ? "hidden"
-              : ""
-              }`}
+                ? "hidden"
+                : ""
+            }`}
             onClick={submitOrderList}
           >
             Đặt món

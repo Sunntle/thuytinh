@@ -1,24 +1,18 @@
 // React
-import { useCallback, useMemo } from "react";
-// React-icons
+import { useCallback, useMemo } from "react"; // React-icons
 import { AiFillWarning } from "react-icons/ai";
-import { HiXMark } from "react-icons/hi2";
-// Components
+import { HiXMark } from "react-icons/hi2"; // Components
 import { message, Modal, Popconfirm } from "antd";
-import Image from "../../../components/Image/Image.jsx";
-// Hooks
-import useHttp from "../../../hooks/useHttp.js";
-// Utils
+import Image from "../../../components/Image/Image.jsx"; // Hooks
+import useHttp from "../../../hooks/useHttp.js"; // Utils
 import { formatCurrency } from "../../../utils/format.js";
 import {
   addIdOrderTable,
   checkIsActiveBooking,
   checkIsOrdered,
   emptyOrder,
-} from "../../../redux/Order/orderSlice.js";
-// Services
-import { addOrder } from "../../../services/api.js";
-// Redux
+} from "../../../redux/Order/orderSlice.js"; // Services
+import { addOrder } from "../../../services/api.js"; // Redux
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleDeleteConfirm,
@@ -76,7 +70,7 @@ const OrderListModal = ({
           }),
         );
         dispatch(checkIsOrdered(true));
-        dispatch(checkIsActiveBooking(true))
+        dispatch(checkIsActiveBooking(true));
         dispatch(emptyOrder());
         messageApi.open({
           type: "success",
@@ -136,6 +130,14 @@ const OrderListModal = ({
     } finally {
       setIsOrderModalOpen(false);
     }
+  };
+
+  const onConfirmDelete = async (id) => {
+    handleDeleteConfirm(id, dispatch);
+    await message.open({
+      type: "info",
+      content: "Huỷ món thành công",
+    });
   };
 
   return (
@@ -201,7 +203,7 @@ const OrderListModal = ({
                     {item.name_product}
                   </span>
                   <span className="text-md md:text-md font-normal">
-                    Giá:
+                    Giá:{" "}
                     <span className="font-bold">
                       {formatCurrency(item.price)}
                     </span>
@@ -216,13 +218,9 @@ const OrderListModal = ({
                     >
                       -
                     </span>
-                    <input
-                      readOnly={true}
-                      className="w-8 h-8 bg-white flex items-center justify-center text-xs outline-none"
-                      type="number"
-                      value={item.quantity}
-                      min={1}
-                    />
+                    <span className="w-8 h-8 flex items-center justify-center text-xs">
+                      {item.quantity}
+                    </span>
                     <span
                       onClick={() =>
                         handleOrderReduxIncreaseQuantity(item, dispatch)
@@ -236,18 +234,23 @@ const OrderListModal = ({
                 <div className="self-end mr-2">
                   <Popconfirm
                     disabled={item.inDb && true}
-                    title={"Bạn có muốn xóa món ăn này"}
-                    okText={"Có"}
+                    placement={"leftTop"}
+                    title={
+                      <span className="font-medium">
+                        Bạn có muốn huỷ món ăn này
+                      </span>
+                    }
+                    okText={"Đồng ý"}
                     okType={"danger"}
-                    cancelText={"Không"}
-                    onConfirm={() => handleDeleteConfirm(item.id, dispatch)}
+                    cancelText={"Huỷ"}
+                    onConfirm={() => onConfirmDelete(item.id)}
                     onCancel={() => console.log("Hủy bỏ")}
                     icon={
                       <AiFillWarning className="w-5 h-5 text-red-600 disabled:text-red-300" />
                     }
                   >
                     <button>
-                      <HiXMark className="w-6 h-6 text-red-600" />
+                      <HiXMark className="w-5 h-5 text-red-600" />
                     </button>
                   </Popconfirm>
                 </div>
