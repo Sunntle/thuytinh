@@ -50,7 +50,7 @@ const ProductSlider = ({ products }) => {
       effect="fade"
       pagination={pagination}
       modules={[Pagination, EffectFade]}
-      className="mySwiper lg:h-screen my-10"
+      className="mySwiper lg:h-[700px] my-10"
       draggable={true}
       onSlideChange={handleSlideChange}
     >
