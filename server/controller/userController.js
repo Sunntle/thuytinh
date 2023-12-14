@@ -38,28 +38,47 @@ exports.login = asyncHandler(async (req, res) => {
       message: "Thiếu thông tin người dùng",
     });
   const user = await User.findOne({ where: { email } });
-
-  if (user && (await user.comparePassword(password))) {
-    const { createdAt, updatedAt, refreshToken, password, ...userAcc } = user.toJSON();
-    const accessToken = generateAccessToken(userAcc.id, userAcc.role);
-    const newrefreshToken = generateRefreshToken(userAcc.id, userAcc.role);
-    await User.update(
-      { refreshToken: newrefreshToken },
-      {
-        where: { id: userAcc.id },
+  if (user) {
+    const usersOnline = getAllUserOnline();
+    const isExist = usersOnline.findIndex((el) => el.id === user.id);
+    if (isExist !== -1) {
+      return res.status(401).json({
+        success: false,
+        message: "Tài khoản đã được đăng nhập ở một thiết bị khác",
+      });
+    } else {
+      if (await user.comparePassword(password)) {
+        const { createdAt, updatedAt, refreshToken, password, ...userAcc } =
+          user.toJSON();
+        const accessToken = generateAccessToken(userAcc.id, userAcc.role);
+        const newrefreshToken = generateRefreshToken(userAcc.id, userAcc.role);
+        await User.update(
+          { refreshToken: newrefreshToken },
+          {
+            where: { id: userAcc.id },
+          }
+        );
+        res.cookie("refreshToken", newrefreshToken, {
+          httpOnly: true,
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        // addUserOnline(user)
+        return res.status(200).json({
+          accessToken,
+          account: user,
+        });
+      } else {
+        return res.status(401).json({
+          success: false,
+          message: "Mật khẩu tài khoản không đúng",
+        });
       }
-    );
-    res.cookie("refreshToken", newrefreshToken, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-    // addUserOnline(user)
-    return res.status(200).json({
-      accessToken,
-      account: user,
-    });
+    }
   } else {
-    return res.status(401).json("Lỗi thông tin tài khoản");
+    return res.status(401).json({
+      success: false,
+      message: "Người dùng không tồn tại",
+    });
   }
 });
 exports.getAllUser = asyncHandler(async (req, res) => {

@@ -9,7 +9,7 @@ const NotFound = () => {
         backgroundColor: customize.darkMode ? "bg-darkModeBg" : "bg-white",
       }}
       status="404"
-      title="Yêu cầu tài khoản đăng nhập"
+      title="Không tìm thấy trang"
       subTitle="Xin lỗi bạn phải đăng nhập để sử dụng"
       extra={
         <Link to="/">
