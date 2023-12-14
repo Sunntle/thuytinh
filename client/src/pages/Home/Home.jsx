@@ -31,7 +31,7 @@ const Home = () => {
   }, [sendRequest]);
 
   return (
-    <div className="tracking-wide pb-12 lg:pb-0">
+    <div className="tracking-wide pb-24 lg:pb-0">
       <Helmet>
         <title>Trang chủ</title>
         <meta name="home" content="Home" />

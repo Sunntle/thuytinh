@@ -123,7 +123,7 @@ const Order = () => {
                     <div className="col-span-5 md:col-span-4 h-28 xl:h-36">
                       <div className="w-full h-full rounded-lg">
                         <Image
-                          className="object-cover"
+                          className="object-cover rounded-md"
                           src={
                             item?.product?.imageproducts[1]?.url ||
                             item?.product?.imageproducts[0]?.url

@@ -1,5 +1,5 @@
 // React
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 // React-icons
 import { AiFillPlusCircle } from "react-icons/ai";
 // Components
@@ -57,7 +57,7 @@ const Product = (props) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       key={id}
-      className="relative box-border tracking-wide min-h-0 w-auto h-auto border rounded-lg shadow cursor-pointer transition-shadow duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)]"
+      className="relative p-2 box-border tracking-wide min-h-0 border border-transparent hover:border-black/20 w-auto h-auto rounded-lg shadow-md hover:scale-105 cursor-pointer transition-all duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)]"
     >
       <div className="w-full h-32 lg:h-40" onClick={showProductDetail}>
         <Image
