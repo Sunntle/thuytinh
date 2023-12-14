@@ -29,6 +29,7 @@ export const accountSlide = createSlice({
         doLoginAction: (state, action) => {
             state.isAuthenticated = true;
             state.user = action.payload;
+            socket.connect()
             socket.emit("user-connected",  action.payload)
         },
         getAccountAction: (state, action) => {
@@ -36,6 +37,7 @@ export const accountSlide = createSlice({
             state.user = action.payload;
         },
         doLogoutAction: () => {
+            socket.disconnect()
             localStorage.removeItem('access_token');
             return initialState
         }

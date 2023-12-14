@@ -23,7 +23,9 @@ const App = () => {
     }
     dispatch(fetchNotification())
   }, [dispatch]);
-
+  useEffect(()=>{
+    document.body.style.backgroundColor = customize.darkMode ?  "#001529": "white"
+  },[customize.darkMode])
   useEffect(() => {
     if (user.isAuthenticated) {
       socket.emit("user-connected", user.user)

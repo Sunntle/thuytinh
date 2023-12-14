@@ -8,6 +8,7 @@ import { getAllCate, getAllMaterial, getAllProduct } from "../../services/api";
 import { formatGia, truncateString } from "../../utils/format";
 import ImageComponent from "../../components/image"
 import { useMemo } from "react";
+import { useSelector } from "react-redux";
 const { Title } = Typography;
 
 function SearchPage() {
@@ -16,6 +17,7 @@ function SearchPage() {
   const [material, setMaterial] = useState(null);
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
+  const user = useSelector(state => state.account)
   const kw = useMemo(()=>searchParams.get("keyword"),[searchParams]);
   const fetchData = useCallback(
     async (_limit = 6, _offset = 0) => {
@@ -150,7 +152,7 @@ function SearchPage() {
                 />
   
                 <div className="p-4 flex flex-col">
-                  <Link to={`/employee/menu?product=${category.id}`} className="font-medium text-xl hover:text-main">{truncateString(el.name_product, 10)}</Link>
+                  <Link to={user?.user.role === "R4" ? "/admin/product" :`/employee/menu?product=${category.id}`} className="font-medium text-xl hover:text-main">{truncateString(el.name_product, 10)}</Link>
                   <div className="text-xs mt-2 text-slate-500">
                   {el.amount >= 1 ? ('Số lượng : ' + el.amount) : (el.amount === 0.5 ? ('Số lượng : vô hạn') : ('Sản phẩm hết hàng!'))}
                   </div>
@@ -211,7 +213,7 @@ function SearchPage() {
               </div>
               <div>
                 <Link
-                  to={`/admin/material`}
+                  to={user?.user?.role === "R4"? "/admin/material" :"/employee/renvenue"}
                   className="font-semibold text-xl hover:text-main"
                 >
                   {el.name_material}
