@@ -10,7 +10,7 @@ import { socket } from "./socket";
 import { fetchNotification } from "./redux/notification/notificationSystem";
 import moment from 'moment-timezone';
 moment.tz.setDefault('Asia/Bangkok');
-const nextCallAccount = ['/', '/register'];
+const nextCallAccount = ['/register'];
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.account);
@@ -18,7 +18,7 @@ const App = () => {
   const customize = useSelector(state => state.customize)
 
   useEffect(() => {
-    if (!nextCallAccount.includes(window.location.pathname)) {
+    if (!nextCallAccount.includes(window.location.pathname) && localStorage.getItem("access_token")) {
       dispatch(fetchAccount());
     }
     dispatch(fetchNotification())
