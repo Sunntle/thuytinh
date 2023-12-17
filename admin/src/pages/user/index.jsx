@@ -108,25 +108,25 @@ function UserPage() {
       };
       form.setFieldsValue(data);
     },
-    [ form]
+    [form]
   );
   
   const handleDelete = useCallback(
     async (id) => {
       if (id === userStore.user.id) {
-        message.error("Không thể xóa chính bản thân mình !!");
+        messageApi.open({type: "error", content: "Không thể xóa chính bản thân mình !"});
         return;
       }
       try {
         await removeUser(id);
         await fetchData();
-        message.success("Xóa thành công");
+        messageApi.open({type: "success", content: "Xóa thành công"});
       } catch (err) {
         console.log(err);
-        message.error("Xảy ra lỗi, xóa thất bại");
+        messageApi.open({type: "error", content: "Xảy ra lỗi, xóa thất bại"});
       }
     },
-    [fetchData, userStore.user.id]
+    [fetchData, messageApi, userStore.user.id]
   );
 
   const onChange = useCallback((pagination, filters, sorter, extra) => {
