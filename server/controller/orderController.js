@@ -139,7 +139,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
   }
   if (!check) {
     for (const cart of carts) {
-      const orderDatabase = current.find((ele) => ele.id_product === cart.id);
+      const orderDatabase = current?.find((ele) => ele.id_product === cart.id);
       const val = await getQtyMaterialByProduct(cart);
       if (orderDatabase) {
 

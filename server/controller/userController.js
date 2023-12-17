@@ -122,7 +122,7 @@ exports.getAllUser = asyncHandler(async (req, res) => {
   const { count, rows } = await User.findAndCountAll(query);
   const adminOnline = getAllUserOnline()
   rows.forEach(itemA => {
-    const matchingItemB = adminOnline.find((itemB) => itemB.id === itemA.dataValues.id);
+    const matchingItemB = adminOnline?.find((itemB) => itemB.id === itemA.dataValues.id);
     if (matchingItemB) {
       itemA.dataValues.status = true;
     } else {

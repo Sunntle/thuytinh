@@ -138,7 +138,7 @@ const Navbar = () => {
     if (location.pathname == "/" || location.pathname == "/home")
       return (checkActiveClassName = navbarRoute[0]);
     else {
-      checkActiveClassName = navbarRoute.find(
+      checkActiveClassName = navbarRoute?.find(
         (item) =>location.pathname.includes(item.originRouteName) ||
         location.state?.from?.includes(item.originRouteName)
       );

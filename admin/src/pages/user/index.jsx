@@ -138,7 +138,7 @@ function UserPage() {
       if (admin && admin.data) {
         const arrAdmin = [...admin.data];
         arrAdmin.forEach((itemA) => {
-          const itemB = data.find((el) => el.id === itemA.id);
+          const itemB = data?.find((el) => el.id === itemA.id);
           itemB ? (itemA.status = true) : (itemA.status = false);
         });
         setAdmin((prev) => ({ ...prev, data: arrAdmin }));
