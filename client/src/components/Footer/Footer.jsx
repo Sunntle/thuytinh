@@ -1,7 +1,8 @@
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import Image from "../../components/Image/Image.jsx";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 const Footer = () => {
   const customerName = useSelector((state) => state.customerName);
   return (
@@ -9,9 +10,12 @@ const Footer = () => {
       <div className="max-w-screen-3xl">
         <div className="grid grid-cols-12 content-stretch">
           <div className="col-span-5 h-full flex flex-col justify-between space-y-40">
-            <div className="w-32 h-32">
-              <Image src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287585/NhaHangThuyTinh/msmn9zmjne9fkkakyn5k.webp" alt="white-logo" />
-            </div>
+            <Link to={"/home"} className="w-32 h-32">
+              <Image
+                src="https://res.cloudinary.com/dw6jih4yt/image/upload/v1700287585/NhaHangThuyTinh/msmn9zmjne9fkkakyn5k.webp"
+                alt="white-logo"
+              />
+            </Link>
             <span className="text-[#BEB7B5]">
               © 2023 Thuy Tinh. All rights reserved
             </span>
@@ -20,26 +24,36 @@ const Footer = () => {
             {/*Col 1*/}
             <div className="flex flex-col justify-between">
               <div className="flex flex-col space-y-3">
-                <Link to={
-                  "/about"
-                } className="text-white hover:text-primary transition-colors cursor-pointer">
+                <Link
+                  to={"/about"}
+                  className="text-white hover:text-primary transition-colors cursor-pointer"
+                >
                   Về chúng tôi
                 </Link>
-                <Link to={
-                  customerName?.tables.length > 0
-                    ? `/tables-${customerName?.tables}/menu`
-                    : "/select-table"
-                } className="text-white hover:text-primary transition-colors cursor-pointer" >
+                <Link
+                  to={
+                    customerName?.tables.length > 0
+                      ? `/tables-${customerName?.tables}/menu`
+                      : "/select-table"
+                  }
+                  className="text-white hover:text-primary transition-colors cursor-pointer"
+                >
                   Thực đơn
                 </Link>
-                <Link to={
-                  customerName?.tables.length > 0
-                    ? `/tables-${customerName?.tables}/service`
-                    : "/select-table"
-                } className="text-white hover:text-primary transition-colors cursor-pointer">
+                <Link
+                  to={
+                    customerName?.tables.length > 0
+                      ? `/tables-${customerName?.tables}/service`
+                      : "/select-table"
+                  }
+                  className="text-white hover:text-primary transition-colors cursor-pointer"
+                >
                   Dịch vụ
                 </Link>
-                <Link to={"/"} className="text-white hover:text-primary transition-colors cursor-pointer">
+                <Link
+                  to={"/"}
+                  className="text-white hover:text-primary transition-colors cursor-pointer"
+                >
                   Giao hàng
                 </Link>
               </div>
@@ -50,18 +64,46 @@ const Footer = () => {
             {/*Col 2*/}
             <div className="flex flex-col justify-between">
               <div className="flex flex-col space-y-3">
-                <span className="cursor-pointer text-white hover:text-primary transition-colors">
+                <Link
+                  to={
+                    customerName?.tables.length > 0
+                      ? `/tables-${customerName?.tables}/contact`
+                      : "/contact"
+                  }
+                  className="cursor-pointer text-white hover:text-primary transition-colors"
+                >
                   Hỗ trợ
-                </span>
-                <span className="cursor-pointer text-white hover:text-primary transition-colors">
+                </Link>
+                <Link
+                  to={
+                    customerName?.tables.length > 0
+                      ? `/tables-${customerName?.tables}/contact`
+                      : "/contact"
+                  }
+                  className="cursor-pointer text-white hover:text-primary transition-colors"
+                >
                   Đặt câu hỏi
-                </span>
-                <span className="cursor-pointer text-white hover:text-primary transition-colors">
+                </Link>
+                <Link
+                  to={
+                    customerName?.tables.length > 0
+                      ? `/tables-${customerName?.tables}/menu`
+                      : "/select-table"
+                  }
+                  className="cursor-pointer text-white hover:text-primary transition-colors"
+                >
                   Đặt món
-                </span>
-                <span className="cursor-pointer text-white hover:text-primary transition-colors">
+                </Link>
+                <Link
+                  to={
+                    customerName?.tables.length > 0
+                      ? `/tables-${customerName?.tables}/contact`
+                      : "/contact"
+                  }
+                  className="cursor-pointer text-white hover:text-primary transition-colors"
+                >
                   Liên hệ
-                </span>
+                </Link>
               </div>
               <a className="cursor-pointer text-white hover:text-primary transition-colors">
                 Điều khoản sử dụng

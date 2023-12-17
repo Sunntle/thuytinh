@@ -70,13 +70,13 @@ const NavbarDesktop = ({
   return (
     <div
       ref={headerRef}
-      className={`tracking-wide hidden ease-in-out duration-500 lg:flex lg:justify-between lg:items-center lg:fixed z-30 ${checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
+      className={`tracking-wide hidden ease-in-out duration-500 lg:flex lg:justify-between lg:items-center lg:fixed z-40 ${checkRoute ? "bg-transparent text-white" : "bg-primary text-white"
         } top-0 w-full h-20 px-16 py-2 drop-shadow-md`}
     >
       {contextHolder}
-      <div className="w-20 h-20">
+      <Link to={"/home"} className="w-20 h-20">
         <img src={logoPath} alt="logo" />
-      </div>
+      </Link>
       <nav className="lg:flex lg:space-x-6">
         {navbarList?.map((navItem, index) => {
           if (navItem.id == 3) {

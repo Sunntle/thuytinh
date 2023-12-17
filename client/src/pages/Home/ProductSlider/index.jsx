@@ -19,12 +19,6 @@ import PaginationSlider from "./PaginationSlider/index.jsx";
 import ProductSlide from "./ProductSlide/index.jsx";
 
 const ProductSlider = ({ products }) => {
-  products = products?.data?.slice(0, 4)?.map((item) => ({
-    name: item.name_product,
-    image:
-      typeof item?.imageproducts?.[1]?.url === "string" ? item?.imageproducts?.[1]?.url : "",
-    description: item.description,
-  }));
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Pagination
@@ -70,14 +64,16 @@ const ProductSlider = ({ products }) => {
 };
 ProductSlider.displayName = "ProductSlider";
 ProductSlider.propTypes = {
-  products: PropTypes.shape({
-    data: PropTypes.arrayOf(
+  products: PropTypes.arrayOf(
       PropTypes.shape({
-        name_product: PropTypes.string,
-        ImageProducts: PropTypes.array,
-        description: PropTypes.string,
-      }),
-    ),
-  }),
+        // Define the expected shape of each product object
+        // Adjust these PropTypes based on the actual structure of your 'product' object
+        // For example, if 'id', 'name', and 'image' are properties of your product, add them here.
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        image: PropTypes.string.isRequired,
+        // ... add more properties as needed ...
+      })
+  ) || Blob,
 };
 export default ProductSlider;

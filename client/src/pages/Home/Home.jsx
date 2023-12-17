@@ -1,23 +1,17 @@
 // React
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
-// Components
+import { Helmet } from "react-helmet"; // Components
 import HomeSlide from "./HomeSlide/index.jsx";
 import Banner from "./Banner/Banner.jsx";
 import Reason from "../../components/Reason/Reason.jsx";
 import Image from "../../components/Image/Image.jsx";
-import ProductSlider from "./ProductSlider/index.jsx";
-// Service
-import { fetchProductByLimit } from "../../services/api.js";
-// Utils
-import { ScrollToTop } from "../../utils/format.js";
-// Hooks
-import useHttp from "../../hooks/useHttp.js";
-// Framer Motion
-import { motion } from "framer-motion";
-// Redux
+import ProductSlider from "./ProductSlider/index.jsx"; // Utils
+import { ScrollToTop } from "../../utils/format.js"; // Hooks
+import useHttp from "../../hooks/useHttp.js"; // Framer Motion
+import { motion } from "framer-motion"; // Redux
 import { useSelector } from "react-redux";
+import { fetchProduct } from "../../services/api.js";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
@@ -25,10 +19,20 @@ const Home = () => {
   const customerName = useSelector((state) => state.customerName);
   useEffect(() => {
     const fetchAllProduct = async () => {
-      await sendRequest(fetchProductByLimit(7), setSlideProduct, false);
+      await sendRequest(fetchProduct(), setSlideProduct, false);
     };
+
     fetchAllProduct();
   }, [sendRequest]);
+
+  const foodLimit4 = useMemo(
+    () => slideProduct?.data?.slice(0, 4),
+    [slideProduct?.data],
+  );
+  const mostFoodLimit7 = useMemo(
+    () => slideProduct?.data?.sort((a, b) => b.sold - a.sold).slice(0, 7),
+    [slideProduct?.data],
+  );
 
   return (
     <div className="tracking-wide pb-24 lg:pb-0">
@@ -50,7 +54,7 @@ const Home = () => {
             </h2>
             <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
           </div>
-          <HomeSlide listProduct={slideProduct} />
+          <HomeSlide listProduct={mostFoodLimit7} />
         </>
       )}
 
@@ -101,7 +105,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {slideProduct && <ProductSlider products={slideProduct} />}
+      {slideProduct && <ProductSlider products={foodLimit4} />}
 
       <Reason customerName={customerName} />
     </div>

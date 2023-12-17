@@ -12,17 +12,16 @@ import {
   formatCurrency,
 } from "../../../utils/format.js";
 // Redux
-
 // Motion
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 
 const Product = (props) => {
-  const { handleAddToOrder } = props
+  const { handleAddToOrder } = props;
   const { id, name_product, price, amount, discount } = props.item;
   const imageUrl = useMemo(
     () => props.item.imageUrls || props.item.imageproducts?.[0]?.url,
-    [props.item]
+    [props.item],
   );
 
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -38,7 +37,6 @@ const Product = (props) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
 
   const showProductDetail = () => {
     if (!isLargeScreen) {
@@ -57,7 +55,7 @@ const Product = (props) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       key={id}
-      className="relative p-2 box-border tracking-wide min-h-0 border border-transparent hover:border-black/20 w-auto h-auto rounded-lg shadow-md hover:scale-105 cursor-pointer transition-all duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)]"
+      className={`relative p-2 box-border tracking-wide min-h-0 border border-transparent hover:border-black/20 w-auto h-auto rounded-lg shadow-md hover:scale-105 cursor-pointer transition-all duration-300 hover:shadow-[3px_3px_15px_0px_rgba(192,194,201,0.2)] ${props.className}`}
     >
       <div className="w-full h-32 lg:h-40" onClick={showProductDetail}>
         <Image
@@ -70,8 +68,9 @@ const Product = (props) => {
       <div className="flex justify-between items-center p-2 text-slate-500">
         <div className="flex h-full flex-col justify-end">
           <span
-            className={`text-xs font-medium line-clamp-1 ${amount > 0 ? "text-green-500" : "text-red-500"
-              }`}
+            className={`text-xs font-medium line-clamp-1 ${
+              amount > 0 ? "text-green-500" : "text-red-500"
+            }`}
           >
             {amount > 0 ? "Còn món" : "Hết món"}
           </span>
@@ -104,7 +103,8 @@ const Product = (props) => {
 
 Product.propTypes = {
   item: PropTypes.object,
-  handleAddToOrder: PropTypes.func
+  handleAddToOrder: PropTypes.func,
+  className: PropTypes.string
 };
 
 export default Product;
