@@ -48,7 +48,6 @@ const Rating = ({ ratingModal, setRatingModal }) => {
 
   return (
     <Modal
-      title={"Đánh giá"}
       centered
       open={ratingModal}
       onOk={handleCloseRatingModal}

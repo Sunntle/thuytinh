@@ -38,9 +38,9 @@ const ProductSlide = React.memo(({ item, currentSlide }) => {
           transition={{
             duration: 1,
           }}
-          className="h-[250px] w-[250px] lg:h-[300px] lg:w-[300px] xl:h-[350px] xl:w-[350px]"
+          className="h-[250px] w-[250px] lg:h-[300px] lg:w-[300px] xl:h-[325px] xl:w-[325px]"
         >
-          <Image alt="anh" src={item.image} />
+          <Image alt="anh" src={item.image} className="rounded-full" />
         </motion.div>
       </div>
       <motion.div

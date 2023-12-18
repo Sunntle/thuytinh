@@ -9,7 +9,7 @@ import Reason from "../../components/Reason/Reason.jsx";
 import Image from "../../components/Image/Image.jsx";
 import ProductSlider from "./ProductSlider/index.jsx";
 // Service
-import { fetchProductByLimit } from "../../services/api.js";
+import { fetchProduct } from "../../services/api.js";
 // Utils
 import { ScrollToTop } from "../../utils/format.js";
 // Hooks
@@ -23,9 +23,16 @@ const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
   const customerName = useSelector((state) => state.customerName);
+  
   useEffect(() => {
     const fetchAllProduct = async () => {
-      await sendRequest(fetchProductByLimit(7), setSlideProduct, false);
+      const params = {
+        _sort: "sold",
+        _order: "DESC",
+        _sold: "gt_0",
+        _limit: 7
+      }
+      await sendRequest(fetchProduct(params), setSlideProduct, false);
     };
     fetchAllProduct();
   }, [sendRequest]);

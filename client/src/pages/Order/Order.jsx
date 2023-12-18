@@ -184,6 +184,7 @@ const Order = () => {
 
                 <button
                   onClick={handleAddNewOrder}
+                  disabled={order?.status === 3}
                   className="mt-8 mb-2 w-full py-2 rounded-lg bg-transparent border border-slate-100 hover:bg-slate-100 hover:text-slate-800 transition-colors duration-200"
                 >
                   Thêm món mới
