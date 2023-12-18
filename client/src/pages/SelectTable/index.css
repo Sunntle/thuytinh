@@ -4,7 +4,7 @@
     .ant-tabs-nav-list {
         width: 100%;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
 
         .ant-tabs-tab {
             @apply text-slate-500;
@@ -24,7 +24,7 @@
 }
 
 
-:where(.css-dev-only-do-not-override-byeoj0).ant-tabs > .ant-tabs-nav .ant-tabs-nav-operations, :where(.css-dev-only-do-not-override-byeoj0).ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-operations {
+:where(.css-dev-only-do-not-override-1k5zuen).ant-tabs > .ant-tabs-nav .ant-tabs-nav-operations, :where(.css-dev-only-do-not-override-1k5zuen).ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-operations {
     display: none;
 }
 
@@ -45,4 +45,20 @@
         height: 100%;
         display: block;
     }
+}
+
+.animation-to-right {
+    @apply ease-linear absolute -top-3 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full
+}
+
+.animation-to-bottom {
+    @apply ease-linear absolute -top-3 right-0 w-0.5 h-0 bg-primary transition-all duration-300 group-hover:h-full
+}
+
+.animation-to-left {
+    @apply ease-linear absolute bottom-0 right-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full
+}
+
+.animation-to-top {
+    @apply ease-linear absolute bottom-0 left-0 w-0.5 h-0 bg-primary transition-all duration-300 group-hover:h-full
 }
