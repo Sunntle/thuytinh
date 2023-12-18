@@ -68,6 +68,10 @@ const HomeSlide = ({ listProduct }) => {
   );
 };
 HomeSlide.propTypes = {
-  listProduct: PropTypes.array || Blob,
+    listProduct: PropTypes.oneOfType([
+        PropTypes.array,
+        PropTypes.object,
+    ]),
 };
+
 export default HomeSlide;

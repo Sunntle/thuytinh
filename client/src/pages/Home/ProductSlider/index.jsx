@@ -1,19 +1,16 @@
 // React
 import { useState } from "react";
 import * as ReactDOMServer from "react-dom/server";
-import PropTypes from "prop-types";
-// Components
-// Swiper
+import PropTypes from "prop-types"; // Components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import {
-  SlidePrevButton,
   SlideNextButton,
-} from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx";
-// External Files
+  SlidePrevButton,
+} from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx"; // External Files
 import "./index.css";
 import PaginationSlider from "./PaginationSlider/index.jsx";
 import ProductSlide from "./ProductSlide/index.jsx";
@@ -22,7 +19,9 @@ const ProductSlider = ({ products }) => {
   products = products?.data?.slice(0, 4)?.map((item) => ({
     name: item.name_product,
     image:
-      typeof item?.imageproducts?.[1]?.url === "string" ? item?.imageproducts?.[1]?.url : "",
+      typeof item?.imageproducts?.[1]?.url === "string"
+        ? item?.imageproducts?.[1]?.url
+        : "",
     description: item.description,
   }));
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -70,16 +69,21 @@ const ProductSlider = ({ products }) => {
 };
 ProductSlider.displayName = "ProductSlider";
 ProductSlider.propTypes = {
-  products: PropTypes.arrayOf(
-      PropTypes.shape({
-        // Define the expected shape of each product object
-        // Adjust these PropTypes based on the actual structure of your 'product' object
-        // For example, if 'id', 'name', and 'image' are properties of your product, add them here.
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        image: PropTypes.string.isRequired,
-        // ... add more properties as needed ...
-      })
-  ) || Blob,
+  products: PropTypes.shape({
+    data: PropTypes.arrayOf(
+        PropTypes.shape({
+          name_product: PropTypes.string.isRequired,
+          imageproducts: PropTypes.arrayOf(
+              PropTypes.shape({
+                url: PropTypes.string.isRequired,
+              })
+          ).isRequired,
+          description: PropTypes.string.isRequired,
+          // ... add more properties as needed ...
+        })
+    ).isRequired,
+  }),
 };
+
+
 export default ProductSlider;
