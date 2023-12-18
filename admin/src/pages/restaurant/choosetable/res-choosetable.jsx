@@ -10,6 +10,7 @@ import ResOrder from '../order/res-order';
 import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSystem';
 import { socket } from '../../../socket';
 import Spinner from '../../../components/spinner';
+import { RemoveReduxCart } from '../../../redux/cartsystem/cartSystem';
 const ButtonTable = ({ table, handleTableClick, handleDetailModal, resetTable }) => (
   <div key={table.id}>
     <span
@@ -134,6 +135,7 @@ const ResChooseTable = () => {
   }, [api, dispatch, userId])
 
   const handleCancel = useCallback(() => {
+    dispatch(RemoveReduxCart())
     dispatch(RemoveTableList())
     setOpen(false);
   }, [dispatch]);
