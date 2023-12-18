@@ -122,7 +122,7 @@ exports.getAllUser = asyncHandler(async (req, res) => {
   const { count, rows } = await User.findAndCountAll(query);
   const adminOnline = getAllUserOnline()
   rows.forEach(itemA => {
-    const matchingItemB = adminOnline.find((itemB) => itemB.id === itemA.dataValues.id);
+    const matchingItemB = adminOnline?.find((itemB) => itemB.id === itemA.dataValues.id);
     if (matchingItemB) {
       itemA.dataValues.status = true;
     } else {
@@ -177,11 +177,22 @@ exports.updateAccount = asyncHandler(async (req, res) => {
   const dataToUpdate = avatarPath
     ? { avatar: avatarPath.replace("/upload/", "/upload/w_400,h_300/"), ...rest }
     : rest;
+  const isCheck = await User.findOne({
+    where: {
+      [Op.and]: {
+        email: rest.email,
+        id: {
+          [Op.ne]: id
+        }
+      }
+    }
+  });
+  if (isCheck) return res.status(404).json({ success: false, message: "Email đã tồn tại" });
   await User.update(dataToUpdate, {
     where: { id },
     individualHooks: avatarPath ? true : false
   })
-  res.status(200).json({ message: "Cập nhật thành công" });
+  res.status(200).json({ success: true, message: "Cập nhật thành công" });
 });
 exports.forgotPassword = asyncHandler(async (req, res) => {
   const email = req.body?.email;

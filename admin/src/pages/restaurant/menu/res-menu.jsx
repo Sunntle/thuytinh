@@ -84,7 +84,7 @@ const ResMenu = () => {
 
     const title = useMemo(() => {
         if (selectedCategory && categories.length > 0) {
-            const result = categories.find(i => i.id == selectedCategory);
+            const result = categories?.find(i => i.id == selectedCategory);
             return result.name_category;
         }
         return 'Tất cả sản phẩm'

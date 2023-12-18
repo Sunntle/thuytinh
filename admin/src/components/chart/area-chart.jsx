@@ -10,7 +10,7 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
   };
   const renderTextTotal = (param) => {
     if (param) {
-      const result = montdPreAndCur.find(i => i.month === param);
+      const result = montdPreAndCur?.find(i => i.month === param);
       return result ? formatGia(result.total) : 0
     } else {
       const result = montdPreAndCur?.[0]?.month === param;
