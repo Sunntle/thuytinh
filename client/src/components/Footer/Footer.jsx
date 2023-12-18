@@ -57,7 +57,7 @@ const Footer = () => {
                   Giao hàng
                 </Link>
               </div>
-              <Link className="cursor-pointer text-white hover:text-primary transition-colors">
+              <Link to={"/"} className="cursor-pointer text-white hover:text-primary transition-colors">
                 Chính sách bảo mật
               </Link>
             </div>
@@ -65,21 +65,13 @@ const Footer = () => {
             <div className="flex flex-col justify-between">
               <div className="flex flex-col space-y-3">
                 <Link
-                  to={
-                    customerName?.tables.length > 0
-                      ? `/tables-${customerName?.tables}/contact`
-                      : "/contact"
-                  }
+                  to="/contact"
                   className="cursor-pointer text-white hover:text-primary transition-colors"
                 >
                   Hỗ trợ
                 </Link>
                 <Link
-                  to={
-                    customerName?.tables.length > 0
-                      ? `/tables-${customerName?.tables}/contact`
-                      : "/contact"
-                  }
+                  to="/contact"
                   className="cursor-pointer text-white hover:text-primary transition-colors"
                 >
                   Đặt câu hỏi
@@ -95,11 +87,7 @@ const Footer = () => {
                   Đặt món
                 </Link>
                 <Link
-                  to={
-                    customerName?.tables.length > 0
-                      ? `/tables-${customerName?.tables}/contact`
-                      : "/contact"
-                  }
+                  to="/contact" 
                   className="cursor-pointer text-white hover:text-primary transition-colors"
                 >
                   Liên hệ
