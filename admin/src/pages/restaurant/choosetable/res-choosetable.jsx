@@ -135,7 +135,6 @@ const ResChooseTable = () => {
   }, [api, dispatch, userId])
 
   const handleCancel = useCallback(() => {
-    console.log("1")
     dispatch(RemoveReduxCart())
     dispatch(RemoveTableList())
     setOpen(false);
