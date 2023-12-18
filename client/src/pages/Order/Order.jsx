@@ -62,7 +62,7 @@ const Order = () => {
     if (order?.status === 3) {
       return messageApi.open({
         type: "info",
-        content: "Hoá đơn đã được thanh toán",
+        content: "Hoá đơn đã thanh toán",
       });
     }
 
@@ -101,7 +101,7 @@ const Order = () => {
       }
 
     } else if (status_order === 3) {
-      message.open({ type: "warning", content: "Hoá đơn đã thanh toán" });
+      message.open({ type: "info", content: "Hoá đơn đã thanh toán" });
     }
   };
 
