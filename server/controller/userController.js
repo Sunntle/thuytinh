@@ -188,11 +188,13 @@ exports.updateAccount = asyncHandler(async (req, res) => {
     }
   });
   if (isCheck) return res.status(404).json({ success: false, message: "Email đã tồn tại" });
-  await User.update(dataToUpdate, {
-    where: { id },
-    individualHooks: avatarPath ? true : false
-  })
-  res.status(200).json({ success: true, message: "Cập nhật thành công" });
+  else{
+    await User.update(dataToUpdate, {
+      where: { id },
+      individualHooks: avatarPath ? true : false
+    })
+    res.status(200).json({ success: true, message: "Cập nhật thành công" });
+  }
 });
 exports.forgotPassword = asyncHandler(async (req, res) => {
   const email = req.body?.email;
@@ -244,8 +246,19 @@ exports.currentAccount = asyncHandler(async (req, res) => {
   const id = req.user.id;
   const ru = await User.findByPk(id);
   if (!ru) res.status(404).json({ success: false });
-  const { createdAt, updatedAt, refreshToken, password, ...userAcc } = ru?.toJSON();
-  return res.status(200).json(userAcc);
+  else{
+    const usersOnline = getAllUserOnline();
+    const isExist = usersOnline.findIndex((el) => el.id === ru?.id);
+    if (isExist !== -1) {
+      return res.status(401).json({
+        success: false,
+        message: "Tài khoản đã được đăng nhập ở một thiết bị khác",
+      });
+    } else {
+    const { createdAt, updatedAt, refreshToken, password, ...userAcc } = ru?.toJSON();
+    return res.status(200).json(userAcc);
+    }
+  }
 });
 exports.logout = asyncHandler(async (req, res) => {
   const cookie = req.cookies;
