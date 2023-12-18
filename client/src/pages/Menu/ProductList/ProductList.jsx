@@ -44,7 +44,7 @@ const ProductList = ({ foods, isLoading }) => {
     );
   //sort product out of stock: foods?.data.sort((a,b)=> b.amount - a.amount)
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
       {foods &&
         foods?.data.map((item, index) => (
           <span key={index}>

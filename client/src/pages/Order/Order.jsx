@@ -52,10 +52,25 @@ const Order = () => {
   };
 
   const handleAddNewOrder = async () => {
+    if (order?.order_details?.length === 0 || order.length === 0) {
+      return messageApi.open({
+        type: "info",
+        content: "Vui lòng chọn món",
+      });
+    }
+
+    if (order?.status === 3) {
+      return messageApi.open({
+        type: "info",
+        content: "Hoá đơn đã thanh toán",
+      });
+    }
+
     const dataPrevious = order?.order_details?.map((item) => {
       const { product, quantity } = item;
       return { ...product, quantity, inDb: quantity };
     });
+
     dispatch(addOrderDetailUpdate(dataPrevious));
     navigate(`/tables-${tables[0]}/menu`);
   };
@@ -68,20 +83,25 @@ const Order = () => {
     if (status_order > 0 && status_order < 3) {
       values = { ...values, amount: totalOrder };
       setLoadingState(true);
+
       const request = {
         method: "post",
         url: "/payment/create_payment_url",
         ...values,
       };
+
       const response = await sendRequest(request, undefined, true);
+
       dispatch(emptyOrder());
       setIsModalOpen(false);
       form.resetFields();
+
       if (response !== null) {
         window.location.href = String(response);
       }
+
     } else if (status_order === 3) {
-      message.open({ type: "warning", content: "Hoá đơn đã thanh toán" });
+      message.open({ type: "info", content: "Hoá đơn đã thanh toán" });
     }
   };
 
@@ -195,7 +215,6 @@ const Order = () => {
 
                 <button
                   onClick={handleAddNewOrder}
-                  disabled={order?.status === 3}
                   className="mt-8 mb-2 w-full py-2 rounded-lg bg-transparent border border-slate-100 hover:bg-slate-100 hover:text-slate-800 transition-colors duration-200"
                 >
                   Thêm món mới
