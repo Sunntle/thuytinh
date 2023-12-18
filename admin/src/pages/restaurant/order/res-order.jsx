@@ -40,7 +40,7 @@ const RenderFooter = ({
       </div>
 
       <div className='flex justify-center font-semibold col-span-2 m-1'>
-        <button className='bg-blue-500 text-white' onClick={() => handleUpdate(tablelist)}>Thêm món mới</button>
+        <button className='bg-blue-500 text-white' disabled={isPay} onClick={() => handleUpdate(tablelist)}>Thêm món mới</button>
       </div>
 
       <div className='flex justify-center font-semibold col-span-2 m-1'>
