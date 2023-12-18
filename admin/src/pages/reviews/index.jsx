@@ -71,39 +71,41 @@ function ReviewsPage() {
 
   const handleChangePage = useCallback((e) => {
     setPage(e);
-    fetchReviews({ _offset: limit * (e - 1), _limit: limit, _time: currentMonth });
-  },[fetchReviews, currentMonth])
+    fetchReviews({ _offset: limit * (e - 1)});
+  },[fetchReviews])
 
   const handleChangeSelectMonth = useCallback((e) => {
-    fetchData({ _offset: 0, _limit: limit, _time: e });
     setMonth(e);
-  },[fetchData])
+  },[])
 
   const handleSearch = useCallback((kw) => {
-    fetchReviews({ _offset: 0, _limit: limit, q: kw });
+    fetchReviews({q: kw });
   },[fetchReviews]);
 
-  const handleDeleteReview = useCallback(async (id) => {
-    const res = await deleteReview(id);
-    if(!res) {
-      messageApi.open({ type: "error", content: res });
-      return
-    }
-   await messageApi.open({ type: "success", content: res })
-   fetchData(filter, true)
-  },[fetchData, filter, messageApi]);
+  const handleDeleteReview = useCallback(
+    async (id) => {
+      const res = await deleteReview(id);
+      if (!res) {
+        messageApi.open({ type: "error", content: res });
+        return;
+      }
+      messageApi.open({ type: "success", content: res });
+      fetchData(filter, true);
+    },
+    [fetchData, filter, messageApi]
+  );
 
   const handleClear = useCallback(() => {
-    fetchReviews({ _offset: 0, _limit: limit, _time: currentMonth });
-  },[currentMonth, fetchReviews])
+    fetchReviews();
+  },[fetchReviews])
   
   const handleCancelConfirm = useCallback(() => {
     messageApi.open({type: "error", content: "Xóa thất bại"});
   },[messageApi])
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchData({_time: currentMonth});
+  }, [currentMonth, fetchData]);
 
   if (loading) return <Spinner />;
   

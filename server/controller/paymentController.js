@@ -287,15 +287,15 @@ exports.updateOrderBilling = asyncHandler(async (req, res) => {
         transaction_date: date,
         status: 3,
       },
-      { where: { id: +idOrder } },
+      { where: { id: +idOrder } }
     );
-
     if (orderUpdated) {
-      _io.of("/client").emit("is-paid", { data: idTable, message: "Nhân viên thanh toán đơn này" })
+      _io.of("/client").emit("is-paid", { data: idTable, message: "Nhân viên thanh toán thành công", success: true })
       res.status(200).json({ message: "thanh cong" });
     }
 
   } catch (err) {
+    _io.of("/client").emit("is-paid", { data: idTable, message: "Có gì đó sai sai! Thanh toán thất bại", success: false })
     res.status(500).json({ message: err });
   }
 });

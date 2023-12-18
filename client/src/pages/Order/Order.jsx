@@ -32,7 +32,6 @@ const Order = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loadingState, setLoadingState] = useState(false);
-
   const order = data?.data?.[0]?.tablebyorders?.[0]?.order || [];
   const totalOrder = calculateTotalWithVAT(order?.total, 10);
 
@@ -95,15 +94,16 @@ const Order = () => {
   };
 
   useEffect(() => {
-    socket.on("is-paid", ({ data }) => {
+    socket.on("is-paid", (arg) => {
+      const {data, success} = arg
       if (data == tables[0]) {
-        sendRequest(fetchTableById(tables[0], tableToken), setData, false);
+        success ? sendRequest(fetchTableById(tables[0], tableToken), setData, false) : console.log("Thanh toán thất bại!");
       }
     })
     return () => {
       socket.off("is-paid");
     };
-  }, [socket])
+  }, [messageApi, sendRequest, tableToken, tables])
 
   if (isLoading || loadingState) return <Spinner />;
 

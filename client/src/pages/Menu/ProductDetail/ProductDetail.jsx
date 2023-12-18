@@ -82,7 +82,7 @@ const ProductDetail = memo(({ openDrawer, onClose, id }) => {
           <span className="font-semibold text-lg text-slate-500 line-clamp-2">
             {productDetail?.name_product}
           </span>
-          <div className="flex justify-between items-end space-x-1">
+          <div className="flex justify-between items-center space-x-1">
             <span className="text-sm font-normal line-through">
               {formatCurrency(productDetail?.price)}
             </span>
