@@ -224,7 +224,7 @@ exports.queryDr = asyncHandler(async (req, res) => {
 });
 
 exports.updateTransactionOrder = asyncHandler(async (req, res) => {
-  
+
   const { transaction_id, transaction_date, idOrder, payment_gateway } =
     req.body;
 
@@ -290,8 +290,11 @@ exports.updateOrderBilling = asyncHandler(async (req, res) => {
       { where: { id: +idOrder } },
     );
 
-    if (orderUpdated)
+    if (orderUpdated) {
+      _io.of("/client").emit("is-paid", { data: idTable, message: "Nhân viên thanh toán đơn này" })
       res.status(200).json({ message: "thanh cong" });
+    }
+
   } catch (err) {
     res.status(500).json({ message: err });
   }

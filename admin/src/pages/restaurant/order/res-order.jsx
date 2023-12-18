@@ -162,6 +162,7 @@ const ResOrder = ({ handleCancel, open }) => {
       window.location.href = String(payment);
     }
   }, [payment]);
+
   const submitPayment = async () => {
     const body = { payment_gateway: "Cash", date: moment(new Date()).format("YYYYMMDDHHmmss"), idOrder: order.id, idTable: tablelist.id }
     const data = await updatePayment(body)
@@ -194,7 +195,6 @@ const ResOrder = ({ handleCancel, open }) => {
         description: data
       });
     }
-
   }
   return (
     <>

@@ -94,6 +94,17 @@ const Order = () => {
     });
   };
 
+  useEffect(() => {
+    socket.on("is-paid", ({ data }) => {
+      if (data == tables[0]) {
+        sendRequest(fetchTableById(tables[0], tableToken), setData, false);
+      }
+    })
+    return () => {
+      socket.off("is-paid");
+    };
+  }, [socket])
+
   if (isLoading || loadingState) return <Spinner />;
 
   return (
