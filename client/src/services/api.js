@@ -7,10 +7,11 @@ export const fetchCategories = () => {
 };
 
 // Product
-export const fetchProduct = () => {
+export const fetchProduct = (params) => {
+  const qs = `${new URLSearchParams(params).toString()}`
   return {
     method: "get",
-    url: "/product",
+    url: `/product?${qs}`,
   };
 };
 

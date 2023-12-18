@@ -58,7 +58,7 @@ const HomeSlide = ({ listProduct }) => {
         autoplay={true}
       >
         {listProduct &&
-          listProduct?.map((product) => (
+          listProduct?.data?.map((product) => (
             <SwiperSlide key={product.id}>
               <Product className="my-4 hover:scale-100 border-0 hover:shadow-lg hover:border-none" item={product} handleAddToOrder={handleAddToOrder} />
             </SwiperSlide>

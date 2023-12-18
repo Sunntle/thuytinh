@@ -13,14 +13,12 @@ const PaginationSlider = memo(({ className, index, products }) => {
         }}
       >
         <div
-          className={`w-44 h-44 z-40 absolute -top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-full drop-shadow-2xl rotate-${
-            (index + 1) * 45
-          }`}
+          className={`w-44 h-44 z-40 absolute -top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-full drop-shadow-2xl`}
         >
           <Image
-            src={products?.[index]?.imageproducts?.[1].url}
+            src={products?.[index]?.image}
             alt={"Ảnh"}
-            isLoading={!products}
+            isLoading={!products?.[index]?.image && false}
             className={"rounded-full"}
           />
         </div>
@@ -36,22 +34,16 @@ const PaginationSlider = memo(({ className, index, products }) => {
     </>
   );
 });
-
 PaginationSlider.displayName = "PaginationSlider";
 PaginationSlider.propTypes = {
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
   index: PropTypes.number.isRequired,
   products: PropTypes.arrayOf(
     PropTypes.shape({
-      imageproducts: PropTypes.arrayOf(
-        PropTypes.shape({
-          url: PropTypes.string.isRequired,
-          // Add more properties as needed based on your data structure
-        }),
-      ),
-      name: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-      // Add more properties as needed based on your data structure
+      name: PropTypes.string,
+      description: PropTypes.string,
+      image: PropTypes.string,
+      // Add more specific PropTypes for product properties if needed
     }),
   ),
 };

@@ -19,6 +19,12 @@ import PaginationSlider from "./PaginationSlider/index.jsx";
 import ProductSlide from "./ProductSlide/index.jsx";
 
 const ProductSlider = ({ products }) => {
+  products = products?.data?.slice(0, 4)?.map((item) => ({
+    name: item.name_product,
+    image:
+      typeof item?.imageproducts?.[1]?.url === "string" ? item?.imageproducts?.[1]?.url : "",
+    description: item.description,
+  }));
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Pagination

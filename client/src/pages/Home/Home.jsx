@@ -1,38 +1,41 @@
 // React
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet"; // Components
+import { Helmet } from "react-helmet";
+// Components
 import HomeSlide from "./HomeSlide/index.jsx";
 import Banner from "./Banner/Banner.jsx";
 import Reason from "../../components/Reason/Reason.jsx";
 import Image from "../../components/Image/Image.jsx";
-import ProductSlider from "./ProductSlider/index.jsx"; // Utils
-import { ScrollToTop } from "../../utils/format.js"; // Hooks
-import useHttp from "../../hooks/useHttp.js"; // Framer Motion
-import { motion } from "framer-motion"; // Redux
-import { useSelector } from "react-redux";
+import ProductSlider from "./ProductSlider/index.jsx";
+// Service
 import { fetchProduct } from "../../services/api.js";
+// Utils
+import { ScrollToTop } from "../../utils/format.js";
+// Hooks
+import useHttp from "../../hooks/useHttp.js";
+// Framer Motion
+import { motion } from "framer-motion";
+// Redux
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
   const { sendRequest } = useHttp();
   const customerName = useSelector((state) => state.customerName);
+  
   useEffect(() => {
     const fetchAllProduct = async () => {
-      await sendRequest(fetchProduct(), setSlideProduct, false);
+      const params = {
+        _sort: "sold",
+        _order: "DESC",
+        _sold: "gt_0",
+        _limit: 7
+      }
+      await sendRequest(fetchProduct(params), setSlideProduct, false);
     };
-
     fetchAllProduct();
   }, [sendRequest]);
-
-  const foodLimit4 = useMemo(
-    () => slideProduct?.data?.slice(0, 4),
-    [slideProduct?.data],
-  );
-  const mostFoodLimit7 = useMemo(
-    () => slideProduct?.data?.sort((a, b) => b.sold - a.sold).slice(0, 7),
-    [slideProduct?.data],
-  );
 
   return (
     <div className="tracking-wide pb-24 lg:pb-0">
@@ -54,7 +57,7 @@ const Home = () => {
             </h2>
             <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
           </div>
-          <HomeSlide listProduct={mostFoodLimit7} />
+          <HomeSlide listProduct={slideProduct} />
         </>
       )}
 
@@ -105,7 +108,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {slideProduct && <ProductSlider products={foodLimit4} />}
+      {slideProduct && <ProductSlider products={slideProduct} />}
 
       <Reason customerName={customerName} />
     </div>
