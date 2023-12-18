@@ -69,8 +69,8 @@ function UserPage() {
         }
         default: {
           const [dataAdmin, dataUser] = await Promise.all([
-            getAllUser({ _like: "role_R1_not"}),
-            getAllUser({ _like: "role_R1"}),
+            getAllUser({ _like: "role_R1_not" }),
+            getAllUser({ _like: "role_R1" }),
           ]);
           dataAdmin.success && setAdmin(dataAdmin);
           dataUser.success && setUser(dataUser);
@@ -108,25 +108,25 @@ function UserPage() {
       };
       form.setFieldsValue(data);
     },
-    [ form]
+    [form]
   );
-  
+
   const handleDelete = useCallback(
     async (id) => {
       if (id === userStore.user.id) {
-        message.error("Không thể xóa chính bản thân mình !!");
+        messageApi.open({ type: "error", content: "Không thể xóa chính bản thân mình !" });
         return;
       }
       try {
         await removeUser(id);
         await fetchData();
-        message.success("Xóa thành công");
+        messageApi.open({ type: "success", content: "Xóa thành công" });
       } catch (err) {
         console.log(err);
-        message.error("Xảy ra lỗi, xóa thất bại");
+        messageApi.open({ type: "error", content: "Xảy ra lỗi, xóa thất bại" });
       }
     },
-    [fetchData, userStore.user.id]
+    [fetchData, messageApi, userStore.user.id]
   );
 
   const onChange = useCallback((pagination, filters, sorter, extra) => {
@@ -138,7 +138,7 @@ function UserPage() {
       if (admin && admin.data) {
         const arrAdmin = [...admin.data];
         arrAdmin.forEach((itemA) => {
-          const itemB = data.find((el) => el.id === itemA.id);
+          const itemB = data?.find((el) => el.id === itemA.id);
           itemB ? (itemA.status = true) : (itemA.status = false);
         });
         setAdmin((prev) => ({ ...prev, data: arrAdmin }));
@@ -162,11 +162,13 @@ function UserPage() {
       }
       const res = await callUpdateAccount(formData);
       messageApi.open({
-        type: "success",
+        type: res.success ? "success" : "warning",
         content: res.message,
       });
-      setOpenModalProfile(false);
-      fetchData()
+      if (res.success) {
+        setOpenModalProfile(false);
+        fetchData()
+      }
     },
     [fetchData, messageApi]
   );
@@ -242,12 +244,12 @@ function UserPage() {
                     >
 
                       <Select placeholder="Chọn 1 loại món ăn">
-                      {options?.map((el, index) => (
-                        <Option key={index} value={el.id}>
-                          {el.name}
-                        </Option>
-                      ))}
-                    </Select>
+                        {options?.map((el, index) => (
+                          <Option key={index} value={el.id}>
+                            {el.name}
+                          </Option>
+                        ))}
+                      </Select>
 
                     </Form.Item>
                     <Form.Item
@@ -439,7 +441,7 @@ function UserPage() {
     [form, form1, onFinish, openModalProfile, submitResetPass]
   );
 
-  const renderRegisterModal = useMemo(()=>(<Modal
+  const renderRegisterModal = useMemo(() => (<Modal
     open={open}
     title="Thêm tài khoản mới"
     centered
@@ -447,7 +449,7 @@ function UserPage() {
     footer={null}
   >
     <RegisterPage handleFinish={handleFinish} />
-  </Modal>),[handleFinish, open])
+  </Modal>), [handleFinish, open])
 
   const columnsUser = useMemo(
     () => [
@@ -552,7 +554,7 @@ function UserPage() {
     ],
     [columnsUser]
   );
-  
+
   const renderTableAdmin = () => {
     return (
       <Table
@@ -564,7 +566,7 @@ function UserPage() {
       />
     );
   };
-  
+
   const renderTableUser = () => {
     return (
       <Table
@@ -589,7 +591,7 @@ function UserPage() {
       children: loading ? <Spinner /> : renderTableAdmin(),
     },
   ];
- 
+
 
   return (
     <div className="my-7 px-5">

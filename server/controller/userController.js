@@ -38,28 +38,47 @@ exports.login = asyncHandler(async (req, res) => {
       message: "Thiếu thông tin người dùng",
     });
   const user = await User.findOne({ where: { email } });
-
-  if (user && (await user.comparePassword(password))) {
-    const { createdAt, updatedAt, refreshToken, password, ...userAcc } = user.toJSON();
-    const accessToken = generateAccessToken(userAcc.id, userAcc.role);
-    const newrefreshToken = generateRefreshToken(userAcc.id, userAcc.role);
-    await User.update(
-      { refreshToken: newrefreshToken },
-      {
-        where: { id: userAcc.id },
+  if (user) {
+    const usersOnline = getAllUserOnline();
+    const isExist = usersOnline.findIndex((el) => el.id === user.id);
+    if (isExist !== -1) {
+      return res.status(401).json({
+        success: false,
+        message: "Tài khoản đã được đăng nhập ở một thiết bị khác",
+      });
+    } else {
+      if (await user.comparePassword(password)) {
+        const { createdAt, updatedAt, refreshToken, password, ...userAcc } =
+          user.toJSON();
+        const accessToken = generateAccessToken(userAcc.id, userAcc.role);
+        const newrefreshToken = generateRefreshToken(userAcc.id, userAcc.role);
+        await User.update(
+          { refreshToken: newrefreshToken },
+          {
+            where: { id: userAcc.id },
+          }
+        );
+        res.cookie("refreshToken", newrefreshToken, {
+          httpOnly: true,
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        // addUserOnline(user)
+        return res.status(200).json({
+          accessToken,
+          account: user,
+        });
+      } else {
+        return res.status(401).json({
+          success: false,
+          message: "Mật khẩu tài khoản không đúng",
+        });
       }
-    );
-    res.cookie("refreshToken", newrefreshToken, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-    // addUserOnline(user)
-    return res.status(200).json({
-      accessToken,
-      account: user,
-    });
+    }
   } else {
-    return res.status(401).json("Lỗi thông tin tài khoản");
+    return res.status(401).json({
+      success: false,
+      message: "Người dùng không tồn tại",
+    });
   }
 });
 exports.getAllUser = asyncHandler(async (req, res) => {
@@ -103,7 +122,7 @@ exports.getAllUser = asyncHandler(async (req, res) => {
   const { count, rows } = await User.findAndCountAll(query);
   const adminOnline = getAllUserOnline()
   rows.forEach(itemA => {
-    const matchingItemB = adminOnline.find((itemB) => itemB.id === itemA.dataValues.id);
+    const matchingItemB = adminOnline?.find((itemB) => itemB.id === itemA.dataValues.id);
     if (matchingItemB) {
       itemA.dataValues.status = true;
     } else {
@@ -158,11 +177,22 @@ exports.updateAccount = asyncHandler(async (req, res) => {
   const dataToUpdate = avatarPath
     ? { avatar: avatarPath.replace("/upload/", "/upload/w_400,h_300/"), ...rest }
     : rest;
+  const isCheck = await User.findOne({
+    where: {
+      [Op.and]: {
+        email: rest.email,
+        id: {
+          [Op.ne]: id
+        }
+      }
+    }
+  });
+  if (isCheck) return res.status(404).json({ success: false, message: "Email đã tồn tại" });
   await User.update(dataToUpdate, {
     where: { id },
     individualHooks: avatarPath ? true : false
   })
-  res.status(200).json({ message: "Cập nhật thành công" });
+  res.status(200).json({ success: true, message: "Cập nhật thành công" });
 });
 exports.forgotPassword = asyncHandler(async (req, res) => {
   const email = req.body?.email;

@@ -1,5 +1,10 @@
 import axios from "axios";
-import { useDispatch } from "react-redux";
+let store
+const importStore = async () => {
+  const module = await import('../redux/store');
+  store = module.store;
+};
+importStore();
 import { doLogoutAction } from "../redux/account/accountSlice";
 const instance = axios.create({
   baseURL: import.meta.env.MODE === 'production' ? import.meta.env.VITE_APP_API_URL_PRODUCTION : import.meta.env.VITE_APP_API_URL,
@@ -27,6 +32,7 @@ instance.interceptors.response.use(
     return response && response?.data;
   },
   async function (error) {
+
     if (
       error.config &&
       error.response &&
@@ -46,8 +52,7 @@ instance.interceptors.response.use(
       +error.response.status === 400 &&
       window.location.pathname !== "/"
     ) {
-      const dispatch = useDispatch();
-      dispatch(doLogoutAction());
+      store.dispatch(doLogoutAction());
       window.location.href = "/";
     }
     return error?.response?.data ?? Promise.reject(error);

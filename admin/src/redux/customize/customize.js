@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     darkMode: false,
     lang: "vi"
-}
+} 
 const customizeSystem = createSlice({
     name: "customize",
     initialState,

@@ -1,4 +1,4 @@
-import { Collapse, Divider, Form, Modal, Radio, message } from "antd";
+import { Collapse, Divider, Form, message, Modal, Radio } from "antd";
 import { useEffect, useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,9 +11,9 @@ import {
 } from "../../redux/Order/orderSlice.js";
 import { fetchOrderById, fetchTableById } from "../../services/api.js";
 import {
-  ScrollToTop,
   calculateTotalWithVAT,
   formatCurrency,
+  ScrollToTop,
 } from "../../utils/format.js";
 import "./index.css";
 import { socket } from "../../services/socket.js";
@@ -82,7 +82,7 @@ const Order = () => {
         window.location.href = String(response);
       }
     } else if (status_order === 3) {
-      message.open({type: 'warning',content: "Hoá đơn đã thanh toán"});
+      message.open({ type: "warning", content: "Hoá đơn đã thanh toán" });
     }
   };
 
@@ -123,8 +123,11 @@ const Order = () => {
                     <div className="col-span-5 md:col-span-4 h-28 xl:h-36">
                       <div className="w-full h-full rounded-lg">
                         <Image
-                          className="object-cover"
-                          src={item?.product?.imageproducts[0]?.url}
+                          className="object-cover rounded-md"
+                          src={
+                            item?.product?.imageproducts[1]?.url ||
+                            item?.product?.imageproducts[0]?.url
+                          }
                           alt={item?.product?.name_product}
                         />
                       </div>

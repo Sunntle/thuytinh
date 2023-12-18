@@ -1,15 +1,23 @@
-
-import { Button, Result } from 'antd';
-import { Link } from 'react-router-dom';
+import { Button, Result } from "antd";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 const NotFound = () => {
-    return (
-        <Result
-            status="404"
-            title="Yêu cầu tài khoản đăng nhập"
-            subTitle="Xin lỗi bạn phải đăng nhập để sử dụng"
-            extra={<Link to='/'><Button type="primary">Back Login</Button></Link>}
-        />
-    )
-}
+  const customize = useSelector((state) => state.customize);
+  return (
+    <Result
+      style={{
+        backgroundColor: customize.darkMode ? "bg-darkModeBg" : "bg-white",
+      }}
+      status="404"
+      title="Không tìm thấy trang"
+      subTitle="Xin lỗi bạn phải đăng nhập để sử dụng"
+      extra={
+        <Link to="/">
+          <Button type="primary">Back Login</Button>
+        </Link>
+      }
+    />
+  );
+};
 
-export default NotFound
+export default NotFound;

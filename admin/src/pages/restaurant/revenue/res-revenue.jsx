@@ -150,7 +150,7 @@ const ResRevenue = () => {
       if (admin && admin.data) {
         const arrAdmin = [...admin.data];
         arrAdmin.forEach((itemA) => {
-          const itemB = data.find((el) => el.id === itemA.id);
+          const itemB = data?.find((el) => el.id === itemA.id);
           if (itemB) {
             itemA.status = true;
           } else {

@@ -30,7 +30,7 @@ const LoginPage = () => {
         } else {
             messageApi.open({
                 type: 'error',
-                content: 'Lỗi thông tin tài khoản'
+                content: res?.message
             });
         }
 

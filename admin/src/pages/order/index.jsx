@@ -44,7 +44,13 @@ const initData = {
   show: false,
   data: [],
 };
-
+const statusOrder = [
+  { value: 0, label: "Hủy đơn hàng" },
+  { value: 1, label: "Đơn hàng mới" },
+  { value: 2, label: "Đang sử dụng" },
+  { value: 3, label: "Đã thanh toán" },
+  { value: 4, label: "Hoàn tất" },
+]
 
 const OrderPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -56,23 +62,14 @@ const OrderPage = () => {
   const [openModalUpdate, setOpenModalUpdate] = useState(initData);
   const [openOrderDetail, setOpenOrderDetail] = useState(initData);
   const notifications = useSelector(state => state.notifications)
-  const statusOrder = useMemo(() => {
-    let arr = [
-      { value: 0, label: "Hủy đơn hàng" },
-      { value: 1, label: "Đơn hàng mới" },
-      { value: 2, label: "Đang sử dụng" },
-      { value: 3, label: "Đã thanh toán" },
-      { value: 4, label: "Hoàn tất" },
-    ];
-    return arr;
-  }, []);
 
   const fetchData = useCallback(async (query) => {
-    const { data, total } = await getAllOrder(query);
+    try{
+      const { data, total } = await getAllOrder(query);
     const avl =
       total > 0 &&
       data.map((item) => {
-        let status = statusOrder.find((i) => i.value == item.status);
+        const status = item.tablebyorders[0]?.status === "confirmed" && +item.status == 0 ? statusOrder[1] : statusOrder?.find((i) => i.value == item.status);
         let data = {
           id: item.id,
           name: item.name,
@@ -94,7 +91,11 @@ const OrderPage = () => {
         return data;
       });
     setDataOrder(avl);
-    setLoading(false);
+    }catch(err){
+      console.log(err);
+    }finally{
+      setLoading(false);
+    }
   }, []);
 
   const fetchDataEmployeeAndTable = async () => {
@@ -124,7 +125,10 @@ const OrderPage = () => {
 
   const handDeleteOrder = useCallback(async (id) => {
     await delOrder(id);
-    fetchData();
+    fetchData({
+      _sort: "createdAt",
+      _order: "DESC",
+    });
     messageApi.open({
       type: "success",
       content: "Đã xóa đơn " + id,
@@ -144,7 +148,10 @@ const OrderPage = () => {
 
   const onFinish = async (values) => {
     await updateOrderAdmin(values);
-    fetchData();
+    fetchData({
+      _sort: "createdAt",
+      _order: "DESC",
+    });
     onClose();
   };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -243,7 +250,10 @@ const OrderPage = () => {
   }), []);
   useEffect(() => {
     if (notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === "order" && notifications.lastNotification?.status === false) {
-      fetchData()
+      fetchData({
+        _sort: "createdAt",
+        _order: "DESC",
+      });
     }
   }, [fetchData, notifications]);
 

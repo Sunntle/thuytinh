@@ -420,8 +420,8 @@ exports.deleteBooking = asyncHandler(async (req, res) => {
 
 exports.getListBooking = asyncHandler(async (req, res) => {
   const data = await TableByOrder.findAndCountAll({
-    include: { model: Order },
-    where: { status: "confirmed" },
+    include: { model: Order, where: { status: 0 } },
+    where: { status: { [Op.in]: ["confirmed", "pending"] } },
     order: [["createdAt", "DESC"]]
   });
   return res.status(200).json(data);

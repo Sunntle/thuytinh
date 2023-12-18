@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isSuccess: {status: "", message: "", type: ""},
+  isSuccess: { status: "", message: "", type: "" },
   err: null,
   order: [],
   idOrder: 0,
@@ -20,19 +20,33 @@ const orderSlice = createSlice({
         if (existingItem.amount && Number.isInteger(existingItem.amount)) {
           if (existingItem.quantity < food.amount) {
             existingItem.quantity += 1;
-            state.isSuccess = {status: "OK", message: "Đặt món thành công ", type: "success"}
-          } else{
-            state.isSuccess = {status: "Warning", message: "Hết món", type: "error"}
+            state.isSuccess = {
+              status: "OK",
+              message: "Thêm món thành công ",
+              type: "success",
+            };
+          } else {
+            state.isSuccess = {
+              status: "Warning",
+              message: "Hết món",
+              type: "error",
+            };
           }
-
         } else {
           existingItem.quantity += 1;
-          state.isSuccess = {status: "OK", message: "Đặt món thành công ", type: "success"}
+          state.isSuccess = {
+            status: "OK",
+            message: "Thêm món thành công ",
+            type: "success",
+          };
         }
       } else {
-
         state.order.push({ ...food, quantity: 1 });
-        state.isSuccess = {status: "OK", message: "Đặt món thành công ", type: "success"}
+        state.isSuccess = {
+          status: "OK",
+          message: "Thêm món thành công ",
+          type: "success",
+        };
       }
     },
     addOrderDetailUpdate: (state, action) => {
@@ -57,14 +71,14 @@ const orderSlice = createSlice({
     },
     increaseQuantity: (state, action) => {
       const food = action.payload;
-      const existingItem = state.order.find((item) => item.id === food.id);
+      const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem && existingItem.quantity < 10) {
         existingItem.quantity += 1;
       }
     },
     decreaseQuantity: (state, action) => {
       const food = action.payload;
-      const existingItem = state.order.find((item) => item.id === food.id);
+      const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem.quantity > 1) {
         if (existingItem.inDb && existingItem.inDb === existingItem.quantity) {
           existingItem.quantity = existingItem.inDb;
@@ -85,9 +99,9 @@ const orderSlice = createSlice({
     checkIsActiveBooking: (state, action) => {
       state.isActiveBooking = action.payload;
     },
-    resetStatusOrder: (state)=>{
-      state.isSuccess = {status: "", message: "", type: ""}
-    }
+    resetStatusOrder: (state) => {
+      state.isSuccess = { status: "", message: "", type: "" };
+    },
   },
 });
 
@@ -104,6 +118,6 @@ export const {
   increaseQuantity,
   decreaseQuantity,
   resetOrderStore,
-  resetStatusOrder
+  resetStatusOrder,
 } = orderSlice.actions;
 export const orderReducer = orderSlice.reducer;
