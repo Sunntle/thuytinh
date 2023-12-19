@@ -72,13 +72,13 @@ ProductSlider.propTypes = {
   products: PropTypes.shape({
     data: PropTypes.arrayOf(
         PropTypes.shape({
-          name_product: PropTypes.string.isRequired,
+          name_product: PropTypes.string,
           imageproducts: PropTypes.arrayOf(
               PropTypes.shape({
-                url: PropTypes.string.isRequired,
+                url: PropTypes.string,
               })
           ).isRequired,
-          description: PropTypes.string.isRequired,
+          description: PropTypes.string,
           // ... add more properties as needed ...
         })
     ).isRequired,
