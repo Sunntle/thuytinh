@@ -23,9 +23,9 @@ const colorLogo =
 const NavbarDesktop = ({
   headerRef,
   checkRoute,
-  categories,
+  categories = [],
   idTable,
-  navbarList,
+  navbarList = [],
 }) => {
   const { order: orders } = useSelector((state) => state.order);
   const [isMenuHovered, setIsMenuHovered] = useState(false);
