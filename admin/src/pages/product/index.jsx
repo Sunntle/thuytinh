@@ -1,4 +1,4 @@
-import { Col, Row, Typography, message, Input, Button, Space, Table, Image } from "antd";
+import { Col, Row, Typography, message, Input, Button, Space, Table } from "antd";
 import ButtonComponents from "../../components/button";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
@@ -111,7 +111,6 @@ function ProductPage() {
           <Button
             type="primary"
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
             size="small"
             style={{
               width: 90,
@@ -207,10 +206,10 @@ function ProductPage() {
       },
       {
         title: "Trạng thái",
-        dataIndex: "status",
-        sorter: (a, b) => a.status - b.status,
+        dataIndex: "amount",
+        sorter: (a, b) => a.amount - b.amount,
         render: (_, record) =>
-          record.status == 0 ? (
+          record.amount > 0 ? (
             <ButtonComponents
               content={"Còn hàng"}
               spacingContent={"px-4 py-2"}
@@ -227,8 +226,6 @@ function ProductPage() {
       {
         title: "Action",
         key: "action",
-        // fixed: "right",
-        // width: "12%",
         render: (_, record) => (
           <div className="h-10 flex items-center cursor-pointer">
             <span

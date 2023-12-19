@@ -15,6 +15,7 @@ const year = new Date().getFullYear()
 const initMonth = new Date().getMonth() + 1
 
 function ReviewsPage() {
+  const [messageApi, contextHolder] = message.useMessage();
   const [page, setPage] = useState(1);
   const [reviews, setReviews] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,8 +45,8 @@ function ReviewsPage() {
   },[])
 
   const fetchData = useCallback(
-    async (params = { _offset: 0, _limit: limit, _time: currentMonth }) => {
-      setLoading(true);
+    async (params = { _offset: 0, _limit: limit, _time: currentMonth }, isBeginLoading) => {
+      !isBeginLoading && setLoading(true);
       try {
         const [response, countReviews, res] = await Promise.all([getAllReviews(params), getAllReviews({ _time: params._time }), getAllReviews({
           _time: currentMonth,
@@ -70,45 +71,48 @@ function ReviewsPage() {
 
   const handleChangePage = useCallback((e) => {
     setPage(e);
-    fetchReviews({ _offset: limit * (e - 1), _limit: limit, _time: currentMonth });
-  },[fetchReviews, currentMonth])
+    fetchReviews({ _offset: limit * (e - 1)});
+  },[fetchReviews])
 
   const handleChangeSelectMonth = useCallback((e) => {
-    fetchData({ _offset: 0, _limit: limit, _time: e });
     setMonth(e);
-  },[fetchData])
+  },[])
 
   const handleSearch = useCallback((kw) => {
-    fetchReviews({ _offset: 0, _limit: limit, q: kw });
+    fetchReviews({q: kw });
   },[fetchReviews]);
 
-  const handleDeleteReview = useCallback(async (id) => {
-    const res = await deleteReview(id);
-    if (res) {
-      message.open({ type: "success", content: res });
-      fetchData(filter);
-    }
-  },[fetchData, filter]);
+  const handleDeleteReview = useCallback(
+    async (id) => {
+      const res = await deleteReview(id);
+      if (!res) {
+        messageApi.open({ type: "error", content: res });
+        return;
+      }
+      messageApi.open({ type: "success", content: res });
+      fetchData(filter, true);
+    },
+    [fetchData, filter, messageApi]
+  );
 
   const handleClear = useCallback(() => {
-    fetchReviews({ _offset: 0, _limit: limit, _time: currentMonth });
-  },[currentMonth, fetchReviews])
+    fetchReviews();
+  },[fetchReviews])
   
-  const handleCancelConfirm = () => {
-    message.error("Xóa thất bại");
-  }
+  const handleCancelConfirm = useCallback(() => {
+    messageApi.open({type: "error", content: "Xóa thất bại"});
+  },[messageApi])
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchData({_time: currentMonth});
+  }, [currentMonth, fetchData]);
 
-  if (loading) {
-    return <Spinner />;
-  }
+  if (loading) return <Spinner />;
   
   return (
     <div className="my-7 px-5">
       <div className="p-5 mb-6 rounded-md border border-solid border-gray-300">
+      {contextHolder}
         <Row align={"middle"} justify={"center"}>
           <Col sm={24} md={8}>
             <Typography.Title level={2}>
@@ -270,7 +274,7 @@ function ReviewsPage() {
         </Row>
         <div className="flex items-center justify-between">
           <h6 className="text-gray-500">
-            Thể hiện {reviewsCurrent?.data.length}/{limit * page} trên tổng số{" "}
+            Thể hiện {reviewsCurrent?.data?.length ?? 0}/{limit * page} trên tổng số{" "}
             {reviewsCurrent?.total} kết quả
           </h6>
           <Pagination

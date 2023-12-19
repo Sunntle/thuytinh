@@ -1,23 +1,14 @@
 import Chart from "react-apexcharts";
 import { Select, Row, Col, Progress } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { formatGia, formatNgay } from "../../utils/format";
+import { formatGia, formatNgay, formatnumber, renderTextTotal } from "../../utils/format";
+
 import moment from "moment"
 const AreaChart = ({ setTimeChart, timeChart, data }) => {
   const { montdPreAndCur, chart_order, countOrder } = data;
   const handleChange = (value) => {
     setTimeChart(value);
   };
-  const renderTextTotal = (param) => {
-    if (param) {
-      const result = montdPreAndCur.find(i => i.month === param);
-      return result ? formatGia(result.total) : 0
-    } else {
-      const result = montdPreAndCur?.[0]?.month === param;
-      return result ? 0 : formatGia(montdPreAndCur?.[0]?.total)
-    }
-  };
-
 
   return (
     <div className="w-full block max-h-[25rem] ">
@@ -85,7 +76,7 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
             </Col>
             <Col xs={18}>
               <div className="text-xs"> Tháng này </div>
-              <div className="font-medium pt-1">{renderTextTotal(moment().format("MM-YYYY"))}</div>
+              <div className="font-medium pt-1">{formatnumber(renderTextTotal(montdPreAndCur, moment().format("MM-YYYY")))}</div>
             </Col>
           </Row>
           <Row className="w-2/5">
@@ -94,7 +85,7 @@ const AreaChart = ({ setTimeChart, timeChart, data }) => {
             </Col>
             <Col xs={18}>
               <div className="text-xs">Tháng trước </div>
-              <div className="font-medium pt-1">{renderTextTotal()}</div>
+              <div className="font-medium pt-1">{formatnumber(renderTextTotal(montdPreAndCur))}</div>
             </Col>
           </Row>
         </Col>

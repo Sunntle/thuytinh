@@ -1,8 +1,9 @@
+import { LoadingOutlined } from "@ant-design/icons";
+import { Form, Input, Modal, Rate, Spin } from "antd";
+import PropTypes from "prop-types";
 import { useState } from "react";
-import { Form, Rate, Modal, Input } from "antd";
 import { useSelector } from "react-redux";
 import useHttp from "../../../hooks/useHttp.js";
-import PropTypes from 'prop-types';
 const desc = ["Rất tệ", "Tệ", "Tạm được", "Tốt", "Rất tuyệt vời"];
 
 const Rating = ({ ratingModal, setRatingModal }) => {
@@ -11,9 +12,9 @@ const Rating = ({ ratingModal, setRatingModal }) => {
   const [form] = Form.useForm();
   const customerName = useSelector((state) => state.customerName);
   const { idOrder } = useSelector((state) => state.order);
-  const { sendRequest } = useHttp();
-
+  const { sendRequest, isLoading } = useHttp();
   const onFinish = async (values) => {
+    if(isLoading) return;
     const { rating, text } = values;
     const dataToSend = {
       name: customerName.name,
@@ -47,7 +48,6 @@ const Rating = ({ ratingModal, setRatingModal }) => {
 
   return (
     <Modal
-      title={"Đánh giá"}
       centered
       open={ratingModal}
       onOk={handleCloseRatingModal}
@@ -58,7 +58,7 @@ const Rating = ({ ratingModal, setRatingModal }) => {
         <h1 className="mb-2 text-center text-xl font-medium text-primary">
           Đánh giá của bạn
         </h1>
-        <Form  form={form} onFinish={onFinish} onFinishFailed={onFinishFailed}>
+        <Form form={form} onFinish={onFinish} onFinishFailed={onFinishFailed}>
           <Form.Item
             className="flex flex-col justify-center items-center mb-0"
             name="rating"
@@ -73,7 +73,16 @@ const Rating = ({ ratingModal, setRatingModal }) => {
               ""
             )}
           </div>
-          <Form.Item name="text" rules={[{ required: true, message: "Vui lòng nhập phản hồi !", whitespace: true }]}>
+          <Form.Item
+            name="text"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập phản hồi !",
+                whitespace: true,
+              },
+            ]}
+          >
             <Input.TextArea
               autoSize={{ maxRows: 4 }}
               // classNames="w-full h-32 focus:outline-none border-0 focus:ring-opacity-50 text-gray-700"
@@ -86,10 +95,25 @@ const Rating = ({ ratingModal, setRatingModal }) => {
               disabled={idOrder === 0 || customerName.name.length == 0}
               className="mt-3 w-full rounded-md bg-primary py-2 font-medium text-white disabled:bg-slate-200 hover:bg-[#F0A500E5]"
             >
-              Gửi đánh giá
+              {isLoading ? (
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{
+                        fontSize: 24,
+                      }}
+                      spin
+                    />
+                  }
+                />
+              ) : (
+                "Gửi đánh giá"
+              )}
             </button>
           </Form.Item>
-          <span className="block text-red-500 mt-3 text-center">{idOrder === 0 && 'Vui lòng đặt món để được đánh giá'}</span>
+          <span className="block text-red-500 mt-3 text-center">
+            {idOrder === 0 && "Vui lòng đặt món để được đánh giá"}
+          </span>
         </Form>
         <Modal
           title="Đánh giá đã được gửi"
@@ -116,6 +140,6 @@ const Rating = ({ ratingModal, setRatingModal }) => {
 };
 Rating.propTypes = {
   ratingModal: PropTypes.any,
-  setRatingModal: PropTypes.any
-}
+  setRatingModal: PropTypes.any,
+};
 export default Rating;

@@ -1,4 +1,4 @@
-import { DatePicker, Form, Select, TimePicker, Grid } from "antd";
+import { DatePicker, Form, Grid, Select, TimePicker } from "antd";
 import moment from "moment";
 import "./index.css";
 import { useState } from "react";
@@ -56,18 +56,18 @@ const BookingTable = () => {
 
   const disabledTime = () => {
     return {
-      disabledHours: () => {
-        const hours = [0, 1, 2, 3, 4, 5, 6];
-        if (watchedDate?.["$D"] > moment().date()) {
-          return hours;
-        }
-        const currentHour = moment().hour();
-        for (let i = 7; i < currentHour + 2; i++) {
-          hours.push(i);
-        }
-        hours.push(23);
-        return hours;
-      },
+      // disabledHours: () => {
+      //   const hours = [0, 1, 2, 3, 4, 5, 6];
+      //   if (watchedDate?.["$D"] > moment().date()) {
+      //     return hours;
+      //   }
+      //   const currentHour = moment().hour();
+      //   for (let i = 7; i < currentHour + 2; i++) {
+      //     hours.push(i);
+      //   }
+      //   hours.push(23);
+      //   return hours;
+      // },
       disabledMinutes: (selectedHour) => {
         const minutes = [];
         const currentMinute = moment().minute();
@@ -187,13 +187,15 @@ const BookingTable = () => {
               rules={[{ required: true, message: "Vui lòng không bỏ trống" }]}
             >
               <DatePicker
+                onChange={() => {
+                  form.setFieldValue("time", "");
+                }}
                 placeholder="Chọn ngày"
                 bordered={false}
                 className="w-full"
                 disabledDate={disabledDate}
                 format={"DD/MM/YYYY"}
                 size={"middle"}
-
               />
             </Form.Item>
           </div>
@@ -229,6 +231,7 @@ const BookingTable = () => {
               />
             </Form.Item>
           </div>
+
           <div className="w-full h-full tracking-wide col-span-2 md:col-span-1 pt-6 md:pt-0">
             <button
               type={"submit"}
@@ -243,9 +246,11 @@ const BookingTable = () => {
           </div>
         </Form>
       </div>
+
       {tables?.time && (
         <div className="text-center text-white">{tables.message}</div>
       )}
+
       <div className="space-y-3">
         {tables?.data?.length &&
           tables?.data?.map((table) => (

@@ -26,7 +26,7 @@ const Header = () => {
         </>
       ) : (
         <>
-          <span className="overflow-hidden w-full flex justify-center items-center font-bold text-base lg:text-xl">
+          <span className="overflow-hidden text-center w-full flex justify-center items-center font-bold text-base lg:text-xl">
             Vui lòng quét mã hoặc chọn vào phần chọn bàn để đặt món
           </span>
         </>

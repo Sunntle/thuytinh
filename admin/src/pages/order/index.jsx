@@ -69,7 +69,7 @@ const OrderPage = () => {
     const avl =
       total > 0 &&
       data.map((item) => {
-        const status = item.tablebyorders[0]?.status === "confirmed" && +item.status == 0 ? statusOrder[1] : statusOrder.find((i) => i.value == item.status);
+        const status = item.tablebyorders[0]?.status === "confirmed" && +item.status == 0 ? statusOrder[1] : statusOrder?.find((i) => i.value == item.status);
         let data = {
           id: item.id,
           name: item.name,
@@ -189,7 +189,6 @@ const OrderPage = () => {
           <Button
             type="primary"
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
             size="small"
             style={{
               width: 90,

@@ -1,19 +1,16 @@
 // React
 import { useState } from "react";
 import * as ReactDOMServer from "react-dom/server";
-import PropTypes from "prop-types";
-// Components
-// Swiper
+import PropTypes from "prop-types"; // Components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import {
-  SlidePrevButton,
   SlideNextButton,
-} from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx";
-// External Files
+  SlidePrevButton,
+} from "../HomeSlide/HomeSlideButton/HomeSlideButton.jsx"; // External Files
 import "./index.css";
 import PaginationSlider from "./PaginationSlider/index.jsx";
 import ProductSlide from "./ProductSlide/index.jsx";
@@ -22,7 +19,9 @@ const ProductSlider = ({ products }) => {
   products = products?.data?.slice(0, 4)?.map((item) => ({
     name: item.name_product,
     image:
-      typeof item?.imageproducts?.[1]?.url === "string" ? item?.imageproducts?.[1]?.url : "",
+      typeof item?.imageproducts?.[1]?.url === "string"
+        ? item?.imageproducts?.[1]?.url
+        : "",
     description: item.description,
   }));
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -50,7 +49,7 @@ const ProductSlider = ({ products }) => {
       effect="fade"
       pagination={pagination}
       modules={[Pagination, EffectFade]}
-      className="mySwiper lg:h-screen my-10"
+      className="mySwiper lg:h-[700px] my-10"
       draggable={true}
       onSlideChange={handleSlideChange}
     >
@@ -72,12 +71,19 @@ ProductSlider.displayName = "ProductSlider";
 ProductSlider.propTypes = {
   products: PropTypes.shape({
     data: PropTypes.arrayOf(
-      PropTypes.shape({
-        name_product: PropTypes.string,
-        ImageProducts: PropTypes.array,
-        description: PropTypes.string,
-      }),
-    ),
+        PropTypes.shape({
+          name_product: PropTypes.string,
+          imageproducts: PropTypes.arrayOf(
+              PropTypes.shape({
+                url: PropTypes.string,
+              })
+          ).isRequired,
+          description: PropTypes.string,
+          // ... add more properties as needed ...
+        })
+    ).isRequired,
   }),
 };
+
+
 export default ProductSlider;

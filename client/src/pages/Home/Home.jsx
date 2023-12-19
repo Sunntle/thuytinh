@@ -1,37 +1,48 @@
 // React
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
-// Components
+import { Helmet } from "react-helmet"; // Components
 import HomeSlide from "./HomeSlide/index.jsx";
 import Banner from "./Banner/Banner.jsx";
 import Reason from "../../components/Reason/Reason.jsx";
 import Image from "../../components/Image/Image.jsx";
-import ProductSlider from "./ProductSlider/index.jsx";
-// Service
-import { fetchProductByLimit } from "../../services/api.js";
-// Utils
-import { ScrollToTop } from "../../utils/format.js";
-// Hooks
-import useHttp from "../../hooks/useHttp.js";
-// Framer Motion
-import { motion } from "framer-motion";
-// Redux
+import ProductSlider from "./ProductSlider/index.jsx"; // Service
+import { fetchProduct } from "../../services/api.js"; // Utils
+import { ScrollToTop } from "../../utils/format.js"; // Hooks
+import useHttp from "../../hooks/useHttp.js"; // Framer Motion
+import { motion } from "framer-motion"; // Redux
 import { useSelector } from "react-redux";
+
+const hotProductParams = {
+  _sort: "sold",
+  _order: "DESC",
+  _sold: "gt_0",
+  _limit: 7,
+};
 
 const Home = () => {
   const [slideProduct, setSlideProduct] = useState(null);
+  const [hotProduct, setHotProduct] = useState(null);
   const { sendRequest } = useHttp();
   const customerName = useSelector((state) => state.customerName);
+
   useEffect(() => {
-    const fetchAllProduct = async () => {
-      await sendRequest(fetchProductByLimit(7), setSlideProduct, false);
+    const fetchData = async () => {
+      try {
+        await Promise.all([
+          sendRequest(fetchProduct(hotProductParams), setHotProduct, false),
+          sendRequest(fetchProduct(), setSlideProduct, false),
+        ]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
-    fetchAllProduct();
+
+    fetchData();
   }, [sendRequest]);
 
   return (
-    <div className="tracking-wide pb-12 lg:pb-0">
+    <div className="tracking-wide pb-24 lg:pb-0">
       <Helmet>
         <title>Trang chủ</title>
         <meta name="home" content="Home" />
@@ -41,7 +52,7 @@ const Home = () => {
 
       <Banner />
 
-      {slideProduct && (
+      {hotProduct && (
         <>
           <div className="flex items-center justify-center mt-12 px-6 gap-x-6 lg:mx-16">
             <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
@@ -50,7 +61,7 @@ const Home = () => {
             </h2>
             <span className="hidden md:block w-[8rem] h-0.5 bg-primary"></span>
           </div>
-          <HomeSlide listProduct={slideProduct} />
+          <HomeSlide listProduct={hotProduct} />
         </>
       )}
 
@@ -101,7 +112,7 @@ const Home = () => {
         </div>
       </motion.section>
 
-      {slideProduct && <ProductSlider products={slideProduct} />}
+      {hotProduct && <ProductSlider products={slideProduct} />}
 
       <Reason customerName={customerName} />
     </div>

@@ -93,6 +93,12 @@ export function calculateWeeklyRevenue(transactions) {
 
   return weeklyRevenue;
 }
+
+export const renderTextTotal = (montdPreAndCur, param) => {
+  const time = param || moment().subtract(1, 'months').format('MM-YYYY');
+  const result = montdPreAndCur?.find(i => i.month == time);
+  return result ? (result.total) : 0
+};
 export function calculateMonthlyRevenue(transactions) {
   const today = new Date();
   const month = today.getMonth();

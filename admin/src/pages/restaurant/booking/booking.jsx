@@ -52,11 +52,12 @@ export const ResBooking = () => {
     const columns = useMemo(
         () => [
             {
-                title: 'Mã đơn hàng',
+                title: 'Mã đặt hàng',
                 dataIndex: 'id',
-                render: (_, data) => (
-                    <span className='font-medium cursor-pointer'>TTLGH{data.id}</span>
-                )
+            },
+            {
+                title: 'Mã đơn hàng',
+                dataIndex: 'orderId',
             },
             {
                 title: 'Tên khách hàng',

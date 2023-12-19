@@ -71,14 +71,14 @@ const orderSlice = createSlice({
     },
     increaseQuantity: (state, action) => {
       const food = action.payload;
-      const existingItem = state.order.find((item) => item.id === food.id);
+      const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem && existingItem.quantity < 10) {
         existingItem.quantity += 1;
       }
     },
     decreaseQuantity: (state, action) => {
       const food = action.payload;
-      const existingItem = state.order.find((item) => item.id === food.id);
+      const existingItem = state.order?.find((item) => item.id === food.id);
       if (existingItem.quantity > 1) {
         if (existingItem.inDb && existingItem.inDb === existingItem.quantity) {
           existingItem.quantity = existingItem.inDb;

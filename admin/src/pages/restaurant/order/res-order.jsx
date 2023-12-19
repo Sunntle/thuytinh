@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import "../payment/res-payment.css"
-import { Button, Modal, Form, Radio, Drawer, Collapse, notification } from "antd"
+import { Button, Modal, Form, Drawer, Collapse, notification } from "antd"
 import { useDispatch, useSelector } from 'react-redux'
 import { AddCartUpdate, RemoveAllCart } from '../../../redux/cartsystem/cartSystem'
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,6 @@ import { AddTableList, RemoveTableList } from '../../../redux/table/listTableSys
 import { formatGia } from '../../../utils/format'
 import moment from 'moment'
 import ButtonComponents from '../../../components/button'
-import { socket } from '../../../socket'
 
 const RenderFooter = ({
   tablelist,
@@ -38,13 +37,12 @@ const RenderFooter = ({
       <div className='flex justify-center font-semibold col-span-2 m-1'>
         <button className='bg-red-500 text-white' onClick={handleCancel}>Hủy</button>
       </div>
-
       <div className='flex justify-center font-semibold col-span-2 m-1'>
-        <button className='bg-blue-500 text-white' onClick={() => handleUpdate(tablelist)}>Thêm món mới</button>
+        <button className='bg-blue-500 text-white' disabled={!isPay} onClick={() => handleUpdate(tablelist)}>Thêm món mới</button>
       </div>
 
       <div className='flex justify-center font-semibold col-span-2 m-1'>
-        <button className='bg-indigo-500 text-white' onClick={() => openSwithTable(tablelist)}>Chuyển bàn</button>
+        <button className='bg-indigo-500 text-white' disabled={!isPay}  onClick={() => openSwithTable(tablelist)}>Chuyển bàn</button>
       </div>
       <div className='flex justify-center col-span-2 m-1'>
 
@@ -129,8 +127,13 @@ const ResOrder = ({ handleCancel, open }) => {
   const order = tablebyorders?.order;
   const order_details = order?.order_details;
   const customize = useSelector((state) => state.customize.darkMode)
+  const isPay = useMemo(()=>tablelist?.tablebyorders?.[0].order.status == 3, [tablelist?.tablebyorders])
   //them mon moi
   const handleUpdate = (index) => {
+    if(isPay) {
+      api.info({message: 'Không thể thực hiện', description: "Đơn hàng đã thanh toán không thể thêm món mới"})
+      return
+    }
     dispatch(RemoveAllCart())
     index.tablebyorders[0].order.order_details.forEach(item => {
       let inDb = item.quantity;
@@ -162,6 +165,7 @@ const ResOrder = ({ handleCancel, open }) => {
       window.location.href = String(payment);
     }
   }, [payment]);
+
   const submitPayment = async () => {
     const body = { payment_gateway: "Cash", date: moment(new Date()).format("YYYYMMDDHHmmss"), idOrder: order.id, idTable: tablelist.id }
     const data = await updatePayment(body)
@@ -173,6 +177,10 @@ const ResOrder = ({ handleCancel, open }) => {
 
   //xu ly chuyen ban
   const openSwithTable = (index) => {
+    if(isPay) {
+      api.info({message: 'Không thể thực hiện', description: "Đơn hàng đã thanh toán không thể chuyển bàn"})
+      return
+    }
     navigate('/employee/select-table/' + tablelist.id + "/" + tablelist.tablebyorders[0].orderId);
   }
   const closeSwithTable = () => {
@@ -194,7 +202,6 @@ const ResOrder = ({ handleCancel, open }) => {
         description: data
       });
     }
-
   }
   return (
     <>
@@ -211,7 +218,7 @@ const ResOrder = ({ handleCancel, open }) => {
           isModalPay={isModalPay} form={form} onFinish={onFinish} showModal={showModal}
           switchTable={switchTable} openSwithTable={openSwithTable} closeSwithTable={closeSwithTable}
           submitPayment={submitPayment} customize={customize}
-          isPay={tablelist?.tablebyorders?.[0].order.status == 3}
+          isPay={isPay}
           completeOrder={completeOrder}
         />}
         closable={false}

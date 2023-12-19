@@ -60,7 +60,7 @@ const HomeSlide = ({ listProduct }) => {
         {listProduct &&
           listProduct?.data?.map((product) => (
             <SwiperSlide key={product.id}>
-              <Product item={product} handleAddToOrder={handleAddToOrder} />
+              <Product className="my-4 hover:scale-100 border-0 hover:shadow-lg hover:border-none" item={product} handleAddToOrder={handleAddToOrder} />
             </SwiperSlide>
           ))}
       </Swiper>
@@ -68,6 +68,10 @@ const HomeSlide = ({ listProduct }) => {
   );
 };
 HomeSlide.propTypes = {
-  listProduct: PropTypes.object,
+    listProduct: PropTypes.oneOfType([
+        PropTypes.array,
+        PropTypes.object,
+    ]),
 };
+
 export default HomeSlide;

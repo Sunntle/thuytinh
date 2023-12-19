@@ -4,7 +4,7 @@ import AreaChart from "../components/chart/area-chart";
 import { Col, Row, Badge, Typography, Segmented } from "antd";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState, useCallback } from "react";
-import { formatGia, truncateString, formatnumber } from "../utils/format";
+import { formatGia, truncateString, formatnumber, renderTextTotal } from "../utils/format";
 import { Autoplay } from "swiper/modules";
 import { getAllProduct, getDataDashboard } from "../services/api";
 import Spinner from "../components/spinner";
@@ -77,14 +77,10 @@ const DashBoard = () => {
                 Thu nhập - Tháng {new Date().getMonth() + 1}
               </span>
               <p className="text-lg font-medium text-green-500 text-center">
-                {data.montdPreAndCur?.[0]?.total ? (
-                  <CountUp
-                    end={data.montdPreAndCur?.[1]?.total}
-                    separator=","
-                  />
-                ) : (
-                  0
-                )}
+                <CountUp
+                  end={renderTextTotal(data.montdPreAndCur, moment().format("MM-YYYY"))}
+                  separator=","
+                />
               </p>
             </div>
             <div className="w-1/3 p-4 h-full flex flex-col justify-center items  gap-1">

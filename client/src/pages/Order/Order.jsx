@@ -32,7 +32,6 @@ const Order = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loadingState, setLoadingState] = useState(false);
-
   const order = data?.data?.[0]?.tablebyorders?.[0]?.order || [];
   const totalOrder = calculateTotalWithVAT(order?.total, 10);
 
@@ -53,10 +52,25 @@ const Order = () => {
   };
 
   const handleAddNewOrder = async () => {
+    if (order?.order_details?.length === 0 || order.length === 0) {
+      return messageApi.open({
+        type: "info",
+        content: "Vui lòng chọn món",
+      });
+    }
+
+    if (order?.status === 3) {
+      return messageApi.open({
+        type: "info",
+        content: "Hoá đơn đã thanh toán",
+      });
+    }
+
     const dataPrevious = order?.order_details?.map((item) => {
       const { product, quantity } = item;
       return { ...product, quantity, inDb: quantity };
     });
+
     dispatch(addOrderDetailUpdate(dataPrevious));
     navigate(`/tables-${tables[0]}/menu`);
   };
@@ -69,20 +83,25 @@ const Order = () => {
     if (status_order > 0 && status_order < 3) {
       values = { ...values, amount: totalOrder };
       setLoadingState(true);
+
       const request = {
         method: "post",
         url: "/payment/create_payment_url",
         ...values,
       };
+
       const response = await sendRequest(request, undefined, true);
+
       dispatch(emptyOrder());
       setIsModalOpen(false);
       form.resetFields();
+
       if (response !== null) {
         window.location.href = String(response);
       }
+
     } else if (status_order === 3) {
-      message.open({ type: "warning", content: "Hoá đơn đã thanh toán" });
+      message.open({ type: "info", content: "Hoá đơn đã thanh toán" });
     }
   };
 
@@ -93,6 +112,18 @@ const Order = () => {
       content: "Vui lòng đợi trong giây lát, nhân viên sẽ đến thanh toán",
     });
   };
+
+  useEffect(() => {
+    socket.on("is-paid", (arg) => {
+      const {data, success} = arg
+      if (data == tables[0]) {
+        success ? sendRequest(fetchTableById(tables[0], tableToken), setData, false) : console.log("Thanh toán thất bại!");
+      }
+    })
+    return () => {
+      socket.off("is-paid");
+    };
+  }, [messageApi, sendRequest, tableToken, tables])
 
   if (isLoading || loadingState) return <Spinner />;
 
@@ -123,7 +154,7 @@ const Order = () => {
                     <div className="col-span-5 md:col-span-4 h-28 xl:h-36">
                       <div className="w-full h-full rounded-lg">
                         <Image
-                          className="object-cover"
+                          className="object-cover rounded-md"
                           src={
                             item?.product?.imageproducts[1]?.url ||
                             item?.product?.imageproducts[0]?.url

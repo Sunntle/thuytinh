@@ -95,7 +95,7 @@ const RecipePage = () => {
       const updatedItems = [];
       const removedItems = [];
       newArray.forEach((newItem) => {
-        const matchingItem = prevArray.find(
+        const matchingItem = prevArray?.find(
           (prevItem) => prevItem.id === newItem.id
         );
         if (!matchingItem) {
@@ -108,7 +108,7 @@ const RecipePage = () => {
         }
       });
       prevArray.forEach((prevItem) => {
-        const matchingItem = newArray.find(
+        const matchingItem = newArray?.find(
           (newItem) => newItem.id === prevItem.id
         );
         if (!matchingItem) {

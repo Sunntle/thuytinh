@@ -32,14 +32,7 @@ const ButtonTable = ({ table, switchTable, handleDetailModal }) => (
           <span className="mt-2 text-white  grid justify-items-center">
             Đang sử dụng
           </span>
-          <div className="mt-3">
-            <Button
-              className="mt-2 border-none col-span-2 h-10 w-20 text-white block bg-green-500 rounded"
-              onClick={() => handleDetailModal(table)}
-            >
-              Chi tiết
-            </Button>
-          </div>
+
         </div>
       )}
     </span>
@@ -63,7 +56,7 @@ const ResSelectTable = () => {
   }, [dispatch]);
   const switchTable = async (newTable) => {
     const res = { currentTable: +id, newTable: newTable, idOrder: +idOrder };
-    const {success , data} = await switchTables(res);
+    const { success, data } = await switchTables(res);
     if (success) {
       api.success({
         message: 'Thông báo',
@@ -76,7 +69,7 @@ const ResSelectTable = () => {
         message: 'Thông báo',
         description: data
       });
-    }      
+    }
   };
 
   const handleDetailModal = (index) => {
