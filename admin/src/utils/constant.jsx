@@ -22,7 +22,7 @@ export const NAV_ITEMS = [
     getItem("Doanh thu", "/employee/renvenue")
   ]),
 ];
-export const NAV_ITEMS_ADMIN= [ getItem("Quản lí", null, <BiCategory />, [
+export const NAV_ITEMS_ADMIN = [getItem("Quản lí", null, <BiCategory />, [
   getItem("Dashboard", "/admin"),
   getItem("Quản lí bàn", "/admin/table"),
   getItem("Món ăn", "/admin/product"),

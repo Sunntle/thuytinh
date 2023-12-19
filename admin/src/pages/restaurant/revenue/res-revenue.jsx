@@ -1,6 +1,7 @@
-import { Avatar, Badge, Col, List, Row, Table, Typography } from "antd";
+import { Avatar, Badge, Space, Col, Button, List, Row, Input, Table, Typography } from "antd";
 import moment from "moment";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { SearchOutlined } from "@ant-design/icons";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import "swiper/css/autoplay";
 import AreaChart from "../../../components/chart/area-chart";
@@ -21,6 +22,7 @@ import {
   formatGia,
   formatNgay,
   renderTextPay,
+  renderTextTotal,
 } from "../../../utils/format";
 import CountUp from 'react-countup';
 import Spinner from "../../../components/spinner";
@@ -35,7 +37,7 @@ const ResRevenue = () => {
   const [dataOrder, setDataOrder] = useState([]);
   const [dataChart, setDataChart] = useState([]);
   const [loading, setLoading] = useState(true)
-
+  const searchInput = useRef(null);
 
 
   const fetchData = useCallback(async () => {
@@ -87,22 +89,123 @@ const ResRevenue = () => {
       // _order: "DESC",
     });
   }, [fetchData, timeChart]);
+  const handleSearch = (selectedKeys, confirm,) => {
+    confirm();
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+  };
+  const handleSearchData = useCallback((string) => {
+    if (string.includes("_")) {
+      const arr = string.split("_")
+      const newArr = arr.map(el => el[0].toUpperCase() + el.slice(1))
+      return newArr.join(" ")
+    }
+    return string[0].toUpperCase() + string.slice(1)
+  }, [])
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${handleSearchData(dataIndex)}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Tìm kiếm
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Đặt lại
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+            }}
+          >
+            Lọc
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Đóng
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1677ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ?.toString()
+        ?.toLowerCase()
+        ?.includes(value?.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => text,
+  });
   const columns = useMemo(
     () => [
       {
         title: 'Mã đơn hàng',
-        dataIndex: 'id',
-        render: (_, record) => (
-          <span className='font-medium cursor-pointer'>TTLGH{record.id}</span>
-        )
+        dataIndex: 'id'
       },
       {
         title: 'Khách hàng',
         dataIndex: 'name',
+        ...getColumnSearchProps("name")
       },
       {
         title: 'Số điện thoại',
         dataIndex: 'phone',
+        ...getColumnSearchProps("phone"),
         render: (_, data) => (
           <span>{data.phone ? data.phone : "Không có số điện thoại"}</span>
         )
@@ -176,14 +279,10 @@ const ResRevenue = () => {
                     Tổng tháng
                   </span>
                   <p className="text-orange-400 text-lg font-medium text-center">
-                    {data.montdPreAndCur?.[1]?.total ? (
-                      <CountUp
-                        end={data.montdPreAndCur?.[1]?.total}
-                        separator=","
-                      />
-                    ) : (
-                      0
-                    )}
+                    <CountUp
+                      end={renderTextTotal(data.montdPreAndCur, moment().format("MM-YYYY"))}
+                      separator=","
+                    />
                     {' '}
                     đ
                   </p>
@@ -281,7 +380,7 @@ const ResRevenue = () => {
                 </div>
               </div>
               <div className="flex flex-col mt-4 border-solid border-2 rounded-lg border-orange-400 p-4">
-              <span className="font-medium text-lg">Quản trị viên</span>
+                <span className="font-medium text-lg">Quản trị viên</span>
                 <List
                   itemLayout="horizontal"
                   dataSource={admin?.data}
