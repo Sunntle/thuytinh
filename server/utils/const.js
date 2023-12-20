@@ -102,7 +102,7 @@ function tinhWeek(weekNumber) {
 
 function currentYear(pa = "startOf") {
     const date = moment()[pa]("year");
-    return date.format("YYYY-MM-DD");
+    return `${date.format("YYYY-MM-DD")} ${pa == "startOf" ? "00:00:00" : "23:59:59"}`;
 }
 function isEmpty(value) {
     return (
