@@ -20,11 +20,11 @@ const {
     Recipes,
     Warehouse,
 } = require("../models");
-const {Op, Sequelize, literal, where, fn, col} = require("sequelize");
+const { Op, Sequelize, literal, where, fn, col } = require("sequelize");
 
 
 exports.createOrder = asyncHandler(async (req, res) => {
-    const {orders, customerName, total, table, id_employee, token} = req.body;
+    const { orders, customerName, total, table, id_employee, token } = req.body;
     if (!total || !customerName || table.length === 0 || orders.length === 0)
         return res.status(404).json({
             success: false,
@@ -32,28 +32,28 @@ exports.createOrder = asyncHandler(async (req, res) => {
         });
     const arrTable = table;
     const checkStatus = await Tables.prototype.checkStatus(arrTable, 0, token);
-    if (checkStatus) return res.status(404).json({success: false, data: "Bàn đã được đặt trước"});
-    const {approve, over} = await Materials.prototype.checkAmountByProduct(orders);
+    if (checkStatus) return res.status(404).json({ success: false, data: "Bàn đã được đặt trước" });
+    const { approve, over } = await Materials.prototype.checkAmountByProduct(orders);
     if (over.length > 0) {
-        return res.status(200).json({success: false, message: `${over[0].name_product} không đủ số lượng`});
+        return res.status(200).json({ success: false, message: `${over[0].name_product} không đủ số lượng` });
     }
     const priceOver = approve.reduce((con, cur) => con + cur.price * cur.quantity, 0);
     if (approve.length === 0)
         return res
             .status(200)
-            .json({success: false, data: "Sản phẩm hết nguyên liệu"});
+            .json({ success: false, data: "Sản phẩm hết nguyên liệu" });
     const order_result = await Order.create({
         total: priceOver,
         name: customerName,
         id_employee
     });
     let dataTable = await TableByOrder.bulkCreate(
-        arrTable.map((item) => ({tableId: item, orderId: order_result.id, dining_option: "eat-in"})),
+        arrTable.map((item) => ({ tableId: item, orderId: order_result.id, dining_option: "eat-in" })),
     );
-    if (id_employee) await Tables.prototype.updateStatusTable({status_table: 1}, arrTable);
+    if (id_employee) await Tables.prototype.updateStatusTable({ status_table: 1 }, arrTable);
     let tableData = await TableByOrder.findAll({
-        include: {model: Tables},
-        where: {id: {[Op.in]: dataTable.map((i) => i.id)}},
+        include: { model: Tables },
+        where: { id: { [Op.in]: dataTable.map((i) => i.id) } },
     });
 
     let val = approve.map((item) => ({
@@ -64,8 +64,8 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
     const order_detail = await OrderDetail.bulkCreate(val);
     let product = await Product.findAll({
-        where: {id: {[Op.in]: order_detail.map((item) => item.id_product)}},
-        include: [{model: ImageProduct, attributes: ["url", "id"]}],
+        where: { id: { [Op.in]: order_detail.map((item) => item.id_product) } },
+        include: [{ model: ImageProduct, attributes: ["url", "id"] }],
     });
     let result = {
         orders: order_result,
@@ -78,27 +78,27 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
     if (!id_employee) {
         await Notification.create(
-            {type: "order", description: `Bàn - ${table[0]} vừa đặt món`, content: order_result.id},
-            {raw: true},
+            { type: "order", description: `Bàn - ${table[0]} vừa đặt món`, content: order_result.id },
+            { raw: true },
         );
         // _io.of("/client").emit("status order", { ...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3" });// check correct order
-        _io.of("/client").emit("is-paid", {data: table[0], message: "Đặt món thành công", success: true})
+        _io.of("/client").emit("is-paid", { data: table[0], message: "Đặt món thành công", success: true })
     }
-    res.status(200).json({success: true, data: result});
+    res.status(200).json({ success: true, data: result });
 });
 
 exports.GetAllOrder = asyncHandler(async (req, res) => {
     let query = {
-        ...apiQueryRest({...req.query, title: "name"}),
+        ...apiQueryRest({ ...req.query, title: "name" }),
         nest: true,
     };
-    const {count, rows} = await Order.findAndCountAll({
+    const { count, rows } = await Order.findAndCountAll({
         ...query,
         include: [
             {
                 ...bien.include,
             },
-            {model: TableByOrder, attributes: ["tableId", "status"]},
+            { model: TableByOrder, attributes: ["tableId", "status"] },
             {
                 model: User,
                 attributes: ["name"],
@@ -106,21 +106,21 @@ exports.GetAllOrder = asyncHandler(async (req, res) => {
         ],
     });
 
-    res.status(200).json({total: count, data: rows});
+    res.status(200).json({ total: count, data: rows });
 });
 
 exports.delOrder = asyncHandler(async (req, res) => {
     const id = req.params.id;
-    await Order.destroy({where: {id}});
+    await Order.destroy({ where: { id } });
     res.status(200).json("Xóa đơn hàng thành công");
 });
 
 exports.updateOrder = asyncHandler(async (req, res) => {
-    const {id_order, carts, id_table, total} = req.body;
+    const { id_order, carts, id_table, total } = req.body;
     const over = [];
     let current = await OrderDetail.findAll({
         where: {
-            [Op.or]: carts.map((item) => ({id_product: item.id, id_order})),
+            [Op.or]: carts.map((item) => ({ id_product: item.id, id_order })),
         },
         raw: true,
     });
@@ -132,7 +132,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
         const result = await checkQtyMaterials(val, Materials);
         if (!result) {
             check = true;
-            res.status(200).json({success: false, data: cart, message: `${cart.name_product} không đủ số lượng`});
+            res.status(200).json({ success: false, data: cart, message: `${cart.name_product} không đủ số lượng` });
             break;
         }
     }
@@ -146,7 +146,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
                     async (item) => {
                         await Materials.decrement("amount", {
                             by: item.total,
-                            where: {id: item.id_material},
+                            where: { id: item.id_material },
                         })
                         await checkOverMaterial(Materials, item.id_material)
                     }
@@ -154,7 +154,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
 
                 await OrderDetail.increment("quantity", {
                     by: cart.quantity,
-                    where: {id: orderDatabase.id},
+                    where: { id: orderDatabase.id },
                 });
             } else {
 
@@ -162,7 +162,7 @@ exports.updateOrder = asyncHandler(async (req, res) => {
                     async (item) => {
                         await Materials.decrement("amount", {
                             by: item.total,
-                            where: {id: item.id_material},
+                            where: { id: item.id_material },
                         })
                         await checkOverMaterial(Materials, item.id_material)
                     }
@@ -175,43 +175,43 @@ exports.updateOrder = asyncHandler(async (req, res) => {
                 });
             }
         }
-        await Order.update({total}, {where: {id: id_order}});
-        res.status(200).json({message: "Cập nhật thành công", over, success: true});
+        await Order.update({ total }, { where: { id: id_order } });
+        res.status(200).json({ message: "Cập nhật thành công", over, success: true });
     }
 
 });
 
 
 exports.updateOrderAdmin = asyncHandler(async (req, res) => {
-    const {table, id, ...rest} = req.body;
+    const { table, id, ...rest } = req.body;
     if (rest.status == 4) {
         await Tables.prototype.updateStatusTable({
             status_table: 0,
             token: null
         }, [table]);
     }
-    await Order.update({...rest}, {where: {id}});
-    _io.of("/client").emit("complete-payment", {data: table[0], message: "Hoàn tất thanh toán"})
+    await Order.update({ ...rest }, { where: { id } });
+    _io.of("/client").emit("complete-payment", { data: table[0], message: "Hoàn tất thanh toán" })
     res.status(200).json("Cập nhật thành công");
 });
 exports.completeOrder = asyncHandler(async (req, res) => {
-    const {orderId, tableId} = req.body;
-    const is = await Order.findOne({where: {id: orderId, status: 3}, raw: true});
+    const { orderId, tableId } = req.body;
+    const is = await Order.findOne({ where: { id: orderId, status: 3 }, raw: true });
     if (is) {
         await Tables.prototype.updateStatusTable({
             status_table: 0,
             token: null
         }, [tableId]);
-        let re = await TableByOrder.findOne({where: {orderId, tableId}});
+        let re = await TableByOrder.findOne({ where: { orderId, tableId } });
         re.dining_time = handleTimeDining(re.createdAt);
         await re.save();
-        await Order.update({status: 4}, {where: {id: orderId}});
-        _io.of("/client").emit("complete-payment", {data: tableId, message: "Hoàn tất thanh toán"})
-        res.status(200).json({success: true, data: "Cập nhật thành công"});
+        await Order.update({ status: 4 }, { where: { id: orderId } });
+        _io.of("/client").emit("complete-payment", { data: tableId, message: "Hoàn tất thanh toán" })
+        res.status(200).json({ success: true, data: "Cập nhật thành công" });
     } else {
         res
             .status(404)
-            .json({success: false, data: "Người dùng chưa thanh toán"});
+            .json({ success: false, data: "Người dùng chưa thanh toán" });
     }
 });
 
@@ -219,7 +219,7 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     let data = {};
     const currentMonth = new Date();
 
-    const {type, weekcurrent} = req.query;
+    const { type, weekcurrent } = req.query;
     const info = type === "MONTH" ? "T/" : "Năm : ";
 
     let dateInWeek = tinhWeek(weekcurrent);
@@ -235,6 +235,11 @@ exports.dashBoard = asyncHandler(async (req, res) => {
         raw: true
     });
     let con = {
+        where: {
+            status: {
+                [Op.gte]: 1
+            }
+        },
         group: [Sequelize.fn(type, Sequelize.col("createdAt"))],
         order: [[type, "ASC"]],
         raw: true,
@@ -242,12 +247,14 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     const specificDate = moment(currentMonth).format("MM-YYYY");
     const lastMonthDate = moment(currentMonth).subtract(1, 'months').format("MM-YYYY");
 
-    if (type === "MONTH") con.where = {
-        createdAt: {
-            [Op.between]: [currentYear(), currentYear("endOf")],
-        },
-    };
-
+    if (type === "MONTH") {
+        con.where = {
+            ...con.where,
+            createdAt: {
+                [Op.between]: [currentYear(), currentYear("endOf")],
+            },
+        }
+    }
     data.montdPreAndCur = await Order.findAll({
         attributes: [
             [fn('SUM', col('total')), 'total'],
@@ -257,13 +264,17 @@ exports.dashBoard = asyncHandler(async (req, res) => {
             [Op.or]: [
                 literal(`DATE_FORMAT(\`createdAt\`, '%m-%Y') = '${lastMonthDate}'`),
                 literal(`DATE_FORMAT(\`createdAt\`, '%m-%Y') = '${specificDate}'`),
-            ]
+            ],
+            status: {
+                [Op.gte]: 1
+            }
         },
         group: ["month"],
         order: [["month", 'asc']],
         raw: true
     });
-
+    const startDate = dateInWeek.shift() + ' 00:00:00';
+    const endDate = dateInWeek.pop() + ' 23:59:59';
     data.chartWeek = await Order.findAll({
         attributes: [
             [fn('date', col('createdAt')), 'createdAt'],
@@ -272,8 +283,11 @@ exports.dashBoard = asyncHandler(async (req, res) => {
         ],
         where: {
             createdAt: {
-                [Op.gte]: dateInWeek.shift(),
-                [Op.lte]: dateInWeek.pop()
+                [Op.gte]: startDate,
+                [Op.lte]: endDate
+            },
+            status: {
+                [Op.gte]: 1
             }
         },
         group: [fn('date', col('createdAt'))],
@@ -282,19 +296,28 @@ exports.dashBoard = asyncHandler(async (req, res) => {
     });
 
 
-    const {count, rows} = await Product.findAndCountAll({
+    const { count, rows } = await Product.findAndCountAll({
         attributes: ["name_product", "sold"],
-        include: {model: ImageProduct, attributes: ["url"]},
+        include: { model: ImageProduct, attributes: ["url"] },
         order: [["sold", "DESC"]],
     });
     data.productBySold = rows;
     data.food = count;
-    const {count: countOrder, rows: rowOrder} = await Order.findAndCountAll({
+
+    const { count: countOrder, rows: rowOrder } = await Order.findAndCountAll({
         attributes: [[fn("sum", col("total")), "total"]],
+        where: {
+            status: {
+                [Op.gte]: 1
+            },
+            createdAt: {
+                [Op.between]: [currentYear(), currentYear("endOf")],
+            },
+        }
     });
     data.countOrder = countOrder;
     data.totalOrderYear = rowOrder[0]?.total;
-    data.user = await User.count({where: {role: "R2"}});
+    data.user = await User.count({ where: { role: "R2" } });
     data.table = await Tables.sum("total_booked");
 
     data.chart_order = (
@@ -312,20 +335,20 @@ exports.dashBoard = asyncHandler(async (req, res) => {
             acc.values.push(item["totalOrder"]);
             return acc;
         },
-        {labels: [], values: []},
+        { labels: [], values: [] },
     );
     res.status(200).json(data);
 });
 
 exports.getOrderById = asyncHandler(async (req, res) => {
-    const {id: idOrder} = req.params;
+    const { id: idOrder } = req.params;
     try {
         const existingOrder = await Order.findOne({
-            where: {id: idOrder},
-            include: [{...bien.include}, {model: TableByOrder}],
+            where: { id: idOrder },
+            include: [{ ...bien.include }, { model: TableByOrder }],
         });
-        if (existingOrder) res.status(200).json({data: existingOrder});
+        if (existingOrder) res.status(200).json({ data: existingOrder });
     } catch (err) {
-        res.status(500).json({message: err});
+        res.status(500).json({ message: err });
     }
 });
