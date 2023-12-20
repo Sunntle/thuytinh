@@ -111,7 +111,6 @@ function ProductPage() {
           <Button
             type="primary"
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
             size="small"
             style={{
               width: 90,
