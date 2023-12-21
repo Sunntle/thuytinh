@@ -56,18 +56,18 @@ const BookingTable = () => {
 
   const disabledTime = () => {
     return {
-      // disabledHours: () => {
-      //   const hours = [0, 1, 2, 3, 4, 5, 6];
-      //   if (watchedDate?.["$D"] > moment().date()) {
-      //     return hours;
-      //   }
-      //   const currentHour = moment().hour();
-      //   for (let i = 7; i < currentHour + 2; i++) {
-      //     hours.push(i);
-      //   }
-      //   hours.push(23);
-      //   return hours;
-      // },
+      disabledHours: () => {
+        const hours = [0, 1, 2, 3, 4, 5, 6];
+        if (watchedDate?.["$D"] > moment().date()) {
+          return hours;
+        }
+        const currentHour = moment().hour();
+        for (let i = 7; i < currentHour + 2; i++) {
+          hours.push(i);
+        }
+        hours.push(23);
+        return hours;
+      },
       disabledMinutes: (selectedHour) => {
         const minutes = [];
         const currentMinute = moment().minute();
@@ -222,7 +222,7 @@ const BookingTable = () => {
                 showNow={false}
                 className="w-full focus:border-primary"
                 placeholder="Chọn giờ"
-                // hideDisabledOptions={true}
+                hideDisabledOptions={true}
                 disabledTime={disabledTime}
                 bordered={false}
                 minuteStep={15}
