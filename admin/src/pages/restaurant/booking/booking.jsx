@@ -22,7 +22,7 @@ export const ResBooking = () => {
         }
     }, []);
     useEffect(() => {
-        fetchData({ _sort: "createdAt", _order: "desc" });
+        fetchData({ _sort: "id", _order: "desc" });
     }, [fetchData]);
     const handleDeleteBooking = useCallback(
         async (id) => {
