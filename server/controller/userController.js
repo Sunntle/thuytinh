@@ -248,7 +248,7 @@ exports.currentAccount = asyncHandler(async (req, res) => {
   if (!ru) res.status(404).json({ success: false });
   else{
     const usersOnline = getAllUserOnline();
-    const isExist = usersOnline.findIndex((el) => el.id === ru?.id);
+    const isExist = usersOnline.findIndex((el) =>  el.id === ru?.id && el.ip != (req.headers['x-forwarded-for']|| req.socket?.remoteAddress || req.connection.remoteAddress));
     if (isExist !== -1) {
       return res.status(401).json({
         success: false,

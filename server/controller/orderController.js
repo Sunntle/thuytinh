@@ -81,7 +81,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
             { type: "order", description: `Bàn - ${table[0]} vừa đặt món`, content: order_result.id },
             { raw: true },
         );
-        // _io.of("/client").emit("status order", { ...result, message: "Đặt món thành công! Đợi một chút quán làm món nhé <3" });// check correct order
         _io.of("/client").emit("is-paid", { data: table[0], message: "Đặt món thành công", success: true })
     }
     res.status(200).json({ success: true, data: result });

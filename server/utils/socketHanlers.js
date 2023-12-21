@@ -20,7 +20,7 @@ exports.handleNewUserConnect = (socket) => {
       if(isExist != -1) {
         userConnected[isExist].socketId = socket.id
       }else{
-        userConnected.push({ socketId: socket.id, role: user.role, id: user.id });
+        userConnected.push({ socketId: socket.id, role: user.role, id: user.id, ip: socket.request.connection.remoteAddress || socket.handshake.address });
       }
       _io.of("/admin").emit("update-admin-online", userConnected);
     } catch (err) {
