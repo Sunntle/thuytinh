@@ -51,7 +51,7 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
         />,
         <ButtonComponents
           className="me-2 bg-borderSecondaryColor text-white"
-          content={"Tạo mới"}
+          content={"Cập nhật"}
           key="submit"
           htmlType="submit"
           onClick={handleSubmit}
@@ -95,13 +95,12 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
             <Form.Item label="Giá (vnđ) :" name="price" rules={[
               {
                 required: true,
-                message: "Bạn phải điền tên nguyên liệu",
-              },
-              {
+                message: "Bạn phải nhập giá nguyên liệu",
+              }, {
                 type: "number",
-                min: 1001,
-                message: "Giá phải lớn hơn 1000",
-              },
+                min: 1,
+                message: "Bạn phải nhập giá nguyên liệu",
+              }
             ]}>
               <InputNumber min={0} className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={(value) => value.replace(/\$\s?|(,*)/g, '')} />

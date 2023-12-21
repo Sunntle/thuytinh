@@ -21,10 +21,10 @@ import { overMasterial, unitMasterial, renderToString } from "../../utils/consta
 import { SearchOutlined } from "@ant-design/icons";
 import ImageComponent from "../../components/image";
 const { Title, Text } = Typography;
-const handleSearchData = (string) =>{
-  if(string.includes("_")){
+const handleSearchData = (string) => {
+  if (string.includes("_")) {
     const arr = string.split("_")
-    const newArr = arr.map(el=>el[0].toUpperCase() + el.slice(1))
+    const newArr = arr.map(el => el[0].toUpperCase() + el.slice(1))
     return newArr.join(" ")
   }
   return string[0].toUpperCase() + string.slice(1)
@@ -68,7 +68,7 @@ function MaterialPage() {
   }, [fetchData]);
 
   useEffect(() => {
-    if(notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === 'material' && notifications.lastNotification?.status === false){
+    if (notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === 'material' && notifications.lastNotification?.status === false) {
       fetchData()
     }
   }, [fetchData, notifications])
@@ -77,7 +77,7 @@ function MaterialPage() {
     const res = await deleteMaterial(id_material);
     if (res) {
       fetchData();
-      message.open({ type: "success", content: res });
+      message.open({ type: "success", content: "Xóa nguyên liệu thanh công" });
     } else {
       message.open({ type: "danger", content: "Có gì đó sai sai!" });
     }
@@ -95,13 +95,13 @@ function MaterialPage() {
     form.setFieldsValue({ name_material, materialId: id, image });
   }, [form])
 
-  const handleSearch = (selectedKeys, confirm, ) => {
+  const handleSearch = (selectedKeys, confirm,) => {
     confirm();
   };
   const handleReset = (clearFilters) => {
     clearFilters();
   };
- 
+
   const getColumnSearchProps = useCallback((dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -139,7 +139,7 @@ function MaterialPage() {
             Tìm kiếm
           </Button>
           <Button
-            onClick={()=> clearFilters && handleReset(clearFilters)}
+            onClick={() => clearFilters && handleReset(clearFilters)}
             size="small"
             style={{
               width: 90,
@@ -178,17 +178,17 @@ function MaterialPage() {
       />
     ),
     onFilter: (value, record) =>
-    record[dataIndex]
-    ?.toString()
-    ?.toLowerCase()
-    ?.includes(value?.toLowerCase()),
+      record[dataIndex]
+        ?.toString()
+        ?.toLowerCase()
+        ?.includes(value?.toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
     render: (text) => text,
-  }),[]);
+  }), []);
 
   const columns = useMemo(() => [
     {
@@ -204,7 +204,7 @@ function MaterialPage() {
       dataIndex: "image",
 
       render: (_, record) => (
-        <ImageComponent src={record.image}/>
+        <ImageComponent src={record.image} />
       ),
     },
     {
@@ -409,7 +409,6 @@ function MaterialPage() {
           </Col>
 
           <Col xs={6} style={{ textAlign: "-webkit-right" }}>
-
             <ButtonComponents
               className="border-borderSecondaryColor text-main"
               content={"Thêm mới"}
@@ -438,15 +437,14 @@ function MaterialPage() {
             <Form.Item label="Giá (vnđ) :" name="price" rules={[
               {
                 required: true,
-                message: "Bạn phải điền tên nguyên liệu",
-              },
-              {
+                message: "Bạn phải nhập giá nguyên liệu",
+              }, {
                 type: "number",
-                min: 1001,
-                message: "Giá phải lớn hơn 1000",
-              },
+                min: 1,
+                message: "Bạn phải nhập giá nguyên liệu",
+              }
             ]}>
-              <InputNumber min={0} className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              <InputNumber className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 parser={(value) => value.replace(/\$\s?|(,*)/g, '')} />
             </Form.Item>
             <Form.Item

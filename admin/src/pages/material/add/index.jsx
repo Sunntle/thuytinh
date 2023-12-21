@@ -81,12 +81,11 @@ function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish, unit
             {
               required: true,
               message: "Bạn phải nhập giá",
-            },
-            {
+            }, {
               type: "number",
-              min: 1001,
-              message: "Giá phải lớn hơn 1000",
-            },
+              min: 1,
+              message: "Bạn phải nhập giá nguyên liệu",
+            }
           ]}>
             <InputNumber className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
               parser={(value) => value.replace(/\$\s?|(,*)/g, '')} />
@@ -102,9 +101,6 @@ function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish, unit
           </Form.Item>
 
         </div>
-
-
-
 
         <Form.Item
           name="Image"
