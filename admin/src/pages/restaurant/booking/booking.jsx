@@ -36,7 +36,7 @@ export const ResBooking = () => {
             const res = await delBooking(id);
             if (res) {
                 message.open({ type: "success", content: res });
-                fetchData();
+                fetchData({ _sort: "id", _order: "desc" });
             } else {
                 message.open({ type: "danger", content: "Có gì đó sai sai!" });
             }
@@ -48,7 +48,7 @@ export const ResBooking = () => {
         try {
             const res = await updateBooking({ id, status: "canceled" });
             message.open({ type: "success", content: res });
-            fetchData({ _sort: "createdAt", _order: "desc" });
+            fetchData({ _sort: "id", _order: "desc" });
         } catch (err) {
             console.error(err);
         } finally {
