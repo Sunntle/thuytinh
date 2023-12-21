@@ -3,6 +3,7 @@ import ButtonComponents from "../../../components/button";
 import { UploadOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { formatGia, formatNgay } from "../../../utils/format";
+import { transformUnit } from "../../../utils/constant";
 const { Text } = Typography
 function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial }) {
   const [form] = Form.useForm();
@@ -100,6 +101,10 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
                 type: "number",
                 min: 1,
                 message: "Bạn phải nhập giá nguyên liệu",
+              }, {
+                type: "integer",
+                pattern: /^\d+$/,
+                message: "Nhập kiểu số nguyên",
               }
             ]}>
               <InputNumber min={0} className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -113,7 +118,7 @@ function EditMaterial({ open, handleCancel, handleFinish, data, unitMasterial })
                 {
                   required: true,
                   message: "Bạn phải điền đơn vị tính nguyên liệu",
-                },
+                }
               ]}
             >
               <Select placeholder="Đơn vị của nguyên liệu " options={

@@ -22,7 +22,7 @@ const initialValues = {
 function AddNewProduct({ open, handleCancel, cate, handleFinish }) {
   // const [haveData, setHaveData] = useState(false);
   const [form] = Form.useForm();
- 
+
   const handleSubmit = useCallback(async () => {
     try {
       await form.validateFields();
@@ -33,7 +33,7 @@ function AddNewProduct({ open, handleCancel, cate, handleFinish }) {
     } catch (error) {
       console.error("Form validation error:", error);
     }
-  },[form, handleCancel, handleFinish]);
+  }, [form, handleCancel, handleFinish]);
   return (
     <Modal
       open={open}
@@ -82,12 +82,16 @@ function AddNewProduct({ open, handleCancel, cate, handleFinish }) {
         </Form.Item>
         <div className="grid grid-cols-2 gap-4">
           <Form.Item label="Giá">
-            <Form.Item name="price"  rules={[
-            {
-              required: true,
-              message:  "Bạn phải điền giá",
-            },
-          ]} noStyle>
+            <Form.Item name="price" rules={[
+              {
+                required: true,
+                message: "Bạn phải điền giá",
+              }, {
+                type: "integer",
+                pattern: /^\d+$/,
+                message: "Nhập kiểu số nguyên",
+              }
+            ]} noStyle>
               <InputNumber min={0} />
             </Form.Item>
             <span
@@ -100,7 +104,7 @@ function AddNewProduct({ open, handleCancel, cate, handleFinish }) {
             </span>
           </Form.Item>
           <Form.Item label="Giảm giá">
-          <Form.Item name="discount" noStyle>
+            <Form.Item name="discount" noStyle>
               <InputNumber min={0} />
             </Form.Item>
             <span
@@ -113,17 +117,17 @@ function AddNewProduct({ open, handleCancel, cate, handleFinish }) {
             </span>
           </Form.Item>
         </div>
-        <Form.Item name="status" label="Trạng thái"  labelCol={{
-            span: 24,
-          }}>
-            <Select placeholder="Chọn trạng thái món ăn">
-              {optionsStatus.map((el, index) => (
-                <Option key={index} value={el.value}>
-                  {el.label}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
+        <Form.Item name="status" label="Trạng thái" labelCol={{
+          span: 24,
+        }}>
+          <Select placeholder="Chọn trạng thái món ăn">
+            {optionsStatus.map((el, index) => (
+              <Option key={index} value={el.value}>
+                {el.label}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
         <Form.Item
           name="id_category"
           label="Loại món ăn"

@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHttp";
-import { message, Tabs } from "antd";
+import { message, Tabs, FloatButton } from "antd";
 import "./index.css";
 import { useSelector } from "react-redux";
 import { Spinner } from "../../components/index.js";
@@ -17,7 +17,7 @@ import { Helmet } from "react-helmet";
 import { ScrollToTop } from "../../utils/format.js";
 import { MdOutlineOutdoorGrill } from "react-icons/md";
 import { PiHouseBold } from "react-icons/pi";
-
+import { FaMapMarkerAlt } from "react-icons/fa";
 const Map = lazy(() => import("./MapComponent.jsx"));
 
 function showError(error) {
@@ -115,7 +115,18 @@ function SelectTable() {
     const filteredValue = tables?.filter((table) => table.position === key);
     setTableByPosition(filteredValue);
   };
-
+  const handleShowMap = () => {
+    if (showMap) {
+      mapRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "start",
+      });
+      return
+    } else {
+      setShowMap(true)
+    }
+  }
   useEffect(() => {
     if (mapRef.current && showMap !== false) {
       mapRef.current.scrollIntoView({
@@ -138,7 +149,7 @@ function SelectTable() {
       </Helmet>
 
       <ScrollToTop />
-
+      <FloatButton icon={<FaMapMarkerAlt />} onClick={handleShowMap} style={{ bottom: 80, right: 10 }} />
       {idTable &&
         isTableExist == "Bàn đã được sử dụng" &&
         +idTable !== customerName.tables?.at(1) && (
@@ -156,14 +167,14 @@ function SelectTable() {
               type={"line"}
               onChange={onHandleTabChange}
               defaultActiveKey={"all"}
-              tabBarExtraContent={
-                <button
-                  onClick={() => setShowMap(true)}
-                  className="font-semibold text-sm md:text-base text-secondary hover:text-secondary/80 transition-colors duration-300 bg-transparent"
-                >
-                  Xem trên bản đồ
-                </button>
-              }
+              // tabBarExtraContent={
+              //   <button
+              //     onClick={() => setShowMap(true)}
+              //     className="font-semibold text-sm md:text-base text-secondary hover:text-secondary/80 transition-colors duration-300 bg-transparent"
+              //   >
+              //     Xem trên bản đồ
+              //   </button>
+              // }
               centered
               items={["all", "in", "out"].map((position) => {
                 return {
@@ -171,8 +182,8 @@ function SelectTable() {
                     position === "all"
                       ? "Tất cả"
                       : position === "in"
-                      ? "Trong nhà"
-                      : "Ngoài trời",
+                        ? "Trong nhà"
+                        : "Ngoài trời",
                   key: position,
                   children: (
                     <div className="w-full mb-10 min-h-fit max-w-full">

@@ -22,6 +22,11 @@ export const NAV_ITEMS = [
     getItem("Doanh thu", "/employee/renvenue")
   ]),
 ];
+export const transformUnit = (amount, oldUnit, newUnit) => {
+  if (isNaN(amount) || newUnit == oldUnit) return amount
+  if ((newUnit === "lít" && oldUnit === "ml") || (newUnit === "kg" && oldUnit === "gram")) return +amount / 1000
+  if ((newUnit === "ml" && oldUnit === "lít") || (newUnit === "gram" && oldUnit === "kg")) return +amount * 1000
+}
 export const NAV_ITEMS_ADMIN = [getItem("Quản lí", null, <BiCategory />, [
   getItem("Dashboard", "/admin"),
   getItem("Quản lí bàn", "/admin/table"),

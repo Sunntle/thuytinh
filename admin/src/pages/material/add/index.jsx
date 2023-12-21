@@ -85,6 +85,10 @@ function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish, unit
               type: "number",
               min: 1,
               message: "Bạn phải nhập giá nguyên liệu",
+            }, {
+              type: "integer",
+              pattern: /^\d+$/,
+              message: "Nhập kiểu số nguyên",
             }
           ]}>
             <InputNumber className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -94,7 +98,11 @@ function AddNewMaterial({ open, confirmLoading, handleCancel, handleFinish, unit
           <Form.Item label="Số lượng" name="amount" rules={[
             {
               required: true,
-              message: "Bạn phải điền đơn vị tính nguyên liệu",
+              message: "Bạn phải nhập số lượng  nguyên liệu",
+            }, {
+              type: "integer",
+              pattern: /^\d+$/,
+              message: "Nhập kiểu số nguyên",
             }
           ]} >
             <InputNumber min={0} className="w-full" />

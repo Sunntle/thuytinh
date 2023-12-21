@@ -9,7 +9,7 @@ const UpdateBooking = ({ setDataUpdate, fetchData, dataUpdate, isModalOpenUpdate
     const [updateForm] = Form.useForm();
     useEffect(() => {
         if (dataUpdate) {
-            const data = { ...dataUpdate, name: dataUpdate.order.name, email: dataUpdate.order.email, phone: dataUpdate.order.phone}
+            const data = { ...dataUpdate, name: dataUpdate.order.name, email: dataUpdate.order.email, phone: dataUpdate.order.phone }
             updateForm.setFieldsValue(data);
         }
     }, [dataUpdate])
@@ -19,14 +19,14 @@ const UpdateBooking = ({ setDataUpdate, fetchData, dataUpdate, isModalOpenUpdate
         updateForm.resetFields();
     }, [dataUpdate, isModalOpenUpdate])
     const onFinish = async (values) => {
-        try{
-          const res = await updateBooking(values);
-          if (res) {
-            fetchData();
-            handleCancel();
-        }
-        messageApi.open({ type: res ? 'success' : "error", content: res });  
-        }catch (err){
+        try {
+            const res = await updateBooking(values);
+            if (res) {
+                fetchData();
+                handleCancel();
+            }
+            messageApi.open({ type: res ? 'success' : "error", content: res });
+        } catch (err) {
             console.log(err)
         }
     };
@@ -68,6 +68,10 @@ const UpdateBooking = ({ setDataUpdate, fetchData, dataUpdate, isModalOpenUpdate
                             type: 'number',
                             required: true,
                             message: 'Vui lòng nhập số điện thoại',
+                        }, {
+                            type: "integer",
+                            pattern: /^\d+$/,
+                            message: "Nhập kiểu số nguyên",
                         }]}
                     >
                         <InputNumber />

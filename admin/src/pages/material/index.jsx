@@ -297,6 +297,8 @@ function MaterialPage() {
       if (status == "add") {
         res = await addNewMaterial(formData);
       } else {
+        const values = [...formData.entries()];
+        console.log(values);
         res = await editMaterial(formData);
       }
       message.destroy();
@@ -442,6 +444,10 @@ function MaterialPage() {
                 type: "number",
                 min: 1,
                 message: "Bạn phải nhập giá nguyên liệu",
+              }, {
+                type: "integer",
+                pattern: /^\d+$/,
+                message: "Nhập kiểu số nguyên",
               }
             ]}>
               <InputNumber className="w-full" formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -459,7 +465,11 @@ function MaterialPage() {
                   type: "number",
                   min: 1,
                   message: "Số lượng nguyên liệu phải lớn hơn 0",
-                },
+                }, {
+                  type: "integer",
+                  pattern: /^\d+$/,
+                  message: "Nhập kiểu số nguyên",
+                }
               ]}
 
             >

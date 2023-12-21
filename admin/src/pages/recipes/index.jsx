@@ -11,6 +11,7 @@ import {
   Col,
   Typography,
   notification,
+  InputNumber,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
@@ -273,12 +274,15 @@ const RecipePage = () => {
                           name={[name, "quantity"]}
                           rules={[
                             {
-                              required: true,
-                              message: "Nhập số lượng",
-                            },
+                              required: true, message: "Nhập số lượng",
+                            }, {
+                              type: "integer",
+                              pattern: /^\d+$/,
+                              message: "Nhập kiểu số nguyên",
+                            }
                           ]}
                         >
-                          <Input placeholder="Số lượng" />
+                          <InputNumber placeholder="Số lượng" />
                         </Form.Item>
                         <Form.Item
                           className="w-full"
