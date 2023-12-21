@@ -5,12 +5,14 @@ import ConfirmComponent from '../../../components/confirm';
 import { formatNgay } from '../../../utils/format';
 import UpdateBooking from './update'
 import Spinner from '../../../components/spinner';
+import { useSelector } from 'react-redux';
 const { Title } = Typography;
 export const ResBooking = () => {
     const [booking, setBooking] = useState({})
     const [isModalOpenUpdate, setIsModalOpenUpdate] = useState(false);
     const [dataUpdate, setDataUpdate] = useState(null);
     const [messageApi, contextHolder] = message.useMessage();
+    const notifications = useSelector(state => state.notifications)
     const [loading, setLoading] = useState(true)
     const fetchData = useCallback(async (params = {}) => {
         try {
@@ -24,6 +26,11 @@ export const ResBooking = () => {
     useEffect(() => {
         fetchData({ _sort: "id", _order: "desc" });
     }, [fetchData]);
+    useEffect(() => {
+        if (notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === 'table' && notifications.lastNotification?.status === false) {
+            fetchData()
+        }
+    }, [fetchData, notifications])
     const handleDeleteBooking = useCallback(
         async (id) => {
             const res = await delBooking(id);
