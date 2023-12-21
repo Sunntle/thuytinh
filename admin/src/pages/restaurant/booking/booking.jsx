@@ -28,7 +28,7 @@ export const ResBooking = () => {
     }, [fetchData]);
     useEffect(() => {
         if (notifications.isLoading == false && notifications.lastNotification !== null && notifications.lastNotification?.type === 'table' && notifications.lastNotification?.status === false) {
-            fetchData()
+            fetchData({ _sort: "id", _order: "desc" });
         }
     }, [fetchData, notifications])
     const handleDeleteBooking = useCallback(
